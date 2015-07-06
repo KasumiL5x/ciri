@@ -11,7 +11,9 @@ namespace ciri {
 
 		enum EventType {
 			Closed,
-			Resized, // when the window has been resized (SizeEvent)
+			Resized, // when the window has been resized (SizeEvent),
+			FocusGained, // when the window gains focus
+			FocusLost, // when the window loses focus
 			Count
 		};
 

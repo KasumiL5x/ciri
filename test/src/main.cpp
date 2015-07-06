@@ -14,6 +14,14 @@ int main() {
 			if( evt.type == ciri::WindowEvent::Resized ) {
 				printf("w: %d; h: %d\n", evt.size.width, evt.size.height);
 			}
+
+			if( evt.type == ciri::WindowEvent::FocusGained ) {
+				printf("focus gained\n");
+			}
+
+			if( evt.type == ciri::WindowEvent::FocusLost ) {
+				printf("focus lost\n");
+			}
 		}
 	}
 

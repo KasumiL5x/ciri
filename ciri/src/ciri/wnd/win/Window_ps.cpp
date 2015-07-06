@@ -155,6 +155,22 @@ namespace ciri {
 				}
 				break;
 			}
+
+				// gained focus
+			case WM_SETFOCUS: {
+				WindowEvent evt;
+				evt.type = WindowEvent::FocusGained;
+				pushEvent(evt);
+				break;
+			}
+
+			// lost focus
+			case WM_KILLFOCUS: {
+				WindowEvent evt;
+				evt.type = WindowEvent::FocusLost;
+				pushEvent(evt);
+				break;
+			}
 		}
 	}
 
