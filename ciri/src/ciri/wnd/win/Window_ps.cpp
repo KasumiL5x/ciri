@@ -14,6 +14,9 @@ namespace ciri {
 		if( !createWindow(width, height) ) {
 			return false;
 		}
+
+		_lastSize = cc::Vec2ui(width, height);
+
 		return true;
 	}
 
