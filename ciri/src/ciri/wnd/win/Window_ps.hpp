@@ -4,6 +4,7 @@
 #include <queue>
 #include <Windows.h>
 #include "../WindowEvent.hpp"
+#include <cc/Vec2.hpp>
 
 namespace ciri {
 	class Window_ps {
@@ -15,6 +16,7 @@ namespace ciri {
 		bool isOpen() const;
 		bool pollEvent( WindowEvent& evt );
 		void destroy();
+		cc::Vec2ui getSize() const;
 
 	private:
 		bool createWindow( int width, int height );
@@ -26,6 +28,8 @@ namespace ciri {
 	private:
 		HWND _hwnd;
 		std::queue<WindowEvent> _events;
+		bool _resizing;
+		cc::Vec2ui _lastSize;
 	};
 }
 

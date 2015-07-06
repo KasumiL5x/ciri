@@ -10,6 +10,10 @@ int main() {
 			if( evt.type == ciri::WindowEvent::Closed ) {
 				window.destroy();
 			}
+
+			if( evt.type == ciri::WindowEvent::Resized ) {
+				printf("w: %d; h: %d\n", evt.size.width, evt.size.height);
+			}
 		}
 	}
 

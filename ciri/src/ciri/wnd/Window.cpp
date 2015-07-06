@@ -23,4 +23,8 @@ namespace ciri {
 		_platform.destroy();
 	}
 
+	cc::Vec2ui Window::getSize() const {
+		return _platform.getSize();
+	}
+
 } // ciri

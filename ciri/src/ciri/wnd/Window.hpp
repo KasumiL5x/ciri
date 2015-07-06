@@ -4,6 +4,7 @@
 #include <ciri/Common.hpp>
 #include CIRI_INCLUDE_PS(Window_ps)
 #include "WindowEvent.hpp"
+#include <cc/Vec2.hpp>
 
 namespace ciri {
 	class Window{
@@ -15,6 +16,8 @@ namespace ciri {
 		bool isOpen() const;
 		bool pollEvent( WindowEvent& evt );
 		void destroy();
+
+		cc::Vec2ui getSize() const;
 
 	private:
 		Window_ps _platform;

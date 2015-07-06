@@ -49,15 +49,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../src/;%DXSDK_DIR%Include;$(IncludePath)</IncludePath>
-    <LibraryPath>%DXSDK_DIR%Lib/x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>../src/;../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../lib/</OutDir>
     <TargetName>$(ProjectName)-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../src/;%DXSDK_DIR%Include;$(IncludePath)</IncludePath>
-    <LibraryPath>%DXSDK_DIR%Lib/x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>../src/;../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../lib/</OutDir>
   </PropertyGroup>

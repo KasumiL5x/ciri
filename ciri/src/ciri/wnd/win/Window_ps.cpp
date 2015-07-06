@@ -3,7 +3,7 @@
 
 namespace ciri {
 	Window_ps::Window_ps()
-		: _hwnd(0) {
+		: _hwnd(0), _resizing(false), _lastSize(0, 0) {
 	}
 
 	Window_ps::~Window_ps() {
@@ -41,6 +41,12 @@ namespace ciri {
 	void Window_ps::destroy() {
 		DestroyWindow(_hwnd);
 		_hwnd = 0;
+	}
+
+	cc::Vec2ui Window_ps::getSize() const {
+		RECT rc;
+		GetClientRect(_hwnd, &rc);
+		return cc::Vec2ui(rc.right - rc.left, rc.bottom - rc.top);
 	}
 
 	bool Window_ps::createWindow( int width, int height ) {
@@ -105,6 +111,45 @@ namespace ciri {
 				WindowEvent evt;
 				evt.type = WindowEvent::Closed;
 				pushEvent(evt);
+				break;
+			}
+
+			case WM_SIZE: {
+				// only consider events triggered by maximimze or unmaximize
+				if( wparam != SIZE_MINIMIZED && !_resizing && _lastSize != getSize() ) {
+					_lastSize = getSize();
+
+					// push resize event
+					WindowEvent evt;
+					evt.type = WindowEvent::Resized;
+					evt.size.width = _lastSize.x;
+					evt.size.height = _lastSize.y;
+					pushEvent(evt);
+				}
+				break;
+			}
+
+			// start resizing
+			case WM_ENTERSIZEMOVE: {
+				_resizing = true;
+				break;
+			}
+
+			// stop resizing
+			case WM_EXITSIZEMOVE: {
+				_resizing = false;
+
+				// ignore cases where window has moved (size doesn't change)
+				if( _lastSize != getSize() ) {
+					_lastSize = getSize();
+
+					// push resize event
+					WindowEvent evt;
+					evt.type = WindowEvent::Resized;
+					evt.size.width = _lastSize.x;
+					evt.size.height = _lastSize.y;
+					pushEvent(evt);
+				}
 				break;
 			}
 		}

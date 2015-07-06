@@ -43,15 +43,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../src/;%DXSDK_DIR%Include;../../ciri/src/;$(IncludePath)</IncludePath>
-    <LibraryPath>%DXSDK_DIR%Lib/x86;../../ciri/lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../src/;../../ciri/src/;../../ciri/thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../ciri/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../bin/</OutDir>
     <TargetName>$(ProjectName)-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../src/;%DXSDK_DIR%Include;../../ciri/src/;$(IncludePath)</IncludePath>
-    <LibraryPath>%DXSDK_DIR%Lib/x86;../../ciri/lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../src/;../../ciri/src/;../../ciri/thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../ciri/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../bin/</OutDir>
   </PropertyGroup>
