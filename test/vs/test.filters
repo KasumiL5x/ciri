@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\src\test\Common.hpp" />
+    <ClInclude Include="..\src\test\wnd\Window.hpp">
+      <Filter>wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test\wnd\win\Window_ps.hpp">
+      <Filter>wnd\win</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="wnd">
+      <UniqueIdentifier>{d3fe9bb4-40e9-4058-8971-9f6ef6ee4a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wnd\win">
+      <UniqueIdentifier>{ffcf656a-54f5-484a-ba00-cf7f5ace7673}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\test\wnd\Window.cpp">
+      <Filter>wnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test\wnd\win\Window_ps.cpp">
+      <Filter>wnd\win</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

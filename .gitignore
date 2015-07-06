@@ -1,0 +1,9 @@
+links
+
+# ciri temp and build files
+ciri/tmp
+ciri/lib
+
+# test temp and build files
+test/tmp
+test/bin
