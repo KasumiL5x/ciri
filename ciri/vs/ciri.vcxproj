@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ciri\Common.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp" />
     <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp" />
     <ClInclude Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.hpp" />
@@ -20,6 +21,7 @@
     <ClInclude Include="..\src\ciri\wnd\win\Window_ps.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
