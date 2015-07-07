@@ -1,13 +1,14 @@
 #include <ciri/wnd/Window.hpp>
 #include <ciri/wnd/WindowEvent.hpp>
 #include <ciri/gfx/IGraphicsDevice.hpp>
-#include <ciri/gfx/DXGraphicsDevice.hpp>
+//#include <ciri/gfx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/GLGraphicsDevice.hpp>
 
 int main() {
 	ciri::Window window;
 	window.create(1280, 720);
 
-	ciri::IGraphicsDevice* graphicsDevice = new ciri::DXGraphicsDevice();
+	ciri::IGraphicsDevice* graphicsDevice = new ciri::GLGraphicsDevice();
 	if( !graphicsDevice->create(&window) ) {
 		printf("Failed to initialize graphics device.");
 		return -1;

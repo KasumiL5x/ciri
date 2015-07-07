@@ -23,6 +23,12 @@
     <ClInclude Include="..\src\ciri\gfx\Camera.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ciri\gfx\GLGraphicsDevice.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.hpp">
+      <Filter>gfx\win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wnd">
@@ -53,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp">
       <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\GLGraphicsDevice.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.cpp">
+      <Filter>gfx\win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

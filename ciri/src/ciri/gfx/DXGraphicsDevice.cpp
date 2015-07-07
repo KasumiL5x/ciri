@@ -19,4 +19,4 @@ namespace ciri {
 	void DXGraphicsDevice::present() {
 		_platform.present();
 	}
-}
+} // ciri

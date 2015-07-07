@@ -176,4 +176,4 @@ namespace ciri {
 
 		return true;
 	}
-}
+} // ciri

@@ -14,8 +14,10 @@
     <ClInclude Include="..\src\ciri\Common.hpp" />
     <ClInclude Include="..\src\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\GLGraphicsDevice.hpp" />
     <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp" />
     <ClInclude Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.hpp" />
     <ClInclude Include="..\src\ciri\wnd\Window.hpp" />
     <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp" />
     <ClInclude Include="..\src\ciri\wnd\win\Window_ps.hpp" />
@@ -23,7 +25,9 @@
   <ItemGroup>
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\GLGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
     <ClCompile Include="..\src\ciri\wnd\win\Window_ps.cpp" />
   </ItemGroup>
