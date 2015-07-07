@@ -12,15 +12,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ciri\Common.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\GraphicsDevice.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\win\dx\GraphicsDevice_ps.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.hpp" />
     <ClInclude Include="..\src\ciri\wnd\Window.hpp" />
     <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp" />
     <ClInclude Include="..\src\ciri\wnd\win\Window_ps.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ciri\gfx\GraphicsDevice.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\win\dx\GraphicsDevice_ps.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
     <ClCompile Include="..\src\ciri\wnd\win\Window_ps.cpp" />
   </ItemGroup>
@@ -71,7 +72,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN;DX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -85,7 +86,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN;DX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

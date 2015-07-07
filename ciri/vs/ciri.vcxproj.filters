@@ -11,11 +11,14 @@
     <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp">
       <Filter>wnd</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\GraphicsDevice.hpp">
+    <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\win\dx\GraphicsDevice_ps.hpp">
-      <Filter>gfx\win\dx</Filter>
+    <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.hpp">
+      <Filter>gfx\win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -29,10 +32,7 @@
       <UniqueIdentifier>{ffaef3a1-bf20-47ef-91ed-a526e1064306}</UniqueIdentifier>
     </Filter>
     <Filter Include="gfx\win">
-      <UniqueIdentifier>{69a56193-ffb7-4c81-8696-66a2a5c93c81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gfx\win\dx">
-      <UniqueIdentifier>{326ae87e-3123-4f97-83ed-768b2a55f543}</UniqueIdentifier>
+      <UniqueIdentifier>{71a3e9f2-d532-4a29-8943-a88c0d364bf3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,11 +42,11 @@
     <ClCompile Include="..\src\ciri\wnd\win\Window_ps.cpp">
       <Filter>wnd\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ciri\gfx\GraphicsDevice.cpp">
+    <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ciri\gfx\win\dx\GraphicsDevice_ps.cpp">
-      <Filter>gfx\win\dx</Filter>
+    <ClCompile Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.cpp">
+      <Filter>gfx\win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
