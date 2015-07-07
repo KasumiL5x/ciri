@@ -3,10 +3,12 @@
 
 #pragma comment(lib, "OpenGL32.lib")
 #pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "glew32s.lib")
 
 #include <Windows.h>
+#include <gl/glew.h>
 #include <gl/GL.h>
-#include <gl\GLU.h>
+#include <gl/GLU.h>
 
 namespace ciri {
 	class Window;
@@ -22,6 +24,7 @@ namespace ciri {
 
 	private:
 		bool configureGl( HWND hwnd );
+		bool configureGlew();
 
 	private:
 		HDC _hdc;

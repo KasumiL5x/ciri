@@ -18,6 +18,11 @@ namespace ciri {
 			return false;
 		}
 
+		if( !configureGlew() ) {
+			destroy();
+			return false;
+		}
+
 		return true;
 	}
 
@@ -85,5 +90,9 @@ namespace ciri {
 		//TODO: setup gl debug message tracing
 
 		return true;
+	}
+
+	bool GLGraphicsDevice_ps::configureGlew() {
+		return (glewInit() == GLEW_OK);
 	}
 } // ciri
