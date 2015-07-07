@@ -1,9 +1,18 @@
 #include <ciri/wnd/Window.hpp>
 #include <ciri/wnd/WindowEvent.hpp>
+#include <ciri/gfx/IGraphicsDevice.hpp>
+#include <ciri/gfx/DXGraphicsDevice.hpp>
 
 int main() {
 	ciri::Window window;
 	window.create(1280, 720);
+
+	ciri::IGraphicsDevice* graphicsDevice = new ciri::DXGraphicsDevice();
+	if( !graphicsDevice->create(&window) ) {
+		printf("Failed to initialize graphics device.");
+		return -1;
+	}
+
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
@@ -23,7 +32,14 @@ int main() {
 				//printf("focus lost\n");
 			}
 		}
+
+		// render and flip
+		graphicsDevice->present();
 	}
+
+	graphicsDevice->destroy();
+	delete graphicsDevice;
+	graphicsDevice = nullptr;
 
 	return 0;
 }

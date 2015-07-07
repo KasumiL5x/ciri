@@ -12,6 +12,8 @@ namespace ciri {
 		virtual ~DXGraphicsDevice();
 
 		virtual bool create( Window* window );
+		virtual void destroy();
+		virtual void present();
 
 	private:
 		DXGraphicsDevice_ps _platform;

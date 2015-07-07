@@ -11,4 +11,12 @@ namespace ciri {
 	bool DXGraphicsDevice::create( Window* window ) {
 		return _platform.create(window);
 	}
+
+	void DXGraphicsDevice::destroy() {
+		_platform.destroy();
+	}
+
+	void DXGraphicsDevice::present() {
+		_platform.present();
+	}
 }

@@ -13,6 +13,8 @@ namespace ciri {
 		}
 
 		virtual bool create( Window* window )=0;
+		virtual void destroy()=0;
+		virtual void present()=0;
 	};
 } // ciri
 
