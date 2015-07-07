@@ -3,7 +3,7 @@
 
 int main() {
 	ciri::Window window;
-	window.create(640, 480);
+	window.create(1280, 720);
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
@@ -12,15 +12,15 @@ int main() {
 			}
 
 			if( evt.type == ciri::WindowEvent::Resized ) {
-				printf("w: %d; h: %d\n", evt.size.width, evt.size.height);
+				//printf("w: %d; h: %d\n", evt.size.width, evt.size.height);
 			}
 
 			if( evt.type == ciri::WindowEvent::FocusGained ) {
-				printf("focus gained\n");
+				//printf("focus gained\n");
 			}
 
 			if( evt.type == ciri::WindowEvent::FocusLost ) {
-				printf("focus lost\n");
+				//printf("focus lost\n");
 			}
 		}
 	}

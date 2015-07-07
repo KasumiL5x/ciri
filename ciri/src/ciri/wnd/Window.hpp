@@ -18,6 +18,7 @@ namespace ciri {
 		void destroy();
 
 		cc::Vec2ui getSize() const;
+		void* getHandle() const;
 
 	private:
 		Window_ps _platform;

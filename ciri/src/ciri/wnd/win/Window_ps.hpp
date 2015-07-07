@@ -17,6 +17,7 @@ namespace ciri {
 		bool pollEvent( WindowEvent& evt );
 		void destroy();
 		cc::Vec2ui getSize() const;
+		void* getHandle() const;
 
 	private:
 		bool createWindow( int width, int height );

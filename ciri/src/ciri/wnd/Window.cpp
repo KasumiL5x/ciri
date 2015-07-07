@@ -27,4 +27,8 @@ namespace ciri {
 		return _platform.getSize();
 	}
 
+	void* Window::getHandle() const {
+		return _platform.getHandle();
+	}
+
 } // ciri

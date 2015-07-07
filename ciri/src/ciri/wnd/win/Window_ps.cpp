@@ -52,6 +52,10 @@ namespace ciri {
 		return cc::Vec2ui(rc.right - rc.left, rc.bottom - rc.top);
 	}
 
+	void* Window_ps::getHandle() const {
+		return _hwnd;
+	}
+
 	bool Window_ps::createWindow( int width, int height ) {
 		// register class
 		WNDCLASSEX wc;
