@@ -1,4 +1,3 @@
-#include <ciri/common.hpp>
 #include "Window_ps.hpp"
 
 namespace ciri {
