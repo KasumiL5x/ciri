@@ -15,6 +15,7 @@ namespace ciri {
 		bool open( const char* file );
 		void close();
 		std::string toString() const;
+		bool isOpen() const;
 
 	private:
 		File_ps _platform;

@@ -25,4 +25,8 @@ namespace ciri {
 		ss << _stream.rdbuf();
 		return ss.str();
 	}
+
+	bool File_ps::isOpen() const {
+		return _stream.is_open();
+	}
 } // ciri

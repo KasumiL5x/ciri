@@ -23,4 +23,8 @@ namespace ciri {
 		// warning: copy, copy
 		return _platform.toString();
 	}
+
+	bool File::isOpen() const {
+		return _platform.isOpen();
+	}
 } // ciri

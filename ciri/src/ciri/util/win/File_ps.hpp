@@ -13,6 +13,7 @@ namespace ciri {
 		bool open( const char* file );
 		void close();
 		std::string toString() const;
+		bool isOpen() const;
 
 	private:
 		std::ifstream _stream;
