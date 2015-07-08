@@ -18,6 +18,8 @@
     <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp" />
     <ClInclude Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.hpp" />
     <ClInclude Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.hpp" />
+    <ClInclude Include="..\src\ciri\util\File.hpp" />
+    <ClInclude Include="..\src\ciri\util\win\File_ps.hpp" />
     <ClInclude Include="..\src\ciri\wnd\Window.hpp" />
     <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp" />
     <ClInclude Include="..\src\ciri\wnd\win\Window_ps.hpp" />
@@ -28,6 +30,8 @@
     <ClCompile Include="..\src\ciri\gfx\GLGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.cpp" />
     <ClCompile Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.cpp" />
+    <ClCompile Include="..\src\ciri\util\File.cpp" />
+    <ClCompile Include="..\src\ciri\util\win\File_ps.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
     <ClCompile Include="..\src\ciri\wnd\win\Window_ps.cpp" />
   </ItemGroup>

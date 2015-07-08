@@ -29,6 +29,12 @@
     <ClInclude Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.hpp">
       <Filter>gfx\win</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ciri\util\File.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ciri\util\win\File_ps.hpp">
+      <Filter>util\win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wnd">
@@ -42,6 +48,12 @@
     </Filter>
     <Filter Include="gfx\win">
       <UniqueIdentifier>{71a3e9f2-d532-4a29-8943-a88c0d364bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{9bfa1e27-9df4-4b4f-b484-b82a44bf3af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\win">
+      <UniqueIdentifier>{edbebfd7-dce4-400a-9b50-b2aa56617d31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.cpp">
       <Filter>gfx\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\util\File.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\util\win\File_ps.cpp">
+      <Filter>util\win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
