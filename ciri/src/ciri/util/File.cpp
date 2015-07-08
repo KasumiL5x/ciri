@@ -4,6 +4,10 @@ namespace ciri {
 	File::File() {
 	}
 
+	File::File( const char* file ) {
+		_platform.open(file);
+	}
+
 	File::~File() {
 	}
 

@@ -9,6 +9,7 @@ namespace ciri {
 	class File {
 	public:
 		File();
+		File( const char* file );
 		~File();
 
 		bool open( const char* file );
