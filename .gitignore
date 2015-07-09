@@ -1,5 +1,9 @@
 links
 
+# visual studio unwanted project-related files
+*.suo
+*.user
+
 # ciri temp and build files
 ciri/tmp
 ciri/lib
