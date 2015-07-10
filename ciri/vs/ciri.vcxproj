@@ -15,25 +15,19 @@
     <ClInclude Include="..\src\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp" />
     <ClInclude Include="..\src\ciri\gfx\GLGraphicsDevice.hpp" />
+    <ClInclude Include="..\src\ciri\gfx\GraphicsDeviceFactory.hpp" />
     <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.hpp" />
     <ClInclude Include="..\src\ciri\util\File.hpp" />
-    <ClInclude Include="..\src\ciri\util\win\File_ps.hpp" />
     <ClInclude Include="..\src\ciri\wnd\Window.hpp" />
     <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp" />
-    <ClInclude Include="..\src\ciri\wnd\win\Window_ps.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\GLGraphicsDevice.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\win\DXGraphicsDevice_ps.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\win\GLGraphicsDevice_ps.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp" />
     <ClCompile Include="..\src\ciri\util\File.cpp" />
-    <ClCompile Include="..\src\ciri\util\win\File_ps.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
-    <ClCompile Include="..\src\ciri\wnd\win\Window_ps.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E756DC89-83AA-4159-8539-F18B6F83C4B4}</ProjectGuid>
@@ -82,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_DEBUG;GLEW_STATIC;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -96,7 +90,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>NDEBUG;GLEW_STATIC;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -1,30 +1,36 @@
 #include "File.hpp"
+#include <sstream>
 
 namespace ciri {
 	File::File() {
 	}
 
 	File::File( const char* file ) {
-		_platform.open(file);
+		open(file);
 	}
 
 	File::~File() {
 	}
 
 	bool File::open( const char* file ) {
-		return _platform.open(file);
+		_stream.open(file, std::ifstream::in);
+		return _stream.is_open();
 	}
 
 	void File::close() {
-		_platform.close();
+		_stream.close();
 	}
 
 	std::string File::toString() const {
-		// warning: copy, copy
-		return _platform.toString();
+		if( !_stream.is_open() ) {
+			return "";
+		}
+		std::stringstream ss;
+		ss << _stream.rdbuf();
+		return ss.str();
 	}
 
 	bool File::isOpen() const {
-		return _platform.isOpen();
+		return _stream.is_open();
 	}
 } // ciri

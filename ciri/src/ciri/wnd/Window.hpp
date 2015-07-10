@@ -1,10 +1,10 @@
 #ifndef __ciri_window__
 #define __ciri_window__
 
-#include <ciri/Common.hpp>
-#include CIRI_INCLUDE_PS(Window_ps)
-#include "WindowEvent.hpp"
+#include <queue>
+#include <Windows.h>
 #include <cc/Vec2.hpp>
+#include "WindowEvent.hpp"
 
 namespace ciri {
 	class Window{
@@ -18,10 +18,20 @@ namespace ciri {
 		void destroy();
 
 		cc::Vec2ui getSize() const;
-		void* getHandle() const;
+		HWND getHandle() const;
 
 	private:
-		Window_ps _platform;
+		bool createWindow( int width, int height );
+		void processEvents();
+		void processEvent( UINT msg, WPARAM wparam, LPARAM lparam );
+		void pushEvent( WindowEvent& evt );
+		static LRESULT CALLBACK WndProc( HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam );
+
+	private:
+		HWND _hwnd;
+		std::queue<WindowEvent> _events;
+		bool _resizing;
+		cc::Vec2ui _lastSize;
 	};
 } // ciri
 

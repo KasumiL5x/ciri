@@ -1,8 +1,7 @@
 #ifndef __ciri_file__
 #define __ciri_file__
 
-#include <ciri/Common.hpp>
-#include CIRI_INCLUDE_PS(File_ps)
+#include <fstream>
 #include <string>
 
 namespace ciri {
@@ -18,7 +17,7 @@ namespace ciri {
 		bool isOpen() const;
 
 	private:
-		File_ps _platform;
+		std::ifstream _stream;
 	};
 } // ciri
 
