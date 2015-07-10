@@ -1,4 +1,4 @@
-#include "DXGraphicsDevice.hpp"
+#include <ciri/gfx/DXGraphicsDevice.hpp>
 #include <ciri/wnd/Window.hpp>
 #include <DirectXColors.h>
 

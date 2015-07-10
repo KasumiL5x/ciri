@@ -43,14 +43,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../src/;../../ciri/src/;../../ciri/thirdparty/ccmath/;../../ciri/thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <IncludePath>../../ciri/inc/;../../ciri/thirdparty/ccmath/;../../ciri/thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../../ciri/lib/;../../ciri/thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../bin/</OutDir>
     <TargetName>$(ProjectName)-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../src/;../../ciri/src/;../../ciri/thirdparty/ccmath/;../../ciri/thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <IncludePath>../../ciri/inc/;../../ciri/thirdparty/ccmath/;../../ciri/thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../../ciri/lib/;../../ciri/thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../bin/</OutDir>

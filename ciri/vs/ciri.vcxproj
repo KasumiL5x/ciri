@@ -11,23 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ciri\Common.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\Camera.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\GLGraphicsDevice.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\GraphicsDeviceFactory.hpp" />
-    <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp" />
-    <ClInclude Include="..\src\ciri\util\File.hpp" />
-    <ClInclude Include="..\src\ciri\wnd\Window.hpp" />
-    <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\GLGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp" />
     <ClCompile Include="..\src\ciri\util\File.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\inc\ciri\Common.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\Camera.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\DXGraphicsDevice.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\GLGraphicsDevice.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\GraphicsDeviceFactory.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\IGraphicsDevice.hpp" />
+    <ClInclude Include="..\inc\ciri\util\File.hpp" />
+    <ClInclude Include="..\inc\ciri\wnd\Window.hpp" />
+    <ClInclude Include="..\inc\ciri\wnd\WindowEvent.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E756DC89-83AA-4159-8539-F18B6F83C4B4}</ProjectGuid>
@@ -58,14 +58,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../src/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <IncludePath>../inc/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../lib/</OutDir>
     <TargetName>$(ProjectName)-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../src/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <IncludePath>../inc/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../lib/</OutDir>

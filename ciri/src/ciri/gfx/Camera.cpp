@@ -1,4 +1,4 @@
-#include "Camera.hpp"
+#include <ciri/gfx/Camera.hpp>
 #include <cc/MatrixFunc.hpp>
 
 namespace ciri {

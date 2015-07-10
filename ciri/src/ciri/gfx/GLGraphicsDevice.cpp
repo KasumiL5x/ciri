@@ -1,4 +1,4 @@
-#include "GLGraphicsDevice.hpp"
+#include <ciri/gfx/GLGraphicsDevice.hpp>
 #include <ciri/wnd/Window.hpp>
 
 namespace ciri {

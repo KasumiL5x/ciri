@@ -1,33 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\src\ciri\Common.hpp" />
-    <ClInclude Include="..\src\ciri\wnd\Window.hpp">
-      <Filter>wnd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\wnd\WindowEvent.hpp">
-      <Filter>wnd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\Camera.hpp">
-      <Filter>gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\util\File.hpp">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\IGraphicsDevice.hpp">
-      <Filter>gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\GLGraphicsDevice.hpp">
-      <Filter>gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\DXGraphicsDevice.hpp">
-      <Filter>gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ciri\gfx\GraphicsDeviceFactory.hpp">
-      <Filter>gfx</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="wnd">
       <UniqueIdentifier>{d3fe9bb4-40e9-4058-8971-9f6ef6ee4a4c}</UniqueIdentifier>
     </Filter>
@@ -57,5 +30,32 @@
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\DXGraphicsDevice.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\GLGraphicsDevice.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\GraphicsDeviceFactory.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\IGraphicsDevice.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\util\File.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\wnd\Window.hpp">
+      <Filter>wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\wnd\WindowEvent.hpp">
+      <Filter>wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\Common.hpp" />
   </ItemGroup>
 </Project>
