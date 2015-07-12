@@ -25,6 +25,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// destroy shaders
+		for( unsigned int i = 0; i < _shaders.size(); ++i ) {
+			if( _shaders[i] != nullptr ) {
+				_shaders[i]->destroy();
+				delete _shaders[i];
+				_shaders[i] = nullptr;
+			}
+		}
+		_shaders.clear();
+
 		// make rendering context not current
 		wglMakeCurrent(0, 0);
 
@@ -39,6 +49,16 @@ namespace ciri {
 		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		SwapBuffers(_hdc);
+	}
+
+	IShader* GLGraphicsDevice::createShader() {
+		GLShader* shader = new GLShader(this);
+		_shaders.push_back(shader);
+		return shader;
+	}
+
+	void GLGraphicsDevice::applyShader( IShader* shader ) {
+		GLShader* glShader = reinterpret_cast<GLShader*>(shader);
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

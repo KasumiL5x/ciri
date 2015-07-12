@@ -24,6 +24,16 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// destroy all shaders
+		for( unsigned int i = 0; i < _shaders.size(); ++i ) {
+			if( _shaders[i] != nullptr ) {
+				_shaders[i]->destroy();
+				delete _shaders[i];
+				_shaders[i] = nullptr;
+			}
+		}
+		_shaders.clear();
+
 		if( _immediateContext )  { _immediateContext->ClearState(); _immediateContext = nullptr; }
 		if( _renderTargetView )  { _renderTargetView->Release(); _renderTargetView = nullptr; }
 		if( _swapchain1 )        { _swapchain1->Release(); _swapchain1 = nullptr; }
@@ -37,6 +47,20 @@ namespace ciri {
 	void DXGraphicsDevice::present() {
 		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
 		_swapchain->Present(0, 0);
+	}
+
+	IShader* DXGraphicsDevice::createShader() {
+		DXShader* shader = new DXShader(this);
+		_shaders.push_back(shader);
+		return shader;
+	}
+
+	void DXGraphicsDevice::applyShader( IShader* shader ) {
+		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
+	}
+
+	ID3D11Device* DXGraphicsDevice::getDevice() const {
+		return _device;
 	}
 
 	bool DXGraphicsDevice::initDevice( unsigned int width, unsigned int height, HWND hwnd ) {

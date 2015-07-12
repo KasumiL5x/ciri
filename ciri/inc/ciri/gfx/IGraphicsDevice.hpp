@@ -3,6 +3,7 @@
 
 namespace ciri {
 	class Window;
+	class IShader;
 
 	class IGraphicsDevice {
 	public:
@@ -17,6 +18,10 @@ namespace ciri {
 		virtual void destroy()=0;
 
 		virtual void present()=0;
+
+		virtual IShader* createShader()=0;
+
+		virtual void applyShader( IShader* shader )=0;
 	};
 } // ciri
 

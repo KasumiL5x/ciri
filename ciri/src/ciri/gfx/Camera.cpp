@@ -131,4 +131,4 @@ namespace ciri {
 	void Camera::rebuildProj() {
 		_proj = cc::math::perspective(_fov, _aspect, _nearPlane, _farPlane);
 	}
-}
+} // ciri

@@ -5,11 +5,13 @@
 #pragma comment(lib, "glu32.lib")
 #pragma comment(lib, "glew32s.lib")
 
+#include <vector>
 #include <Windows.h>
 #include <gl/glew.h>
 #include <gl/gl.h>
 #include <gl/glu.h>
 #include "IGraphicsDevice.hpp"
+#include "GLShader.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -20,6 +22,8 @@ namespace ciri {
 		virtual bool create( Window* window );
 		virtual void destroy();
 		virtual void present();
+		virtual IShader* createShader();
+		virtual void applyShader( IShader* shader );
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -28,6 +32,8 @@ namespace ciri {
 	private:
 		HDC _hdc;
 		HGLRC _hglrc;
+		//
+		std::vector<GLShader*> _shaders;
 	};
 } // ciri
 

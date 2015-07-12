@@ -1,6 +1,6 @@
 #include <ciri/wnd/Window.hpp>
-#include <ciri/wnd/WindowEvent.hpp>
 #include <ciri/gfx/GraphicsDeviceFactory.hpp>
+#include <ciri/gfx/IShader.hpp>
 
 int main() {
 	ciri::Window window;
@@ -8,8 +8,20 @@ int main() {
 
 	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::DirectX);
 	if( !device->create(&window) ) {
-		printf("Failed to initialize graphics device.");
+		printf("Failed to initialize graphics device.\n");
 		return -1;
+	} else {
+		printf("Graphics device initialized.\n");
+	}
+
+	ciri::IShader* shader = device->createShader();
+	shader->addVertexShader("data/simple_vs.hlsl");
+	shader->addPixelShader("data/simple_ps.hlsl");
+	shader->addInputElement(ciri::VertexElement(0, ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	if( !shader->build() ) {
+		printf("Failed to build shader: %s.\n", shader->getLastError());
+	} else {
+		printf("Shader built.\n");
 	}
 
 	while( window.isOpen() ) {
@@ -31,6 +43,9 @@ int main() {
 				//printf("focus lost\n");
 			}
 		}
+
+		// set shader
+		device->applyShader(shader);
 
 		// render and flip
 		device->present();

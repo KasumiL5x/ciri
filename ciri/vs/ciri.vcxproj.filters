@@ -30,6 +30,24 @@
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\GLShader.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\DXShader.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\VertexDeclaration.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\GLVertexDeclaration.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\DXVertexDeclaration.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -57,5 +75,35 @@
       <Filter>wnd</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\ciri\Common.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\IShader.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\GLShader.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\DXShader.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\VertexFormat.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\VertexUsage.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\VertexElement.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\VertexDeclaration.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\GLVertexDeclaration.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\DXVertexDeclaration.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\util\StrUtil.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

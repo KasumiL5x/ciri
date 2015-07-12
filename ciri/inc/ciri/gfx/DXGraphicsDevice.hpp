@@ -3,8 +3,10 @@
 
 #pragma comment(lib, "d3d11.lib")
 
+#include <vector>
 #include <d3d11_1.h>
 #include "IGraphicsDevice.hpp"
+#include "DXShader.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -15,6 +17,10 @@ namespace ciri {
 		virtual bool create( Window* window );
 		virtual void destroy();
 		virtual void present();
+		virtual IShader* createShader();
+		virtual void applyShader( IShader* shader );
+
+		ID3D11Device* getDevice() const;
 
 	private:
 		bool initDevice( unsigned int width, unsigned int height, HWND hwnd );
@@ -29,6 +35,8 @@ namespace ciri {
 		IDXGISwapChain* _swapchain;
 		IDXGISwapChain1* _swapchain1;
 		ID3D11RenderTargetView* _renderTargetView;
+		//
+		std::vector<DXShader*> _shaders;
 	};
 } // ciri
 
