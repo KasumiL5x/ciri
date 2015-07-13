@@ -2,7 +2,7 @@
 #define __ciri_dxvertexbuffer__
 
 #include <d3d11_1.h>
-#include "IVertexBuffer.hpp"
+#include "../IVertexBuffer.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice;

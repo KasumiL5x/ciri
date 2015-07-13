@@ -1,4 +1,4 @@
-#include <ciri/gfx/GLVertexBuffer.hpp>
+#include <ciri/gfx/gl/GLVertexBuffer.hpp>
 
 namespace ciri {
 	GLVertexBuffer::GLVertexBuffer( GLGraphicsDevice* device )

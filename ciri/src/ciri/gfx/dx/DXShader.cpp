@@ -1,7 +1,7 @@
 #pragma comment(lib, "D3DCompiler.lib")
 
-#include <ciri/gfx/DXShader.hpp>
-#include <ciri/gfx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/dx/DXShader.hpp>
+#include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <d3dcompiler.h>
 #include <ciri/util/StrUtil.hpp>
 

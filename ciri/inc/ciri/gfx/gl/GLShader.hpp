@@ -3,7 +3,7 @@
 
 #include <string>
 #include <gl/glew.h>
-#include "IShader.hpp"
+#include "../IShader.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice;

@@ -1,4 +1,4 @@
-#include <ciri/gfx/GLVertexDeclaration.hpp>
+#include <ciri/gfx/gl/GLVertexDeclaration.hpp>
 
 namespace ciri {
 	GLVertexDeclaration::GLVertexDeclaration()

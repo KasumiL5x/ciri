@@ -1,4 +1,4 @@
-#include <ciri/gfx/DXVertexDeclaration.hpp>
+#include <ciri/gfx/dx/DXVertexDeclaration.hpp>
 
 namespace ciri {
 	DXVertexDeclaration::DXVertexDeclaration()

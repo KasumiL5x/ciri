@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <d3d11_1.h>
-#include "IGraphicsDevice.hpp"
+#include "../IGraphicsDevice.hpp"
 #include "DXShader.hpp"
 #include "DXVertexBuffer.hpp"
 

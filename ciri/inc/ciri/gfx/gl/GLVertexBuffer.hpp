@@ -1,7 +1,7 @@
 #ifndef __ciri_glvertexbuffer__
 #define __ciri_glvertexbuffer__
 
-#include "IVertexBuffer.hpp"
+#include "../IVertexBuffer.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice;

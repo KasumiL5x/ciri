@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 #include <d3d11_1.h>
-#include "IShader.hpp"
-#include "VertexDeclaration.hpp"
+#include "../IShader.hpp"
+#include "../VertexDeclaration.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice;

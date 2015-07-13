@@ -10,7 +10,7 @@
 #include <gl/glew.h>
 #include <gl/gl.h>
 #include <gl/glu.h>
-#include "IGraphicsDevice.hpp"
+#include "../IGraphicsDevice.hpp"
 #include "GLShader.hpp"
 #include "GLVertexBuffer.hpp"
 

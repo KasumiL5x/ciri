@@ -1,7 +1,7 @@
 #ifndef __ciri_glvertexdeclaration__
 #define __ciri_glvertexdeclaration__
 
-#include "VertexDeclaration.hpp"
+#include "../VertexDeclaration.hpp"
 
 namespace ciri {
 	class GLVertexDeclaration : public VertexDeclaration {

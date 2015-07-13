@@ -12,14 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\DXGraphicsDevice.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\DXShader.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\DXVertexBuffer.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\DXVertexDeclaration.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\GLGraphicsDevice.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\GLShader.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\GLVertexBuffer.cpp" />
-    <ClCompile Include="..\src\ciri\gfx\GLVertexDeclaration.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\dx\DXGraphicsDevice.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\dx\DXShader.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\dx\DXVertexBuffer.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\dx\DXVertexDeclaration.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\gl\GLGraphicsDevice.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\gl\GLShader.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\gl\GLVertexBuffer.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\gl\GLVertexDeclaration.cpp" />
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexDeclaration.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp" />
@@ -29,14 +29,14 @@
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\Common.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\DXGraphicsDevice.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\DXShader.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\DXVertexBuffer.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\DXVertexDeclaration.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\GLGraphicsDevice.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\GLShader.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\GLVertexBuffer.hpp" />
-    <ClInclude Include="..\inc\ciri\gfx\GLVertexDeclaration.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXShader.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLGraphicsDevice.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLShader.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\GraphicsDeviceFactory.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IGraphicsDevice.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IShader.hpp" />

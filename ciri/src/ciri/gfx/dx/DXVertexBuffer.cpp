@@ -1,5 +1,5 @@
-#include <ciri/gfx/DXVertexBuffer.hpp>
-#include <ciri/gfx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/dx/DXVertexBuffer.hpp>
+#include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
 	DXVertexBuffer::DXVertexBuffer( DXGraphicsDevice* device )

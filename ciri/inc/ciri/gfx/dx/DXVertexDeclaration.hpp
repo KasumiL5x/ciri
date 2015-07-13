@@ -1,7 +1,7 @@
 #ifndef __ciri_dxvertexdeclaration__
 #define __ciri_dxvertexdeclaration__
 
-#include "VertexDeclaration.hpp"
+#include "../VertexDeclaration.hpp"
 
 namespace ciri {
 	class DXVertexDeclaration : public VertexDeclaration {
