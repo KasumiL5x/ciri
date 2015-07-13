@@ -27,7 +27,7 @@ namespace ciri {
 		// destroy all vertex buffers
 		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
 			if( _vertexBuffers[i] != nullptr ) {
-				// todo: _vertexBuffers[i]->destroy();
+				_vertexBuffers[i]->destroy();
 				delete _vertexBuffers[i];
 				_vertexBuffers[i] = nullptr;
 			}
@@ -56,6 +56,10 @@ namespace ciri {
 
 	void DXGraphicsDevice::present() {
 		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
+
+		_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		_immediateContext->Draw(3, 0);
+
 		_swapchain->Present(0, 0);
 	}
 
@@ -67,16 +71,48 @@ namespace ciri {
 
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
 		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
+
+		ID3D11VertexShader* vs = dxShader->getVertexShader();
+		if( vs != nullptr ) {
+			_immediateContext->VSSetShader(vs, nullptr, 0);
+		}
+
+		ID3D11GeometryShader* gs = dxShader->getGeometryShader();
+		if( gs != nullptr ) {
+			_immediateContext->GSSetShader(gs, nullptr, 0);
+		}
+
+		ID3D11PixelShader* ps = dxShader->getPixelShader();
+		if( ps != nullptr ) {
+			_immediateContext->PSSetShader(ps, nullptr, 0);
+		}
+
+		ID3D11InputLayout* il = dxShader->getInputLayout();
+		if( il != nullptr ) {
+			_immediateContext->IASetInputLayout(il);
+		}
 	}
 
 	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
-		DXVertexBuffer* buffer = new DXVertexBuffer();//this);
+		DXVertexBuffer* buffer = new DXVertexBuffer(this);
 		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
+	void DXGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+		DXVertexBuffer* dxBuffer = reinterpret_cast<DXVertexBuffer*>(buffer);
+		UINT stride = buffer->getStride();
+		UINT offset = 0;
+		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
+		_immediateContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+	}
+
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
 		return _device;
+	}
+
+	ID3D11DeviceContext* DXGraphicsDevice::getContext() const {
+		return _immediateContext;
 	}
 
 	bool DXGraphicsDevice::initDevice( unsigned int width, unsigned int height, HWND hwnd ) {

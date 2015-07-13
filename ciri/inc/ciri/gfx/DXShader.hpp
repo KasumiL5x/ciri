@@ -25,6 +25,11 @@ namespace ciri {
 		virtual void destroy();
 		virtual const char* getLastError() const;
 
+		ID3D11VertexShader* getVertexShader() const;
+		ID3D11GeometryShader* getGeometryShader() const;
+		ID3D11PixelShader* getPixelShader() const;
+		ID3D11InputLayout* getInputLayout() const;
+
 	private:
 		DXGI_FORMAT convertInputFormat( VertexFormat::Type type ) const;
 

@@ -25,6 +25,8 @@ namespace ciri {
 		virtual void applyShader( IShader* shader )=0;
 
 		virtual IVertexBuffer* createVertexBuffer()=0;
+
+		virtual void setVertexBuffer( IVertexBuffer* buffer )=0;
 	};
 } // ciri
 

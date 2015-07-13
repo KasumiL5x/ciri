@@ -21,8 +21,10 @@ namespace ciri {
 		virtual IShader* createShader();
 		virtual void applyShader( IShader* shader );
 		virtual IVertexBuffer* createVertexBuffer();
+		virtual void setVertexBuffer( IVertexBuffer* buffer );
 
 		ID3D11Device* getDevice() const;
+		ID3D11DeviceContext* getContext() const;
 
 	private:
 		bool initDevice( unsigned int width, unsigned int height, HWND hwnd );

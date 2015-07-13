@@ -1,6 +1,12 @@
 #include <ciri/wnd/Window.hpp>
 #include <ciri/gfx/GraphicsDeviceFactory.hpp>
 #include <ciri/gfx/IShader.hpp>
+#include <ciri/gfx/IVertexBuffer.hpp>
+#include <cc/Vec3.hpp>
+
+struct SimpleVertex {
+	cc::Vec3f position;
+};
 
 int main() {
 	ciri::Window window;
@@ -25,7 +31,19 @@ int main() {
 	}
 
 	ciri::IVertexBuffer* vertexBuffer = device->createVertexBuffer();
-	// ...
+	SimpleVertex vertices[] = {
+		cc::Vec3f( 0.0f,  0.5f, 0.5f),
+		cc::Vec3f( 0.5f, -0.5f, 0.5f),
+		cc::Vec3f(-0.5f, -0.5f, 0.5f)
+	};
+	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), 3, false) ) {
+		printf("Failed to create vertex buffer.\n");
+	} else {
+		printf("Created vertex buffer.");
+	}
+
+	// set the vertex buffer
+	device->setVertexBuffer(vertexBuffer);
 
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;

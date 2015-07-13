@@ -56,6 +56,8 @@ namespace ciri {
 			if( FAILED(hr) ) {
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
 					_lastError = "File not found";
+				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
+					_lastError = "Path not found";
 				} else {
 					_lastError = (const char*)errorBlob->GetBufferPointer();
 				}
@@ -102,6 +104,8 @@ namespace ciri {
 			if( FAILED(hr) ) {
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
 					_lastError = "File not found";
+				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
+					_lastError = "Path not found";
 				} else {
 					_lastError = (const char*)errorBlob->GetBufferPointer();
 				}
@@ -126,6 +130,8 @@ namespace ciri {
 			if( FAILED(hr) ) {
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
 					_lastError = "File not found";
+				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
+					_lastError = "Path not found";
 				} else {
 					_lastError = (const char*)errorBlob->GetBufferPointer();
 				}
@@ -176,6 +182,22 @@ namespace ciri {
 
 	const char* DXShader::getLastError() const {
 		return _lastError.c_str();
+	}
+
+	ID3D11VertexShader* DXShader::getVertexShader() const {
+		return _vertexShader;
+	}
+
+	ID3D11GeometryShader* DXShader::getGeometryShader() const {
+		return _geometryShader;
+	}
+
+	ID3D11PixelShader* DXShader::getPixelShader() const {
+		return _pixelShader;
+	}
+
+	ID3D11InputLayout* DXShader::getInputLayout() const {
+		return _inputLayout;
 	}
 
 	DXGI_FORMAT DXShader::convertInputFormat( VertexFormat::Type type ) const {

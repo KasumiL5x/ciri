@@ -4,10 +4,19 @@
 #include "IVertexBuffer.hpp"
 
 namespace ciri {
+	class GLGraphicsDevice;
+
 	class GLVertexBuffer : public IVertexBuffer {
 	public:
-		GLVertexBuffer();
+		GLVertexBuffer( GLGraphicsDevice* device );
 		virtual ~GLVertexBuffer();
+
+		virtual bool set( void* vertices, int vertexStride, int vertexCount, bool dynamic );
+		virtual void destroy();
+		virtual int getStride() const;
+
+	private:
+		GLGraphicsDevice* _device;
 	};
 } // ciri
 
