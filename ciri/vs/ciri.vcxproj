@@ -41,6 +41,7 @@
     <ClInclude Include="..\inc\ciri\gfx\IGraphicsDevice.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IShader.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IVertexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexElement.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexFormat.hpp" />

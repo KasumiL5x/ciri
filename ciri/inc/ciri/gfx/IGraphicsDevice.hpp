@@ -1,6 +1,8 @@
 #ifndef __ciri_igraphicsdevice__
 #define __ciri_igraphicsdevice__
 
+#include "PrimitiveTopology.hpp"
+
 namespace ciri {
 	class Window;
 	class IShader;
@@ -27,6 +29,8 @@ namespace ciri {
 		virtual IVertexBuffer* createVertexBuffer()=0;
 
 		virtual void setVertexBuffer( IVertexBuffer* buffer )=0;
+
+		virtual void setPrimitiveTopology( PrimitiveTopology::Type type )=0;
 	};
 } // ciri
 

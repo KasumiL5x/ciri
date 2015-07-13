@@ -22,6 +22,7 @@ namespace ciri {
 		virtual void applyShader( IShader* shader );
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
+		virtual void setPrimitiveTopology( PrimitiveTopology::Type type );
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;

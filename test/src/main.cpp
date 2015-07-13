@@ -68,6 +68,9 @@ int main() {
 		// set shader
 		device->applyShader(shader);
 
+		// set primitive topology
+		device->setPrimitiveTopology(ciri::PrimitiveTopology::TriangleList);
+
 		// render and flip
 		device->present();
 	}

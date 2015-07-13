@@ -83,6 +83,10 @@ namespace ciri {
 		// todo
 	}
 
+	void GLGraphicsDevice::setPrimitiveTopology( PrimitiveTopology::Type type ) {
+		// todo
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);

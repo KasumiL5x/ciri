@@ -27,6 +27,7 @@ namespace ciri {
 		virtual void applyShader( IShader* shader );
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
+		virtual void setPrimitiveTopology( PrimitiveTopology::Type type );
 
 	private:
 		bool configureGl( HWND hwnd );

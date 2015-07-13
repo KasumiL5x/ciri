@@ -57,7 +57,6 @@ namespace ciri {
 	void DXGraphicsDevice::present() {
 		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
 
-		_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		_immediateContext->Draw(3, 0);
 
 		_swapchain->Present(0, 0);
@@ -105,6 +104,34 @@ namespace ciri {
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
 		_immediateContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+	}
+
+	void DXGraphicsDevice::setPrimitiveTopology( PrimitiveTopology::Type type ) {
+		switch( type ) {
+			case PrimitiveTopology::PointList: {
+				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+			}
+
+			case PrimitiveTopology::LineList: {
+				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+			}
+
+			case PrimitiveTopology::LineStrip: {
+				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			}
+
+			case PrimitiveTopology::TriangleList: {
+				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			}
+
+			case PrimitiveTopology::TriangleStrip: {
+				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+			}
+
+			default: {
+				break;
+			}
+		}
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

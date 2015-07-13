@@ -120,5 +120,8 @@
     <ClInclude Include="..\inc\ciri\gfx\DXVertexBuffer.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
