@@ -48,6 +48,12 @@
     <ClCompile Include="..\src\ciri\gfx\DXVertexDeclaration.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\DXVertexBuffer.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\GLVertexBuffer.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -104,6 +110,15 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\util\StrUtil.hpp">
       <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\IVertexBuffer.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\GLVertexBuffer.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\DXVertexBuffer.hpp">
+      <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

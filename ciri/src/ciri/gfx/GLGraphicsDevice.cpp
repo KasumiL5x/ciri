@@ -25,6 +25,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// destroy vertex buffers
+		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
+			if( _vertexBuffers[i] != nullptr ) {
+				// todo: _vertexBuffers[i]->destroy();
+				delete _vertexBuffers[i];
+				_vertexBuffers[i] = nullptr;
+			}
+		}
+		_vertexBuffers.clear();
+
 		// destroy shaders
 		for( unsigned int i = 0; i < _shaders.size(); ++i ) {
 			if( _shaders[i] != nullptr ) {
@@ -59,6 +69,12 @@ namespace ciri {
 
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
 		GLShader* glShader = reinterpret_cast<GLShader*>(shader);
+	}
+
+	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
+		GLVertexBuffer* buffer = new GLVertexBuffer();//this);
+		_vertexBuffers.push_back(buffer);
+		return buffer;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

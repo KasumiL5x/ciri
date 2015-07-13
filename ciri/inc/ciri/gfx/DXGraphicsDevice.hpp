@@ -7,6 +7,7 @@
 #include <d3d11_1.h>
 #include "IGraphicsDevice.hpp"
 #include "DXShader.hpp"
+#include "DXVertexBuffer.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -19,6 +20,7 @@ namespace ciri {
 		virtual void present();
 		virtual IShader* createShader();
 		virtual void applyShader( IShader* shader );
+		virtual IVertexBuffer* createVertexBuffer();
 
 		ID3D11Device* getDevice() const;
 
@@ -37,6 +39,7 @@ namespace ciri {
 		ID3D11RenderTargetView* _renderTargetView;
 		//
 		std::vector<DXShader*> _shaders;
+		std::vector<DXVertexBuffer*> _vertexBuffers;
 	};
 } // ciri
 

@@ -24,6 +24,16 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// destroy all vertex buffers
+		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
+			if( _vertexBuffers[i] != nullptr ) {
+				// todo: _vertexBuffers[i]->destroy();
+				delete _vertexBuffers[i];
+				_vertexBuffers[i] = nullptr;
+			}
+		}
+		_vertexBuffers.clear();
+
 		// destroy all shaders
 		for( unsigned int i = 0; i < _shaders.size(); ++i ) {
 			if( _shaders[i] != nullptr ) {
@@ -57,6 +67,12 @@ namespace ciri {
 
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
 		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
+	}
+
+	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
+		DXVertexBuffer* buffer = new DXVertexBuffer();//this);
+		_vertexBuffers.push_back(buffer);
+		return buffer;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

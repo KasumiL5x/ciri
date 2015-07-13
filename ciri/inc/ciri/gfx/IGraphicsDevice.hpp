@@ -4,6 +4,7 @@
 namespace ciri {
 	class Window;
 	class IShader;
+	class IVertexBuffer;
 
 	class IGraphicsDevice {
 	public:
@@ -22,6 +23,8 @@ namespace ciri {
 		virtual IShader* createShader()=0;
 
 		virtual void applyShader( IShader* shader )=0;
+
+		virtual IVertexBuffer* createVertexBuffer()=0;
 	};
 } // ciri
 

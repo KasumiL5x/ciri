@@ -24,6 +24,9 @@ int main() {
 		printf("Shader built.\n");
 	}
 
+	ciri::IVertexBuffer* vertexBuffer = device->createVertexBuffer();
+	// ...
+
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {

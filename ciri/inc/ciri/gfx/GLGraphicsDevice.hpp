@@ -12,6 +12,7 @@
 #include <gl/glu.h>
 #include "IGraphicsDevice.hpp"
 #include "GLShader.hpp"
+#include "GLVertexBuffer.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -24,6 +25,7 @@ namespace ciri {
 		virtual void present();
 		virtual IShader* createShader();
 		virtual void applyShader( IShader* shader );
+		virtual IVertexBuffer* createVertexBuffer();
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -34,6 +36,7 @@ namespace ciri {
 		HGLRC _hglrc;
 		//
 		std::vector<GLShader*> _shaders;
+		std::vector<GLVertexBuffer*> _vertexBuffers;
 	};
 } // ciri
 
