@@ -10,4 +10,6 @@ ciri/lib
 
 # test temp and build files
 test/tmp
-test/bin
+test/bin/*.exe
+test/bin/*.ilk
+test/bin/*.pdb
