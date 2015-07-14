@@ -42,36 +42,20 @@ int main() {
 		printf("Created vertex buffer.");
 	}
 
-	// set the vertex buffer
-	device->setVertexBuffer(vertexBuffer);
-
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
 			if( evt.type == ciri::WindowEvent::Closed ) {
 				window.destroy();
 			}
-
-			if( evt.type == ciri::WindowEvent::Resized ) {
-				//printf("w: %d; h: %d\n", evt.size.width, evt.size.height);
-			}
-
-			if( evt.type == ciri::WindowEvent::FocusGained ) {
-				//printf("focus gained\n");
-			}
-
-			if( evt.type == ciri::WindowEvent::FocusLost ) {
-				//printf("focus lost\n");
-			}
 		}
 
-		// set shader
+		device->clear();
+
 		device->applyShader(shader);
+		device->setVertexBuffer(vertexBuffer);
+		device->drawArrays(ciri::PrimitiveTopology::TriangleList, 3, 0);
 
-		// set primitive topology
-		device->setPrimitiveTopology(ciri::PrimitiveTopology::TriangleList);
-
-		// render and flip
 		device->present();
 	}
 

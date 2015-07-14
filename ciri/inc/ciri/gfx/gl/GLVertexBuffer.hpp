@@ -1,6 +1,7 @@
 #ifndef __ciri_glvertexbuffer__
 #define __ciri_glvertexbuffer__
 
+#include <gl/glew.h>
 #include "../IVertexBuffer.hpp"
 
 namespace ciri {
@@ -15,8 +16,12 @@ namespace ciri {
 		virtual void destroy();
 		virtual int getStride() const;
 
+		GLuint getVbo() const;
+
 	private:
 		GLGraphicsDevice* _device;
+		GLuint _vbo;
+		int _vertexStride;
 	};
 } // ciri
 

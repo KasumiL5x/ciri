@@ -51,4 +51,28 @@ namespace ciri {
 			}
 		}
 	}
+
+	int VertexElement::getMultiplicity() const {
+		switch( _format ) {
+			case VertexFormat::Float: {
+				return 1;
+			}
+
+			case VertexFormat::Float2: {
+				return 2;
+			}
+
+			case VertexFormat::Float3: {
+				return 3;
+			}
+
+			case VertexFormat::Float4: {
+				return 4;
+			}
+
+			default: {
+				return 0;
+			}
+		}
+	}
 } // ciri

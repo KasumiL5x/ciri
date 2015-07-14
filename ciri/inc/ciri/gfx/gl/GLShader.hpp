@@ -4,6 +4,7 @@
 #include <string>
 #include <gl/glew.h>
 #include "../IShader.hpp"
+#include "../VertexDeclaration.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice;
@@ -22,6 +23,12 @@ namespace ciri {
 		virtual void destroy();
 		virtual const char* getLastError() const;
 
+		GLuint getVertexShader() const;
+		GLuint getGeometryShader() const;
+		GLuint getPixelShader() const;
+		GLuint getProgram() const;
+		const VertexDeclaration& getVertexDeclaration() const;
+
 	private:
 		GLGraphicsDevice* _device;
 		//
@@ -33,6 +40,10 @@ namespace ciri {
 		GLuint _geometryShader;
 		GLuint _pixelShader;
 		GLuint _program;
+		//
+		std::string _lastError;
+		//
+		VertexDeclaration _vertexDeclaration;
 	};
 } // ciri
 

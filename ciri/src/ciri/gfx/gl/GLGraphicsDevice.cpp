@@ -3,7 +3,7 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _hdc(0), _hglrc(0) {
+		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr) {
 	}
 
 	GLGraphicsDevice::~GLGraphicsDevice() {
@@ -56,8 +56,6 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::present() {
-		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		SwapBuffers(_hdc);
 	}
 
@@ -69,7 +67,8 @@ namespace ciri {
 
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
 		GLShader* glShader = reinterpret_cast<GLShader*>(shader);
-		// todo
+		glUseProgram(glShader->getProgram());
+		_activeShader = glShader;
 	}
 
 	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
@@ -80,11 +79,66 @@ namespace ciri {
 
 	void GLGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
 		GLVertexBuffer* glBuffer = reinterpret_cast<GLVertexBuffer*>(buffer);
-		// todo
+
+		glBindBuffer(GL_ARRAY_BUFFER, glBuffer->getVbo());
+
+		// apply vertex attribute pointers based on the shader's vertex declaration
+		int offset = 0;
+		const std::vector<VertexElement>& elements = _activeShader->getVertexDeclaration().getElements();
+		for( unsigned int i = 0; i < elements.size(); ++i ) {
+			const VertexElement& currElement = elements[i];
+
+			glEnableVertexAttribArray(i);
+
+			GLenum type;
+			switch( currElement.getFormat() ) {
+				case VertexFormat::Float:
+				case VertexFormat::Float2:
+				case VertexFormat::Float3:
+				case VertexFormat::Float4: {
+					type = GL_FLOAT;
+				}
+			}
+
+			glVertexAttribPointer(i, currElement.getMultiplicity(), type, GL_FALSE, _activeShader->getVertexDeclaration().getStride(), (const void*)offset);
+			offset += currElement.getSize(); // sizeof(datatype) * numberOfThem;
+		}
 	}
 
-	void GLGraphicsDevice::setPrimitiveTopology( PrimitiveTopology::Type type ) {
-		// todo
+	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
+		GLenum mode = 0;
+		switch( topology ) {
+			case PrimitiveTopology::PointList: {
+				mode = GL_POINTS;
+			}
+
+			case PrimitiveTopology::LineList: {
+				mode = GL_LINES; // wrong?
+			}
+
+			case PrimitiveTopology::LineStrip: {
+				mode = GL_LINE_STRIP;
+			}
+
+			case PrimitiveTopology::TriangleList: {
+				mode = GL_TRIANGLES; // wrong?
+			}
+
+			case PrimitiveTopology::TriangleStrip: {
+				mode = GL_TRIANGLE_STRIP;
+			}
+
+			default: {
+				break;
+			}
+		}
+
+		glDrawArrays(mode, startIndex, vertexCount);
+	}
+
+	void GLGraphicsDevice::clear() {
+		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

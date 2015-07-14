@@ -55,10 +55,6 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::present() {
-		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
-
-		_immediateContext->Draw(3, 0);
-
 		_swapchain->Present(0, 0);
 	}
 
@@ -106,8 +102,8 @@ namespace ciri {
 		_immediateContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 	}
 
-	void DXGraphicsDevice::setPrimitiveTopology( PrimitiveTopology::Type type ) {
-		switch( type ) {
+	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
+		switch( topology ) {
 			case PrimitiveTopology::PointList: {
 				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 			}
@@ -132,6 +128,12 @@ namespace ciri {
 				break;
 			}
 		}
+
+		_immediateContext->Draw(vertexCount, startIndex);
+	}
+
+	void DXGraphicsDevice::clear() {
+		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

@@ -30,7 +30,9 @@ namespace ciri {
 
 		virtual void setVertexBuffer( IVertexBuffer* buffer )=0;
 
-		virtual void setPrimitiveTopology( PrimitiveTopology::Type type )=0;
+		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex )=0;
+
+		virtual void clear()=0;
 	};
 } // ciri
 

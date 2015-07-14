@@ -27,7 +27,8 @@ namespace ciri {
 		virtual void applyShader( IShader* shader );
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
-		virtual void setPrimitiveTopology( PrimitiveTopology::Type type );
+		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
+		virtual void clear();
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -39,6 +40,8 @@ namespace ciri {
 		//
 		std::vector<GLShader*> _shaders;
 		std::vector<GLVertexBuffer*> _vertexBuffers;
+		//
+		GLShader* _activeShader;
 	};
 } // ciri
 

@@ -23,6 +23,7 @@ namespace ciri {
 	}
 
 	void GLShader::addInputElement( const VertexElement& element ) {
+		_vertexDeclaration.add(element);
 	}
 
 	bool GLShader::build() {
@@ -30,12 +31,15 @@ namespace ciri {
 			return false;
 		}
 
+		const int ERROR_LOG_SIZE = 1024;
+
 		GLint status = GL_TRUE;
 
 		// build the vertex shader
 		if( !_vsFile.empty() ) {
 			File file(_vsFile.c_str());
 			if( !file.isOpen() ) {
+				_lastError = "File not found: " + _vsFile;
 				destroy();
 				return false;
 			}
@@ -46,6 +50,9 @@ namespace ciri {
 			glCompileShader(_vertexShader);
 			glGetShaderiv(_vertexShader, GL_COMPILE_STATUS, &status);
 			if( status != GL_TRUE ) {
+				GLchar log[ERROR_LOG_SIZE] = "";
+				glGetShaderInfoLog(_vertexShader, ERROR_LOG_SIZE, 0, log);
+				_lastError = "Vertex shader failed to compile: " + std::string(log);
 				destroy();
 				return false;
 			}
@@ -55,6 +62,7 @@ namespace ciri {
 		if( !_gsFile.empty() ) {
 			File file(_gsFile.c_str());
 			if( !file.isOpen() ) {
+				_lastError = "File not found: " + _gsFile;
 				destroy();
 				return false;
 			}
@@ -65,6 +73,9 @@ namespace ciri {
 			glCompileShader(_geometryShader);
 			glGetShaderiv(_geometryShader, GL_COMPILE_STATUS, &status);
 			if( status != GL_TRUE ) {
+				GLchar log[ERROR_LOG_SIZE] = "";
+				glGetShaderInfoLog(_geometryShader, ERROR_LOG_SIZE, 0, log);
+				_lastError = "Geometry shader failed to compile: " + std::string(log);
 				destroy();
 				return false;
 			}
@@ -74,6 +85,7 @@ namespace ciri {
 		if( !_psFile.empty() ) {
 			File file(_psFile.c_str());
 			if( !file.isOpen() ) {
+				_lastError = "File not found: " + _psFile;
 				destroy();
 				return false;
 			}
@@ -84,6 +96,9 @@ namespace ciri {
 			glCompileShader(_pixelShader);
 			glGetShaderiv(_pixelShader, GL_COMPILE_STATUS, &status);
 			if( status != GL_TRUE ) {
+				GLchar log[ERROR_LOG_SIZE] = "";
+				glGetShaderInfoLog(_pixelShader, ERROR_LOG_SIZE, 0, log);
+				_lastError = "Pixel shader failed to compile: " + std::string(log);
 				destroy();
 				return false;
 			}
@@ -107,6 +122,7 @@ namespace ciri {
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &status);
 		if( status != GL_TRUE ) {
+			_lastError = "Failed to link shader.";
 			destroy();
 			return false;
 		}
@@ -142,6 +158,26 @@ namespace ciri {
 	}
 
 	const char* GLShader::getLastError() const {
-		return "SUCCESS";
+		return _lastError.c_str();
+	}
+
+	GLuint GLShader::getVertexShader() const {
+		return _vertexShader;
+	}
+
+	GLuint GLShader::getGeometryShader() const {
+		return _geometryShader;
+	}
+
+	GLuint GLShader::getPixelShader() const {
+		return _pixelShader;
+	}
+
+	GLuint GLShader::getProgram() const {
+		return _program;
+	}
+
+	const VertexDeclaration& GLShader::getVertexDeclaration() const {
+		return _vertexDeclaration;
 	}
 } // ciri

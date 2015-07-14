@@ -7,6 +7,7 @@ namespace ciri {
 	}
 
 	DXVertexBuffer::~DXVertexBuffer() {
+		destroy();
 	}
 
 	void DXVertexBuffer::destroy() {

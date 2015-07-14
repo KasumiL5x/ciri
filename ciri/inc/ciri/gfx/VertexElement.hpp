@@ -16,6 +16,7 @@ namespace ciri {
 		VertexUsage::Type getUsage() const;
 		int getUsageIndex() const;
 		int getSize() const;
+		int getMultiplicity() const;
 
 	private:
 		int _offset;
