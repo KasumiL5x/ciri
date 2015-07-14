@@ -1,6 +1,7 @@
 #include <ciri/gfx/gl/GLShader.hpp>
 #include <ciri/gfx/gl/GLGraphicsDevice.hpp>
 #include <ciri/util/File.hpp>
+#include <ciri/ErrorStrings.hpp>
 
 namespace ciri {
 	GLShader::GLShader( GLGraphicsDevice* device )
@@ -39,7 +40,7 @@ namespace ciri {
 		if( !_vsFile.empty() ) {
 			File file(_vsFile.c_str());
 			if( !file.isOpen() ) {
-				_lastError = "File not found: " + _vsFile;
+				_lastError = err::SHADER_FILE_NOT_FOUND + _vsFile;
 				destroy();
 				return false;
 			}
@@ -52,7 +53,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_vertexShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = "Vertex shader failed to compile: " + std::string(log);
+				_lastError = err::SHADER_COMPILE_FAILED + std::string(log);
 				destroy();
 				return false;
 			}
@@ -62,7 +63,7 @@ namespace ciri {
 		if( !_gsFile.empty() ) {
 			File file(_gsFile.c_str());
 			if( !file.isOpen() ) {
-				_lastError = "File not found: " + _gsFile;
+				_lastError = err::SHADER_FILE_NOT_FOUND + _gsFile;
 				destroy();
 				return false;
 			}
@@ -75,7 +76,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_geometryShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = "Geometry shader failed to compile: " + std::string(log);
+				_lastError = err::SHADER_COMPILE_FAILED + std::string(log);
 				destroy();
 				return false;
 			}
@@ -85,7 +86,7 @@ namespace ciri {
 		if( !_psFile.empty() ) {
 			File file(_psFile.c_str());
 			if( !file.isOpen() ) {
-				_lastError = "File not found: " + _psFile;
+				_lastError = err::SHADER_FILE_NOT_FOUND + _psFile;
 				destroy();
 				return false;
 			}
@@ -98,7 +99,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_pixelShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = "Pixel shader failed to compile: " + std::string(log);
+				_lastError = err::SHADER_COMPILE_FAILED + std::string(log);
 				destroy();
 				return false;
 			}
@@ -122,7 +123,9 @@ namespace ciri {
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &status);
 		if( status != GL_TRUE ) {
-			_lastError = "Failed to link shader.";
+			GLchar log[ERROR_LOG_SIZE] = "";
+			glGetProgramInfoLog(_program, ERROR_LOG_SIZE, 0, log);
+			_lastError = err::SHADER_LINK_FAILED + std::string(log);
 			destroy();
 			return false;
 		}

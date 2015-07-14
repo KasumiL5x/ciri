@@ -129,5 +129,6 @@
     <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexDeclaration.hpp">
       <Filter>gfx\gl</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\ErrorStrings.hpp" />
   </ItemGroup>
 </Project>

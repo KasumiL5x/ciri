@@ -4,6 +4,7 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <d3dcompiler.h>
 #include <ciri/util/StrUtil.hpp>
+#include <ciri/ErrorStrings.hpp>
 
 namespace ciri {
 	DXShader::DXShader( DXGraphicsDevice* device )
@@ -55,11 +56,11 @@ namespace ciri {
 			hr = D3DCompileFromFile(strutil::str2wstr(_vsFile).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
-					_lastError = "File not found";
+					_lastError = err::SHADER_FILE_NOT_FOUND + _vsFile;
 				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
-					_lastError = "Path not found";
+					_lastError = err::SHADER_PATH_NOT_FOUND + _vsFile;
 				} else {
-					_lastError = (const char*)errorBlob->GetBufferPointer();
+					_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				}
 				destroy();
 				return false;
@@ -67,7 +68,7 @@ namespace ciri {
 
 			hr = _device->getDevice()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_vertexShader);
 			if( FAILED(hr) ) {
-				_lastError = (const char*)errorBlob->GetBufferPointer();
+				_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				destroy();
 				return false;
 			}
@@ -90,7 +91,7 @@ namespace ciri {
 					// todo: error about mismatch between actual data and expected data
 					_lastError = "E_INVALIDARG";
 				} else {
-					_lastError = (const char*)errorBlob->GetBufferPointer();
+					_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				}
 				destroy();
 				return false;
@@ -100,6 +101,7 @@ namespace ciri {
 			layout = nullptr;
 
 			shaderBlob->Release();
+			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
@@ -108,11 +110,11 @@ namespace ciri {
 			hr = D3DCompileFromFile(strutil::str2wstr(_gsFile).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
-					_lastError = "File not found";
+					_lastError = err::SHADER_FILE_NOT_FOUND + _gsFile;
 				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
-					_lastError = "Path not found";
+					_lastError = err::SHADER_PATH_NOT_FOUND + _gsFile;
 				} else {
-					_lastError = (const char*)errorBlob->GetBufferPointer();
+					_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				}
 				destroy();
 				return false;
@@ -120,12 +122,13 @@ namespace ciri {
 
 			hr = _device->getDevice()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_geometryShader);
 			if( FAILED(hr) ) {
-				_lastError = (const char*)errorBlob->GetBufferPointer();
+				_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				destroy();
 				return false;
 			}
 
 			shaderBlob->Release();
+			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
@@ -134,11 +137,11 @@ namespace ciri {
 			hr = D3DCompileFromFile(strutil::str2wstr(_psFile).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
-					_lastError = "File not found";
+					_lastError = err::SHADER_FILE_NOT_FOUND + _psFile;
 				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
-					_lastError = "Path not found";
+					_lastError = err::SHADER_PATH_NOT_FOUND + _psFile;
 				} else {
-					_lastError = (const char*)errorBlob->GetBufferPointer();
+					_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				}
 				destroy();
 				return false;
@@ -146,12 +149,13 @@ namespace ciri {
 
 			hr = _device->getDevice()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_pixelShader);
 			if( FAILED(hr) ) {
-				_lastError = (const char*)errorBlob->GetBufferPointer();
+				_lastError = err::SHADER_COMPILE_FAILED + std::string((const char*)errorBlob->GetBufferPointer());
 				destroy();
 				return false;
 			}
 
 			shaderBlob->Release();
+			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
