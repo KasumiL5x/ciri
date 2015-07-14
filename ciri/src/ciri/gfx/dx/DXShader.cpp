@@ -86,7 +86,12 @@ namespace ciri {
 			}
 			hr = _device->getDevice()->CreateInputLayout(layout, elements.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &_inputLayout);
 			if( FAILED(hr) ) {
-				_lastError = (const char*)errorBlob->GetBufferPointer();
+				if( E_INVALIDARG == hr ) {
+					// todo: error about mismatch between actual data and expected data
+					_lastError = "E_INVALIDARG";
+				} else {
+					_lastError = (const char*)errorBlob->GetBufferPointer();
+				}
 				destroy();
 				return false;
 			}
