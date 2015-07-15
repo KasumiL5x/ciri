@@ -193,6 +193,10 @@ namespace ciri {
 		return _lastError.c_str();
 	}
 
+	bool DXShader::isValid() const {
+		return (_vertexShader != nullptr) && (_pixelShader != nullptr);
+	}
+
 	ID3D11VertexShader* DXShader::getVertexShader() const {
 		return _vertexShader;
 	}

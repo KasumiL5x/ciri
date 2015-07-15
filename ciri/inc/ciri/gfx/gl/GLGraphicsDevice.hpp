@@ -42,6 +42,7 @@ namespace ciri {
 		std::vector<GLVertexBuffer*> _vertexBuffers;
 		//
 		GLShader* _activeShader;
+		GLVertexBuffer* _activeVertexBuffer;
 	};
 } // ciri
 

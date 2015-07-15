@@ -22,6 +22,7 @@ namespace ciri {
 		virtual bool rebuild();
 		virtual void destroy();
 		virtual const char* getLastError() const;
+		virtual bool isValid() const;
 
 		GLuint getVertexShader() const;
 		GLuint getGeometryShader() const;

@@ -24,6 +24,7 @@ namespace ciri {
 		virtual bool rebuild();
 		virtual void destroy();
 		virtual const char* getLastError() const;
+		virtual bool isValid() const;
 
 		ID3D11VertexShader* getVertexShader() const;
 		ID3D11GeometryShader* getGeometryShader() const;

@@ -19,6 +19,7 @@ namespace ciri {
 		virtual bool rebuild()=0;
 		virtual void destroy()=0;
 		virtual const char* getLastError() const=0;
+		virtual bool isValid() const=0;
 	};
 } // ciri
 

@@ -3,7 +3,7 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr) {
+		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr), _activeVertexBuffer(nullptr) {
 	}
 
 	GLGraphicsDevice::~GLGraphicsDevice() {
@@ -66,6 +66,11 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
+		if( !shader->isValid() ) {
+			_activeShader = nullptr;
+			return;
+		}
+
 		GLShader* glShader = reinterpret_cast<GLShader*>(shader);
 		glUseProgram(glShader->getProgram());
 		_activeShader = glShader;
@@ -78,6 +83,11 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+		// cannot set parameters with no active shader
+		if( nullptr == _activeShader ) {
+			return;
+		}
+
 		GLVertexBuffer* glBuffer = reinterpret_cast<GLVertexBuffer*>(buffer);
 
 		glBindBuffer(GL_ARRAY_BUFFER, glBuffer->getVbo());
@@ -106,6 +116,26 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
+		// cannot draw with no active shader
+		if( nullptr == _activeShader ) {
+			return;
+		}
+
+		// cannot draw with no active vertex buffer
+		if( nullptr == _activeVertexBuffer ) {
+			return;
+		}
+
+		// vertex count must be greater than 0!
+		if( vertexCount <= 0 ) {
+			return;
+		}
+
+		// start index must be positive and less than vertex count-1
+		if( startIndex <= 0 || startIndex >= vertexCount ) {
+			return;
+		}
+
 		GLenum mode = 0;
 		switch( topology ) {
 			case PrimitiveTopology::PointList: {

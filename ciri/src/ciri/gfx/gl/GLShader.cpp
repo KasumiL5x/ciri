@@ -164,6 +164,10 @@ namespace ciri {
 		return _lastError.c_str();
 	}
 
+	bool GLShader::isValid() const {
+		return (_vertexShader != 0) && (_pixelShader != 0);
+	}
+
 	GLuint GLShader::getVertexShader() const {
 		return _vertexShader;
 	}

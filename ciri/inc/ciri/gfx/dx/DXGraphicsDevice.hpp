@@ -44,6 +44,9 @@ namespace ciri {
 		//
 		std::vector<DXShader*> _shaders;
 		std::vector<DXVertexBuffer*> _vertexBuffers;
+		//
+		DXShader* _activeShader;
+		DXVertexBuffer* _activeVertexBuffer;
 	};
 } // ciri
 

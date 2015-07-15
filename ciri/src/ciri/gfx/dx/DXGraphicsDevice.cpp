@@ -6,7 +6,7 @@ namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
 		: IGraphicsDevice(), _driverType(D3D_DRIVER_TYPE_NULL), _featureLevel(D3D_FEATURE_LEVEL_11_0), _device(nullptr),
 			_device1(nullptr), _immediateContext(nullptr), _immediateContext1(nullptr), _swapchain(nullptr),
-			_swapchain1(nullptr), _renderTargetView(nullptr) {
+			_swapchain1(nullptr), _renderTargetView(nullptr), _activeShader(nullptr), _activeVertexBuffer(nullptr) {
 	}
 
 	DXGraphicsDevice::~DXGraphicsDevice() {
@@ -65,6 +65,11 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
+		if( !shader->isValid() ) {
+			_activeShader = nullptr;
+			return;
+		}
+
 		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
 
 		ID3D11VertexShader* vs = dxShader->getVertexShader();
@@ -86,6 +91,8 @@ namespace ciri {
 		if( il != nullptr ) {
 			_immediateContext->IASetInputLayout(il);
 		}
+
+		_activeShader = dxShader;
 	}
 
 	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
@@ -95,14 +102,42 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+		// gl cannot set parameters with no active shader; dx can, but let's stay consistent
+		if( nullptr == _activeShader ) {
+			_activeVertexBuffer = nullptr;
+			return;
+		}
+
 		DXVertexBuffer* dxBuffer = reinterpret_cast<DXVertexBuffer*>(buffer);
 		UINT stride = buffer->getStride();
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
 		_immediateContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+
+		_activeVertexBuffer = dxBuffer;
 	}
 
 	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
+		// cannot draw with no active shader
+		if( nullptr == _activeShader ) {
+			return;
+		}
+
+		// cannot draw with no active vertex buffer
+		if( nullptr == _activeVertexBuffer ) {
+			return;
+		}
+
+		// vertex count must be greater than 0!
+		if( vertexCount <= 0 ) {
+			return;
+		}
+
+		// start index must be positive and less than vertex count-1
+		if( startIndex <= 0 || startIndex >= vertexCount ) {
+			return;
+		}
+
 		switch( topology ) {
 			case PrimitiveTopology::PointList: {
 				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
