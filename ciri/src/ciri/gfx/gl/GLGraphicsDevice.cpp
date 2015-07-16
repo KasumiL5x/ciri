@@ -113,6 +113,8 @@ namespace ciri {
 			glVertexAttribPointer(i, currElement.getMultiplicity(), type, GL_FALSE, _activeShader->getVertexDeclaration().getStride(), (const void*)offset);
 			offset += currElement.getSize(); // sizeof(datatype) * numberOfThem;
 		}
+
+		_activeVertexBuffer = glBuffer;
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
