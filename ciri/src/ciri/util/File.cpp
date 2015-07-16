@@ -1,5 +1,6 @@
 #include <ciri/util/File.hpp>
 #include <sstream>
+#include <ciri/ErrorCodes.hpp>
 
 namespace ciri {
 	File::File() {

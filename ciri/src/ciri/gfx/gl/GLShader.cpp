@@ -1,7 +1,6 @@
 #include <ciri/gfx/gl/GLShader.hpp>
 #include <ciri/gfx/gl/GLGraphicsDevice.hpp>
 #include <ciri/util/File.hpp>
-#include <ciri/ErrorStrings.hpp>
 
 namespace ciri {
 	GLShader::GLShader( GLGraphicsDevice* device )
@@ -27,9 +26,9 @@ namespace ciri {
 		_vertexDeclaration.add(element);
 	}
 
-	bool GLShader::build() {
+	err::ErrorCode GLShader::build() {
 		if( _vsFile.empty() && _gsFile.empty() && _psFile.empty() ) {
-			return false;
+			return err::CIRI_UNKNOWN_ERROR; // todo: change this to an actual error
 		}
 
 		const int ERROR_LOG_SIZE = 1024;
@@ -40,9 +39,9 @@ namespace ciri {
 		if( !_vsFile.empty() ) {
 			File file(_vsFile.c_str());
 			if( !file.isOpen() ) {
-				_lastError = err::SHADER_FILE_NOT_FOUND + _vsFile;
+				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + _vsFile + std::string(")");;
 				destroy();
-				return false;
+				return err::CIRI_FILE_NOT_FOUND;
 			}
 			const std::string str = file.toString();
 			const char* ptr = str.c_str();
@@ -53,9 +52,9 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_vertexShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = err::SHADER_COMPILE_FAILED + std::string(log);
+				_lastError = err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log);
 				destroy();
-				return false;
+				return err::CIRI_SHADER_COMPILE_FAILED;
 			}
 		}
 
@@ -63,9 +62,9 @@ namespace ciri {
 		if( !_gsFile.empty() ) {
 			File file(_gsFile.c_str());
 			if( !file.isOpen() ) {
-				_lastError = err::SHADER_FILE_NOT_FOUND + _gsFile;
+				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + _gsFile + std::string(")");;
 				destroy();
-				return false;
+				return err::CIRI_FILE_NOT_FOUND;
 			}
 			const std::string str = file.toString();
 			const char* ptr = str.c_str();
@@ -76,9 +75,9 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_geometryShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = err::SHADER_COMPILE_FAILED + std::string(log);
+				_lastError = err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log);
 				destroy();
-				return false;
+				return err::CIRI_SHADER_COMPILE_FAILED;
 			}
 		}
 
@@ -86,9 +85,9 @@ namespace ciri {
 		if( !_psFile.empty() ) {
 			File file(_psFile.c_str());
 			if( !file.isOpen() ) {
-				_lastError = err::SHADER_FILE_NOT_FOUND + _psFile;
+				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + _psFile + std::string(")");;
 				destroy();
-				return false;
+				return err::CIRI_FILE_NOT_FOUND;
 			}
 			const std::string str = file.toString();
 			const char* ptr = str.c_str();
@@ -99,9 +98,9 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_pixelShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = err::SHADER_COMPILE_FAILED + std::string(log);
+				_lastError = err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log);
 				destroy();
-				return false;
+				return err::CIRI_SHADER_COMPILE_FAILED;
 			}
 		}
 
@@ -125,15 +124,15 @@ namespace ciri {
 		if( status != GL_TRUE ) {
 			GLchar log[ERROR_LOG_SIZE] = "";
 			glGetProgramInfoLog(_program, ERROR_LOG_SIZE, 0, log);
-			_lastError = err::SHADER_LINK_FAILED + std::string(log);
+			_lastError = err::getString(err::CIRI_SHADER_LINK_FAILED) + std::string(": ") + std::string(log);
 			destroy();
-			return false;
+			return err::CIRI_SHADER_LINK_FAILED;
 		}
 
-		return true;
+		return err::CIRI_OK;
 	}
 
-	bool GLShader::rebuild() {
+	err::ErrorCode GLShader::rebuild() {
 		destroy();
 		return build();
 	}

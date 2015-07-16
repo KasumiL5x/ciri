@@ -26,7 +26,7 @@ int main() {
 	shader->addPixelShader("data/simple_ps.hlsl");
 	shader->addInputElement(ciri::VertexElement(0, ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	shader->addInputElement(ciri::VertexElement(12, ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
-	if( !shader->build() ) {
+	if( ciri::err::failed(shader->build()) ) {
 		printf("Failed to build shader: %s.\n", shader->getLastError());
 	} else {
 		printf("Shader built.\n");

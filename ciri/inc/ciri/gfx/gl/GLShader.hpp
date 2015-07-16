@@ -18,8 +18,8 @@ namespace ciri {
 		virtual void addGeometryShader( const char* filename );
 		virtual void addPixelShader( const char* filename );
 		virtual void addInputElement( const VertexElement& element );
-		virtual bool build();
-		virtual bool rebuild();
+		virtual err::ErrorCode build();
+		virtual err::ErrorCode rebuild();
 		virtual void destroy();
 		virtual const char* getLastError() const;
 		virtual bool isValid() const;

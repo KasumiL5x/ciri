@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\Common.hpp" />
-    <ClInclude Include="..\inc\ciri\ErrorStrings.hpp" />
+    <ClInclude Include="..\inc\ciri\ErrorCodes.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXShader.hpp" />
