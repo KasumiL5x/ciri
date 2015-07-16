@@ -133,8 +133,8 @@ namespace ciri {
 			return;
 		}
 
-		// start index must be positive and less than vertex count-1
-		if( startIndex <= 0 || startIndex >= vertexCount ) {
+		// start index must be greater than zero and less than vertex count
+		if( startIndex < 0 || startIndex >= vertexCount ) {
 			return;
 		}
 
