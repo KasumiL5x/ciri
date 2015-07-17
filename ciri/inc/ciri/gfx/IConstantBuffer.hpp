@@ -12,7 +12,7 @@ namespace ciri {
 		virtual ~IConstantBuffer() {
 		}
 
-		virtual err::ErrorCode initialize()=0;
+		virtual err::ErrorCode setData( int dataSize, void* data )=0;
 		virtual void destroy()=0;
 	};
 } // ciri

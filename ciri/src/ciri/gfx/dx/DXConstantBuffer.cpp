@@ -9,7 +9,7 @@ namespace ciri {
 		destroy();
 	}
 
-	err::ErrorCode DXConstantBuffer::initialize() {
+	err::ErrorCode DXConstantBuffer::setData( int dataSize, void* data ) {
 		return err::CIRI_UNKNOWN_ERROR;
 	}
 

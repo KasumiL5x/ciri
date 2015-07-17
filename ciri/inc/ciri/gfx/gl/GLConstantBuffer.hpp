@@ -1,6 +1,7 @@
 #ifndef __ciri_glconstantbuffer__
 #define __ciri_glconstantbuffer__
 
+#include <gl/glew.h>
 #include "../IConstantBuffer.hpp"
 
 namespace ciri {
@@ -9,8 +10,13 @@ namespace ciri {
 		GLConstantBuffer();
 		virtual ~GLConstantBuffer();
 
-		virtual err::ErrorCode initialize();
+		virtual err::ErrorCode setData( int dataSize, void* data );
 		virtual void destroy();
+
+		GLuint getUbo() const;
+
+	private:
+		GLuint _ubo;
 	};
 } // ciri
 

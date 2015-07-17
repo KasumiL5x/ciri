@@ -35,6 +35,10 @@ namespace ciri {
 		_vertexDeclaration.add(element);
 	}
 
+	err::ErrorCode DXShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
+		return err::CIRI_UNKNOWN_ERROR;
+	}
+
 	err::ErrorCode DXShader::build() {
 		if( _vsFile.empty() && _gsFile.empty() && _psFile.empty() ) {
 			return err::CIRI_UNKNOWN_ERROR;

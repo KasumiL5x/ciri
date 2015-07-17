@@ -9,7 +9,7 @@ namespace ciri {
 		DXConstantBuffer();
 		virtual ~DXConstantBuffer();
 
-		virtual err::ErrorCode initialize();
+		virtual err::ErrorCode setData( int dataSize, void* data );
 		virtual void destroy();
 	};
 } // ciri

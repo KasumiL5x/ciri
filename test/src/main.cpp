@@ -2,7 +2,12 @@
 #include <ciri/gfx/GraphicsDeviceFactory.hpp>
 #include <ciri/gfx/IShader.hpp>
 #include <ciri/gfx/IVertexBuffer.hpp>
+#include <ciri/gfx/IConstantBuffer.hpp>
 #include <cc/Vec3.hpp>
+
+#if defined(_DEBUG)
+	#include <crtdbg.h>
+#endif
 
 struct SimpleVertex {
 	cc::Vec3f position;
@@ -14,10 +19,17 @@ struct ShaderData {
 };
 
 int main() {
+	#if defined(_DEBUG)
+		int debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+		debugFlag|= _CRTDBG_LEAK_CHECK_DF;
+		debugFlag |= _CRTDBG_CHECK_ALWAYS_DF;
+		_CrtSetDbgFlag(debugFlag);
+	#endif
+
 	ciri::Window window;
 	window.create(1280, 720);
 
-	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::DirectX);
+	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::OpenGL);
 	if( !device->create(&window) ) {
 		printf("Failed to initialize graphics device.\n");
 		return -1;
@@ -26,8 +38,8 @@ int main() {
 	}
 
 	ciri::IShader* shader = device->createShader();
-	shader->addVertexShader("data/simple_vs.hlsl");
-	shader->addPixelShader("data/simple_ps.hlsl");
+	shader->addVertexShader("data/simple_vs.glsl");
+	shader->addPixelShader("data/simple_ps.glsl");
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
 	if( ciri::err::failed(shader->build()) ) {
@@ -45,11 +57,22 @@ int main() {
 	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), 3, false) ) {
 		printf("Failed to create vertex buffer.\n");
 	} else {
-		printf("Created vertex buffer.");
+		printf("Created vertex buffer.\n");
 	}
 
+	ShaderData shaderData;
+	shaderData.alpha = 1.0f;
 	ciri::IConstantBuffer* constantBuffer = device->createConstantBuffer();
-	// ...
+	if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
+		printf("Failed to create constant buffer.\n");
+	} else {
+		printf("Created constant buffer.\n");
+	}
+	if( ciri::err::failed(shader->addConstants(constantBuffer, "TestConstants", ciri::ShaderType::All)) ) {
+		printf("Failed to assign constant buffer to shader.\n");
+	} else {
+		printf("Assigned constant buffer to shader.\n");
+	}
 
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;
@@ -59,8 +82,14 @@ int main() {
 			}
 		}
 
-		device->clear();
+		static float time = 0.0f;
+		time += 0.0001f;
+		shaderData.alpha = (sin(time * 10.0f) * 0.5f + 0.5f) * 1.0f;
+		if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
+			printf("Failed to update constant buffer.\n");
+		}
 
+		device->clear();
 		device->applyShader(shader);
 		device->setVertexBuffer(vertexBuffer);
 		device->drawArrays(ciri::PrimitiveTopology::TriangleList, 3, 0);

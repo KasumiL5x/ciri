@@ -8,6 +8,7 @@
 
 namespace ciri {
 	class GLGraphicsDevice;
+	class IConstantBuffer;
 
 	class GLShader : public IShader {
 	public:
@@ -18,6 +19,7 @@ namespace ciri {
 		virtual void addGeometryShader( const char* filename );
 		virtual void addPixelShader( const char* filename );
 		virtual void addInputElement( const VertexElement& element );
+		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags );
 		virtual err::ErrorCode build();
 		virtual err::ErrorCode rebuild();
 		virtual void destroy();
@@ -45,6 +47,8 @@ namespace ciri {
 		std::string _lastError;
 		//
 		VertexDeclaration _vertexDeclaration;
+		//
+		std::vector<IConstantBuffer*> _constantBuffers;
 	};
 } // ciri
 

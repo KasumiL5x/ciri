@@ -26,6 +26,32 @@ namespace ciri {
 		_vertexDeclaration.add(element);
 	}
 
+	err::ErrorCode GLShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
+		// note: type flag doesn't matter in GL because it's linked per-program, not per shader
+
+		if( nullptr == buffer ) {
+			return err::CIRI_UNKNOWN_ERROR;
+		}
+
+		if( !isValid() ) {
+			return err::CIRI_UNKNOWN_ERROR;
+		}
+
+		GLConstantBuffer* glBuffer = reinterpret_cast<GLConstantBuffer*>(buffer);
+
+		const GLuint blockIndex = glGetUniformBlockIndex(_program, name);
+		if( GL_INVALID_INDEX == blockIndex ) {
+			return err::CIRI_UNKNOWN_ERROR;
+		}
+
+		_constantBuffers.push_back(glBuffer);
+
+		glBindBufferBase(GL_UNIFORM_BUFFER, _constantBuffers.size()-1, glBuffer->getUbo());
+		glUniformBlockBinding(_program, blockIndex, _constantBuffers.size()-1);
+
+		return err::CIRI_OK;
+	}
+
 	err::ErrorCode GLShader::build() {
 		if( _vsFile.empty() && _gsFile.empty() && _psFile.empty() ) {
 			return err::CIRI_UNKNOWN_ERROR; // todo: change this to an actual error
