@@ -2,15 +2,24 @@
 #define __ciri_dxconstantbuffer__
 
 #include "../IConstantBuffer.hpp"
+#include <d3d11_1.h>
 
 namespace ciri {
+	class DXGraphicsDevice;
+
 	class DXConstantBuffer : public IConstantBuffer {
 	public:
-		DXConstantBuffer();
+		DXConstantBuffer( DXGraphicsDevice* device );
 		virtual ~DXConstantBuffer();
 
 		virtual err::ErrorCode setData( int dataSize, void* data );
 		virtual void destroy();
+
+		ID3D11Buffer* getBuffer() const;
+
+	private:
+		DXGraphicsDevice* _device;
+		ID3D11Buffer* _buffer;
 	};
 } // ciri
 

@@ -10,6 +10,7 @@
 
 namespace ciri {
 	class DXGraphicsDevice;
+	class DXConstantBuffer;
 
 	class DXShader : public IShader {
 	public:
@@ -32,6 +33,10 @@ namespace ciri {
 		ID3D11PixelShader* getPixelShader() const;
 		ID3D11InputLayout* getInputLayout() const;
 
+		const std::vector<DXConstantBuffer*>& getVertexConstants() const;
+		const std::vector<DXConstantBuffer*>& getGeometryConstants() const;
+		const std::vector<DXConstantBuffer*>& getPixelConstants() const;
+
 	private:
 		DXGI_FORMAT convertInputFormat( VertexFormat::Type type ) const;
 
@@ -51,6 +56,13 @@ namespace ciri {
 		std::string _lastError;
 		//
 		std::unordered_map<VertexUsage::Type, std::string> _dxUsageStrings;
+		//
+		std::unordered_map<int, std::string> _reflectedVertexConstantBufferNames;
+		std::unordered_map<int, std::string> _reflectedGeometryConstantBufferNames;
+		std::unordered_map<int, std::string> _reflectedPixelConstantBufferNames;
+		std::vector<DXConstantBuffer*> _vertexConstantBuffers;
+		std::vector<DXConstantBuffer*> _geometryConstantBuffers;
+		std::vector<DXConstantBuffer*> _pixelConstantBuffers;
 	};
 } // ciri
 

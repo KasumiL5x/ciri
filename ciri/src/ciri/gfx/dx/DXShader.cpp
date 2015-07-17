@@ -1,5 +1,3 @@
-#pragma comment(lib, "D3DCompiler.lib")
-
 #include <ciri/gfx/dx/DXShader.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <d3dcompiler.h>
@@ -36,7 +34,55 @@ namespace ciri {
 	}
 
 	err::ErrorCode DXShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
-		return err::CIRI_UNKNOWN_ERROR;
+		if( nullptr == buffer ) {
+			return err::CIRI_UNKNOWN_ERROR;
+		}
+
+		if( !isValid() ) {
+			return err::CIRI_UNKNOWN_ERROR;
+		}
+
+		DXConstantBuffer* dxBuffer = reinterpret_cast<DXConstantBuffer*>(buffer);
+
+		const bool all = (shaderTypeFlags & ShaderType::All);
+
+		if( all || (shaderTypeFlags & ShaderType::Vertex) ) {
+			if( _reflectedVertexConstantBufferNames.size() == 0 ) {
+				return err::CIRI_UNKNOWN_ERROR;
+			}
+
+			const int index = _vertexConstantBuffers.size() == 0 ? 0 : _vertexConstantBuffers.size()-1;
+			if( strcmp(name, _reflectedVertexConstantBufferNames[index].c_str()) != 0 ) {
+				return err::CIRI_UNKNOWN_ERROR; // given shader name didn't match reflected name at same index (a.k.a added in the wrong order)
+			}
+			_vertexConstantBuffers.push_back(dxBuffer);
+		}
+
+		if( _geometryShader != nullptr && (all || (shaderTypeFlags & ShaderType::Geometry)) ) {
+			if( _reflectedGeometryConstantBufferNames.size() == 0 ) {
+				return err::CIRI_UNKNOWN_ERROR;
+			}
+
+			const int index = _geometryConstantBuffers.size() == 0 ? 0 : _geometryConstantBuffers.size()-1;
+			if( strcmp(name, _reflectedGeometryConstantBufferNames[index].c_str()) != 0 ) {
+				return err::CIRI_UNKNOWN_ERROR;
+			}
+			_geometryConstantBuffers.push_back(dxBuffer);
+		}
+
+		if( all || (shaderTypeFlags & ShaderType::Pixel) ) {
+			if( _reflectedPixelConstantBufferNames.size() == 0 ) {
+				return err::CIRI_UNKNOWN_ERROR;
+			}
+
+			const int index = _pixelConstantBuffers.size() == 0 ? 0 : _pixelConstantBuffers.size()-1;
+			if( strcmp(name, _reflectedPixelConstantBufferNames[index].c_str()) != 0 ) {
+				return err::CIRI_UNKNOWN_ERROR;
+			}
+			_pixelConstantBuffers.push_back(dxBuffer);
+		}
+
+		return err::CIRI_OK;
 	}
 
 	err::ErrorCode DXShader::build() {
@@ -106,9 +152,23 @@ namespace ciri {
 				destroy();
 				return err::CIRI_UNKNOWN_ERROR;
 			}
-
 			delete[] layout;
 			layout = nullptr;
+
+			// reflect the constant buffers of the vertex shader
+			ID3D11ShaderReflection* refl = nullptr;
+			D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
+			int index = 0;
+			while( true ) {
+				D3D11_SHADER_BUFFER_DESC desc;
+				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
+					break;
+				}
+				_reflectedVertexConstantBufferNames[index] = std::string(desc.Name);
+
+				index += 1;
+			}
+
 
 			shaderBlob->Release();
 			shaderBlob = nullptr;
@@ -141,6 +201,20 @@ namespace ciri {
 				return err::CIRI_UNKNOWN_ERROR;
 			}
 
+			// reflect the constant buffers of the geometry shader
+			ID3D11ShaderReflection* refl = nullptr;
+			D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
+			int index = 0;
+			while( true ) {
+				D3D11_SHADER_BUFFER_DESC desc;
+				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
+					break;
+				}
+				_reflectedGeometryConstantBufferNames[index] = std::string(desc.Name);
+
+				index += 1;
+			}
+
 			shaderBlob->Release();
 			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
@@ -170,6 +244,20 @@ namespace ciri {
 				_lastError = err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
 				destroy();
 				return err::CIRI_UNKNOWN_ERROR;
+			}
+
+			// reflect the constant buffers of the pixel shader
+			ID3D11ShaderReflection* refl = nullptr;
+			D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
+			int index = 0;
+			while( true ) {
+				D3D11_SHADER_BUFFER_DESC desc;
+				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
+					break;
+				}
+				_reflectedPixelConstantBufferNames[index] = std::string(desc.Name);
+
+				index += 1;
 			}
 
 			shaderBlob->Release();
@@ -229,6 +317,18 @@ namespace ciri {
 
 	ID3D11InputLayout* DXShader::getInputLayout() const {
 		return _inputLayout;
+	}
+
+	const std::vector<DXConstantBuffer*>& DXShader::getVertexConstants() const {
+		return _vertexConstantBuffers;
+	}
+
+	const std::vector<DXConstantBuffer*>& DXShader::getGeometryConstants() const {
+		return _geometryConstantBuffers;
+	}
+
+	const std::vector<DXConstantBuffer*>& DXShader::getPixelConstants() const {
+		return _pixelConstantBuffers;
 	}
 
 	DXGI_FORMAT DXShader::convertInputFormat( VertexFormat::Type type ) const {

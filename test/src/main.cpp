@@ -14,6 +14,7 @@ struct SimpleVertex {
 	cc::Vec3f color;
 };
 
+__declspec(align(16))
 struct ShaderData {
 	float alpha;
 };
@@ -29,7 +30,7 @@ int main() {
 	ciri::Window window;
 	window.create(1280, 720);
 
-	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::OpenGL);
+	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::DirectX);
 	if( !device->create(&window) ) {
 		printf("Failed to initialize graphics device.\n");
 		return -1;
@@ -38,8 +39,8 @@ int main() {
 	}
 
 	ciri::IShader* shader = device->createShader();
-	shader->addVertexShader("data/simple_vs.glsl");
-	shader->addPixelShader("data/simple_ps.glsl");
+	shader->addVertexShader("data/simple_vs.hlsl");
+	shader->addPixelShader("data/simple_ps.hlsl");
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
 	if( ciri::err::failed(shader->build()) ) {
@@ -68,7 +69,7 @@ int main() {
 	} else {
 		printf("Created constant buffer.\n");
 	}
-	if( ciri::err::failed(shader->addConstants(constantBuffer, "TestConstants", ciri::ShaderType::All)) ) {
+	if( ciri::err::failed(shader->addConstants(constantBuffer, "TestConstants", ciri::ShaderType::Pixel)) ) {
 		printf("Failed to assign constant buffer to shader.\n");
 	} else {
 		printf("Assigned constant buffer to shader.\n");

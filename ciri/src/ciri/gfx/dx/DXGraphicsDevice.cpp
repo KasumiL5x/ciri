@@ -83,23 +83,31 @@ namespace ciri {
 		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
 
 		ID3D11VertexShader* vs = dxShader->getVertexShader();
-		if( vs != nullptr ) {
-			_immediateContext->VSSetShader(vs, nullptr, 0);
+		_immediateContext->VSSetShader(vs, nullptr, 0);
+		const std::vector<DXConstantBuffer*>& vertexConstants = dxShader->getVertexConstants();
+		for( unsigned int i = 0; i < vertexConstants.size(); ++i ) {
+			ID3D11Buffer* buffer = vertexConstants[i]->getBuffer();
+			_immediateContext->VSSetConstantBuffers(i, 1, &buffer);
 		}
+		ID3D11InputLayout* il = dxShader->getInputLayout();
+		_immediateContext->IASetInputLayout(il);
 
 		ID3D11GeometryShader* gs = dxShader->getGeometryShader();
 		if( gs != nullptr ) {
 			_immediateContext->GSSetShader(gs, nullptr, 0);
+			const std::vector<DXConstantBuffer*>& geometryConstants = dxShader->getGeometryConstants();
+			for( unsigned int i = 0; i < geometryConstants.size(); ++i ) {
+				ID3D11Buffer* buffer = geometryConstants[i]->getBuffer();
+				_immediateContext->GSSetConstantBuffers(i, 1, &buffer);
+			}
 		}
 
 		ID3D11PixelShader* ps = dxShader->getPixelShader();
-		if( ps != nullptr ) {
-			_immediateContext->PSSetShader(ps, nullptr, 0);
-		}
-
-		ID3D11InputLayout* il = dxShader->getInputLayout();
-		if( il != nullptr ) {
-			_immediateContext->IASetInputLayout(il);
+		_immediateContext->PSSetShader(ps, nullptr, 0);
+		const std::vector<DXConstantBuffer*>& pixelConstants = dxShader->getPixelConstants();
+		for( unsigned int i = 0; i < pixelConstants.size(); ++i ) {
+			ID3D11Buffer* buffer = pixelConstants[i]->getBuffer();
+			_immediateContext->PSSetConstantBuffers(i, 1, &buffer);
 		}
 
 		_activeShader = dxShader;
@@ -182,7 +190,7 @@ namespace ciri {
 	}
 
 	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
-		DXConstantBuffer* buffer = new DXConstantBuffer();
+		DXConstantBuffer* buffer = new DXConstantBuffer(this);
 		_constantBuffers.push_back(buffer);
 		return buffer;
 	}
