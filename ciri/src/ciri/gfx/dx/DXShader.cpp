@@ -79,6 +79,7 @@ namespace ciri {
 			}
 
 			// build the input layout
+			int offset = 0;
 			const std::vector<VertexElement>& elements = _vertexDeclaration.getElements();
 			D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[elements.size()];
 			for( unsigned int i = 0; i < elements.size(); ++i ) {
@@ -86,9 +87,10 @@ namespace ciri {
 				layout[i].SemanticIndex = 0;
 				layout[i].Format = convertInputFormat(elements[i].getFormat());
 				layout[i].InputSlot = 0;
-				layout[i].AlignedByteOffset = elements[i].getOffset();
+				layout[i].AlignedByteOffset = offset;
 				layout[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 				layout[i].InstanceDataStepRate = 0;
+				offset += elements[i].getSize(); // sizeof(datatype) * numberOfThem;
 			}
 			hr = _device->getDevice()->CreateInputLayout(layout, elements.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &_inputLayout);
 			if( FAILED(hr) ) {

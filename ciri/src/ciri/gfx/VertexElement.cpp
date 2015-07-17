@@ -2,18 +2,14 @@
 
 namespace ciri {
 	VertexElement::VertexElement()
-		: _offset(0), _format(VertexFormat::Float3), _usage(VertexUsage::Position), _usageIndex(0) {
+		: _format(VertexFormat::Float3), _usage(VertexUsage::Position), _usageIndex(0) {
 	}
 
-	VertexElement::VertexElement( int offset, VertexFormat::Type format, VertexUsage::Type usage, int usageIndex )
-		: _offset(offset), _format(format), _usage(usage), _usageIndex(usageIndex) {
+	VertexElement::VertexElement( VertexFormat::Type format, VertexUsage::Type usage, int usageIndex )
+		: _format(format), _usage(usage), _usageIndex(usageIndex) {
 	}
 
 	VertexElement::~VertexElement() {
-	}
-
-	int VertexElement::getOffset() const {
-		return _offset;
 	}
 
 	VertexFormat::Type VertexElement::getFormat() const {
