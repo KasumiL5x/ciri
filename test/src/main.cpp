@@ -9,6 +9,10 @@ struct SimpleVertex {
 	cc::Vec3f color;
 };
 
+struct ShaderData {
+	float alpha;
+};
+
 int main() {
 	ciri::Window window;
 	window.create(1280, 720);
@@ -43,6 +47,9 @@ int main() {
 	} else {
 		printf("Created vertex buffer.");
 	}
+
+	ciri::IConstantBuffer* constantBuffer = device->createConstantBuffer();
+	// ...
 
 	while( window.isOpen() ) {
 		ciri::WindowEvent evt;

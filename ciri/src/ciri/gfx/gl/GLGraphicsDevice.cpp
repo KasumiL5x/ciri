@@ -25,6 +25,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// destroy constant buffers
+		for( unsigned int i = 0; i < _constantBuffers.size(); ++i ) {
+			if( _constantBuffers[i] != nullptr ) {
+				_constantBuffers[i]->destroy();
+				delete _constantBuffers[i];
+				_constantBuffers[i] = nullptr;
+			}
+		}
+		_constantBuffers.clear();
+
 		// destroy vertex buffers
 		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
 			if( _vertexBuffers[i] != nullptr ) {
@@ -171,6 +181,12 @@ namespace ciri {
 	void GLGraphicsDevice::clear() {
 		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
+		GLConstantBuffer* buffer = new GLConstantBuffer();
+		_constantBuffers.push_back(buffer);
+		return buffer;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

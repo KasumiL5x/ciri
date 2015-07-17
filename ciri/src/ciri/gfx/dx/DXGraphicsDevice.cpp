@@ -24,6 +24,16 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// destroy constant buffers
+		for( unsigned int i = 0; i < _constantBuffers.size(); ++i ) {
+			if( _constantBuffers[i] != nullptr ) {
+				_constantBuffers[i]->destroy();
+				delete _constantBuffers[i];
+				_constantBuffers[i] = nullptr;
+			}
+		}
+		_constantBuffers.clear();
+
 		// destroy all vertex buffers
 		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
 			if( _vertexBuffers[i] != nullptr ) {
@@ -169,6 +179,12 @@ namespace ciri {
 
 	void DXGraphicsDevice::clear() {
 		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
+	}
+
+	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
+		DXConstantBuffer* buffer = new DXConstantBuffer();
+		_constantBuffers.push_back(buffer);
+		return buffer;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

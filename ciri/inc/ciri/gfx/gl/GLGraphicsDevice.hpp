@@ -13,6 +13,7 @@
 #include "../IGraphicsDevice.hpp"
 #include "GLShader.hpp"
 #include "GLVertexBuffer.hpp"
+#include "GLConstantBuffer.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -29,6 +30,7 @@ namespace ciri {
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
 		virtual void clear();
+		virtual IConstantBuffer* createConstantBuffer();
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -43,6 +45,8 @@ namespace ciri {
 		//
 		GLShader* _activeShader;
 		GLVertexBuffer* _activeVertexBuffer;
+		//
+		std::vector<GLConstantBuffer*> _constantBuffers;
 	};
 } // ciri
 

@@ -7,6 +7,7 @@ namespace ciri {
 	class Window;
 	class IShader;
 	class IVertexBuffer;
+	class IConstantBuffer;
 
 	class IGraphicsDevice {
 	public:
@@ -33,6 +34,8 @@ namespace ciri {
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex )=0;
 
 		virtual void clear()=0;
+
+		virtual IConstantBuffer* createConstantBuffer()=0;
 	};
 } // ciri
 

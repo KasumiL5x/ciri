@@ -8,6 +8,7 @@
 #include "../IGraphicsDevice.hpp"
 #include "DXShader.hpp"
 #include "DXVertexBuffer.hpp"
+#include "DXConstantBuffer.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -24,6 +25,7 @@ namespace ciri {
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
 		virtual void clear();
+		virtual IConstantBuffer* createConstantBuffer();
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -47,6 +49,8 @@ namespace ciri {
 		//
 		DXShader* _activeShader;
 		DXVertexBuffer* _activeVertexBuffer;
+		//
+		std::vector<DXConstantBuffer*> _constantBuffers;
 	};
 } // ciri
 
