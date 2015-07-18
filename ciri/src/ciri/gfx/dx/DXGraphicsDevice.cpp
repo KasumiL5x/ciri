@@ -34,6 +34,16 @@ namespace ciri {
 		}
 		_constantBuffers.clear();
 
+		// destroy index buffers
+		for( unsigned int i = 0; i < _indexBuffers.size(); ++i ) {
+			if( _indexBuffers[i] != nullptr ) {
+				_indexBuffers[i]->destroy();
+				delete _indexBuffers[i];
+				_indexBuffers[i] = nullptr;
+			}
+		}
+		_indexBuffers.clear();
+
 		// destroy all vertex buffers
 		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
 			if( _vertexBuffers[i] != nullptr ) {
@@ -136,6 +146,12 @@ namespace ciri {
 		_immediateContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
 		_activeVertexBuffer = dxBuffer;
+	}
+
+	IIndexBuffer* DXGraphicsDevice::createIndexBuffer() {
+		DXIndexBuffer* buffer = new DXIndexBuffer();
+		_indexBuffers.push_back(buffer);
+		return buffer;
 	}
 
 	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {

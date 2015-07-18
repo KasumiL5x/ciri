@@ -2,6 +2,7 @@
 #include <ciri/gfx/GraphicsDeviceFactory.hpp>
 #include <ciri/gfx/IShader.hpp>
 #include <ciri/gfx/IVertexBuffer.hpp>
+#include <ciri/gfx/IIndexBuffer.hpp>
 #include <ciri/gfx/IConstantBuffer.hpp>
 #include <cc/Vec3.hpp>
 
@@ -60,6 +61,9 @@ int main() {
 	} else {
 		printf("Created vertex buffer.\n");
 	}
+
+	ciri::IIndexBuffer* indexBuffer = device->createIndexBuffer();
+	// ...
 
 	ShaderData shaderData;
 	shaderData.alpha = 1.0f;

@@ -35,6 +35,16 @@ namespace ciri {
 		}
 		_constantBuffers.clear();
 
+		// destroy index buffers
+		for( unsigned int i = 0; i < _indexBuffers.size(); ++i ) {
+			if( _indexBuffers[i] != nullptr ) {
+				_indexBuffers[i]->destroy();
+				delete _indexBuffers[i];
+				_indexBuffers[i] = nullptr;
+			}
+		}
+		_indexBuffers.clear();
+
 		// destroy vertex buffers
 		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
 			if( _vertexBuffers[i] != nullptr ) {
@@ -125,6 +135,12 @@ namespace ciri {
 		}
 
 		_activeVertexBuffer = glBuffer;
+	}
+
+	IIndexBuffer* GLGraphicsDevice::createIndexBuffer() {
+		GLIndexBuffer* buffer = new GLIndexBuffer();
+		_indexBuffers.push_back(buffer);
+		return buffer;
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
