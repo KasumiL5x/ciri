@@ -47,38 +47,29 @@ namespace ciri {
 		const bool all = (shaderTypeFlags & ShaderType::All);
 
 		if( all || (shaderTypeFlags & ShaderType::Vertex) ) {
-			if( _reflectedVertexConstantBufferNames.size() == 0 ) {
-				return err::CIRI_UNKNOWN_ERROR;
+			const std::unordered_map<std::string, int>::const_iterator existing = _vertexConstantBufferIndices.find(name);
+			if( _vertexConstantBufferIndices.end() == existing ) {
+				return err::CIRI_UNKNOWN_ERROR; // no matching string
 			}
-
-			const int index = _vertexConstantBuffers.size() == 0 ? 0 : _vertexConstantBuffers.size()-1;
-			if( strcmp(name, _reflectedVertexConstantBufferNames[index].c_str()) != 0 ) {
-				return err::CIRI_UNKNOWN_ERROR; // given shader name didn't match reflected name at same index (a.k.a added in the wrong order)
-			}
+			dxBuffer->setIndex(existing->second);
 			_vertexConstantBuffers.push_back(dxBuffer);
 		}
 
 		if( _geometryShader != nullptr && (all || (shaderTypeFlags & ShaderType::Geometry)) ) {
-			if( _reflectedGeometryConstantBufferNames.size() == 0 ) {
+			const std::unordered_map<std::string, int>::const_iterator existing = _geometryConstantBufferIndices.find(name);
+			if( _geometryConstantBufferIndices.end() == existing ) {
 				return err::CIRI_UNKNOWN_ERROR;
 			}
-
-			const int index = _geometryConstantBuffers.size() == 0 ? 0 : _geometryConstantBuffers.size()-1;
-			if( strcmp(name, _reflectedGeometryConstantBufferNames[index].c_str()) != 0 ) {
-				return err::CIRI_UNKNOWN_ERROR;
-			}
+			dxBuffer->setIndex(existing->second);
 			_geometryConstantBuffers.push_back(dxBuffer);
 		}
 
 		if( all || (shaderTypeFlags & ShaderType::Pixel) ) {
-			if( _reflectedPixelConstantBufferNames.size() == 0 ) {
+			const std::unordered_map<std::string, int>::const_iterator existing = _pixelConstantBufferIndices.find(name);
+			if( _pixelConstantBufferIndices.end() == existing ) {
 				return err::CIRI_UNKNOWN_ERROR;
 			}
-
-			const int index = _pixelConstantBuffers.size() == 0 ? 0 : _pixelConstantBuffers.size()-1;
-			if( strcmp(name, _reflectedPixelConstantBufferNames[index].c_str()) != 0 ) {
-				return err::CIRI_UNKNOWN_ERROR;
-			}
+			dxBuffer->setIndex(existing->second);
 			_pixelConstantBuffers.push_back(dxBuffer);
 		}
 
@@ -164,7 +155,8 @@ namespace ciri {
 				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
 					break;
 				}
-				_reflectedVertexConstantBufferNames[index] = std::string(desc.Name);
+
+				_vertexConstantBufferIndices[std::string(desc.Name)] = index;
 
 				index += 1;
 			}
@@ -210,7 +202,7 @@ namespace ciri {
 				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
 					break;
 				}
-				_reflectedGeometryConstantBufferNames[index] = std::string(desc.Name);
+				_geometryConstantBufferIndices[std::string(desc.Name)] = index;
 
 				index += 1;
 			}
@@ -255,7 +247,7 @@ namespace ciri {
 				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
 					break;
 				}
-				_reflectedPixelConstantBufferNames[index] = std::string(desc.Name);
+				_pixelConstantBufferIndices[std::string(desc.Name)] = index;
 
 				index += 1;
 			}
@@ -274,6 +266,14 @@ namespace ciri {
 	}
 
 	void DXShader::destroy() {
+		_vertexConstantBufferIndices.clear();
+		_geometryConstantBufferIndices.clear();
+		_pixelConstantBufferIndices.clear();
+		_vertexConstantBuffers.clear();
+		_geometryConstantBuffers.clear();
+		_pixelConstantBuffers.clear();
+
+
 		if( _inputLayout != nullptr ) {
 			_inputLayout->Release();
 			_inputLayout = nullptr;

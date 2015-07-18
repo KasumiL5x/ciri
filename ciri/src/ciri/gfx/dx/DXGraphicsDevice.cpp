@@ -87,7 +87,8 @@ namespace ciri {
 		const std::vector<DXConstantBuffer*>& vertexConstants = dxShader->getVertexConstants();
 		for( unsigned int i = 0; i < vertexConstants.size(); ++i ) {
 			ID3D11Buffer* buffer = vertexConstants[i]->getBuffer();
-			_immediateContext->VSSetConstantBuffers(i, 1, &buffer);
+			const int index = vertexConstants[i]->getIndex();
+			_immediateContext->VSSetConstantBuffers(index, 1, &buffer);
 		}
 		ID3D11InputLayout* il = dxShader->getInputLayout();
 		_immediateContext->IASetInputLayout(il);
@@ -98,7 +99,8 @@ namespace ciri {
 			const std::vector<DXConstantBuffer*>& geometryConstants = dxShader->getGeometryConstants();
 			for( unsigned int i = 0; i < geometryConstants.size(); ++i ) {
 				ID3D11Buffer* buffer = geometryConstants[i]->getBuffer();
-				_immediateContext->GSSetConstantBuffers(i, 1, &buffer);
+				const int index = geometryConstants[i]->getIndex();
+				_immediateContext->GSSetConstantBuffers(index, 1, &buffer);
 			}
 		}
 
@@ -107,7 +109,8 @@ namespace ciri {
 		const std::vector<DXConstantBuffer*>& pixelConstants = dxShader->getPixelConstants();
 		for( unsigned int i = 0; i < pixelConstants.size(); ++i ) {
 			ID3D11Buffer* buffer = pixelConstants[i]->getBuffer();
-			_immediateContext->PSSetConstantBuffers(i, 1, &buffer);
+			const int index = pixelConstants[i]->getIndex();
+			_immediateContext->PSSetConstantBuffers(index, 1, &buffer);
 		}
 
 		_activeShader = dxShader;

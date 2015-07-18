@@ -17,9 +17,13 @@ namespace ciri {
 
 		ID3D11Buffer* getBuffer() const;
 
+		void setIndex( int val );
+		int getIndex() const;
+
 	private:
 		DXGraphicsDevice* _device;
 		ID3D11Buffer* _buffer;
+		int _index;
 	};
 } // ciri
 

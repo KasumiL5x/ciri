@@ -57,9 +57,9 @@ namespace ciri {
 		//
 		std::unordered_map<VertexUsage::Type, std::string> _dxUsageStrings;
 		//
-		std::unordered_map<int, std::string> _reflectedVertexConstantBufferNames;
-		std::unordered_map<int, std::string> _reflectedGeometryConstantBufferNames;
-		std::unordered_map<int, std::string> _reflectedPixelConstantBufferNames;
+		std::unordered_map<std::string, int> _vertexConstantBufferIndices;
+		std::unordered_map<std::string, int> _geometryConstantBufferIndices;
+		std::unordered_map<std::string, int> _pixelConstantBufferIndices;
 		std::vector<DXConstantBuffer*> _vertexConstantBuffers;
 		std::vector<DXConstantBuffer*> _geometryConstantBuffers;
 		std::vector<DXConstantBuffer*> _pixelConstantBuffers;

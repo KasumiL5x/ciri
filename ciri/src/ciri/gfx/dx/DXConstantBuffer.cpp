@@ -3,7 +3,7 @@
 
 namespace ciri {
 	DXConstantBuffer::DXConstantBuffer( DXGraphicsDevice* device )
-		: IConstantBuffer(), _device(device), _buffer(nullptr) {
+		: IConstantBuffer(), _device(device), _buffer(nullptr), _index(0) {
 	}
 
 	DXConstantBuffer::~DXConstantBuffer() {
@@ -57,5 +57,13 @@ namespace ciri {
 
 	ID3D11Buffer* DXConstantBuffer::getBuffer() const {
 		return _buffer;
+	}
+
+	void DXConstantBuffer::setIndex( int val ) {
+		_index = val;
+	}
+
+	int DXConstantBuffer::getIndex() const {
+		return _index;
 	}
 } // ciri
