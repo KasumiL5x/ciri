@@ -39,7 +39,7 @@ namespace ciri {
 		}
 
 		if( !isValid() ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::CIRI_SHADER_INVALID;
 		}
 
 		DXConstantBuffer* dxBuffer = reinterpret_cast<DXConstantBuffer*>(buffer);

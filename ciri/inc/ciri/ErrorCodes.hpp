@@ -13,6 +13,7 @@ namespace ciri {
 			CIRI_SHADER_COMPILE_FAILED,
 			CIRI_SHADER_LINK_FAILED,
 			CIRI_SHADER_INCOMPLETE,
+			CIRI_SHADER_INVALID,
 			CIRI_INVALID_ARGUMENT
 		};
 
@@ -24,6 +25,7 @@ namespace ciri {
 			{ CIRI_SHADER_COMPILE_FAILED, "Shader compile failed" },
 			{ CIRI_SHADER_LINK_FAILED, "Shader link failed" },
 			{ CIRI_SHADER_INCOMPLETE, "Shader data incomplete" },
+			{ CIRI_SHADER_INVALID, "Shader is invalid" },
 			{ CIRI_INVALID_ARGUMENT, "Invalid argument" }
 		};
 
