@@ -53,8 +53,9 @@ namespace ciri {
 	}
 
 	err::ErrorCode GLShader::build() {
-		if( _vsFile.empty() && _gsFile.empty() && _psFile.empty() ) {
-			return err::CIRI_UNKNOWN_ERROR; // todo: change this to an actual error
+		// must have at least VS and PS
+		if( _vsFile.empty() && _psFile.empty() ) {
+			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
 		const int ERROR_LOG_SIZE = 1024;

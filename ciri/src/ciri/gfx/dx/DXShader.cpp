@@ -77,8 +77,9 @@ namespace ciri {
 	}
 
 	err::ErrorCode DXShader::build() {
-		if( _vsFile.empty() && _gsFile.empty() && _psFile.empty() ) {
-			return err::CIRI_UNKNOWN_ERROR;
+		// must have at least VS and PS
+		if( _vsFile.empty() && _psFile.empty() ) {
+			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
 		HRESULT hr = S_OK;
