@@ -12,7 +12,8 @@ namespace ciri {
 			CIRI_PATH_NOT_FOUND,
 			CIRI_SHADER_COMPILE_FAILED,
 			CIRI_SHADER_LINK_FAILED,
-			CIRI_SHADER_INCOMPLETE
+			CIRI_SHADER_INCOMPLETE,
+			CIRI_INVALID_ARGUMENT
 		};
 
 		static std::unordered_map<ErrorCode, const char*> errorStrings = {
@@ -22,7 +23,8 @@ namespace ciri {
 			{ CIRI_PATH_NOT_FOUND, "Path not found" },
 			{ CIRI_SHADER_COMPILE_FAILED, "Shader compile failed" },
 			{ CIRI_SHADER_LINK_FAILED, "Shader link failed" },
-			{ CIRI_SHADER_INCOMPLETE, "Shader data incomplete" }
+			{ CIRI_SHADER_INCOMPLETE, "Shader data incomplete" },
+			{ CIRI_INVALID_ARGUMENT, "Invalid argument" }
 		};
 
 		static bool success( const ErrorCode& code ) {

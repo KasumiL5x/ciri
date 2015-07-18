@@ -34,8 +34,8 @@ namespace ciri {
 	}
 
 	err::ErrorCode DXShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
-		if( nullptr == buffer ) {
-			return err::CIRI_UNKNOWN_ERROR;
+		if( nullptr == buffer || nullptr == name ) {
+			return err::CIRI_INVALID_ARGUMENT;
 		}
 
 		if( !isValid() ) {
@@ -43,6 +43,8 @@ namespace ciri {
 		}
 
 		DXConstantBuffer* dxBuffer = reinterpret_cast<DXConstantBuffer*>(buffer);
+
+		bool wasBufferSet = false;
 
 		const bool all = (shaderTypeFlags & ShaderType::All);
 
@@ -53,6 +55,8 @@ namespace ciri {
 			}
 			dxBuffer->setIndex(existing->second);
 			_vertexConstantBuffers.push_back(dxBuffer);
+			
+			wasBufferSet = true;
 		}
 
 		if( _geometryShader != nullptr && (all || (shaderTypeFlags & ShaderType::Geometry)) ) {
@@ -62,6 +66,8 @@ namespace ciri {
 			}
 			dxBuffer->setIndex(existing->second);
 			_geometryConstantBuffers.push_back(dxBuffer);
+
+			wasBufferSet = true;
 		}
 
 		if( all || (shaderTypeFlags & ShaderType::Pixel) ) {
@@ -71,6 +77,13 @@ namespace ciri {
 			}
 			dxBuffer->setIndex(existing->second);
 			_pixelConstantBuffers.push_back(dxBuffer);
+
+			wasBufferSet = true;
+		}
+
+		// if no buffer was set, the shader type flag didn't trigger any of the above conditions
+		if( false == wasBufferSet ) {
+			return err::CIRI_INVALID_ARGUMENT;
 		}
 
 		return err::CIRI_OK;

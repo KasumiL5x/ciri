@@ -27,10 +27,8 @@ namespace ciri {
 	}
 
 	err::ErrorCode GLShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
-		// note: type flag doesn't matter in GL because it's linked per-program, not per shader
-
-		if( nullptr == buffer ) {
-			return err::CIRI_UNKNOWN_ERROR;
+		if( nullptr == buffer || nullptr == name ) {
+			return err::CIRI_INVALID_ARGUMENT;
 		}
 
 		if( !isValid() ) {
