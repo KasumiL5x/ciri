@@ -4,7 +4,10 @@
 #include <ciri/gfx/IVertexBuffer.hpp>
 #include <ciri/gfx/IIndexBuffer.hpp>
 #include <ciri/gfx/IConstantBuffer.hpp>
+#include <ciri/gfx/Camera.hpp>
 #include <cc/Vec3.hpp>
+#include <cc/Mat4.hpp>
+#include <cc/MatrixFunc.hpp>
 
 #if defined(_DEBUG)
 	#include <crtdbg.h>
@@ -13,12 +16,49 @@
 struct SimpleVertex {
 	cc::Vec3f position;
 	cc::Vec3f color;
+
+	SimpleVertex() {
+	}
+
+	SimpleVertex( const cc::Vec3f& pos, const cc::Vec3f& col )
+		: position(pos), color(col) {
+	}
 };
 
 __declspec(align(16))
 struct ShaderData {
-	float alpha;
+	//cc::Mat4f xform;
+	float xform[16];
 };
+
+void createCube( float size, SimpleVertex* vb, int* ib ) {
+	vb[0] = SimpleVertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(1.0f, 0.0f, 0.0f));
+	vb[1] = SimpleVertex(cc::Vec3f( 1.0f, -1.0f,  1.0f), cc::Vec3f(0.0f, 1.0f, 0.0f));
+	vb[2] = SimpleVertex(cc::Vec3f( 1.0,   1.0,   1.0),  cc::Vec3f(0.0f, 0.0f, 1.0f));
+	vb[3] = SimpleVertex(cc::Vec3f(-1.0,   1.0,   1.0),  cc::Vec3f(1.0f, 1.0f, 1.0f));
+	vb[4] = SimpleVertex(cc::Vec3f(-1.0,  -1.0,  -1.0),  cc::Vec3f(1.0f, 0.0f, 0.0f));
+	vb[5] = SimpleVertex(cc::Vec3f( 1.0,  -1.0,  -1.0),  cc::Vec3f(0.0f, 1.0f, 0.0f));
+	vb[6] = SimpleVertex(cc::Vec3f( 1.0,   1.0,  -1.0),  cc::Vec3f(0.0f, 0.0f, 1.0f));
+	vb[7] = SimpleVertex(cc::Vec3f(-1.0,   1.0,  -1.0),  cc::Vec3f(1.0f, 1.0f, 1.0f));
+
+	ib[0]=0; ib[1]=1; ib[2]=2;
+	ib[3]=2; ib[4]=3; ib[5]=0;
+
+	ib[6]=3; ib[7]=2; ib[8]=6;
+	ib[9]=6; ib[10]=7; ib[11]=3;
+
+	ib[12]=7; ib[13]=6; ib[14]=5;
+	ib[15]=5; ib[16]=4; ib[17]=7;
+
+	ib[18]=4; ib[19]=5; ib[20]=1;
+	ib[21]=1; ib[22]=0; ib[23]=4;
+
+	ib[24]=4; ib[25]=0; ib[26]=3;
+	ib[27]=3; ib[28]=7; ib[29]=4;
+	
+	ib[30]=1; ib[31]=5; ib[32]=6;
+	ib[33]=6; ib[34]=2; ib[35]=1;
+}
 
 int main() {
 	#if defined(_DEBUG)
@@ -28,10 +68,15 @@ int main() {
 		_CrtSetDbgFlag(debugFlag);
 	#endif
 
+	ciri::Camera camera;
+	camera.setAspect(1280.0f / 720.0f);
+	camera.setPosition(cc::Vec3f(0.0f, 2.0f, 0.0f));
+	camera.setTarget(cc::Vec3f(0.0f, 0.0f, -4.0f));
+
 	ciri::Window window;
 	window.create(1280, 720);
 
-	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::DirectX);
+	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::OpenGL);
 	if( !device->create(&window) ) {
 		printf("Failed to initialize graphics device.\n");
 		return -1;
@@ -40,8 +85,8 @@ int main() {
 	}
 
 	ciri::IShader* shader = device->createShader();
-	shader->addVertexShader("data/simple_vs.hlsl");
-	shader->addPixelShader("data/simple_ps.hlsl");
+	shader->addVertexShader("data/simple_vs.glsl");
+	shader->addPixelShader("data/simple_ps.glsl");
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
 	if( ciri::err::failed(shader->build()) ) {
@@ -50,37 +95,36 @@ int main() {
 		printf("Shader built.\n");
 	}
 
+	SimpleVertex vertices[8];
+	int indices[36];
+	createCube(1.0f, vertices, indices);
+
 	ciri::IVertexBuffer* vertexBuffer = device->createVertexBuffer();
-	SimpleVertex vertices[] = {
-		{cc::Vec3f( 0.0f,  0.5f, 0.5f), cc::Vec3f(1.0f, 0.0f, 0.0f) },
-		{cc::Vec3f( 0.5f, -0.5f, 0.5f), cc::Vec3f(0.0f, 1.0f, 0.0f) },
-		{cc::Vec3f(-0.5f, -0.5f, 0.5f), cc::Vec3f(0.0f, 0.0f, 1.0f) },
-	};
-	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), 3, false) ) {
+	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), 8, false) ) {
 		printf("Failed to create vertex buffer.\n");
 	} else {
 		printf("Created vertex buffer.\n");
 	}
 
 	ciri::IIndexBuffer* indexBuffer = device->createIndexBuffer();
-	int indices[] = {
-		0, 1, 2
-	};
-	if( !indexBuffer->set(indices, 3, false) ) {
+	if( !indexBuffer->set(indices, 36, false) ) {
 		printf("Failed to create index buffer.\n");
 	} else {
 		printf("Created index buffer.\n");
 	}
 
 	ShaderData shaderData;
-	shaderData.alpha = 1.0f;
+	cc::Mat4f viewProj = (camera.getProj() * camera.getView());
+	cc::Mat4f world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -4.0f));
+	cc::Mat4f xform = viewProj * world;
+	memcpy(shaderData.xform, &xform[0][0], sizeof(float) * 16);
 	ciri::IConstantBuffer* constantBuffer = device->createConstantBuffer();
 	if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
 		printf("Failed to create constant buffer.\n");
 	} else {
 		printf("Created constant buffer.\n");
 	}
-	if( ciri::err::failed(shader->addConstants(constantBuffer, "TestConstants", ciri::ShaderType::Pixel)) ) {
+	if( ciri::err::failed(shader->addConstants(constantBuffer, "TestConstants", ciri::ShaderType::Vertex)) ) {
 		printf("Failed to assign constant buffer to shader.\n");
 	} else {
 		printf("Assigned constant buffer to shader.\n");
@@ -96,7 +140,15 @@ int main() {
 
 		static float time = 0.0f;
 		time += 0.0001f;
-		shaderData.alpha = (sin(time * 10.0f) * 0.5f + 0.5f) * 1.0f;
+		static float angle = 0.0f;
+		angle += 0.1f;
+		if( angle > 360.0f ) {
+			angle = (360.0f - angle);
+		}
+		viewProj = (camera.getProj() * camera.getView());
+		world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -4.0f)) * cc::math::rotate(angle, cc::Vec3f(0.0f, 1.0f, 0.0f));
+		cc::Mat4f xform = viewProj * world;
+		memcpy(shaderData.xform, &xform[0][0], sizeof(float) * 16);
 		if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
 			printf("Failed to update constant buffer.\n");
 		}
