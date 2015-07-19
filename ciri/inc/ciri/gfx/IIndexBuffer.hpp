@@ -11,6 +11,7 @@ namespace ciri {
 
 		virtual bool set( int* indices, int indexCount, bool dynamic )=0;
 		virtual void destroy()=0;
+		virtual int getIndexCount() const=0;
 	};
 } // ciri
 

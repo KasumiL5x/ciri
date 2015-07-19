@@ -3,7 +3,7 @@
 
 namespace ciri {
 	DXIndexBuffer::DXIndexBuffer( DXGraphicsDevice* device )
-		: IIndexBuffer(), _device(device), _indexBuffer(nullptr) {
+		: IIndexBuffer(), _device(device), _indexBuffer(nullptr), _indexCount(0) {
 	}
 
 	DXIndexBuffer::~DXIndexBuffer() {
@@ -15,6 +15,8 @@ namespace ciri {
 		if( _indexBuffer != nullptr ) {
 			return false;
 		}
+
+		_indexCount = indexCount;
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
@@ -44,6 +46,10 @@ namespace ciri {
 			_indexBuffer->Release();
 			_indexBuffer = nullptr;
 		}
+	}
+
+	int DXIndexBuffer::getIndexCount() const {
+		return _indexCount;
 	}
 
 	ID3D11Buffer* DXIndexBuffer::getIndexBuffer() const {

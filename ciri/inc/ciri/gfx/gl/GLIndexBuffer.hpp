@@ -12,11 +12,13 @@ namespace ciri {
 
 		virtual bool set( int* indices, int indexCount, bool dynamic );
 		virtual void destroy();
+		virtual int getIndexCount() const;
 
 		GLuint getEvbo() const;
 
 	private:
 		GLuint _evbo;
+		int _indexCount;
 	};
 } // ciri
 

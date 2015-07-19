@@ -27,7 +27,9 @@ namespace ciri {
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual IIndexBuffer* createIndexBuffer();
+		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
+		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
 
@@ -36,6 +38,7 @@ namespace ciri {
 
 	private:
 		bool initDevice( unsigned int width, unsigned int height, HWND hwnd );
+		D3D_PRIMITIVE_TOPOLOGY convertTopology( PrimitiveTopology::Type topology ) const;
 
 	private:
 		D3D_DRIVER_TYPE _driverType;
@@ -54,6 +57,7 @@ namespace ciri {
 		//
 		DXShader* _activeShader;
 		DXVertexBuffer* _activeVertexBuffer;
+		DXIndexBuffer* _activeIndexBuffer;
 		//
 		std::vector<DXConstantBuffer*> _constantBuffers;
 	};

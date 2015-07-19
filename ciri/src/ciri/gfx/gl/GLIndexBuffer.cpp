@@ -2,7 +2,7 @@
 
 namespace ciri {
 	GLIndexBuffer::GLIndexBuffer()
-		: IIndexBuffer(), _evbo(0) {
+		: IIndexBuffer(), _evbo(0), _indexCount(0) {
 	}
 
 	GLIndexBuffer::~GLIndexBuffer() {
@@ -14,6 +14,8 @@ namespace ciri {
 		if( _evbo != 0 ) {
 			return false;
 		}
+
+		_indexCount = indexCount;
 
 		glGenBuffers(1, &_evbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _evbo);
@@ -30,6 +32,10 @@ namespace ciri {
 			glDeleteBuffers(1, &_evbo);
 			_evbo = 0;
 		}
+	}
+
+	int GLIndexBuffer::getIndexCount() const {
+		return _indexCount;
 	}
 
 	GLuint GLIndexBuffer::getEvbo() const {

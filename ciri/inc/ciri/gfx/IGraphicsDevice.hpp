@@ -34,7 +34,11 @@ namespace ciri {
 
 		virtual IIndexBuffer* createIndexBuffer()=0;
 
+		virtual void setIndexBuffer( IIndexBuffer* buffer )=0;
+
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex )=0;
+
+		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount )=0;
 
 		virtual void clear()=0;
 

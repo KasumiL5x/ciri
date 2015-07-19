@@ -6,7 +6,7 @@ namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
 		: IGraphicsDevice(), _driverType(D3D_DRIVER_TYPE_NULL), _featureLevel(D3D_FEATURE_LEVEL_11_0), _device(nullptr),
 			_device1(nullptr), _immediateContext(nullptr), _immediateContext1(nullptr), _swapchain(nullptr),
-			_swapchain1(nullptr), _renderTargetView(nullptr), _activeShader(nullptr), _activeVertexBuffer(nullptr) {
+			_swapchain1(nullptr), _renderTargetView(nullptr), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr) {
 	}
 
 	DXGraphicsDevice::~DXGraphicsDevice() {
@@ -154,6 +154,18 @@ namespace ciri {
 		return buffer;
 	}
 
+	void DXGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
+		DXIndexBuffer* dxBuffer = reinterpret_cast<DXIndexBuffer*>(buffer);
+
+		ID3D11Buffer* ib = dxBuffer->getIndexBuffer();
+		if( nullptr == ib ) {
+			return; // todo: error
+		}
+		_immediateContext->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
+
+		_activeIndexBuffer = dxBuffer;
+	}
+
 	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
@@ -175,33 +187,28 @@ namespace ciri {
 			return;
 		}
 
-		switch( topology ) {
-			case PrimitiveTopology::PointList: {
-				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-			}
+		_immediateContext->IASetPrimitiveTopology(convertTopology(topology));
+		_immediateContext->Draw(vertexCount, startIndex);
+	}
 
-			case PrimitiveTopology::LineList: {
-				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-			}
-
-			case PrimitiveTopology::LineStrip: {
-				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-			}
-
-			case PrimitiveTopology::TriangleList: {
-				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			}
-
-			case PrimitiveTopology::TriangleStrip: {
-				_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-			}
-
-			default: {
-				break;
-			}
+	void DXGraphicsDevice::drawIndexed( PrimitiveTopology::Type topology, int indexCount ) {
+		// cannot draw with no active shader
+		if( nullptr == _activeShader ) {
+			return;
 		}
 
-		_immediateContext->Draw(vertexCount, startIndex);
+		// cannot draw without a valid vertex and index buffer
+		if( nullptr == _activeVertexBuffer || nullptr == _activeIndexBuffer ) {
+			return;
+		}
+
+		// index count must be greater than 0
+		if( indexCount <= 0 ) {
+			return; // todo: error
+		}
+
+		_immediateContext->IASetPrimitiveTopology(convertTopology(topology));
+		_immediateContext->DrawIndexed(indexCount, 0, 0);
 	}
 
 	void DXGraphicsDevice::clear() {
@@ -357,5 +364,33 @@ namespace ciri {
 		_immediateContext->RSSetViewports(1, &vp);
 
 		return true;
+	}
+
+	D3D_PRIMITIVE_TOPOLOGY DXGraphicsDevice::convertTopology( PrimitiveTopology::Type topology ) const {
+		switch( topology ) {
+			case PrimitiveTopology::PointList: {
+				return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+			}
+
+			case PrimitiveTopology::LineList: {
+				return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+			}
+
+			case PrimitiveTopology::LineStrip: {
+				return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+			}
+
+			case PrimitiveTopology::TriangleList: {
+				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			}
+
+			case PrimitiveTopology::TriangleStrip: {
+				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+			}
+
+			default: {
+				return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+			}
+		}
 	}
 } // ciri

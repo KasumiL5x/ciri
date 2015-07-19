@@ -14,12 +14,14 @@ namespace ciri {
 
 		virtual bool set( int* indices, int indexCount, bool dynamic );
 		virtual void destroy();
+		virtual int getIndexCount() const;
 
 		ID3D11Buffer* getIndexBuffer() const;
 
 	private:
 		DXGraphicsDevice* _device;
 		ID3D11Buffer* _indexBuffer;
+		int _indexCount;
 	};
 } // ciri
 

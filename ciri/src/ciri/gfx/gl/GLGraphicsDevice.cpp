@@ -3,7 +3,7 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr), _activeVertexBuffer(nullptr) {
+		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr) {
 	}
 
 	GLGraphicsDevice::~GLGraphicsDevice() {
@@ -143,6 +143,18 @@ namespace ciri {
 		return buffer;
 	}
 
+	void GLGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
+		GLIndexBuffer* glBuffer = reinterpret_cast<GLIndexBuffer*>(buffer);
+
+		const GLuint evbo = glBuffer->getEvbo();
+		if( 0 == evbo ) {
+			return; // todo: error
+		}
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, evbo);
+
+		_activeIndexBuffer = glBuffer;
+	}
+
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
@@ -164,34 +176,26 @@ namespace ciri {
 			return;
 		}
 
-		GLenum mode = 0;
-		switch( topology ) {
-			case PrimitiveTopology::PointList: {
-				mode = GL_POINTS;
-			}
+		glDrawArrays(convertTopology(topology), startIndex, vertexCount);
+	}
 
-			case PrimitiveTopology::LineList: {
-				mode = GL_LINES; // wrong?
-			}
-
-			case PrimitiveTopology::LineStrip: {
-				mode = GL_LINE_STRIP;
-			}
-
-			case PrimitiveTopology::TriangleList: {
-				mode = GL_TRIANGLES; // wrong?
-			}
-
-			case PrimitiveTopology::TriangleStrip: {
-				mode = GL_TRIANGLE_STRIP;
-			}
-
-			default: {
-				break;
-			}
+	void GLGraphicsDevice::drawIndexed( PrimitiveTopology::Type topology, int indexCount ) {
+		// cannot draw with no active shader
+		if( nullptr == _activeShader ) {
+			return;
 		}
 
-		glDrawArrays(mode, startIndex, vertexCount);
+		// cannot draw without a valid vertex and index buffer
+		if( nullptr == _activeVertexBuffer || nullptr == _activeIndexBuffer ) {
+			return;
+		}
+
+		// index count must be greater than 0
+		if( indexCount <= 0 ) {
+			return; // todo: error
+		}
+
+		glDrawElements(convertTopology(topology), indexCount, GL_UNSIGNED_INT, 0);
 	}
 
 	void GLGraphicsDevice::clear() {
@@ -256,5 +260,33 @@ namespace ciri {
 
 	bool GLGraphicsDevice::configureGlew() {
 		return (glewInit() == GLEW_OK);
+	}
+
+	GLenum GLGraphicsDevice::convertTopology( PrimitiveTopology::Type topology ) const {
+		switch( topology ) {
+			case PrimitiveTopology::PointList: {
+				return GL_POINTS;
+			}
+
+			case PrimitiveTopology::LineList: {
+				return GL_LINES; // wrong?
+			}
+
+			case PrimitiveTopology::LineStrip: {
+				return GL_LINE_STRIP;
+			}
+
+			case PrimitiveTopology::TriangleList: {
+				return GL_TRIANGLES; // wrong?
+			}
+
+			case PrimitiveTopology::TriangleStrip: {
+				return GL_TRIANGLE_STRIP;
+			}
+
+			default: {
+				return GL_INVALID_ENUM; // lol
+			}
+		}
 	}
 } // ciri

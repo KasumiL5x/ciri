@@ -63,7 +63,14 @@ int main() {
 	}
 
 	ciri::IIndexBuffer* indexBuffer = device->createIndexBuffer();
-	// ...
+	int indices[] = {
+		0, 1, 2
+	};
+	if( !indexBuffer->set(indices, 3, false) ) {
+		printf("Failed to create index buffer.\n");
+	} else {
+		printf("Created index buffer.\n");
+	}
 
 	ShaderData shaderData;
 	shaderData.alpha = 1.0f;
@@ -97,7 +104,8 @@ int main() {
 		device->clear();
 		device->applyShader(shader);
 		device->setVertexBuffer(vertexBuffer);
-		device->drawArrays(ciri::PrimitiveTopology::TriangleList, 3, 0);
+		device->setIndexBuffer(indexBuffer);
+		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, indexBuffer->getIndexCount());
 
 		device->present();
 	}

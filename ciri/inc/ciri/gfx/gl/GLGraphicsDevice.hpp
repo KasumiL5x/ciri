@@ -30,13 +30,16 @@ namespace ciri {
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual IIndexBuffer* createIndexBuffer();
+		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
+		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
 
 	private:
 		bool configureGl( HWND hwnd );
 		bool configureGlew();
+		GLenum convertTopology( PrimitiveTopology::Type topology ) const;
 
 	private:
 		HDC _hdc;
@@ -48,6 +51,7 @@ namespace ciri {
 		//
 		GLShader* _activeShader;
 		GLVertexBuffer* _activeVertexBuffer;
+		GLIndexBuffer* _activeIndexBuffer;
 		//
 		std::vector<GLConstantBuffer*> _constantBuffers;
 	};
