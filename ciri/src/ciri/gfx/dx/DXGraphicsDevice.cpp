@@ -149,7 +149,7 @@ namespace ciri {
 	}
 
 	IIndexBuffer* DXGraphicsDevice::createIndexBuffer() {
-		DXIndexBuffer* buffer = new DXIndexBuffer();
+		DXIndexBuffer* buffer = new DXIndexBuffer(this);
 		_indexBuffers.push_back(buffer);
 		return buffer;
 	}

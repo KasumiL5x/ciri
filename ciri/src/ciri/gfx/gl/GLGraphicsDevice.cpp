@@ -80,7 +80,7 @@ namespace ciri {
 	}
 
 	IShader* GLGraphicsDevice::createShader() {
-		GLShader* shader = new GLShader(this);
+		GLShader* shader = new GLShader();
 		_shaders.push_back(shader);
 		return shader;
 	}
@@ -97,7 +97,7 @@ namespace ciri {
 	}
 
 	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
-		GLVertexBuffer* buffer = new GLVertexBuffer(this);
+		GLVertexBuffer* buffer = new GLVertexBuffer();
 		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}

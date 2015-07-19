@@ -9,6 +9,7 @@ namespace ciri {
 		virtual ~IIndexBuffer() {
 		}
 
+		virtual bool set( int* indices, int indexCount, bool dynamic )=0;
 		virtual void destroy()=0;
 	};
 } // ciri

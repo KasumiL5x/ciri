@@ -1,15 +1,25 @@
 #ifndef __ciri_dxindexbuffer__
 #define __ciri_dxindexbuffer__
 
+#include <d3d11_1.h>
 #include "../IIndexBuffer.hpp"
 
 namespace ciri {
+	class DXGraphicsDevice;
+
 	class DXIndexBuffer : public IIndexBuffer {
 	public:
-		DXIndexBuffer();
+		DXIndexBuffer( DXGraphicsDevice* device );
 		virtual ~DXIndexBuffer();
 
+		virtual bool set( int* indices, int indexCount, bool dynamic );
 		virtual void destroy();
+
+		ID3D11Buffer* getIndexBuffer() const;
+
+	private:
+		DXGraphicsDevice* _device;
+		ID3D11Buffer* _indexBuffer;
 	};
 } // ciri
 

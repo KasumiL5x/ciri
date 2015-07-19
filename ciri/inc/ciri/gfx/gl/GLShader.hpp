@@ -7,12 +7,11 @@
 #include "../VertexDeclaration.hpp"
 
 namespace ciri {
-	class GLGraphicsDevice;
 	class IConstantBuffer;
 
 	class GLShader : public IShader {
 	public:
-		GLShader( GLGraphicsDevice* device );
+		GLShader();
 		virtual ~GLShader();
 
 		virtual void addVertexShader( const char* filename );
@@ -33,8 +32,6 @@ namespace ciri {
 		const VertexDeclaration& getVertexDeclaration() const;
 
 	private:
-		GLGraphicsDevice* _device;
-		//
 		std::string _vsFile;
 		std::string _gsFile;
 		std::string _psFile;

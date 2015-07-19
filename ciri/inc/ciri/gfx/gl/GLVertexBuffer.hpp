@@ -5,11 +5,9 @@
 #include "../IVertexBuffer.hpp"
 
 namespace ciri {
-	class GLGraphicsDevice;
-
-	class GLVertexBuffer : public IVertexBuffer {
+class GLVertexBuffer : public IVertexBuffer {
 	public:
-		GLVertexBuffer( GLGraphicsDevice* device );
+		GLVertexBuffer();
 		virtual ~GLVertexBuffer();
 
 		virtual bool set( void* vertices, int vertexStride, int vertexCount, bool dynamic );
@@ -19,7 +17,6 @@ namespace ciri {
 		GLuint getVbo() const;
 
 	private:
-		GLGraphicsDevice* _device;
 		GLuint _vbo;
 		int _vertexStride;
 	};

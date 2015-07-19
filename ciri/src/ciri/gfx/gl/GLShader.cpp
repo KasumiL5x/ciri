@@ -1,10 +1,10 @@
 #include <ciri/gfx/gl/GLShader.hpp>
-#include <ciri/gfx/gl/GLGraphicsDevice.hpp>
+#include <ciri/gfx/gl/GLConstantBuffer.hpp>
 #include <ciri/util/File.hpp>
 
 namespace ciri {
-	GLShader::GLShader( GLGraphicsDevice* device )
-		: IShader(), _device(device), _vsFile(""), _gsFile(""), _psFile(""), _vertexShader(0), _geometryShader(0), _pixelShader(0), _program(0) {
+	GLShader::GLShader()
+		: IShader(), _vsFile(""), _gsFile(""), _psFile(""), _vertexShader(0), _geometryShader(0), _pixelShader(0), _program(0) {
 	}
 
 	GLShader::~GLShader() {
