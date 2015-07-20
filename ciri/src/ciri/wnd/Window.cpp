@@ -2,7 +2,7 @@
 
 namespace ciri {
 	Window::Window()
-		: _hwnd(0), _resizing(false), _lastSize(0, 0) {
+		: _hwnd(0), _resizing(false), _lastSize(0, 0), _keyRepeatEnabled(true) {
 	}
 
 	Window::~Window() {
@@ -172,6 +172,41 @@ namespace ciri {
 				WindowEvent evt;
 				evt.type = WindowEvent::FocusLost;
 				pushEvent(evt);
+				break;
+			}
+
+			// character input
+			case WM_CHAR: {
+				break;
+			}
+
+			// keydown
+			case WM_KEYDOWN:
+			case WM_SYSKEYDOWN: {
+				if( _keyRepeatEnabled || ((HIWORD(lparam) & KF_REPEAT) == 0) ) {
+					WindowEvent evt;
+					evt.type = WindowEvent::KeyDown;
+					evt.key.alt = HIWORD(GetAsyncKeyState(VK_MENU)) != 0;
+					evt.key.ctrl = HIWORD(GetAsyncKeyState(VK_CONTROL)) != 0;
+					evt.key.shift = HIWORD(GetAsyncKeyState(VK_SHIFT)) != 0;
+					evt.key.super = (HIWORD(GetAsyncKeyState(VK_LWIN)) != 0) || (HIWORD(GetAsyncKeyState(VK_RWIN)) != 0);
+					evt.key.code = wparam;
+					pushEvent(evt);
+				}
+				break;
+			}
+
+			// keyup
+			case WM_KEYUP:
+			case WM_SYSKEYUP: {
+					WindowEvent evt;
+					evt.type = WindowEvent::KeyUp;
+					evt.key.alt = HIWORD(GetAsyncKeyState(VK_MENU)) != 0;
+					evt.key.ctrl = HIWORD(GetAsyncKeyState(VK_CONTROL)) != 0;
+					evt.key.shift = HIWORD(GetAsyncKeyState(VK_SHIFT)) != 0;
+					evt.key.super = (HIWORD(GetAsyncKeyState(VK_LWIN)) != 0) || (HIWORD(GetAsyncKeyState(VK_RWIN)) != 0);
+					evt.key.code = wparam;
+					pushEvent(evt);
 				break;
 			}
 		}

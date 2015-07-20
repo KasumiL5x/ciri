@@ -32,6 +32,7 @@ namespace ciri {
 		std::queue<WindowEvent> _events;
 		bool _resizing;
 		cc::Vec2ui _lastSize;
+		bool _keyRepeatEnabled;
 	};
 } // ciri
 
