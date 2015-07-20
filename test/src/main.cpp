@@ -27,8 +27,7 @@ struct SimpleVertex {
 
 __declspec(align(16))
 struct ShaderData {
-	//cc::Mat4f xform;
-	float xform[16];
+	cc::Mat4f xform;
 };
 
 void createCube( float size, SimpleVertex* vb, int* ib ) {
@@ -117,7 +116,7 @@ int main() {
 	cc::Mat4f viewProj = (camera.getProj() * camera.getView());
 	cc::Mat4f world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -4.0f));
 	cc::Mat4f xform = viewProj * world;
-	memcpy(shaderData.xform, &xform[0][0], sizeof(float) * 16);
+	shaderData.xform = xform;
 	ciri::IConstantBuffer* constantBuffer = device->createConstantBuffer();
 	if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
 		printf("Failed to create constant buffer.\n");
@@ -148,7 +147,7 @@ int main() {
 		viewProj = (camera.getProj() * camera.getView());
 		world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -4.0f)) * cc::math::rotate(angle, cc::Vec3f(0.0f, 1.0f, 0.0f));
 		cc::Mat4f xform = viewProj * world;
-		memcpy(shaderData.xform, &xform[0][0], sizeof(float) * 16);
+		shaderData.xform = xform;
 		if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
 			printf("Failed to update constant buffer.\n");
 		}
