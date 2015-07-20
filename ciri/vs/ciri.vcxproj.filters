@@ -16,6 +16,9 @@
     <Filter Include="gfx\gl">
       <UniqueIdentifier>{43e2367a-7233-4fd2-993e-d08fbcfc21c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{2b1202f0-e285-4e82-a97e-b0cdf9f5a380}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ciri\wnd\Window.cpp">
@@ -71,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="..\src\ciri\gfx\dx\DXIndexBuffer.cpp">
       <Filter>gfx\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\input\Input.cpp">
+      <Filter>input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\dx\DXIndexBuffer.hpp">
       <Filter>gfx\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\input\Input.hpp">
+      <Filter>input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

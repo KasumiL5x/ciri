@@ -5,6 +5,7 @@
 #include <ciri/gfx/IIndexBuffer.hpp>
 #include <ciri/gfx/IConstantBuffer.hpp>
 #include <ciri/gfx/Camera.hpp>
+#include <ciri/input/Input.hpp>
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
 #include <cc/MatrixFunc.hpp>
@@ -135,6 +136,10 @@ int main() {
 			if( evt.type == ciri::WindowEvent::Closed ) {
 				window.destroy();
 			}
+		}
+
+		if(  ciri::Input::instance().isKeyPressed(ciri::Keyboard::LCtrl) && ciri::Input::instance().isKeyPressed(ciri::Keyboard::Tilde) ) {
+			printf("lctrl+tilde pressed\n");
 		}
 
 		static float time = 0.0f;

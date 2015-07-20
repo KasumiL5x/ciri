@@ -27,6 +27,7 @@
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexDeclaration.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp" />
+    <ClCompile Include="..\src\ciri\input\Input.cpp" />
     <ClCompile Include="..\src\ciri\util\File.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
   </ItemGroup>
@@ -57,6 +58,7 @@
     <ClInclude Include="..\inc\ciri\gfx\VertexElement.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexFormat.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexUsage.hpp" />
+    <ClInclude Include="..\inc\ciri\input\Input.hpp" />
     <ClInclude Include="..\inc\ciri\util\File.hpp" />
     <ClInclude Include="..\inc\ciri\util\StrUtil.hpp" />
     <ClInclude Include="..\inc\ciri\wnd\Window.hpp" />
