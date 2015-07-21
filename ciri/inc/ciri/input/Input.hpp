@@ -4,6 +4,8 @@
 #include <Windows.h>
 
 namespace ciri {
+	class Window;
+
 	class Keyboard {
 	public:
 		enum Key {
@@ -45,17 +47,52 @@ namespace ciri {
 		};
 	};
 
-	class Input {
+	class MouseButton {
 	public:
-		Input();
-		~Input();
+		enum Button {
+			Left=0, Middle, Right, X1, X2, Max
+		};
+	};
 
-		static Input& instance();
+	struct KeyboardState {
+		friend class Input;
 
-		bool isKeyPressed( Keyboard::Key key ) const;
+		KeyboardState();
+		KeyboardState( const KeyboardState& rhs );
+		KeyboardState& operator=( const KeyboardState& rhs );
+
+		bool isKeyDown( Keyboard::Key key ) const;
+		bool isKeyUp( Keyboard::Key key ) const;
 
 	private:
-		static Input* _instance;
+		const static int KEY_ARRAY_SIZE = 256;
+		static unsigned char _keyBuffer[KEY_ARRAY_SIZE]; // shared between all states; used by win32 code
+		bool states[KEY_ARRAY_SIZE];
+	};
+
+	struct MouseState {
+		friend class Input;
+
+		MouseState();
+		MouseState( const MouseState& rhs );
+		MouseState& operator=( const MouseState& rhs );
+
+		bool isButtonDown( MouseButton::Button button ) const;
+		bool isButtonUp( MouseButton::Button button ) const;
+
+	public:
+		int x;
+		int y;
+
+	private:
+		bool states[MouseButton::Max];
+	};
+
+	class Input {
+	public:
+		static void getKeyboardState( KeyboardState* outState );
+		static void getMouseState( MouseState* outState, Window* window );
+		static int ciriKeyToWinKey( Keyboard::Key key );
 	};
 } // ciri
 

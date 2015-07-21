@@ -138,9 +138,15 @@ int main() {
 			}
 		}
 
-		if(  ciri::Input::instance().isKeyPressed(ciri::Keyboard::LCtrl) && ciri::Input::instance().isKeyPressed(ciri::Keyboard::Tilde) ) {
+		ciri::KeyboardState keyState;
+		ciri::Input::getKeyboardState(&keyState);
+		if(  keyState.isKeyDown(ciri::Keyboard::LCtrl) && keyState.isKeyDown(ciri::Keyboard::Tilde) ) {
 			printf("lctrl+tilde pressed\n");
 		}
+
+		ciri::MouseState mouseState;
+		ciri::Input::getMouseState(&mouseState, &window);
+		printf("x{%d} y{%d}\n", mouseState.x, mouseState.y);
 
 		static float time = 0.0f;
 		time += 0.0001f;
