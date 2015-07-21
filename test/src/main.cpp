@@ -6,6 +6,7 @@
 #include <ciri/gfx/IConstantBuffer.hpp>
 #include <ciri/gfx/Camera.hpp>
 #include <ciri/input/Input.hpp>
+#include <ciri/util/Timer.hpp>
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
 #include <cc/MatrixFunc.hpp>
@@ -130,23 +131,28 @@ int main() {
 		printf("Assigned constant buffer to shader.\n");
 	}
 
+	// delta timer
+	ciri::Timer timer;
+	timer.start();
+	float lastTime = 0.0f;
+
+	// mouse and keyboard states
+	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);
+	ciri::KeyboardState prevKeyState; ciri::Input::getKeyboardState(&prevKeyState);
+	ciri::MouseState currMouseState; ciri::Input::getMouseState(&currMouseState, &window);
+	ciri::MouseState prevMouseState; ciri::Input::getMouseState(&prevMouseState, &window);
+
 	while( window.isOpen() ) {
+		const float currTime = static_cast<float>(timer.getElapsedSeconds());
+		const float deltaTime = currTime - lastTime;
+		lastTime = currTime;
+
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
 			if( evt.type == ciri::WindowEvent::Closed ) {
 				window.destroy();
 			}
 		}
-
-		ciri::KeyboardState keyState;
-		ciri::Input::getKeyboardState(&keyState);
-		if(  keyState.isKeyDown(ciri::Keyboard::LCtrl) && keyState.isKeyDown(ciri::Keyboard::Tilde) ) {
-			printf("lctrl+tilde pressed\n");
-		}
-
-		ciri::MouseState mouseState;
-		ciri::Input::getMouseState(&mouseState, &window);
-		printf("x{%d} y{%d}\n", mouseState.x, mouseState.y);
 
 		static float time = 0.0f;
 		time += 0.0001f;

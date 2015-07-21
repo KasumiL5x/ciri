@@ -29,6 +29,7 @@
     <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp" />
     <ClCompile Include="..\src\ciri\input\Input.cpp" />
     <ClCompile Include="..\src\ciri\util\File.cpp" />
+    <ClCompile Include="..\src\ciri\util\Timer.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +62,7 @@
     <ClInclude Include="..\inc\ciri\input\Input.hpp" />
     <ClInclude Include="..\inc\ciri\util\File.hpp" />
     <ClInclude Include="..\inc\ciri\util\StrUtil.hpp" />
+    <ClInclude Include="..\inc\ciri\util\Timer.hpp" />
     <ClInclude Include="..\inc\ciri\wnd\Window.hpp" />
     <ClInclude Include="..\inc\ciri\wnd\WindowEvent.hpp" />
   </ItemGroup>

@@ -78,6 +78,9 @@
     <ClCompile Include="..\src\ciri\input\Input.cpp">
       <Filter>input</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\util\Timer.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -168,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\input\Input.hpp">
       <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\util\Timer.hpp">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
