@@ -81,6 +81,9 @@
     <ClCompile Include="..\src\ciri\util\Timer.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\MayaCamera.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -174,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\util\Timer.hpp">
       <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\MayaCamera.hpp">
+      <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

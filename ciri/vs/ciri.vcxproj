@@ -25,6 +25,7 @@
     <ClCompile Include="..\src\ciri\gfx\gl\GLVertexBuffer.cpp" />
     <ClCompile Include="..\src\ciri\gfx\gl\GLVertexDeclaration.cpp" />
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\MayaCamera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexDeclaration.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp" />
     <ClCompile Include="..\src\ciri\input\Input.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="..\inc\ciri\gfx\IIndexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IShader.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IVertexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\MayaCamera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexElement.hpp" />

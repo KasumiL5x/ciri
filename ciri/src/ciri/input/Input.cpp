@@ -65,11 +65,11 @@ namespace ciri {
 			return;
 		}
 
-		outState->states[MouseButton::Left] = (GetAsyncKeyState(VK_LBUTTON) & 0x80) ? true : false;
-		outState->states[MouseButton::Middle] = (GetAsyncKeyState(VK_MBUTTON) & 0x80) ? true : false;
-		outState->states[MouseButton::Right] = (GetAsyncKeyState(VK_RBUTTON) & 0x80) ? true : false;
-		outState->states[MouseButton::X1] = (GetAsyncKeyState(VK_XBUTTON1) & 0x80) ? true : false;
-		outState->states[MouseButton::X2] = (GetAsyncKeyState(VK_XBUTTON2) & 0x80) ? true : false;
+		outState->states[MouseButton::Left] = (GetKeyState(VK_LBUTTON) & 0x80) ? true : false;
+		outState->states[MouseButton::Middle] = (GetKeyState(VK_MBUTTON) & 0x80) ? true : false;
+		outState->states[MouseButton::Right] = (GetKeyState(VK_RBUTTON) & 0x80) ? true : false;
+		outState->states[MouseButton::X1] = (GetKeyState(VK_XBUTTON1) & 0x80) ? true : false;
+		outState->states[MouseButton::X2] = (GetKeyState(VK_XBUTTON2) & 0x80) ? true : false;
 
 		POINT pos;
 		GetCursorPos(&pos);

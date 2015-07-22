@@ -4,7 +4,7 @@
 #include <ciri/gfx/IVertexBuffer.hpp>
 #include <ciri/gfx/IIndexBuffer.hpp>
 #include <ciri/gfx/IConstantBuffer.hpp>
-#include <ciri/gfx/Camera.hpp>
+#include <ciri/gfx/MayaCamera.hpp>
 #include <ciri/input/Input.hpp>
 #include <ciri/util/Timer.hpp>
 #include <cc/Vec3.hpp>
@@ -69,9 +69,16 @@ int main() {
 		_CrtSetDbgFlag(debugFlag);
 	#endif
 
-	ciri::Camera camera;
+	ciri::MayaCamera camera;
 	camera.setAspect(1280.0f / 720.0f);
-	camera.setPosition(cc::Vec3f(0.0f, 2.0f, 0.0f));
+	camera.setPlanes(0.1f, 1000.0f);
+	camera.setYaw(0.0f);
+	camera.setPitch(9.0f);
+	camera.setOffset(4.0f);
+	camera.setSensitivity(100.0f, 50.0f, 10.0f);
+	camera.setLerpStrength(10.0f);
+	camera.resetPosition();
+	//camera.setPosition(cc::Vec3f(0.0f, 2.0f, 0.0f));
 	camera.setTarget(cc::Vec3f(0.0f, 0.0f, -4.0f));
 
 	ciri::Window window;
@@ -138,15 +145,23 @@ int main() {
 
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);
-	ciri::KeyboardState prevKeyState; ciri::Input::getKeyboardState(&prevKeyState);
+	ciri::KeyboardState prevKeyState = currKeyState;
 	ciri::MouseState currMouseState; ciri::Input::getMouseState(&currMouseState, &window);
-	ciri::MouseState prevMouseState; ciri::Input::getMouseState(&prevMouseState, &window);
+	ciri::MouseState prevMouseState = currMouseState;
 
 	while( window.isOpen() ) {
+		// delta time
 		const float currTime = static_cast<float>(timer.getElapsedSeconds());
 		const float deltaTime = currTime - lastTime;
 		lastTime = currTime;
 
+		printf("%f\n", deltaTime);
+
+		// update current input states
+		ciri::Input::getKeyboardState(&currKeyState);
+		ciri::Input::getMouseState(&currMouseState, &window);
+
+		// event processing
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
 			if( evt.type == ciri::WindowEvent::Closed ) {
@@ -154,10 +169,35 @@ int main() {
 			}
 		}
 
+		// camera movement
+		if( currKeyState.isKeyDown(ciri::Keyboard::LAlt) ) {
+			// rotation
+			if( currMouseState.isButtonDown(ciri::MouseButton::Left) ) {
+				const float dx = static_cast<float>(currMouseState.x) - static_cast<float>(prevMouseState.x);
+				const float dy = static_cast<float>(currMouseState.y) - static_cast<float>(prevMouseState.y);
+				camera.rotateYaw(-dx * deltaTime);
+				camera.rotatePitch(-dy * deltaTime);
+			}
+
+			// dolly
+			if( currMouseState.isButtonDown(ciri::MouseButton::Right) ) {
+				const float dy = static_cast<float>(currMouseState.y) - static_cast<float>(prevMouseState.y);
+				camera.dolly(dy * deltaTime);
+			}
+
+			// pan
+			if( currMouseState.isButtonDown(ciri::MouseButton::Middle) ) {
+				const float dx = static_cast<float>(currMouseState.x) - static_cast<float>(prevMouseState.x);
+				const float dy = static_cast<float>(currMouseState.y) - static_cast<float>(prevMouseState.y);
+				camera.pan(dx * deltaTime, -dy * deltaTime);
+			}
+		}
+		camera.update(deltaTime);
+
 		static float time = 0.0f;
 		time += 0.0001f;
 		static float angle = 0.0f;
-		angle += 0.1f;
+		//angle += 0.1f;
 		if( angle > 360.0f ) {
 			angle = (360.0f - angle);
 		}
@@ -176,6 +216,10 @@ int main() {
 		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, indexBuffer->getIndexCount());
 
 		device->present();
+
+		// update previous inputs to current inputs
+		prevKeyState = currKeyState;
+		prevMouseState = currMouseState;
 	}
 
 	device->destroy();
