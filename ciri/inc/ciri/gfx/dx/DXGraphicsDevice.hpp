@@ -12,6 +12,7 @@
 #include "DXVertexBuffer.hpp"
 #include "DXIndexBuffer.hpp"
 #include "DXConstantBuffer.hpp"
+#include "DXTexture2D.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -32,6 +33,7 @@ namespace ciri {
 		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
+		virtual ITexture2D* createTexture2D();
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -60,6 +62,8 @@ namespace ciri {
 		DXIndexBuffer* _activeIndexBuffer;
 		//
 		std::vector<DXConstantBuffer*> _constantBuffers;
+		//
+		std::vector<DXTexture2D*> _texture2Ds;
 	};
 } // ciri
 

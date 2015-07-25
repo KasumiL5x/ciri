@@ -25,6 +25,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// destroy 2d textures
+		for( unsigned int i = 0; i < _texture2Ds.size(); ++i ) {
+			if( _texture2Ds[i] != nullptr ) {
+				_texture2Ds[i]->destroy();
+				delete _texture2Ds[i];
+				_texture2Ds[i] = nullptr;
+			}
+		}
+		_texture2Ds.clear();
+
 		// destroy constant buffers
 		for( unsigned int i = 0; i < _constantBuffers.size(); ++i ) {
 			if( _constantBuffers[i] != nullptr ) {
@@ -207,6 +217,12 @@ namespace ciri {
 		GLConstantBuffer* buffer = new GLConstantBuffer();
 		_constantBuffers.push_back(buffer);
 		return buffer;
+	}
+
+	ITexture2D* GLGraphicsDevice::createTexture2D() {
+		GLTexture2D* glTexture = new GLTexture2D();
+		_texture2Ds.push_back(glTexture);
+		return glTexture;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

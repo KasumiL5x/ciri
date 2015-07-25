@@ -9,6 +9,7 @@ namespace ciri {
 	class IVertexBuffer;
 	class IIndexBuffer;
 	class IConstantBuffer;
+	class ITexture2D;
 
 	class IGraphicsDevice {
 	public:
@@ -43,6 +44,8 @@ namespace ciri {
 		virtual void clear()=0;
 
 		virtual IConstantBuffer* createConstantBuffer()=0;
+
+		virtual ITexture2D* createTexture2D()=0;
 	};
 } // ciri
 

@@ -7,6 +7,7 @@
 #include <ciri/gfx/MayaCamera.hpp>
 #include <ciri/input/Input.hpp>
 #include <ciri/util/Timer.hpp>
+#include <ciri/gfx/ITexture2D.hpp>
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
 #include <cc/MatrixFunc.hpp>
@@ -138,6 +139,9 @@ int main() {
 		printf("Assigned constant buffer to shader.\n");
 	}
 
+	// create a texture
+	ciri::ITexture2D* texture2D = device->createTexture2D();
+
 	// delta timer
 	ciri::Timer timer;
 	timer.start();
@@ -155,7 +159,7 @@ int main() {
 		const float deltaTime = currTime - lastTime;
 		lastTime = currTime;
 
-		printf("%f\n", deltaTime);
+		//printf("%f\n", deltaTime);
 
 		// update current input states
 		ciri::Input::getKeyboardState(&currKeyState);

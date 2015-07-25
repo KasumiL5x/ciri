@@ -24,6 +24,16 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// destroy 2d textures
+		for( unsigned int i = 0; i < _texture2Ds.size(); ++i ) {
+			if( _texture2Ds[i] != nullptr ) {
+				_texture2Ds[i]->destroy();
+				delete _texture2Ds[i];
+				_texture2Ds[i] = nullptr;
+			}
+		}
+		_texture2Ds.clear();
+
 		// destroy constant buffers
 		for( unsigned int i = 0; i < _constantBuffers.size(); ++i ) {
 			if( _constantBuffers[i] != nullptr ) {
@@ -219,6 +229,12 @@ namespace ciri {
 		DXConstantBuffer* buffer = new DXConstantBuffer(this);
 		_constantBuffers.push_back(buffer);
 		return buffer;
+	}
+
+	ITexture2D* DXGraphicsDevice::createTexture2D() {
+		DXTexture2D* dxTexture = new DXTexture2D();
+		_texture2Ds.push_back(dxTexture);
+		return dxTexture;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

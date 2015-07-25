@@ -15,6 +15,7 @@
 #include "GLVertexBuffer.hpp"
 #include "GLIndexBuffer.hpp"
 #include "GLConstantBuffer.hpp"
+#include "GLTexture2D.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -35,6 +36,7 @@ namespace ciri {
 		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
+		virtual ITexture2D* createTexture2D();
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -54,6 +56,8 @@ namespace ciri {
 		GLIndexBuffer* _activeIndexBuffer;
 		//
 		std::vector<GLConstantBuffer*> _constantBuffers;
+		//
+		std::vector<GLTexture2D*> _texture2Ds;
 	};
 } // ciri
 

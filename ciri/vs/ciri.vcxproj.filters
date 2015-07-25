@@ -84,6 +84,12 @@
     <ClCompile Include="..\src\ciri\gfx\MayaCamera.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\gl\GLTexture2D.cpp">
+      <Filter>gfx\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\dx\DXTexture2D.cpp">
+      <Filter>gfx\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -180,6 +186,18 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\MayaCamera.hpp">
       <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\TextureFormat.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\ITexture2D.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLTexture2D.hpp">
+      <Filter>gfx\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXTexture2D.hpp">
+      <Filter>gfx\dx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
