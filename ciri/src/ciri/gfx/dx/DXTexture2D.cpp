@@ -11,4 +11,8 @@ namespace ciri {
 
 	void DXTexture2D::destroy() {
 	}
+
+	bool DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+		return false;
+	}
 } // ciri

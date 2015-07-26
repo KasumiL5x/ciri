@@ -1,6 +1,8 @@
 #ifndef __ciri_itexture__
 #define __ciri_itexture__
 
+#include "TextureFormat.hpp"
+
 namespace ciri {
 	class ITexture2D {
 	public:
@@ -10,6 +12,8 @@ namespace ciri {
 		}
 
 		virtual void destroy()=0;
+
+		virtual bool setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format )=0;
 	};
 } // ciri
 

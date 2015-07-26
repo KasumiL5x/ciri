@@ -8,6 +8,7 @@
 #include <ciri/input/Input.hpp>
 #include <ciri/util/Timer.hpp>
 #include <ciri/gfx/ITexture2D.hpp>
+#include <ciri/util/TGA.hpp>
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
 #include <cc/MatrixFunc.hpp>
@@ -77,10 +78,9 @@ int main() {
 	camera.setPitch(9.0f);
 	camera.setOffset(4.0f);
 	camera.setSensitivity(100.0f, 50.0f, 10.0f);
-	camera.setLerpStrength(10.0f);
+	camera.setLerpStrength(100.0f);
+	camera.setTarget(cc::Vec3f(0.0f, 0.0f, -0.0f));
 	camera.resetPosition();
-	//camera.setPosition(cc::Vec3f(0.0f, 2.0f, 0.0f));
-	camera.setTarget(cc::Vec3f(0.0f, 0.0f, -4.0f));
 
 	ciri::Window window;
 	window.create(1280, 720);
@@ -124,7 +124,7 @@ int main() {
 
 	ShaderData shaderData;
 	cc::Mat4f viewProj = (camera.getProj() * camera.getView());
-	cc::Mat4f world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -4.0f));
+	cc::Mat4f world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -0.0f));
 	cc::Mat4f xform = viewProj * world;
 	shaderData.xform = xform;
 	ciri::IConstantBuffer* constantBuffer = device->createConstantBuffer();
@@ -141,11 +141,17 @@ int main() {
 
 	// create a texture
 	ciri::ITexture2D* texture2D = device->createTexture2D();
-
-	// delta timer
-	ciri::Timer timer;
-	timer.start();
-	float lastTime = 0.0f;
+	ciri::TGA tgaFile;
+	if( !tgaFile.loadFromFile("data/nyan.tga") ) {
+		printf("Failed to load texture from TGA file.\n");
+	} else {
+		printf("Loaded texture from TGA file.\n");
+		if( !texture2D->setData(0, 0, tgaFile.getWidth(), tgaFile.getHeight(), tgaFile.getPixels(), ciri::TextureFormat::Color) ) {
+			printf("Failed to set texture2d data.\n");
+		} else {
+			printf("Set texture2d data.\n");
+		}
+	}
 
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);
@@ -153,18 +159,12 @@ int main() {
 	ciri::MouseState currMouseState; ciri::Input::getMouseState(&currMouseState, &window);
 	ciri::MouseState prevMouseState = currMouseState;
 
+	// delta timer
+	ciri::Timer timer;
+	timer.start();
+	double lastTime = 0.0;
+
 	while( window.isOpen() ) {
-		// delta time
-		const float currTime = static_cast<float>(timer.getElapsedSeconds());
-		const float deltaTime = currTime - lastTime;
-		lastTime = currTime;
-
-		//printf("%f\n", deltaTime);
-
-		// update current input states
-		ciri::Input::getKeyboardState(&currKeyState);
-		ciri::Input::getMouseState(&currMouseState, &window);
-
 		// event processing
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
@@ -172,6 +172,15 @@ int main() {
 				window.destroy();
 			}
 		}
+
+		// delta time
+		const double currTime = timer.getElapsedMicroseconds();
+		const double deltaTime = (currTime - lastTime) * 0.000001;
+		lastTime = currTime;
+
+		// update current input states
+		ciri::Input::getKeyboardState(&currKeyState);
+		ciri::Input::getMouseState(&currMouseState, &window);
 
 		// camera movement
 		if( currKeyState.isKeyDown(ciri::Keyboard::LAlt) ) {
@@ -198,15 +207,15 @@ int main() {
 		}
 		camera.update(deltaTime);
 
-		static float time = 0.0f;
-		time += 0.0001f;
-		static float angle = 0.0f;
+		//static float time = 0.0f;
+		//time += 0.0001f;
+		//static float angle = 0.0f;
 		//angle += 0.1f;
-		if( angle > 360.0f ) {
-			angle = (360.0f - angle);
-		}
+		//if( angle > 360.0f ) {
+			//angle = (360.0f - angle);
+		//}
 		viewProj = (camera.getProj() * camera.getView());
-		world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -4.0f)) * cc::math::rotate(angle, cc::Vec3f(0.0f, 1.0f, 0.0f));
+		world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -0.0f));// * cc::math::rotate(angle, cc::Vec3f(0.0f, 1.0f, 0.0f));
 		cc::Mat4f xform = viewProj * world;
 		shaderData.xform = xform;
 		if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
@@ -218,13 +227,14 @@ int main() {
 		device->setVertexBuffer(vertexBuffer);
 		device->setIndexBuffer(indexBuffer);
 		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, indexBuffer->getIndexCount());
-
 		device->present();
 
 		// update previous inputs to current inputs
 		prevKeyState = currKeyState;
 		prevMouseState = currMouseState;
 	}
+
+	tgaFile.destroy();
 
 	device->destroy();
 	delete device;
