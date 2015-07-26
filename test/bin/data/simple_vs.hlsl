@@ -4,13 +4,13 @@ cbuffer TestConstants : register(b0) {
 
 struct Output {
 	float4 Pos : SV_POSITION;
-	float3 Col : COLOR0;
+	float2 Tex : TEXCOORD0;
 };
 
-Output main( float3 Pos : POSITION, float3 Col : COLOR )
+Output main( float3 Pos : POSITION, float2 Tex : TEXCOORD )
 {
 	Output OUT;
 	OUT.Pos = mul(xform, float4(Pos, 1.0f));
-	OUT.Col = Col;
+	OUT.Tex = Tex;
 	return OUT;
 }

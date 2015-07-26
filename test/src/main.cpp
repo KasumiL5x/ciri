@@ -19,13 +19,13 @@
 
 struct SimpleVertex {
 	cc::Vec3f position;
-	cc::Vec3f color;
+	cc::Vec2f texcoord;
 
 	SimpleVertex() {
 	}
 
-	SimpleVertex( const cc::Vec3f& pos, const cc::Vec3f& col )
-		: position(pos), color(col) {
+	SimpleVertex( const cc::Vec3f& pos, const cc::Vec2f& tex )
+		: position(pos), texcoord(tex) {
 	}
 };
 
@@ -35,32 +35,37 @@ struct ShaderData {
 };
 
 void createCube( float size, SimpleVertex* vb, int* ib ) {
-	vb[0] = SimpleVertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(1.0f, 0.0f, 0.0f));
-	vb[1] = SimpleVertex(cc::Vec3f( 1.0f, -1.0f,  1.0f), cc::Vec3f(0.0f, 1.0f, 0.0f));
-	vb[2] = SimpleVertex(cc::Vec3f( 1.0,   1.0,   1.0),  cc::Vec3f(0.0f, 0.0f, 1.0f));
-	vb[3] = SimpleVertex(cc::Vec3f(-1.0,   1.0,   1.0),  cc::Vec3f(1.0f, 1.0f, 1.0f));
-	vb[4] = SimpleVertex(cc::Vec3f(-1.0,  -1.0,  -1.0),  cc::Vec3f(1.0f, 0.0f, 0.0f));
-	vb[5] = SimpleVertex(cc::Vec3f( 1.0,  -1.0,  -1.0),  cc::Vec3f(0.0f, 1.0f, 0.0f));
-	vb[6] = SimpleVertex(cc::Vec3f( 1.0,   1.0,  -1.0),  cc::Vec3f(0.0f, 0.0f, 1.0f));
-	vb[7] = SimpleVertex(cc::Vec3f(-1.0,   1.0,  -1.0),  cc::Vec3f(1.0f, 1.0f, 1.0f));
+	vb[0]  = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  0.0f));
+	vb[1]  = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  0.0f));
+	vb[2]  = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
+	vb[3]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  1.0f));
+	vb[4]  = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
+	vb[5]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  0.0f));
+	vb[6]  = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  1.0f));
+	vb[7]  = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  1.0f));
+	vb[8]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
+	vb[9]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  0.0f));
+	vb[10] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
+	vb[11] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  1.0f));
+	vb[12] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
+	vb[13] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  0.0f));
+	vb[14] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
+	vb[15] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  1.0f));
+	vb[16] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
+	vb[17] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  0.0f));
+	vb[18] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
+	vb[19] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  1.0f));
+	vb[20] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
+	vb[21] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  0.0f));
+	vb[22] = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
+	vb[23] = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  1.0f));
 
-	ib[0]=0; ib[1]=1; ib[2]=2;
-	ib[3]=2; ib[4]=3; ib[5]=0;
-
-	ib[6]=3; ib[7]=2; ib[8]=6;
-	ib[9]=6; ib[10]=7; ib[11]=3;
-
-	ib[12]=7; ib[13]=6; ib[14]=5;
-	ib[15]=5; ib[16]=4; ib[17]=7;
-
-	ib[18]=4; ib[19]=5; ib[20]=1;
-	ib[21]=1; ib[22]=0; ib[23]=4;
-
-	ib[24]=4; ib[25]=0; ib[26]=3;
-	ib[27]=3; ib[28]=7; ib[29]=4;
-	
-	ib[30]=1; ib[31]=5; ib[32]=6;
-	ib[33]=6; ib[34]=2; ib[35]=1;
+	ib[0]=0;   ib[1]=1;   ib[2]=2;   ib[3]=0;   ib[4]=2;   ib[5]=3;
+	ib[6]=4;   ib[7]=5;   ib[8]=6;   ib[9]=4;   ib[10]=6;  ib[11]=7;
+	ib[12]=8;  ib[13]=9;  ib[14]=10; ib[15]=8;  ib[16]=10; ib[17]=11;
+	ib[18]=12; ib[19]=13; ib[20]=14; ib[21]=12; ib[22]=14; ib[23]=15;
+	ib[24]=16; ib[25]=17; ib[26]=18; ib[27]=16; ib[28]=18; ib[29]=19;
+	ib[30]=20; ib[31]=21; ib[32]=22; ib[33]=20; ib[34]=22; ib[35]=23;
 }
 
 int main() {
@@ -97,26 +102,28 @@ int main() {
 	shader->addVertexShader("data/simple_vs.glsl");
 	shader->addPixelShader("data/simple_ps.glsl");
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
-	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
+	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	if( ciri::err::failed(shader->build()) ) {
 		printf("Failed to build shader: %s.\n", shader->getLastError());
 	} else {
 		printf("Shader built.\n");
 	}
 
-	SimpleVertex vertices[8];
-	int indices[36];
+	const unsigned int VERTEX_COUNT = 24;
+	const unsigned int INDEX_COUNT = 36;
+	SimpleVertex vertices[VERTEX_COUNT];
+	int indices[INDEX_COUNT];
 	createCube(1.0f, vertices, indices);
 
 	ciri::IVertexBuffer* vertexBuffer = device->createVertexBuffer();
-	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), 8, false) ) {
+	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), VERTEX_COUNT, false) ) {
 		printf("Failed to create vertex buffer.\n");
 	} else {
 		printf("Created vertex buffer.\n");
 	}
 
 	ciri::IIndexBuffer* indexBuffer = device->createIndexBuffer();
-	if( !indexBuffer->set(indices, 36, false) ) {
+	if( !indexBuffer->set(indices, INDEX_COUNT, false) ) {
 		printf("Failed to create index buffer.\n");
 	} else {
 		printf("Created index buffer.\n");
