@@ -47,6 +47,7 @@ namespace ciri {
 		virtual IConstantBuffer* createConstantBuffer()=0;
 
 		virtual ITexture2D* createTexture2D()=0;
+		virtual void setTexture2D( int index, ITexture2D* texture )=0;
 
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 		virtual void setSamplerState( int index, ISamplerState* state )=0;

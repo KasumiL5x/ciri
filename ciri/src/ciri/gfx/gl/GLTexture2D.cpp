@@ -40,17 +40,24 @@ namespace ciri {
 
 			glGenTextures(1, &_textureId);
 			glBindTexture(GL_TEXTURE_2D, _textureId);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterMode);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterMode);
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, getPixelStoreSize(format));
 			glTexImage2D(GL_TEXTURE_2D, level, _internalFormat, width, height, 0, _pixelFormat, _pixelType, data);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+			//glGenerateMipmap(GL_TEXTURE_2D);
+
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		return true;
+	}
+
+	GLuint GLTexture2D::getTextureId() const {
+		return _textureId;
 	}
 
 	void GLTexture2D::ciriFormatToGlFormat( TextureFormat::Type ciriFormat ) {

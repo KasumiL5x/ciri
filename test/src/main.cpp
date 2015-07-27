@@ -34,31 +34,31 @@ struct ShaderData {
 	cc::Mat4f xform;
 };
 
-void createCube( float size, SimpleVertex* vb, int* ib ) {
-	vb[0]  = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  0.0f));
-	vb[1]  = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  0.0f));
-	vb[2]  = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
-	vb[3]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  1.0f));
-	vb[4]  = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
-	vb[5]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  0.0f));
-	vb[6]  = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  1.0f));
-	vb[7]  = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  1.0f));
-	vb[8]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
-	vb[9]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  0.0f));
-	vb[10] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
-	vb[11] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  1.0f));
-	vb[12] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
-	vb[13] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  0.0f));
-	vb[14] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
-	vb[15] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  1.0f));
-	vb[16] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
-	vb[17] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f,  0.0f));
-	vb[18] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
-	vb[19] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f,  1.0f));
-	vb[20] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  0.0f));
-	vb[21] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  0.0f));
-	vb[22] = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f,  1.0f));
-	vb[23] = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f,  1.0f));
+void createCube( float size, float uvScale, SimpleVertex* vb, int* ib ) {
+	vb[0]  = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f * uvScale,  0.0f * uvScale));
+	vb[1]  = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  0.0f * uvScale));
+	vb[2]  = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  1.0f * uvScale));
+	vb[3]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(0.0f * uvScale,  1.0f * uvScale));
+	vb[4]  = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  0.0f * uvScale));
+	vb[5]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f * uvScale,  0.0f * uvScale));
+	vb[6]  = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f * uvScale,  1.0f * uvScale));
+	vb[7]  = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  1.0f * uvScale));
+	vb[8]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  0.0f * uvScale));
+	vb[9]  = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  0.0f * uvScale));
+	vb[10] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  1.0f * uvScale));
+	vb[11] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  1.0f * uvScale));
+	vb[12] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  0.0f * uvScale));
+	vb[13] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(1.0f * uvScale,  0.0f * uvScale));
+	vb[14] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  1.0f * uvScale));
+	vb[15] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f * uvScale,  1.0f * uvScale));
+	vb[16] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  0.0f * uvScale));
+	vb[17] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(1.0f * uvScale,  0.0f * uvScale));
+	vb[18] = SimpleVertex(cc::Vec3f( 0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  1.0f * uvScale));
+	vb[19] = SimpleVertex(cc::Vec3f( 0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(0.0f * uvScale,  1.0f * uvScale));
+	vb[20] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  0.0f * uvScale));
+	vb[21] = SimpleVertex(cc::Vec3f(-0.5f*size, -0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  0.0f * uvScale));
+	vb[22] = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size,  0.5f*size), cc::Vec2f(1.0f * uvScale,  1.0f * uvScale));
+	vb[23] = SimpleVertex(cc::Vec3f(-0.5f*size,  0.5f*size, -0.5f*size), cc::Vec2f(0.0f * uvScale,  1.0f * uvScale));
 
 	ib[0]=0;   ib[1]=1;   ib[2]=2;   ib[3]=0;   ib[4]=2;   ib[5]=3;
 	ib[6]=4;   ib[7]=5;   ib[8]=6;   ib[9]=4;   ib[10]=6;  ib[11]=7;
@@ -113,7 +113,7 @@ int main() {
 	const unsigned int INDEX_COUNT = 36;
 	SimpleVertex vertices[VERTEX_COUNT];
 	int indices[INDEX_COUNT];
-	createCube(1.0f, vertices, indices);
+	createCube(1.0f, 1.0f, vertices, indices);
 
 	ciri::IVertexBuffer* vertexBuffer = device->createVertexBuffer();
 	if( !vertexBuffer->set(vertices, sizeof(SimpleVertex), VERTEX_COUNT, false) ) {
@@ -157,6 +157,7 @@ int main() {
 			printf("Failed to set texture2d data.\n");
 		} else {
 			printf("Set texture2d data.\n");
+			device->setTexture2D(0, texture2D);
 		}
 	}
 

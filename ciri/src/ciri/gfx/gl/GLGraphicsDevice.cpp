@@ -21,6 +21,10 @@ namespace ciri {
 			return false;
 		}
 
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+		glDepthMask(GL_TRUE);
+
 		return true;
 	}
 
@@ -220,7 +224,7 @@ namespace ciri {
 
 	void GLGraphicsDevice::clear() {
 		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
@@ -233,6 +237,12 @@ namespace ciri {
 		GLTexture2D* glTexture = new GLTexture2D();
 		_texture2Ds.push_back(glTexture);
 		return glTexture;
+	}
+
+	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture ) {
+		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
 	}
 
 	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {

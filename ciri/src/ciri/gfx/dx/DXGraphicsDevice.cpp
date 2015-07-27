@@ -247,6 +247,10 @@ namespace ciri {
 		return dxTexture;
 	}
 
+	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture ) {
+		// todo
+	}
+
 	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
 		DXSamplerState* dxSampler = new DXSamplerState();
 		if( !dxSampler->create(desc) ) {

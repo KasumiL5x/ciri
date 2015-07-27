@@ -13,6 +13,8 @@ namespace ciri {
 		virtual void destroy();
 		virtual bool setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format );
 
+		GLuint getTextureId() const;
+
 	private:
 		bool createTexture();
 		void ciriFormatToGlFormat( TextureFormat::Type ciriFormat );
