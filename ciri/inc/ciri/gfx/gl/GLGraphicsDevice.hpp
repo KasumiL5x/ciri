@@ -16,6 +16,7 @@
 #include "GLIndexBuffer.hpp"
 #include "GLConstantBuffer.hpp"
 #include "GLTexture2D.hpp"
+#include "GLSamplerState.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -37,6 +38,7 @@ namespace ciri {
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
+		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -58,6 +60,8 @@ namespace ciri {
 		std::vector<GLConstantBuffer*> _constantBuffers;
 		//
 		std::vector<GLTexture2D*> _texture2Ds;
+		//
+		std::vector<GLSamplerState*> _samplers;
 	};
 } // ciri
 

@@ -2,6 +2,7 @@
 #define __ciri_igraphicsdevice__
 
 #include "PrimitiveTopology.hpp"
+#include "ISamplerState.hpp"
 
 namespace ciri {
 	class Window;
@@ -46,6 +47,8 @@ namespace ciri {
 		virtual IConstantBuffer* createConstantBuffer()=0;
 
 		virtual ITexture2D* createTexture2D()=0;
+
+		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 	};
 } // ciri
 

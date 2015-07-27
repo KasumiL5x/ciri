@@ -25,6 +25,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// destroy samplers
+		for( unsigned int i = 0; i < _samplers.size(); ++i ) {
+			if( _samplers[i] != nullptr ) {
+				_samplers[i]->destroy();
+				delete _samplers[i];
+				_samplers[i] = nullptr;
+			}
+		}
+		_samplers.clear();
+
 		// destroy 2d textures
 		for( unsigned int i = 0; i < _texture2Ds.size(); ++i ) {
 			if( _texture2Ds[i] != nullptr ) {
@@ -223,6 +233,17 @@ namespace ciri {
 		GLTexture2D* glTexture = new GLTexture2D();
 		_texture2Ds.push_back(glTexture);
 		return glTexture;
+	}
+
+	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+		GLSamplerState* glSampler = new GLSamplerState();
+		if( !glSampler->create(desc) ) {
+			delete glSampler;
+			glSampler = nullptr;
+			return nullptr;
+		}
+		_samplers.push_back(glSampler);
+		return glSampler;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

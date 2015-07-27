@@ -13,6 +13,7 @@
 #include "DXIndexBuffer.hpp"
 #include "DXConstantBuffer.hpp"
 #include "DXTexture2D.hpp"
+#include "DXSamplerState.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -34,6 +35,7 @@ namespace ciri {
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
+		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -64,6 +66,8 @@ namespace ciri {
 		std::vector<DXConstantBuffer*> _constantBuffers;
 		//
 		std::vector<DXTexture2D*> _texture2Ds;
+		//
+		std::vector<DXSamplerState*> _samplers;
 	};
 } // ciri
 

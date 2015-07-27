@@ -24,6 +24,16 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// destroy samplers
+		for( unsigned int i = 0; i < _samplers.size(); ++i ) {
+			if( _samplers[i] != nullptr ) {
+				_samplers[i]->destroy();
+				delete _samplers[i];
+				_samplers[i] = nullptr;
+			}
+		}
+		_samplers.clear();
+
 		// destroy 2d textures
 		for( unsigned int i = 0; i < _texture2Ds.size(); ++i ) {
 			if( _texture2Ds[i] != nullptr ) {
@@ -235,6 +245,17 @@ namespace ciri {
 		DXTexture2D* dxTexture = new DXTexture2D();
 		_texture2Ds.push_back(dxTexture);
 		return dxTexture;
+	}
+
+	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+		DXSamplerState* dxSampler = new DXSamplerState();
+		if( !dxSampler->create(desc) ) {
+			delete dxSampler;
+			dxSampler = nullptr;
+			return nullptr;
+		}
+		_samplers.push_back(dxSampler);
+		return dxSampler;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

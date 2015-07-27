@@ -160,6 +160,20 @@ int main() {
 		}
 	}
 
+	// create a sampler state
+	ciri::SamplerDesc samplerDesc;
+	samplerDesc.borderColor[0] = samplerDesc.borderColor[1] = samplerDesc.borderColor[2] = samplerDesc.borderColor[3] = 0.0f;
+	samplerDesc.comparisonFunc = ciri::SamplerComparison::Always;
+	samplerDesc.filterMax = ciri::SamplerFilter::Linear;
+	samplerDesc.filterMin = ciri::SamplerFilter::Linear;
+	samplerDesc.lodBias = 0.0f;
+	samplerDesc.maxLod = 1000.0f;
+	samplerDesc.minLod = -1000.0f;
+	samplerDesc.wrapU = ciri::SamplerWrap::Wrap;
+	samplerDesc.wrapV = ciri::SamplerWrap::Wrap;
+	samplerDesc.wrapW = ciri::SamplerWrap::Wrap;
+	ciri::ISamplerState* samplerState = device->createSamplerState(samplerDesc);
+
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);
 	ciri::KeyboardState prevKeyState = currKeyState;
@@ -182,7 +196,7 @@ int main() {
 
 		// delta time
 		const double currTime = timer.getElapsedMicroseconds();
-		const double deltaTime = (currTime - lastTime) * 0.000001;
+		const float deltaTime = static_cast<float>((currTime - lastTime) * 0.000001);
 		lastTime = currTime;
 
 		// update current input states

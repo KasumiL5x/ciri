@@ -93,6 +93,12 @@
     <ClCompile Include="..\src\ciri\util\TGA.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\gl\GLSamplerState.cpp">
+      <Filter>gfx\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\dx\DXSamplerState.cpp">
+      <Filter>gfx\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -204,6 +210,15 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\util\TGA.hpp">
       <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\ISamplerState.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLSamplerState.hpp">
+      <Filter>gfx\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXSamplerState.hpp">
+      <Filter>gfx\dx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
