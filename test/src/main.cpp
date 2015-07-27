@@ -166,6 +166,7 @@ int main() {
 	samplerDesc.comparisonFunc = ciri::SamplerComparison::Always;
 	samplerDesc.filterMax = ciri::SamplerFilter::Linear;
 	samplerDesc.filterMin = ciri::SamplerFilter::Linear;
+	samplerDesc.maxAnisotropy = 16.0f;
 	samplerDesc.lodBias = 0.0f;
 	samplerDesc.maxLod = 1000.0f;
 	samplerDesc.minLod = -1000.0f;

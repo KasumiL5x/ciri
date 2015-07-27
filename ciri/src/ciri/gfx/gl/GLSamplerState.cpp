@@ -22,6 +22,7 @@ namespace ciri {
 
 		glSamplerParameteri(_samplerId, GL_TEXTURE_MIN_FILTER, ciriToGlFilter(desc.filterMin));
 		glSamplerParameteri(_samplerId, GL_TEXTURE_MAG_FILTER, ciriToGlFilter(desc.filterMax));
+		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, desc.maxAnisotropy); // todo: if supported??
 
 		glSamplerParameterfv(_samplerId, GL_TEXTURE_BORDER_COLOR, &desc.borderColor[0]);
 
