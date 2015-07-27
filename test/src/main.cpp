@@ -174,6 +174,7 @@ int main() {
 	samplerDesc.wrapV = ciri::SamplerWrap::Wrap;
 	samplerDesc.wrapW = ciri::SamplerWrap::Wrap;
 	ciri::ISamplerState* samplerState = device->createSamplerState(samplerDesc);
+	device->setSamplerState(0, samplerState);
 
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);

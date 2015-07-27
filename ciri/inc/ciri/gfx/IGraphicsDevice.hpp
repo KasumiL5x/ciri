@@ -49,6 +49,7 @@ namespace ciri {
 		virtual ITexture2D* createTexture2D()=0;
 
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
+		virtual void setSamplerState( int index, ISamplerState* state )=0;
 	};
 } // ciri
 

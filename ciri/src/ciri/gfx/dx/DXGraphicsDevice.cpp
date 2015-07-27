@@ -258,6 +258,10 @@ namespace ciri {
 		return dxSampler;
 	}
 
+	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state ) {
+		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state);
+	}
+
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
 		return _device;
 	}

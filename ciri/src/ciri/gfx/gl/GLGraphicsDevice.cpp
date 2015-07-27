@@ -246,6 +246,11 @@ namespace ciri {
 		return glSampler;
 	}
 
+	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state ) {
+		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
+		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);

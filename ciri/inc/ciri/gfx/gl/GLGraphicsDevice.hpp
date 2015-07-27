@@ -39,6 +39,7 @@ namespace ciri {
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
+		virtual void setSamplerState( int index, ISamplerState* state );
 
 	private:
 		bool configureGl( HWND hwnd );

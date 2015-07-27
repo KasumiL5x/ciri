@@ -36,6 +36,7 @@ namespace ciri {
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
+		virtual void setSamplerState( int index, ISamplerState* state );
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
