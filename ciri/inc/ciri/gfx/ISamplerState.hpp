@@ -17,11 +17,12 @@ namespace ciri {
 	class SamplerFilter {
 	public:
 		enum Mode {
-			Nearest,
-			Linear,
-			Bilinear,
-			Trilinear,
-			Anisotropic
+			Point, // min=point; mag=point; mip=point
+			PointLinear, // min=point; mag=linear; mip=point
+			LinearPoint, // min=linear; mag=point; mip=point
+			Bilinear, // min=linear; mag=linear; mip=point
+			Trilinear, // min=linear; mag=linear, mip=linear
+			Anisotropic // dank filterz
 		};
 	};
 
@@ -43,8 +44,7 @@ namespace ciri {
 		SamplerWrap::Mode wrapU;
 		SamplerWrap::Mode wrapV;
 		SamplerWrap::Mode wrapW;
-		SamplerFilter::Mode filterMin;
-		SamplerFilter::Mode filterMax;
+		SamplerFilter::Mode filter;
 		float maxAnisotropy;
 		float borderColor[4];
 		float minLod;

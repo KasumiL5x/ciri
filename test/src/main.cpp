@@ -90,7 +90,7 @@ int main() {
 	ciri::Window window;
 	window.create(1280, 720);
 
-	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::OpenGL);
+	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::DirectX);
 	if( !device->create(&window) ) {
 		printf("Failed to initialize graphics device.\n");
 		return -1;
@@ -99,8 +99,8 @@ int main() {
 	}
 
 	ciri::IShader* shader = device->createShader();
-	shader->addVertexShader("data/simple_vs.glsl");
-	shader->addPixelShader("data/simple_ps.glsl");
+	shader->addVertexShader("data/simple_vs.hlsl");
+	shader->addPixelShader("data/simple_ps.hlsl");
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	if( ciri::err::failed(shader->build()) ) {
@@ -149,7 +149,7 @@ int main() {
 	// create a texture
 	ciri::ITexture2D* texture2D = device->createTexture2D();
 	ciri::TGA tgaFile;
-	if( !tgaFile.loadFromFile("data/nyan.tga") ) {
+	if( !tgaFile.loadFromFile("data/dirt.tga", true) || tgaFile.getFormat() != ciri::TGA::RGBA ) {
 		printf("Failed to load texture from TGA file.\n");
 	} else {
 		printf("Loaded texture from TGA file.\n");
@@ -157,16 +157,15 @@ int main() {
 			printf("Failed to set texture2d data.\n");
 		} else {
 			printf("Set texture2d data.\n");
-			device->setTexture2D(0, texture2D);
+			device->setTexture2D(0, texture2D, ciri::ShaderStage::Pixel);
 		}
 	}
 
 	// create a sampler state
 	ciri::SamplerDesc samplerDesc;
 	samplerDesc.borderColor[0] = samplerDesc.borderColor[1] = samplerDesc.borderColor[2] = samplerDesc.borderColor[3] = 0.0f;
-	samplerDesc.comparisonFunc = ciri::SamplerComparison::Always;
-	samplerDesc.filterMax = ciri::SamplerFilter::Linear;
-	samplerDesc.filterMin = ciri::SamplerFilter::Linear;
+	samplerDesc.comparisonFunc = ciri::SamplerComparison::Never;
+	samplerDesc.filter = ciri::SamplerFilter::Bilinear;
 	samplerDesc.maxAnisotropy = 16.0f;
 	samplerDesc.lodBias = 0.0f;
 	samplerDesc.maxLod = 1000.0f;
@@ -175,7 +174,7 @@ int main() {
 	samplerDesc.wrapV = ciri::SamplerWrap::Wrap;
 	samplerDesc.wrapW = ciri::SamplerWrap::Wrap;
 	ciri::ISamplerState* samplerState = device->createSamplerState(samplerDesc);
-	device->setSamplerState(0, samplerState);
+	device->setSamplerState(0, samplerState, ciri::ShaderStage::Pixel);
 
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);

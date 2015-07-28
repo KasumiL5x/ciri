@@ -220,5 +220,8 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXSamplerState.hpp">
       <Filter>gfx\dx</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\ShaderStage.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ namespace ciri {
 		destroy();
 	}
 
-	bool TGA::loadFromFile( const char* file ) {
+	bool TGA::loadFromFile( const char* file, bool forceRGBA ) {
 		std::ifstream in(file, std::ios::binary);
 		if( !in.is_open() ) {
 			return false;
@@ -89,6 +89,21 @@ namespace ciri {
 		}
 
 		in.close();
+
+		// if rgba was requested but the image is rgb, create a new buffer with an A channel and delete the old one.
+		// can't do this normally as the data is read in one big chunk.
+		if( forceRGBA && _format != RGBA ) {
+			unsigned char* newPixels = new unsigned char[4 * _width * _height];
+			int newPixelsOffset = 0;
+			for( unsigned int i = 0; i < (bpp * _width * _height); i += bpp ) { // loop all old pixels
+				memcpy(&newPixels[newPixelsOffset], &_pixels[i], bpp);
+				newPixels[newPixelsOffset+3] = 255; // 100% alpha
+				newPixelsOffset += 4;
+			}
+			delete[] _pixels;
+			_pixels = newPixels;
+			_format = RGBA;
+		}
 
 		return true;
 	}

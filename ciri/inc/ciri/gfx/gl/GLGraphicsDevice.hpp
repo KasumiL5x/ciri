@@ -38,9 +38,9 @@ namespace ciri {
 		virtual void clear();
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
-		virtual void setTexture2D( int index, ITexture2D* texture );
+		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
-		virtual void setSamplerState( int index, ISamplerState* state );
+		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
 
 	private:
 		bool configureGl( HWND hwnd );

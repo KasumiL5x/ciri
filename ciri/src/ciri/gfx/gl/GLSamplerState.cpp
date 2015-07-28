@@ -1,4 +1,5 @@
 #include <ciri/gfx/gl/GLSamplerState.hpp>
+#include <cc/Common.hpp>
 
 namespace ciri {
 	GLSamplerState::GLSamplerState()
@@ -20,9 +21,16 @@ namespace ciri {
 		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_T, ciriToGlWrap(desc.wrapV));
 		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_R, ciriToGlWrap(desc.wrapW));
 
-		glSamplerParameteri(_samplerId, GL_TEXTURE_MIN_FILTER, ciriToGlFilter(desc.filterMin));
-		glSamplerParameteri(_samplerId, GL_TEXTURE_MAG_FILTER, ciriToGlFilter(desc.filterMax));
-		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, desc.maxAnisotropy); // todo: if supported??
+		GLint filterMin;
+		GLint filterMax;
+		ciriToGlFilter(desc.filter, &filterMin, &filterMax);
+		glSamplerParameteri(_samplerId, GL_TEXTURE_MIN_FILTER, filterMin);
+		glSamplerParameteri(_samplerId, GL_TEXTURE_MAG_FILTER, filterMax);
+
+		GLfloat maxAniso;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
+		const float aniso = cc::math::clamp<float>(desc.maxAnisotropy, 1.0f, maxAniso);
+		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso); // todo: if supported??
 
 		glSamplerParameterfv(_samplerId, GL_TEXTURE_BORDER_COLOR, &desc.borderColor[0]);
 
@@ -69,35 +77,56 @@ namespace ciri {
 			}
 
 			default: {
-				return GL_INVALID_ENUM;
+				return GL_REPEAT; // dx has no fail, so match its default return type
 			}
 		}
 	}
 
-	GLint GLSamplerState::ciriToGlFilter( SamplerFilter::Mode mode ) const {
+	void GLSamplerState::ciriToGlFilter( SamplerFilter::Mode mode, GLint* outMin, GLint* outMag ) const {
+		// note: mag can only be nearest or linear; min controls everything else
+		// https://www.opengl.org/wiki/Sampler_Object#Filtering
+
 		switch( mode ) {
-			case SamplerFilter::Nearest: {
-				return GL_NEAREST;
+			case SamplerFilter::Point: {
+				*outMin = GL_NEAREST;
+				*outMag = GL_NEAREST;
+				break;
 			}
 
-			case SamplerFilter::Linear: {
-				return GL_LINEAR;
+			case SamplerFilter::PointLinear: {
+				*outMin = GL_NEAREST;
+				*outMag = GL_LINEAR;
+				break;
+			}
+
+			case SamplerFilter::LinearPoint: {
+				*outMin = GL_LINEAR;
+				*outMag = GL_NEAREST;
+				break;
 			}
 
 			case SamplerFilter::Bilinear: {
-				return GL_LINEAR; // todo: from gamedev.net, is it right?
+				*outMin = GL_LINEAR;
+				*outMag = GL_LINEAR;
+				break;
 			}
 
 			case SamplerFilter::Trilinear: {
-				return GL_LINEAR_MIPMAP_LINEAR; // todo: from gamedev.net, is it right?
+				*outMin = GL_LINEAR_MIPMAP_LINEAR;
+				*outMag = GL_LINEAR;
+				break;
 			}
 
 			case SamplerFilter::Anisotropic: {
-				return GL_LINEAR_MIPMAP_LINEAR; // todo: i'm literally guessing
+				*outMin = GL_LINEAR_MIPMAP_LINEAR;
+				*outMag = GL_LINEAR;
+				break;
 			}
 
 			default: {
-				return GL_INVALID_ENUM;
+				*outMin = GL_NEAREST;
+				*outMag = GL_NEAREST; // point filtering by default
+				break;
 			}
 		}
 	}
@@ -137,7 +166,7 @@ namespace ciri {
 			}
 
 			default: {
-				return GL_INVALID_ENUM;
+				return GL_NEVER; // dx has no fail, so match it
 			}
 		}
 	}

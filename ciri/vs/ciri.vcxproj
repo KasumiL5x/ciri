@@ -68,6 +68,7 @@
     <ClInclude Include="..\inc\ciri\gfx\IVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\MayaCamera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\ShaderStage.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\TextureFormat.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexElement.hpp" />

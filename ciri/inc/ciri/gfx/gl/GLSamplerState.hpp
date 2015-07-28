@@ -17,7 +17,7 @@ namespace ciri {
 
 	private:
 		GLint ciriToGlWrap( SamplerWrap::Mode mode ) const;
-		GLint ciriToGlFilter( SamplerFilter::Mode mode ) const;
+		void ciriToGlFilter( SamplerFilter::Mode mode, GLint* outMin, GLint* outMag ) const;
 		GLint ciriToClFunc( SamplerComparison::Mode mode ) const;
 
 	private:

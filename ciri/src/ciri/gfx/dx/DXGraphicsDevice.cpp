@@ -242,17 +242,31 @@ namespace ciri {
 	}
 
 	ITexture2D* DXGraphicsDevice::createTexture2D() {
-		DXTexture2D* dxTexture = new DXTexture2D();
+		DXTexture2D* dxTexture = new DXTexture2D(this);
 		_texture2Ds.push_back(dxTexture);
 		return dxTexture;
 	}
 
-	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture ) {
-		// todo
+	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture);
+
+		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
+		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
+
+		const bool all = (shaderStage & ShaderStage::All);
+		if( all || (shaderStage & ShaderStage::Vertex) ) {
+			_immediateContext->VSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Geometry) ) {
+			_immediateContext->GSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Pixel) ) {
+			_immediateContext->PSSetShaderResources(index, 1, srv);
+		}
 	}
 
 	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
-		DXSamplerState* dxSampler = new DXSamplerState();
+		DXSamplerState* dxSampler = new DXSamplerState(this);
 		if( !dxSampler->create(desc) ) {
 			delete dxSampler;
 			dxSampler = nullptr;
@@ -262,8 +276,22 @@ namespace ciri {
 		return dxSampler;
 	}
 
-	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state ) {
+	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
 		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state);
+
+		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
+		ID3D11SamplerState* sampler[1] = { (state != nullptr) ? dxSampler->getSamplerState() : nullptr };
+
+		const bool all = (shaderStage & ShaderStage::All);
+		if( all || (shaderStage & ShaderStage::Vertex) ) {
+			_immediateContext->VSSetSamplers(index, 1, sampler);
+		}
+		if( all || (shaderStage & ShaderStage::Geometry) ) {
+			_immediateContext->GSSetSamplers(index, 1, sampler);
+		}
+		if( all || (shaderStage & ShaderStage::Pixel) ) {
+			_immediateContext->PSSetSamplers(index, 1, sampler);
+		}
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

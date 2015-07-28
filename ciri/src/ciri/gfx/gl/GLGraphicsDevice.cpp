@@ -1,6 +1,28 @@
 #include <ciri/gfx/gl/GLGraphicsDevice.hpp>
 #include <ciri/wnd/Window.hpp>
 
+//static void setVSync(bool sync)
+//{	
+//	// Function pointer for the wgl extention function we need to enable/disable
+//	// vsync
+//	typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
+//	PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
+//
+//	const char *extensions = (char*)glGetString( GL_EXTENSIONS );
+//
+//	if( false && strstr( extensions, "WGL_EXT_swap_control" ) == 0 )
+//	{
+//		return;
+//	}
+//	else
+//	{
+//		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALPROC)wglGetProcAddress( "wglSwapIntervalEXT" );
+//
+//		if( wglSwapIntervalEXT )
+//			wglSwapIntervalEXT(sync);
+//	}
+//}
+
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
 		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr) {
@@ -239,7 +261,7 @@ namespace ciri {
 		return glTexture;
 	}
 
-	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture ) {
+	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
 		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
@@ -256,7 +278,7 @@ namespace ciri {
 		return glSampler;
 	}
 
-	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state ) {
+	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
 		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
 	}

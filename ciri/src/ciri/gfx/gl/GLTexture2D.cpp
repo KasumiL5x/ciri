@@ -63,15 +63,14 @@ namespace ciri {
 	void GLTexture2D::ciriFormatToGlFormat( TextureFormat::Type ciriFormat ) {
 		// http://www.opentk.com/files/doc/namespace_open_t_k_1_1_graphics_1_1_open_g_l.html#ae0f3f1e7b978e4937984b34fdebabf62a8f0fb883eb5a52838534191513e365a2
 		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetGLFormat
-		// todo: change rgb to rgba and fix the no alpha bug (add another format?)
-		_internalFormat = GL_RGB;
-		_pixelFormat = GL_RGB;
+		_internalFormat = GL_RGBA;
+		_pixelFormat = GL_RGBA;
 		_pixelType = GL_UNSIGNED_BYTE;
 
 		switch( ciriFormat ) {
 			case TextureFormat::Color: {
-				_internalFormat = GL_RGB;
-				_pixelFormat = GL_RGB;
+				_internalFormat = GL_RGBA;
+				_pixelFormat = GL_RGBA;
 				_pixelType = GL_UNSIGNED_BYTE;
 				break;
 			}

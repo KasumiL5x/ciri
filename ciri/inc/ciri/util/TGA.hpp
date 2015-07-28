@@ -32,7 +32,7 @@ namespace ciri {
 		TGA();
 		~TGA();
 
-		bool loadFromFile( const char* file );
+		bool loadFromFile( const char* file, bool forceRGBA );
 		void destroy();
 
 		Format getFormat() const;
