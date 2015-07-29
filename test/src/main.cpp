@@ -8,6 +8,7 @@
 #include <ciri/input/Input.hpp>
 #include <ciri/util/Timer.hpp>
 #include <ciri/gfx/ITexture2D.hpp>
+#include <ciri/gfx/IRenderTarget2D.hpp>
 #include <ciri/util/TGA.hpp>
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
@@ -90,7 +91,7 @@ int main() {
 	ciri::Window window;
 	window.create(1280, 720);
 
-	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::DirectX);
+	ciri::IGraphicsDevice* device = ciri::GraphicsDeviceFactory::create(ciri::GraphicsDeviceFactory::OpenGL);
 	if( !device->create(&window) ) {
 		printf("Failed to initialize graphics device.\n");
 		return -1;
@@ -99,8 +100,8 @@ int main() {
 	}
 
 	ciri::IShader* shader = device->createShader();
-	shader->addVertexShader("data/simple_vs.hlsl");
-	shader->addPixelShader("data/simple_ps.hlsl");
+	shader->addVertexShader("data/simple_vs.glsl");
+	shader->addPixelShader("data/simple_ps.glsl");
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	if( ciri::err::failed(shader->build()) ) {
@@ -176,6 +177,9 @@ int main() {
 	ciri::ISamplerState* samplerState = device->createSamplerState(samplerDesc);
 	device->setSamplerState(0, samplerState, ciri::ShaderStage::Pixel);
 
+	// render target
+	ciri::IRenderTarget2D* renderTarget = device->createRenderTarget2D(256, 256);
+
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);
 	ciri::KeyboardState prevKeyState = currKeyState;
@@ -204,6 +208,12 @@ int main() {
 		// update current input states
 		ciri::Input::getKeyboardState(&currKeyState);
 		ciri::Input::getMouseState(&currMouseState, &window);
+
+		// close dat shit
+		if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
+			window.destroy();
+			break;
+		}
 
 		// camera movement
 		if( currKeyState.isKeyDown(ciri::Keyboard::LAlt) ) {

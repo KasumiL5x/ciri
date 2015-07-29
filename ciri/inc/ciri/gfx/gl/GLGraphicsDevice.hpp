@@ -17,6 +17,7 @@
 #include "GLConstantBuffer.hpp"
 #include "GLTexture2D.hpp"
 #include "GLSamplerState.hpp"
+#include "GLRenderTarget2D.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -41,6 +42,7 @@ namespace ciri {
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height );
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -64,6 +66,8 @@ namespace ciri {
 		std::vector<GLTexture2D*> _texture2Ds;
 		//
 		std::vector<GLSamplerState*> _samplers;
+		//
+		std::vector<GLRenderTarget2D*> _renderTarget2Ds;
 	};
 } // ciri
 

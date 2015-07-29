@@ -12,6 +12,7 @@ namespace ciri {
 	class IIndexBuffer;
 	class IConstantBuffer;
 	class ITexture2D;
+	class IRenderTarget2D;
 
 	class IGraphicsDevice {
 	public:
@@ -52,6 +53,8 @@ namespace ciri {
 
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage )=0;
+
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height )=0;
 	};
 } // ciri
 

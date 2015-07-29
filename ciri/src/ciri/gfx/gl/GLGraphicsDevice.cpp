@@ -51,6 +51,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// destroy 2d render targets
+		for( unsigned int i = 0; i < _renderTarget2Ds.size(); ++i ) {
+			if( _renderTarget2Ds[i] != nullptr ) {
+				_renderTarget2Ds[i]->destroy();
+				delete _renderTarget2Ds[i];
+				_renderTarget2Ds[i] = nullptr;
+			}
+		}
+		_renderTarget2Ds.clear();
+
 		// destroy samplers
 		for( unsigned int i = 0; i < _samplers.size(); ++i ) {
 			if( _samplers[i] != nullptr ) {
@@ -281,6 +291,13 @@ namespace ciri {
 	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
 		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
+	}
+
+	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height ) {
+		GLRenderTarget2D* glTarget = new GLRenderTarget2D();
+		//...
+		_renderTarget2Ds.push_back(glTarget);
+		return glTarget;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

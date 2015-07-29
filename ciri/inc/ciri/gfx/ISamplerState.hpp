@@ -45,7 +45,7 @@ namespace ciri {
 		SamplerWrap::Mode wrapV;
 		SamplerWrap::Mode wrapW;
 		SamplerFilter::Mode filter;
-		float maxAnisotropy;
+		int maxAnisotropy;
 		float borderColor[4];
 		float minLod;
 		float maxLod;

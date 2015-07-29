@@ -14,6 +14,7 @@
 #include "DXConstantBuffer.hpp"
 #include "DXTexture2D.hpp"
 #include "DXSamplerState.hpp"
+#include "DXRenderTarget2D.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -38,6 +39,7 @@ namespace ciri {
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height );
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -70,6 +72,8 @@ namespace ciri {
 		std::vector<DXTexture2D*> _texture2Ds;
 		//
 		std::vector<DXSamplerState*> _samplers;
+		//
+		std::vector<DXRenderTarget2D*> _renderTarget2Ds;
 	};
 } // ciri
 

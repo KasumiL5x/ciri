@@ -29,7 +29,7 @@ namespace ciri {
 
 		GLfloat maxAniso;
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
-		const float aniso = cc::math::clamp<float>(desc.maxAnisotropy, 1.0f, maxAniso);
+		const float aniso = cc::math::clamp<float>(static_cast<float>(desc.maxAnisotropy), 1.0f, maxAniso);
 		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso); // todo: if supported??
 
 		glSamplerParameterfv(_samplerId, GL_TEXTURE_BORDER_COLOR, &desc.borderColor[0]);

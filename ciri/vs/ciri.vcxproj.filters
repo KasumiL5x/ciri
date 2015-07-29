@@ -99,6 +99,12 @@
     <ClCompile Include="..\src\ciri\gfx\dx\DXSamplerState.cpp">
       <Filter>gfx\dx</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\dx\DXRenderTarget2D.cpp">
+      <Filter>gfx\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\gl\GLRenderTarget2D.cpp">
+      <Filter>gfx\gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -222,6 +228,15 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\ShaderStage.hpp">
       <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\IRenderTarget2D.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLRenderTarget2D.hpp">
+      <Filter>gfx\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXRenderTarget2D.hpp">
+      <Filter>gfx\dx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
