@@ -238,5 +238,8 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXRenderTarget2D.hpp">
       <Filter>gfx\dx</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\ClearFlags.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

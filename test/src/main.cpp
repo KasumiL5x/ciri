@@ -178,7 +178,7 @@ int main() {
 	device->setSamplerState(0, samplerState, ciri::ShaderStage::Pixel);
 
 	// render target
-	ciri::IRenderTarget2D* renderTarget = device->createRenderTarget2D(256, 256);
+	ciri::IRenderTarget2D* renderTarget = device->createRenderTarget2D(64, 64, ciri::TextureFormat::RGB32_Float);
 
 	// mouse and keyboard states
 	ciri::KeyboardState currKeyState; ciri::Input::getKeyboardState(&currKeyState);
@@ -240,22 +240,46 @@ int main() {
 		}
 		camera.update(deltaTime);
 
-		//static float time = 0.0f;
-		//time += 0.0001f;
-		//static float angle = 0.0f;
-		//angle += 0.1f;
-		//if( angle > 360.0f ) {
-			//angle = (360.0f - angle);
-		//}
-		viewProj = (camera.getProj() * camera.getView());
 		world = cc::math::translate(cc::Vec3f(0.0f, 0.0f, -0.0f));// * cc::math::rotate(angle, cc::Vec3f(0.0f, 1.0f, 0.0f));
+
+		///// BEGIN OLD CODE /////
+		//viewProj = (camera.getProj() * camera.getView());
+		//cc::Mat4f xform = viewProj * world;
+		//shaderData.xform = xform;
+		//if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
+		//	printf("Failed to update constant buffer.\n");
+		//}
+		//device->clear();
+		//device->setTexture2D(0, texture2D, ciri::ShaderStage::Pixel);
+		//device->applyShader(shader);
+		//device->setVertexBuffer(vertexBuffer);
+		//device->setIndexBuffer(indexBuffer);
+		//device->drawIndexed(ciri::PrimitiveTopology::TriangleList, indexBuffer->getIndexCount());
+		//device->present();
+		///// END OLD CODE /////
+
+		// update camera matrix
+		viewProj = (camera.getProj() * camera.getView());
 		cc::Mat4f xform = viewProj * world;
 		shaderData.xform = xform;
 		if( ciri::err::failed(constantBuffer->setData(sizeof(shaderData), &shaderData)) ) {
 			printf("Failed to update constant buffer.\n");
 		}
-
-		device->clear();
+		// render the scene to texture
+		ciri::IRenderTarget2D* renderTargets = { renderTarget };
+		device->setRenderTargets(&renderTargets, 1);
+		float firstClearColor[4] = {0.3f, 0.3f, 0.3f, 1.0f};
+		device->clear(ciri::ClearFlags::Color, &firstClearColor[0]);
+		device->setTexture2D(0, texture2D, ciri::ShaderStage::Pixel);
+		device->applyShader(shader);
+		device->setVertexBuffer(vertexBuffer);
+		device->setIndexBuffer(indexBuffer);
+		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, indexBuffer->getIndexCount());
+		//// render to the screen using the rendertarget as a texture
+		device->restoreDefaultRenderTargets();
+		float secondClearColor[4] = {0.39f, 0.58f, 0.93f, 1.0f};
+		device->clear(ciri::ClearFlags::ColorDepth, secondClearColor);
+		device->setTexture2D(0, renderTarget->getTexture2D(), ciri::ShaderStage::Pixel);
 		device->applyShader(shader);
 		device->setVertexBuffer(vertexBuffer);
 		device->setIndexBuffer(indexBuffer);

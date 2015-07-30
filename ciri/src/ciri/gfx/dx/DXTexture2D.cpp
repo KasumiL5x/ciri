@@ -3,7 +3,7 @@
 
 namespace ciri {
 	DXTexture2D::DXTexture2D( DXGraphicsDevice* device )
-		: ITexture2D(), _device(device), _texture2D(nullptr), _shaderResourceView(nullptr) {
+		: ITexture2D(), _device(device), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {
 	}
 
 	DXTexture2D::~DXTexture2D() {
@@ -23,6 +23,9 @@ namespace ciri {
 	}
 
 	bool DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+		_width = (width > _width) ? width : _width;
+		_height = (height > _height) ? height : _height;
+
 		if( _shaderResourceView != nullptr ) {
 			// todo: support editing (also change below to dynamic)
 			return false;
@@ -42,15 +45,21 @@ namespace ciri {
 		texDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // todo: write?
 		texDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA subData;
-		ZeroMemory(&subData, sizeof(subData));
-		subData.pSysMem = data;
-		subData.SysMemPitch = width * 4; // must be rgba
-		subData.SysMemSlicePitch = width*height*4; // must be rgba
-
-		if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, &subData, &_texture2D)) ) {
-			destroy();
-			return false;
+		if( data != nullptr ) {
+			D3D11_SUBRESOURCE_DATA subData;
+			ZeroMemory(&subData, sizeof(subData));
+			subData.pSysMem = data;
+			subData.SysMemPitch = width * TextureFormat::bytesPerPixel(format);
+			subData.SysMemSlicePitch = width * height * TextureFormat::bytesPerPixel(format);
+			if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, &subData, &_texture2D)) ) {
+				destroy();
+				return false;
+			}
+		} else {
+			if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, nullptr, &_texture2D)) ) {
+				destroy();
+				return false;
+			}
 		}
 
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_texture2D, nullptr, &_shaderResourceView)) ) {
@@ -61,6 +70,14 @@ namespace ciri {
 		return true;
 	}
 
+	int DXTexture2D::getWidth() const {
+		return _width;
+	}
+
+	int DXTexture2D::getHeight() const {
+		return _height;
+	}
+
 	ID3D11ShaderResourceView* DXTexture2D::getShaderResourceView() const {
 		return _shaderResourceView;
 	}
@@ -69,6 +86,10 @@ namespace ciri {
 		switch( format ) {
 			case TextureFormat::Color: {
 				return DXGI_FORMAT_R8G8B8A8_UNORM;
+			}
+
+			case TextureFormat::RGB32_Float: {
+				return DXGI_FORMAT_R32G32B32_FLOAT;
 			}
 
 			default: {

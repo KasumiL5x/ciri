@@ -4,6 +4,8 @@
 #include "ShaderStage.hpp"
 #include "PrimitiveTopology.hpp"
 #include "ISamplerState.hpp"
+#include "TextureFormat.hpp"
+#include "ClearFlags.hpp"
 
 namespace ciri {
 	class Window;
@@ -44,7 +46,7 @@ namespace ciri {
 
 		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount )=0;
 
-		virtual void clear()=0;
+		virtual void clear( ClearFlags::Flags flags, float* color=nullptr )=0;
 
 		virtual IConstantBuffer* createConstantBuffer()=0;
 
@@ -54,7 +56,9 @@ namespace ciri {
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage )=0;
 
-		virtual IRenderTarget2D* createRenderTarget2D( int width, int height )=0;
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format )=0;
+		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets )=0;
+		virtual void restoreDefaultRenderTargets()=0;
 	};
 } // ciri
 

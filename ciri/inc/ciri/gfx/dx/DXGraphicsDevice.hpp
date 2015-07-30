@@ -33,13 +33,15 @@ namespace ciri {
 		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
 		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
-		virtual void clear();
+		virtual void clear( ClearFlags::Flags flags, float* color=nullptr );
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
-		virtual IRenderTarget2D* createRenderTarget2D( int width, int height );
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
+		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
+		virtual void restoreDefaultRenderTargets();
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;

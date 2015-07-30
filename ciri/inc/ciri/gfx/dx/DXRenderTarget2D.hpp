@@ -13,6 +13,8 @@ namespace ciri {
 
 		virtual void destroy();
 
+		virtual ITexture2D* getTexture2D() const;
+
 	private:
 		IGraphicsDevice* _device;
 	};

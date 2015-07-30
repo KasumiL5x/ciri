@@ -15,6 +15,9 @@ namespace ciri {
 		virtual void destroy();
 		virtual bool setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format );
 
+		virtual int getWidth() const;
+		virtual int getHeight() const;
+
 		ID3D11ShaderResourceView* getShaderResourceView() const;
 
 	private:
@@ -24,6 +27,8 @@ namespace ciri {
 		DXGraphicsDevice* _device;
 		ID3D11Texture2D* _texture2D;
 		ID3D11ShaderResourceView* _shaderResourceView;
+		int _width;
+		int _height;
 	};
 }
 

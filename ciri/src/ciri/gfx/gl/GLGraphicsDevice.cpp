@@ -25,7 +25,12 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _hdc(0), _hglrc(0), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr) {
+		: IGraphicsDevice(), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
+			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0) {
+		// configure mrt draw buffers
+		for( int i = 0; i < MAX_MRTS; ++i ) {
+			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+		}
 	}
 
 	GLGraphicsDevice::~GLGraphicsDevice() {
@@ -33,6 +38,9 @@ namespace ciri {
 	}
 
 	bool GLGraphicsDevice::create( Window* window ) {
+		_defaultWidth = window->getSize().x;
+		_defaultHeight = window->getSize().y;
+
 		if( !configureGl(window->getHandle()) ) {
 			destroy();
 			return false;
@@ -51,6 +59,12 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// clean fbo
+		if( 0 != _currentFbo ) {
+			glDeleteFramebuffers(1, &_currentFbo);
+			_currentFbo = 0;
+		}
+
 		// destroy 2d render targets
 		for( unsigned int i = 0; i < _renderTarget2Ds.size(); ++i ) {
 			if( _renderTarget2Ds[i] != nullptr ) {
@@ -254,9 +268,51 @@ namespace ciri {
 		glDrawElements(convertTopology(topology), indexCount, GL_UNSIGNED_INT, 0);
 	}
 
-	void GLGraphicsDevice::clear() {
-		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	void GLGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
+		GLbitfield clearFlags = 0;
+		switch( flags ) {
+			case ClearFlags::Color: {
+					clearFlags = GL_COLOR_BUFFER_BIT;
+				break;
+			}
+
+			case ClearFlags::Depth: {
+					clearFlags = GL_DEPTH_BUFFER_BIT;
+				break;
+			}
+
+			case ClearFlags::Stencil: {
+					clearFlags = GL_STENCIL_BUFFER_BIT;
+				break;
+			}
+
+			case ClearFlags::ColorDepth: {
+					clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+				break;
+			}
+
+			case ClearFlags::ColorStencil: {
+					clearFlags = GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+				break;
+			}
+
+			case ClearFlags::DepthStencil: {
+					clearFlags = GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+				break;
+			}
+
+			case ClearFlags::All: {
+					clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+				break;
+			}
+		}
+
+		if( color != nullptr ) {
+			glClearColor(color[0], color[1], color[2], color[3]);
+		} else {
+			glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+		}
+		glClear(clearFlags);
 	}
 
 	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
@@ -293,11 +349,40 @@ namespace ciri {
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
 	}
 
-	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height ) {
-		GLRenderTarget2D* glTarget = new GLRenderTarget2D();
-		//...
+	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
+		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D());
+		if( !texture->setData(0, 0, width, height, nullptr, format) ) {
+			texture->destroy();
+			delete texture;
+			texture = nullptr;
+			_texture2Ds.pop_back();
+		}
+		GLRenderTarget2D* glTarget = new GLRenderTarget2D(texture);
 		_renderTarget2Ds.push_back(glTarget);
 		return glTarget;
+	}
+
+	void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
+		// create and bind a framebuffer
+		if( 0 == _currentFbo ) { glGenFramebuffers(1, &_currentFbo); }
+		glBindFramebuffer(GL_FRAMEBUFFER, _currentFbo);
+
+		// attach all render target textures
+		for( int i = 0; i < numRenderTargets; ++i ) {
+			GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(renderTargets[i]->getTexture2D());
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->getTextureId(), 0);
+		}
+
+		// configure draw buffers
+		glDrawBuffers(numRenderTargets, _drawBuffers);
+
+		// set viewport (use 0's size)
+		glViewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight());
+	}
+
+	void GLGraphicsDevice::restoreDefaultRenderTargets() {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
@@ -343,6 +428,8 @@ namespace ciri {
 		if( !wglMakeCurrent(_hdc, _hglrc) ) {
 			return false;
 		}
+
+		glViewport(0, 0, _defaultWidth, _defaultHeight);
 
 		//TODO: setup gl debug message tracing
 

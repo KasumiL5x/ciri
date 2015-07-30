@@ -2,7 +2,7 @@
 
 namespace ciri {
 	GLTexture2D::GLTexture2D()
-		: ITexture2D(), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0) {
+		: ITexture2D(), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
 	}
 
 	GLTexture2D::~GLTexture2D() {
@@ -17,6 +17,9 @@ namespace ciri {
 	}
 
 	bool GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+		_width = (width > _width) ? width : _width;
+		_height = (height > _height) ? height : _height;
+
 		ciriFormatToGlFormat(format);
 
 		const GLint minFilterMode = (1 > 1) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR; // (levelCount > 1) ? ... : ...;
@@ -29,7 +32,7 @@ namespace ciri {
 
 		if( _textureId != 0 ) {
 			glBindTexture(GL_TEXTURE_2D, _textureId);
-			glPixelStorei(GL_UNPACK_ALIGNMENT, getPixelStoreSize(format));
+			glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
 			glTexSubImage2D(GL_TEXTURE_2D, level, xOffset, yOffset, width, height, _pixelFormat, _pixelType, data);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 			glBindTexture(GL_TEXTURE_2D, 0);
@@ -44,7 +47,7 @@ namespace ciri {
 			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
 			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
-			glPixelStorei(GL_UNPACK_ALIGNMENT, getPixelStoreSize(format));
+			glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
 			glTexImage2D(GL_TEXTURE_2D, level, _internalFormat, width, height, 0, _pixelFormat, _pixelType, data);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
@@ -54,6 +57,14 @@ namespace ciri {
 		}
 
 		return true;
+	}
+
+	int GLTexture2D::getWidth() const {
+		return _width;
+	}
+
+	int GLTexture2D::getHeight() const {
+		return _height;
 	}
 
 	GLuint GLTexture2D::getTextureId() const {
@@ -74,18 +85,12 @@ namespace ciri {
 				_pixelType = GL_UNSIGNED_BYTE;
 				break;
 			}
-		}
-	}
 
-	int GLTexture2D::getPixelStoreSize( TextureFormat::Type format ) {
-		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetSize
-		switch( format ) {
-			case TextureFormat::Color: {
-				return 4;
-			}
-
-			default: {
-				return -1;
+			case TextureFormat::RGB32_Float: {
+				_internalFormat = GL_RGB32F;
+				_pixelFormat = GL_RGB;
+				_pixelType = GL_FLOAT;
+				break;
 			}
 		}
 	}

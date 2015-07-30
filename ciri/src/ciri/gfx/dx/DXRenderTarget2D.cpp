@@ -12,4 +12,8 @@ namespace ciri {
 
 	void DXRenderTarget2D::destroy() {
 	}
+
+	ITexture2D* DXRenderTarget2D::getTexture2D() const {
+		return nullptr;
+	}
 } // ciri

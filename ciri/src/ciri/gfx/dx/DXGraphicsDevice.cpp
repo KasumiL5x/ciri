@@ -241,8 +241,13 @@ namespace ciri {
 		_immediateContext->DrawIndexed(indexCount, 0, 0);
 	}
 
-	void DXGraphicsDevice::clear() {
-		_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
+	void DXGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
+		if( color != nullptr ) {
+			const FLOAT clearColor[4] = {color[0], color[1], color[2], color[3]};
+			_immediateContext->ClearRenderTargetView(_renderTargetView, clearColor);
+		} else {
+			_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
+		}
 	}
 
 	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
@@ -304,11 +309,19 @@ namespace ciri {
 		}
 	}
 
-	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height ) {
+	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
 		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(this);
 		//...
 		_renderTarget2Ds.push_back(dxTarget);
 		return dxTarget;
+	}
+
+	void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
+		throw;
+	}
+
+	void DXGraphicsDevice::restoreDefaultRenderTargets() {
+		throw;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

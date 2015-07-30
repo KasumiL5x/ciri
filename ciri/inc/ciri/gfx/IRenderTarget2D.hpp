@@ -2,6 +2,8 @@
 #define __ciri_irendertarget2d__
 
 namespace ciri {
+	class ITexture2D;
+
 	class IRenderTarget2D {
 	public:
 		IRenderTarget2D() {
@@ -11,6 +13,8 @@ namespace ciri {
 		}
 
 		virtual void destroy()=0;
+
+		virtual ITexture2D* getTexture2D() const=0;
 	};
 } // ciri
 

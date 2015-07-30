@@ -36,13 +36,15 @@ namespace ciri {
 		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
 		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
-		virtual void clear();
+		virtual void clear( ClearFlags::Flags flags, float* color=nullptr );
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D();
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
-		virtual IRenderTarget2D* createRenderTarget2D( int width, int height );
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
+		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
+		virtual void restoreDefaultRenderTargets();
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -52,6 +54,8 @@ namespace ciri {
 	private:
 		HDC _hdc;
 		HGLRC _hglrc;
+		int _defaultWidth;
+		int _defaultHeight;
 		//
 		std::vector<GLShader*> _shaders;
 		std::vector<GLVertexBuffer*> _vertexBuffers;
@@ -68,6 +72,10 @@ namespace ciri {
 		std::vector<GLSamplerState*> _samplers;
 		//
 		std::vector<GLRenderTarget2D*> _renderTarget2Ds;
+		//
+		GLuint _currentFbo;
+		const static int MAX_MRTS{8};
+		GLenum _drawBuffers[MAX_MRTS];
 	};
 } // ciri
 
