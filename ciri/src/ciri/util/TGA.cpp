@@ -83,6 +83,8 @@ namespace ciri {
 				}
 			}
 			while( currPixel < pixelCount );
+			delete[] buf;
+			buf = nullptr;
 		}
 		else {
 			return false;
