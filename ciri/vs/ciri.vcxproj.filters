@@ -105,6 +105,9 @@
     <ClCompile Include="..\src\ciri\gfx\gl\GLRenderTarget2D.cpp">
       <Filter>gfx\gl</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\ObjModel.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -239,6 +242,9 @@
       <Filter>gfx\dx</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\ClearFlags.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\ObjModel.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
