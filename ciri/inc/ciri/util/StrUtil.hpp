@@ -2,6 +2,7 @@
 #define __ciri_strutil__
 
 #include <string>
+#include <vector>
 #include <Windows.h>
 
 namespace ciri {
@@ -15,6 +16,33 @@ namespace ciri {
 			std::wstring wstr(buf);
 			delete[] buf;
 			return wstr;
+		}
+
+		static std::vector<std::string>* split( const char* str, char delim, std::vector<std::string>* outVec ) {
+			do {
+				const char* begin = str;
+				while( *str != delim && *str ) {
+					str++;
+				}
+				outVec->emplace_back(begin, str); // faster than push_back
+			} while( 0 != *str++ );
+			return outVec;
+		}
+
+		static int countCharactersInString( const char* str, char delim, int start ) {
+			int count = 0;
+			int index = start;
+			while( true ) {
+				const char c = str[index];
+				if( '\0' == c  ) {
+					break;
+				}
+				if( delim == c ) {
+					count += 1;
+				}
+				index += 1;
+			}
+			return count;
 		}
 	} // strutil
 } // ciri
