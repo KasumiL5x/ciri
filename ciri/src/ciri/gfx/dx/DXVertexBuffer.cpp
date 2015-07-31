@@ -3,7 +3,7 @@
 
 namespace ciri {
 	DXVertexBuffer::DXVertexBuffer( DXGraphicsDevice* device )
-		: IVertexBuffer(), _device(device), _vertexBuffer(nullptr), _vertexStride(0) {
+		: IVertexBuffer(), _device(device), _vertexBuffer(nullptr), _vertexStride(0), _vertexCount(0) {
 	}
 
 	DXVertexBuffer::~DXVertexBuffer() {
@@ -24,6 +24,7 @@ namespace ciri {
 		}
 
 		_vertexStride = vertexStride;
+		_vertexCount = vertexCount;
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
@@ -50,6 +51,10 @@ namespace ciri {
 
 	int DXVertexBuffer::getStride() const {
 		return _vertexStride;
+	}
+
+	int DXVertexBuffer::getVertexCount() {
+		return _vertexCount;
 	}
 
 	ID3D11Buffer* DXVertexBuffer::getVertexBuffer() const {

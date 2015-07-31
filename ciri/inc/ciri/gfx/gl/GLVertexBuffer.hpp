@@ -13,12 +13,14 @@ class GLVertexBuffer : public IVertexBuffer {
 		virtual bool set( void* vertices, int vertexStride, int vertexCount, bool dynamic );
 		virtual void destroy();
 		virtual int getStride() const;
+		virtual int getVertexCount();
 
 		GLuint getVbo() const;
 
 	private:
 		GLuint _vbo;
 		int _vertexStride;
+		int _vertexCount;
 	};
 } // ciri
 

@@ -58,7 +58,7 @@ namespace ciri {
 
 	bool ObjModel::parseLine( const std::string& line ) {
 		if( line.length() < 1 ) {
-			return false;
+			return true; // blank lines can trigger this
 		}
 
 		switch( line[0] ) {
@@ -112,7 +112,7 @@ namespace ciri {
 		}
 
 		// for all vertices (assuming 3)
-		for( int i = 0; i < 4; ++i ) {
+		for( int i = 1; i < 4; ++i ) {
 			_secondSplit.clear();
 			strutil::split(_firstSplit[i].c_str(), '/', &_secondSplit);
 

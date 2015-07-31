@@ -2,7 +2,7 @@
 
 namespace ciri {
 	GLVertexBuffer::GLVertexBuffer()
-		: IVertexBuffer(), _vbo(0), _vertexStride(0) {
+		: IVertexBuffer(), _vbo(0), _vertexStride(0), _vertexCount(0) {
 	}
 
 	GLVertexBuffer::~GLVertexBuffer() {
@@ -16,6 +16,7 @@ namespace ciri {
 		}
 
 		_vertexStride = vertexStride;
+		_vertexCount = vertexCount;
 
 		glGenBuffers(1, &_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -36,6 +37,10 @@ namespace ciri {
 
 	int GLVertexBuffer::getStride() const {
 		return _vertexStride;
+	}
+
+	int GLVertexBuffer::getVertexCount() {
+		return _vertexCount;
 	}
 
 	GLuint GLVertexBuffer::getVbo() const {

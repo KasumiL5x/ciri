@@ -1,20 +1,20 @@
 #ifndef __ciri_igraphicsdevice__
 #define __ciri_igraphicsdevice__
 
-#include "ShaderStage.hpp"
+#include "IShader.hpp"
+#include "IVertexBuffer.hpp"
+#include "IIndexBuffer.hpp"
 #include "PrimitiveTopology.hpp"
+#include "ClearFlags.hpp"
+#include "IConstantBuffer.hpp"
+#include "ITexture2D.hpp"
+#include "ShaderStage.hpp"
 #include "ISamplerState.hpp"
 #include "TextureFormat.hpp"
-#include "ClearFlags.hpp"
+#include"IRenderTarget2D.hpp"
 
 namespace ciri {
 	class Window;
-	class IShader;
-	class IVertexBuffer;
-	class IIndexBuffer;
-	class IConstantBuffer;
-	class ITexture2D;
-	class IRenderTarget2D;
 
 	class IGraphicsDevice {
 	public:

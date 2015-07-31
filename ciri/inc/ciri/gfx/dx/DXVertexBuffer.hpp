@@ -15,6 +15,7 @@ namespace ciri {
 		virtual bool set( void* vertices, int vertexStride, int vertexCount, bool dynamic );
 		virtual void destroy();
 		virtual int getStride() const;
+		virtual int getVertexCount();
 
 		ID3D11Buffer* getVertexBuffer() const;
 
@@ -22,6 +23,7 @@ namespace ciri {
 		DXGraphicsDevice* _device;
 		ID3D11Buffer* _vertexBuffer;
 		int _vertexStride;
+		int _vertexCount;
 	};
 } // ciri
 
