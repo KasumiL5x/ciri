@@ -114,6 +114,48 @@ namespace ciri {
 		return shader;
 	}
 
+	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
+		DXVertexBuffer* buffer = new DXVertexBuffer(this);
+		_vertexBuffers.push_back(buffer);
+		return buffer;
+	}
+
+	IIndexBuffer* DXGraphicsDevice::createIndexBuffer() {
+		DXIndexBuffer* buffer = new DXIndexBuffer(this);
+		_indexBuffers.push_back(buffer);
+		return buffer;
+	}
+
+	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
+		DXConstantBuffer* buffer = new DXConstantBuffer(this);
+		_constantBuffers.push_back(buffer);
+		return buffer;
+	}
+
+	ITexture2D* DXGraphicsDevice::createTexture2D() {
+		DXTexture2D* dxTexture = new DXTexture2D(this);
+		_texture2Ds.push_back(dxTexture);
+		return dxTexture;
+	}
+
+	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+		DXSamplerState* dxSampler = new DXSamplerState(this);
+		if( !dxSampler->create(desc) ) {
+			delete dxSampler;
+			dxSampler = nullptr;
+			return nullptr;
+		}
+		_samplers.push_back(dxSampler);
+		return dxSampler;
+	}
+
+	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
+		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(this);
+		//...
+		_renderTarget2Ds.push_back(dxTarget);
+		return dxTarget;
+	}
+
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
 		if( !shader->isValid() ) {
 			_activeShader = nullptr;
@@ -156,12 +198,6 @@ namespace ciri {
 		_activeShader = dxShader;
 	}
 
-	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
-		DXVertexBuffer* buffer = new DXVertexBuffer(this);
-		_vertexBuffers.push_back(buffer);
-		return buffer;
-	}
-
 	void DXGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
 		// gl cannot set parameters with no active shader; dx can, but let's stay consistent
 		if( nullptr == _activeShader ) {
@@ -178,12 +214,6 @@ namespace ciri {
 		_activeVertexBuffer = dxBuffer;
 	}
 
-	IIndexBuffer* DXGraphicsDevice::createIndexBuffer() {
-		DXIndexBuffer* buffer = new DXIndexBuffer(this);
-		_indexBuffers.push_back(buffer);
-		return buffer;
-	}
-
 	void DXGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
 		DXIndexBuffer* dxBuffer = reinterpret_cast<DXIndexBuffer*>(buffer);
 
@@ -194,6 +224,42 @@ namespace ciri {
 		_immediateContext->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
 
 		_activeIndexBuffer = dxBuffer;
+	}
+
+	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture);
+
+		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
+		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
+
+		const bool all = (shaderStage & ShaderStage::All);
+		if( all || (shaderStage & ShaderStage::Vertex) ) {
+			_immediateContext->VSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Geometry) ) {
+			_immediateContext->GSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Pixel) ) {
+			_immediateContext->PSSetShaderResources(index, 1, srv);
+		}
+	}
+
+	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
+		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state);
+
+		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
+		ID3D11SamplerState* sampler[1] = { (state != nullptr) ? dxSampler->getSamplerState() : nullptr };
+
+		const bool all = (shaderStage & ShaderStage::All);
+		if( all || (shaderStage & ShaderStage::Vertex) ) {
+			_immediateContext->VSSetSamplers(index, 1, sampler);
+		}
+		if( all || (shaderStage & ShaderStage::Geometry) ) {
+			_immediateContext->GSSetSamplers(index, 1, sampler);
+		}
+		if( all || (shaderStage & ShaderStage::Pixel) ) {
+			_immediateContext->PSSetSamplers(index, 1, sampler);
+		}
 	}
 
 	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
@@ -240,6 +306,14 @@ namespace ciri {
 		_immediateContext->IASetPrimitiveTopology(convertTopology(topology));
 		_immediateContext->DrawIndexed(indexCount, 0, 0);
 	}
+	
+	void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
+		throw;
+	}
+
+	void DXGraphicsDevice::restoreDefaultRenderTargets() {
+		throw;
+	}
 
 	void DXGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
 		if( color != nullptr ) {
@@ -248,80 +322,6 @@ namespace ciri {
 		} else {
 			_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
 		}
-	}
-
-	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
-		DXConstantBuffer* buffer = new DXConstantBuffer(this);
-		_constantBuffers.push_back(buffer);
-		return buffer;
-	}
-
-	ITexture2D* DXGraphicsDevice::createTexture2D() {
-		DXTexture2D* dxTexture = new DXTexture2D(this);
-		_texture2Ds.push_back(dxTexture);
-		return dxTexture;
-	}
-
-	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
-		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture);
-
-		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
-		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
-
-		const bool all = (shaderStage & ShaderStage::All);
-		if( all || (shaderStage & ShaderStage::Vertex) ) {
-			_immediateContext->VSSetShaderResources(index, 1, srv);
-		}
-		if( all || (shaderStage & ShaderStage::Geometry) ) {
-			_immediateContext->GSSetShaderResources(index, 1, srv);
-		}
-		if( all || (shaderStage & ShaderStage::Pixel) ) {
-			_immediateContext->PSSetShaderResources(index, 1, srv);
-		}
-	}
-
-	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
-		DXSamplerState* dxSampler = new DXSamplerState(this);
-		if( !dxSampler->create(desc) ) {
-			delete dxSampler;
-			dxSampler = nullptr;
-			return nullptr;
-		}
-		_samplers.push_back(dxSampler);
-		return dxSampler;
-	}
-
-	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
-		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state);
-
-		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
-		ID3D11SamplerState* sampler[1] = { (state != nullptr) ? dxSampler->getSamplerState() : nullptr };
-
-		const bool all = (shaderStage & ShaderStage::All);
-		if( all || (shaderStage & ShaderStage::Vertex) ) {
-			_immediateContext->VSSetSamplers(index, 1, sampler);
-		}
-		if( all || (shaderStage & ShaderStage::Geometry) ) {
-			_immediateContext->GSSetSamplers(index, 1, sampler);
-		}
-		if( all || (shaderStage & ShaderStage::Pixel) ) {
-			_immediateContext->PSSetSamplers(index, 1, sampler);
-		}
-	}
-
-	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
-		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(this);
-		//...
-		_renderTarget2Ds.push_back(dxTarget);
-		return dxTarget;
-	}
-
-	void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
-		throw;
-	}
-
-	void DXGraphicsDevice::restoreDefaultRenderTargets() {
-		throw;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

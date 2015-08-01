@@ -155,6 +155,54 @@ namespace ciri {
 		return shader;
 	}
 
+	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
+		GLVertexBuffer* buffer = new GLVertexBuffer();
+		_vertexBuffers.push_back(buffer);
+		return buffer;
+	}
+
+	IIndexBuffer* GLGraphicsDevice::createIndexBuffer() {
+		GLIndexBuffer* buffer = new GLIndexBuffer();
+		_indexBuffers.push_back(buffer);
+		return buffer;
+	}
+
+	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
+		GLConstantBuffer* buffer = new GLConstantBuffer();
+		_constantBuffers.push_back(buffer);
+		return buffer;
+	}
+
+	ITexture2D* GLGraphicsDevice::createTexture2D() {
+		GLTexture2D* glTexture = new GLTexture2D();
+		_texture2Ds.push_back(glTexture);
+		return glTexture;
+	}
+
+	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+		GLSamplerState* glSampler = new GLSamplerState();
+		if( !glSampler->create(desc) ) {
+			delete glSampler;
+			glSampler = nullptr;
+			return nullptr;
+		}
+		_samplers.push_back(glSampler);
+		return glSampler;
+	}
+
+	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
+		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D());
+		if( !texture->setData(0, 0, width, height, nullptr, format) ) {
+			texture->destroy();
+			delete texture;
+			texture = nullptr;
+			_texture2Ds.pop_back();
+		}
+		GLRenderTarget2D* glTarget = new GLRenderTarget2D(texture);
+		_renderTarget2Ds.push_back(glTarget);
+		return glTarget;
+	}
+
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
 		if( !shader->isValid() ) {
 			_activeShader = nullptr;
@@ -164,12 +212,6 @@ namespace ciri {
 		GLShader* glShader = reinterpret_cast<GLShader*>(shader);
 		glUseProgram(glShader->getProgram());
 		_activeShader = glShader;
-	}
-
-	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
-		GLVertexBuffer* buffer = new GLVertexBuffer();
-		_vertexBuffers.push_back(buffer);
-		return buffer;
 	}
 
 	void GLGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
@@ -207,12 +249,6 @@ namespace ciri {
 		_activeVertexBuffer = glBuffer;
 	}
 
-	IIndexBuffer* GLGraphicsDevice::createIndexBuffer() {
-		GLIndexBuffer* buffer = new GLIndexBuffer();
-		_indexBuffers.push_back(buffer);
-		return buffer;
-	}
-
 	void GLGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
 		GLIndexBuffer* glBuffer = reinterpret_cast<GLIndexBuffer*>(buffer);
 
@@ -223,6 +259,17 @@ namespace ciri {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, evbo);
 
 		_activeIndexBuffer = glBuffer;
+	}
+
+	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
+	}
+
+	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
+		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
+		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
@@ -266,6 +313,29 @@ namespace ciri {
 		}
 
 		glDrawElements(convertTopology(topology), indexCount, GL_UNSIGNED_INT, 0);
+	}
+
+	void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
+		// create and bind a framebuffer
+		if( 0 == _currentFbo ) { glGenFramebuffers(1, &_currentFbo); }
+		glBindFramebuffer(GL_FRAMEBUFFER, _currentFbo);
+
+		// attach all render target textures
+		for( int i = 0; i < numRenderTargets; ++i ) {
+			GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(renderTargets[i]->getTexture2D());
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->getTextureId(), 0);
+		}
+
+		// configure draw buffers
+		glDrawBuffers(numRenderTargets, _drawBuffers);
+
+		// set viewport (use 0's size)
+		glViewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight());
+	}
+
+	void GLGraphicsDevice::restoreDefaultRenderTargets() {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
 	void GLGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
@@ -313,76 +383,6 @@ namespace ciri {
 			glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
 		}
 		glClear(clearFlags);
-	}
-
-	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
-		GLConstantBuffer* buffer = new GLConstantBuffer();
-		_constantBuffers.push_back(buffer);
-		return buffer;
-	}
-
-	ITexture2D* GLGraphicsDevice::createTexture2D() {
-		GLTexture2D* glTexture = new GLTexture2D();
-		_texture2Ds.push_back(glTexture);
-		return glTexture;
-	}
-
-	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
-		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
-	}
-
-	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
-		GLSamplerState* glSampler = new GLSamplerState();
-		if( !glSampler->create(desc) ) {
-			delete glSampler;
-			glSampler = nullptr;
-			return nullptr;
-		}
-		_samplers.push_back(glSampler);
-		return glSampler;
-	}
-
-	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
-		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
-		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
-	}
-
-	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
-		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D());
-		if( !texture->setData(0, 0, width, height, nullptr, format) ) {
-			texture->destroy();
-			delete texture;
-			texture = nullptr;
-			_texture2Ds.pop_back();
-		}
-		GLRenderTarget2D* glTarget = new GLRenderTarget2D(texture);
-		_renderTarget2Ds.push_back(glTarget);
-		return glTarget;
-	}
-
-	void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
-		// create and bind a framebuffer
-		if( 0 == _currentFbo ) { glGenFramebuffers(1, &_currentFbo); }
-		glBindFramebuffer(GL_FRAMEBUFFER, _currentFbo);
-
-		// attach all render target textures
-		for( int i = 0; i < numRenderTargets; ++i ) {
-			GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(renderTargets[i]->getTexture2D());
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->getTextureId(), 0);
-		}
-
-		// configure draw buffers
-		glDrawBuffers(numRenderTargets, _drawBuffers);
-
-		// set viewport (use 0's size)
-		glViewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight());
-	}
-
-	void GLGraphicsDevice::restoreDefaultRenderTargets() {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
