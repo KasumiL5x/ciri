@@ -19,7 +19,7 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
 
 void enableMemoryLeakChecking();
 bool createWindow();
@@ -117,6 +117,9 @@ int main() {
 	ciri::Timer timer;
 	timer.start();
 
+	// DEBUG COUNTER
+	int loopCount = 0;
+
 	// main loop
 	while( window->isOpen() ) {
 		// event processing
@@ -176,7 +179,7 @@ int main() {
 				printf("Failed to update simple constants buffer.\n");
 			}
 
-			// render all models with the simple shader
+		//	// render all models with the simple shader
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);
 			graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
@@ -196,6 +199,12 @@ int main() {
 		// update previous input states
 		prevKeyState = currKeyState;
 		prevMouseState = currMouseState;
+
+		loopCount += 1;
+		if( loopCount > 100 ) {
+			//window->destroy();
+			//break;
+		}
 	}
 
 	cleanup();
@@ -333,10 +342,11 @@ bool createSamplers() {
 }
 
 void cleanup() {
-	if( window != nullptr ) {
-		window->destroy();
-		delete window;
-		window = nullptr;
+	for( int i = 0; i < models.size(); ++i ) {
+		if( models[i] != nullptr ) {
+			delete models[i];
+			models[i] = nullptr;
+		}
 	}
 
 	if( graphicsDevice != nullptr ) {
@@ -345,11 +355,10 @@ void cleanup() {
 		graphicsDevice = nullptr;
 	}
 
-	for( int i = 0; i < models.size(); ++i ) {
-		if( models[i] != nullptr ) {
-			delete models[i];
-			models[i] = nullptr;
-		}
+	if( window != nullptr ) {
+		window->destroy();
+		delete window;
+		window = nullptr;
 	}
 }
 
