@@ -249,7 +249,7 @@ bool createConstantBuffers() {
 }
 
 bool assignConstantBuffersToShaders() {
-	if( ciri::err::failed(simpleShader->addConstants(simpleConstantsBuffer, "SimpleConstants", ciri::ShaderType::Vertex)) ) {
+	if( ciri::err::failed(simpleShader->addConstants(simpleConstantsBuffer, "SimpleConstants", ciri::ShaderStage::Vertex)) ) {
 		printf("Failed to assign simple constants to simple shader.\n");
 		return false;
 	}

@@ -46,9 +46,9 @@ namespace ciri {
 
 		bool wasBufferSet = false;
 
-		const bool all = (shaderTypeFlags & ShaderType::All);
+		const bool all = (shaderTypeFlags & ShaderStage::All);
 
-		if( all || (shaderTypeFlags & ShaderType::Vertex) ) {
+		if( all || (shaderTypeFlags & ShaderStage::Vertex) ) {
 			const std::unordered_map<std::string, int>::const_iterator existing = _vertexConstantBufferIndices.find(name);
 			if( _vertexConstantBufferIndices.end() == existing ) {
 				return err::CIRI_UNKNOWN_ERROR; // no matching string
@@ -59,7 +59,7 @@ namespace ciri {
 			wasBufferSet = true;
 		}
 
-		if( _geometryShader != nullptr && (all || (shaderTypeFlags & ShaderType::Geometry)) ) {
+		if( _geometryShader != nullptr && (all || (shaderTypeFlags & ShaderStage::Geometry)) ) {
 			const std::unordered_map<std::string, int>::const_iterator existing = _geometryConstantBufferIndices.find(name);
 			if( _geometryConstantBufferIndices.end() == existing ) {
 				return err::CIRI_UNKNOWN_ERROR;
@@ -70,7 +70,7 @@ namespace ciri {
 			wasBufferSet = true;
 		}
 
-		if( all || (shaderTypeFlags & ShaderType::Pixel) ) {
+		if( all || (shaderTypeFlags & ShaderStage::Pixel) ) {
 			const std::unordered_map<std::string, int>::const_iterator existing = _pixelConstantBufferIndices.find(name);
 			if( _pixelConstantBufferIndices.end() == existing ) {
 				return err::CIRI_UNKNOWN_ERROR;
