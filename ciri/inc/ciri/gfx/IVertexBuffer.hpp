@@ -1,6 +1,8 @@
 #ifndef __ciri_vertexbuffer__
 #define __ciri_vertexbuffer__
 
+#include "../ErrorCodes.hpp"
+
 namespace ciri {
 	class IVertexBuffer {
 	public:
@@ -9,7 +11,7 @@ namespace ciri {
 		virtual ~IVertexBuffer() {
 		}
 
-		virtual bool set( void* vertices, int vertexStride, int vertexCount, bool dynamic )=0;
+		virtual err::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic )=0;
 		virtual void destroy()=0;
 		virtual int getStride() const=0;
 		virtual int getVertexCount()=0;

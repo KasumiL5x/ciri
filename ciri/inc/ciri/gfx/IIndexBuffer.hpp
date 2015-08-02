@@ -1,6 +1,8 @@
 #ifndef __ciri_iindexbuffer__
 #define __ciri_iindexbuffer__
 
+#include "../ErrorCodes.hpp"
+
 namespace ciri {
 	class IIndexBuffer {
 	public:
@@ -9,7 +11,7 @@ namespace ciri {
 		virtual ~IIndexBuffer() {
 		}
 
-		virtual bool set( int* indices, int indexCount, bool dynamic )=0;
+		virtual err::ErrorCode set( int* indices, int indexCount, bool dynamic )=0;
 		virtual void destroy()=0;
 		virtual int getIndexCount() const=0;
 	};

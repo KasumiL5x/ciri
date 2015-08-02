@@ -27,7 +27,7 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 	}
 
 	_vertexBuffer = device->createVertexBuffer();
-	if( !_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), false) ) {
+	if( ciri::err::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), false)) ) {
 		_vertexBuffer->destroy();
 		delete _vertexBuffer;
 		_vertexBuffer = nullptr;
@@ -36,7 +36,7 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 
 	if( _indices.size() > 0 ) {
 		_indexBuffer = device->createIndexBuffer();
-		if( !_indexBuffer->set(_indices.data(), _indices.size(), false) ) {
+		if( ciri::err::failed(_indexBuffer->set(_indices.data(), _indices.size(), false)) ) {
 			_vertexBuffer->destroy();
 			delete _vertexBuffer;
 			_vertexBuffer = nullptr;

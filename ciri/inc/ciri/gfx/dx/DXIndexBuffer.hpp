@@ -12,7 +12,7 @@ namespace ciri {
 		DXIndexBuffer( DXGraphicsDevice* device );
 		virtual ~DXIndexBuffer();
 
-		virtual bool set( int* indices, int indexCount, bool dynamic );
+		virtual err::ErrorCode set( int* indices, int indexCount, bool dynamic );
 		virtual void destroy();
 		virtual int getIndexCount() const;
 

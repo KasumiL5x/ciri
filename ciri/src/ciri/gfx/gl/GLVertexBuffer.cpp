@@ -9,10 +9,14 @@ namespace ciri {
 		destroy();
 	}
 
-	bool GLVertexBuffer::set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
+	err::ErrorCode GLVertexBuffer::set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
+		if( nullptr == vertices || vertexStride <= 0 || vertexCount <= 0 ) {
+			return err::CIRI_INVALID_ARGUMENT;
+		}
+
 		// todo: add remapping (updating) support
 		if( _vbo != 0 ) {
-			return false;
+			return err::CIRI_NOT_IMPLEMENTED;
 		}
 
 		_vertexStride = vertexStride;
@@ -25,7 +29,7 @@ namespace ciri {
 
 		// todo: check for fail
 
-		return true;
+		return err::CIRI_OK;
 	}
 
 	void GLVertexBuffer::destroy() {

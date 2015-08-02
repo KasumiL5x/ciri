@@ -10,7 +10,7 @@ class GLVertexBuffer : public IVertexBuffer {
 		GLVertexBuffer();
 		virtual ~GLVertexBuffer();
 
-		virtual bool set( void* vertices, int vertexStride, int vertexCount, bool dynamic );
+		virtual err::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic );
 		virtual void destroy();
 		virtual int getStride() const;
 		virtual int getVertexCount();

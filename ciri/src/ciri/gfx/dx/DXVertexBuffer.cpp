@@ -17,10 +17,14 @@ namespace ciri {
 		}
 	}
 
-	bool DXVertexBuffer::set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
+	err::ErrorCode DXVertexBuffer::set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
+		if( nullptr == vertices || vertexStride <= 0 || vertexCount <= 0 ) {
+			return err::CIRI_INVALID_ARGUMENT;
+		}
+
 		// todo: add remapping (updating) support
 		if( _vertexBuffer != nullptr ) {
-			return false;
+			return err::CIRI_NOT_IMPLEMENTED;
 		}
 
 		_vertexStride = vertexStride;
@@ -43,10 +47,10 @@ namespace ciri {
 
 		if( FAILED(_device->getDevice()->CreateBuffer(&desc, &data, &_vertexBuffer)) ) {
 			destroy();
-			return false;
+			return err::CIRI_UNKNOWN_ERROR;
 		}
 
-		return true;
+		return err::CIRI_OK;
 	}
 
 	int DXVertexBuffer::getStride() const {
