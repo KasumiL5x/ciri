@@ -135,14 +135,12 @@ namespace ciri {
 		_program = glCreateProgram();
 		if( !_vsFile.empty() ) {
 			glAttachShader(_program, _vertexShader);
-			// todo: glBindAttribLocation(_program, index, "input") for all inputs
 		}
 		if( !_gsFile.empty() ) {
 			glAttachShader(_program, _geometryShader);
 		}
 		if( !_psFile.empty() ) {
 			glAttachShader(_program, _pixelShader);
-			// todo: glBindFragDataLocation(_program, index, "output") for all outputs
 		}
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &status);
