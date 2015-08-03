@@ -7,7 +7,9 @@
 #include <ciri/util/TGA.hpp>
 #include <cc/Mat4.hpp>
 #include "Model.hpp"
+#include "ModelGen.hpp"
 #include <ciri/gfx/ObjModel.hpp>
+#include "Axis.hpp"
 #if defined(_DEBUG)
 	#include <crtdbg.h>
 #endif
@@ -19,7 +21,8 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
+const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 
 void enableMemoryLeakChecking();
 bool createWindow();
@@ -40,6 +43,7 @@ bool areShadersValid;
 SimpleConstants simpleConstants;
 ciri::IConstantBuffer* simpleConstantsBuffer = nullptr;
 std::vector<Model*> models;
+Axis axis;
 ciri::ITexture2D* texture0 = nullptr;
 ciri::ISamplerState* sampler0 = nullptr;
 
@@ -93,6 +97,11 @@ int main() {
 	// create samplers
 	if( !createSamplers() ) {
 		printf("Failed to create samplers.\n");
+	}
+
+	// create the axis thingymabob
+	if( !axis.create(5.0f, SHADER_EXT, graphicsDevice) ) {
+		printf("Failed to create axis.\n");
 	}
 
 	// create and configure a maya-styled camera
@@ -171,15 +180,25 @@ int main() {
 		}
 		camera.update(deltaTime);
 
+		const cc::Mat4f cameraViewProj = camera.getProj() * camera.getView();
+
 		graphicsDevice->clear(ciri::ClearFlags::ColorDepth);
-		if( areShadersValid ) { // only render if shaders are ok!
-			// update simple shader constants
-			simpleConstants.xform = (camera.getProj() * camera.getView());
+
+		if( axis.isValid() ) {
+			if( axis.updateConstants(cameraViewProj) ) {
+				graphicsDevice->applyShader(axis.getShader());
+				graphicsDevice->setVertexBuffer(axis.getVertexBuffer());
+				graphicsDevice->drawArrays(ciri::PrimitiveTopology::LineList, axis.getVertexBuffer()->getVertexCount(), 0);
+			}
+		}
+
+		if( areShadersValid ) {
+			simpleConstants.xform = cameraViewProj;
 			if( ciri::err::failed(simpleConstantsBuffer->setData(sizeof(SimpleConstants), &simpleConstants)) ) {
 				printf("Failed to update simple constants buffer.\n");
 			}
 
-		//	// render all models with the simple shader
+			// render all models with the simple shader
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);
 			graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
@@ -193,7 +212,10 @@ int main() {
 					graphicsDevice->drawArrays(ciri::PrimitiveTopology::TriangleList, mdl->getVertexBuffer()->getVertexCount(), 0);
 				}
 			}
+			graphicsDevice->setTexture2D(0, nullptr, ciri::ShaderStage::Pixel);
+			graphicsDevice->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
 		}
+
 		graphicsDevice->present();
 
 		// update previous input states
@@ -232,10 +254,9 @@ bool createGraphicsDevice() {
 }
 
 bool loadShaders() {
-	std::string ext = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 	simpleShader = graphicsDevice->createShader();
-	simpleShader->addVertexShader(("data/simple_vs" + ext).c_str());
-	simpleShader->addPixelShader(("data/simple_ps" + ext).c_str());
+	simpleShader->addVertexShader(("data/simple_vs" + SHADER_EXT).c_str());
+	simpleShader->addPixelShader(("data/simple_ps" + SHADER_EXT).c_str());
 	simpleShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	simpleShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
 	simpleShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
@@ -289,14 +310,20 @@ bool loadModelFromObj( const char* file, Model* outModel ) {
 bool loadModels() {
 	bool success = true;
 
-	Model* testModel = new Model();
-	if( !loadModelFromObj("data/controller.obj", testModel) ) {
-		delete testModel;
-		testModel = nullptr;
-		success = false;
-		printf("Failed to load test model.\n");
-	} else {
-		models.push_back(testModel);
+	//Model* testModel = new Model();
+	//if( !loadModelFromObj("data/controller.obj", testModel) ) {
+	//	delete testModel;
+	//	testModel = nullptr;
+	//	success = false;
+	//	printf("Failed to load test model.\n");
+	//} else {
+	//	models.push_back(testModel);
+	//}
+
+	// create a floor
+	Model* floor = modelgen::createCube(10.0f, 0.25f, 10.0f, 1.0f, 1.0f, graphicsDevice);
+	if( floor != nullptr ) {
+		models.push_back(floor);
 	}
 
 	return success;

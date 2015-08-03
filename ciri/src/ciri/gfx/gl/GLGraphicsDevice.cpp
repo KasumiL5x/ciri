@@ -51,6 +51,14 @@ namespace ciri {
 			return false;
 		}
 
+		// temp:
+		printf("**********\n");
+		printf("Vendor: %s\n", glGetString(GL_VENDOR));
+		printf("Renderer: %s\n", glGetString(GL_RENDERER));
+		printf("Version: %s\n", glGetString(GL_VERSION));
+		printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		printf("**********\n");
+
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		glDepthMask(GL_TRUE);
@@ -168,7 +176,9 @@ namespace ciri {
 	}
 
 	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
-		GLConstantBuffer* buffer = new GLConstantBuffer();
+		// note: using the size of a vector as the index means they can't be removed.
+		// todo: update the index to a smarter system that allows for reuse of deleted buffer indices
+		GLConstantBuffer* buffer = new GLConstantBuffer(_constantBuffers.size());
 		_constantBuffers.push_back(buffer);
 		return buffer;
 	}

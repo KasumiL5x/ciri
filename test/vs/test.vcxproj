@@ -11,11 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Axis.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Axis.hpp" />
     <ClInclude Include="..\src\Model.hpp" />
+    <ClInclude Include="..\src\ModelGen.hpp" />
     <ClInclude Include="..\src\Vertex.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

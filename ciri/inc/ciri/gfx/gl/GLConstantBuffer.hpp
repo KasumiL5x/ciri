@@ -7,16 +7,18 @@
 namespace ciri {
 	class GLConstantBuffer : public IConstantBuffer {
 	public:
-		GLConstantBuffer();
+		GLConstantBuffer( GLuint index );
 		virtual ~GLConstantBuffer();
 
 		virtual err::ErrorCode setData( int dataSize, void* data );
 		virtual void destroy();
 
 		GLuint getUbo() const;
+		GLuint getIndex() const;
 
 	private:
 		GLuint _ubo;
+		GLuint _index;
 	};
 } // ciri
 

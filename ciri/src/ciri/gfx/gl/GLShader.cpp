@@ -42,10 +42,19 @@ namespace ciri {
 			return err::CIRI_UNKNOWN_ERROR;
 		}
 
+		// note: I found out that uniform buffer objects work like texture units in that there's allocated space for them and then
+		//       programs can bind to them as they see fit; the buffer indices themselves are per-context and not per-program.
+		//       Here's some links I used for help just in case I need them for future reference:
+		// http://www.opentk.com/node/2926
+		// https://www.packtpub.com/books/content/opengl-40-using-uniform-blocks-and-uniform-buffer-objects
+		// http://www.geeks3d.com/20140704/gpu-buffers-introduction-to-opengl-3-1-uniform-buffers-objects/
+		// http://wlog.flatlib.jp/item/1634
+
 		_constantBuffers.push_back(glBuffer);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, _constantBuffers.size()-1, glBuffer->getUbo());
-		glUniformBlockBinding(_program, blockIndex, _constantBuffers.size()-1);
+		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer->getUbo());
+		glUniformBlockBinding(_program, blockIndex, glBuffer->getIndex());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		return err::CIRI_OK;
 	}
