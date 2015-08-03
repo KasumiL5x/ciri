@@ -311,7 +311,7 @@ bool loadTextures() {
 		success = false;
 	} else {
 		texture0 = graphicsDevice->createTexture2D();
-		if( !texture0->setData(0, 0, tga0.getWidth(), tga0.getHeight(), tga0.getPixels(), ciri::TextureFormat::Color) ) {
+		if( ciri::err::failed(texture0->setData(0, 0, tga0.getWidth(), tga0.getHeight(), tga0.getPixels(), ciri::TextureFormat::Color)) ) {
 			texture0->destroy();
 			delete texture0;
 			texture0 = nullptr;

@@ -13,7 +13,7 @@ namespace ciri {
 		virtual ~DXTexture2D();
 
 		virtual void destroy();
-		virtual bool setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format );
+		virtual err::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format );
 
 		virtual int getWidth() const;
 		virtual int getHeight() const;

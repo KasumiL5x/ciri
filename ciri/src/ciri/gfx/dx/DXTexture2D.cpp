@@ -22,13 +22,13 @@ namespace ciri {
 		}
 	}
 
-	bool DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+	err::ErrorCode DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
 		_width = (width > _width) ? width : _width;
 		_height = (height > _height) ? height : _height;
 
 		if( _shaderResourceView != nullptr ) {
 			// todo: support editing (also change below to dynamic)
-			return false;
+			return err::CIRI_NOT_IMPLEMENTED;
 		}
 
 		D3D11_TEXTURE2D_DESC texDesc;
@@ -53,21 +53,21 @@ namespace ciri {
 			subData.SysMemSlicePitch = width * height * TextureFormat::bytesPerPixel(format);
 			if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, &subData, &_texture2D)) ) {
 				destroy();
-				return false;
+				return err::CIRI_UNKNOWN_ERROR;
 			}
 		} else {
 			if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, nullptr, &_texture2D)) ) {
 				destroy();
-				return false;
+				return err::CIRI_UNKNOWN_ERROR;
 			}
 		}
 
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_texture2D, nullptr, &_shaderResourceView)) ) {
 			destroy();
-			return false;
+			return err::CIRI_UNKNOWN_ERROR;
 		}	
 
-		return true;
+		return err::CIRI_OK;
 	}
 
 	int DXTexture2D::getWidth() const {

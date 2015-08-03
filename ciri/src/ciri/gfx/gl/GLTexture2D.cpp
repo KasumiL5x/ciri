@@ -16,7 +16,7 @@ namespace ciri {
 		}
 	}
 
-	bool GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+	err::ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
 		_width = (width > _width) ? width : _width;
 		_height = (height > _height) ? height : _height;
 
@@ -38,7 +38,7 @@ namespace ciri {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		} else {
 			if( xOffset != 0 || yOffset != 0 ) {
-				return false; // todo: error (cannot set a nonzeroed rect on a blank image)
+				return err::CIRI_UNKNOWN_ERROR; // todo: error (cannot set a nonzeroed rect on a blank image)
 			}
 
 			glGenTextures(1, &_textureId);
@@ -56,7 +56,7 @@ namespace ciri {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		return true;
+		return err::CIRI_OK;
 	}
 
 	int GLTexture2D::getWidth() const {
