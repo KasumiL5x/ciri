@@ -129,8 +129,6 @@ namespace ciri {
 			}
 		}
 
-		// todo: link
-
 		// create the program and link the shaders
 		_program = glCreateProgram();
 		if( !_vsFile.empty() ) {
