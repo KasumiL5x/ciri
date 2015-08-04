@@ -9,6 +9,7 @@
 #include "Model.hpp"
 #include "ModelGen.hpp"
 #include <ciri/gfx/ObjModel.hpp>
+#include "Grid.hpp"
 #include "Axis.hpp"
 #if defined(_DEBUG)
 	#include <crtdbg.h>
@@ -43,6 +44,7 @@ bool areShadersValid;
 SimpleConstants simpleConstants;
 ciri::IConstantBuffer* simpleConstantsBuffer = nullptr;
 std::vector<Model*> models;
+Grid grid;
 Axis axis;
 ciri::ITexture2D* texture0 = nullptr;
 ciri::ISamplerState* sampler0 = nullptr;
@@ -97,6 +99,11 @@ int main() {
 	// create samplers
 	if( !createSamplers() ) {
 		printf("Failed to create samplers.\n");
+	}
+
+	// create the world grid
+	if( !grid.create(graphicsDevice, SHADER_EXT) ) {
+		printf("Failed to create grid.\n");
 	}
 
 	// create the axis thingymabob
@@ -183,6 +190,14 @@ int main() {
 		const cc::Mat4f cameraViewProj = camera.getProj() * camera.getView();
 
 		graphicsDevice->clear(ciri::ClearFlags::ColorDepth);
+
+		if( grid.isValid() ) {
+			if( grid.updateConstants(cameraViewProj) ) {
+				graphicsDevice->applyShader(grid.getShader());
+				graphicsDevice->setVertexBuffer(grid.getVertexBuffer());
+				graphicsDevice->drawArrays(ciri::PrimitiveTopology::LineList, grid.getVertexBuffer()->getVertexCount(), 0);
+			}
+		}
 
 		if( axis.isValid() ) {
 			if( axis.updateConstants(cameraViewProj) ) {
