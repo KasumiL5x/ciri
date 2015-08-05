@@ -57,3 +57,7 @@ ciri::IVertexBuffer* Model::getVertexBuffer() const {
 ciri::IIndexBuffer* Model::getIndexBuffer() const {
 	return _indexBuffer;
 }
+
+Transform& Model::getXform() {
+	return _xform;
+}

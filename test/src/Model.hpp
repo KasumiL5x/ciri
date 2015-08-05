@@ -2,8 +2,9 @@
 #define __test_model__
 
 #include <vector>
-#include "Vertex.hpp"
 #include <ciri/gfx/IGraphicsDevice.hpp>
+#include "Vertex.hpp"
+#include "Transform.hpp"
 
 class Model {
 public:
@@ -17,11 +18,14 @@ public:
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
 
+	Transform& getXform();
+
 private:
 	std::vector<Vertex> _vertices;
 	std::vector<int> _indices;
 	ciri::IVertexBuffer* _vertexBuffer;
 	ciri::IIndexBuffer* _indexBuffer;
+	Transform _xform;
 };
 
 #endif /* __test_model__ */

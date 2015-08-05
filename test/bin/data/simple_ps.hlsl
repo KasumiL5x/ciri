@@ -21,7 +21,7 @@ float3 phong( float3 L, float3 N, float3 lightColor, float lightIntensity, float
 	float3 RL = normalize(2.0f * N * nDotL - L);
 	float3 V = normalize(cameraPos - worldPos);
 	float rDotV = max(dot(RL, V), 0.0f);
-	float3 specular = float3(0.0f);
+	float3 specular = float3(0.0f, 0.0f, 0.0f);
 	if( specularPower > 0.0f ) {
 		specular = lightColor * pow(rDotV, specularPower);
 	}
