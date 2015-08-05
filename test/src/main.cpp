@@ -17,6 +17,7 @@
 
 __declspec(align(16))
 struct SimpleConstants {
+	cc::Mat4f world;
 	cc::Mat4f xform;
 };
 
@@ -208,6 +209,7 @@ int main() {
 		}
 
 		if( areShadersValid ) {
+			simpleConstants.world = cc::Mat4f(1.0f);
 			simpleConstants.xform = cameraViewProj;
 			if( ciri::err::failed(simpleConstantsBuffer->setData(sizeof(SimpleConstants), &simpleConstants)) ) {
 				printf("Failed to update simple constants buffer.\n");
