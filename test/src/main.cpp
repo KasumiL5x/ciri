@@ -29,6 +29,7 @@ const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_
 void enableMemoryLeakChecking();
 bool createWindow();
 bool createGraphicsDevice();
+bool createRasterizerStates();
 bool loadShaders();
 bool createConstantBuffers();
 bool assignConstantBuffersToShaders();
@@ -49,6 +50,7 @@ Grid grid;
 Axis axis;
 ciri::ITexture2D* texture0 = nullptr;
 ciri::ISamplerState* sampler0 = nullptr;
+ciri::IRasterizerState* rasterizerState = nullptr;
 
 int main() {
 	enableMemoryLeakChecking();
@@ -63,6 +65,13 @@ int main() {
 	// create the graphics device
 	if( !createGraphicsDevice() ) {
 		printf("Failed to create graphics device.\n");
+		cleanup();
+		return -1;
+	}
+
+	// create rasterizer states
+	if( !createRasterizerStates() ) {
+		printf("Failed to create rasterizer states.\n");
 		cleanup();
 		return -1;
 	}
@@ -133,9 +142,6 @@ int main() {
 	double lastTime = 0.0;
 	ciri::Timer timer;
 	timer.start();
-
-	// DEBUG COUNTER
-	int loopCount = 0;
 
 	// main loop
 	while( window->isOpen() ) {
@@ -209,6 +215,8 @@ int main() {
 		}
 
 		if( areShadersValid ) {
+			graphicsDevice->setRasterizerState(rasterizerState);
+
 			// render all models with the simple shader
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);
@@ -240,12 +248,6 @@ int main() {
 		// update previous input states
 		prevKeyState = currKeyState;
 		prevMouseState = currMouseState;
-
-		loopCount += 1;
-		if( loopCount > 100 ) {
-			//window->destroy();
-			//break;
-		}
 	}
 
 	cleanup();
@@ -270,6 +272,14 @@ bool createWindow() {
 bool createGraphicsDevice() {
 	graphicsDevice = ciri::GraphicsDeviceFactory::create(GRAPHICS_DEVICE_TYPE);
 	return graphicsDevice->create(window);
+}
+
+bool createRasterizerStates() {
+	ciri::RasterizerDesc desc;
+	desc.cullMode = ciri::CullMode::Clockwise;
+	//desc.fillMode = ciri::FillMode::Wireframe;
+	rasterizerState = graphicsDevice->createRasterizerState(desc);
+	return (rasterizerState != nullptr);
 }
 
 bool loadShaders() {
@@ -340,7 +350,7 @@ bool loadModels() {
 	//}
 
 	// create a floor
-	Model* floor = modelgen::createCube(10.0f, 0.25f, 10.0f, 1.0f, 1.0f, graphicsDevice);
+	Model* floor = modelgen::createCube(10.0f, 0.25f, 10.0f, 4.0f, 4.0f, graphicsDevice);
 	if( floor != nullptr ) {
 		models.push_back(floor);
 	}
@@ -352,7 +362,7 @@ bool loadTextures() {
 	bool success = true;
 
 	ciri::TGA tga0;
-	if( !tga0.loadFromFile("data/diffuse.tga", true) ) {
+	if( !tga0.loadFromFile("data/scifi_metal_wall.tga", true) ) {
 		printf("Failed to load tga0.\n");
 		success = false;
 	} else {
@@ -384,7 +394,7 @@ bool createSamplers() {
 	samplerDesc.wrapW = ciri::SamplerWrap::Wrap;
 	sampler0 = graphicsDevice->createSamplerState(samplerDesc);
 
-	return true;
+	return (sampler0 != nullptr);
 }
 
 void cleanup() {

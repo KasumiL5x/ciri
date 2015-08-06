@@ -12,6 +12,7 @@
 #include "ISamplerState.hpp"
 #include "TextureFormat.hpp"
 #include"IRenderTarget2D.hpp"
+#include "IRasterizerState.hpp"
 
 namespace ciri {
 	class Window;
@@ -35,6 +36,7 @@ namespace ciri {
 		virtual ITexture2D* createTexture2D()=0;
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format )=0;
+		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc )=0;
 
 		virtual void applyShader( IShader* shader )=0;
 
@@ -50,6 +52,8 @@ namespace ciri {
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets )=0;
 		virtual void restoreDefaultRenderTargets()=0;
 		virtual void clear( ClearFlags::Flags flags, float* color=nullptr )=0;
+
+		virtual void setRasterizerState( IRasterizerState* state )=0;
 	};
 } // ciri
 

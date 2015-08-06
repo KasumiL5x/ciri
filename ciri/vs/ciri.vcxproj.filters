@@ -108,6 +108,12 @@
     <ClCompile Include="..\src\ciri\gfx\ObjModel.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\gl\GLRasterizerState.cpp">
+      <Filter>gfx\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\dx\DXRasterizerState.cpp">
+      <Filter>gfx\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -246,6 +252,15 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\ObjModel.hpp">
       <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\IRasterizerState.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLRasterizerState.hpp">
+      <Filter>gfx\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXRasterizerState.hpp">
+      <Filter>gfx\dx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@
 #include "DXTexture2D.hpp"
 #include "DXSamplerState.hpp"
 #include "DXRenderTarget2D.hpp"
+#include "DXRasterizerState.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -33,6 +34,7 @@ namespace ciri {
 		virtual ITexture2D* createTexture2D();
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
+		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
 
 		virtual void applyShader( IShader* shader );
 
@@ -48,6 +50,8 @@ namespace ciri {
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
 		virtual void clear( ClearFlags::Flags flags, float* color );
+
+		virtual void setRasterizerState( IRasterizerState* state );
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -82,6 +86,9 @@ namespace ciri {
 		std::vector<DXSamplerState*> _samplers;
 		//
 		std::vector<DXRenderTarget2D*> _renderTarget2Ds;
+		//
+		std::vector<DXRasterizerState*> _rasterizerStates;
+		IRasterizerState* _activeRasterizerState;
 	};
 } // ciri
 

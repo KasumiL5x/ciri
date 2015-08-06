@@ -6,7 +6,8 @@ namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
 		: IGraphicsDevice(), _driverType(D3D_DRIVER_TYPE_NULL), _featureLevel(D3D_FEATURE_LEVEL_11_0), _device(nullptr),
 			_device1(nullptr), _immediateContext(nullptr), _immediateContext1(nullptr), _swapchain(nullptr),
-			_swapchain1(nullptr), _renderTargetView(nullptr), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr) {
+			_swapchain1(nullptr), _renderTargetView(nullptr), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
+			_activeRasterizerState(nullptr) {
 	}
 
 	DXGraphicsDevice::~DXGraphicsDevice() {
@@ -24,6 +25,16 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// clean rasterizer states
+		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
+			if( _rasterizerStates[i] != nullptr ) {
+				_rasterizerStates[i]->destroy();
+				delete _rasterizerStates[i];
+				_rasterizerStates[i] = nullptr;
+			}
+		}
+		_rasterizerStates.clear();
+
 		// destroy 2d render targets
 		for( unsigned int i = 0; i < _renderTarget2Ds.size(); ++i ) {
 			if( _renderTarget2Ds[i] != nullptr ) {
@@ -154,6 +165,17 @@ namespace ciri {
 		//...
 		_renderTarget2Ds.push_back(dxTarget);
 		return dxTarget;
+	}
+
+	IRasterizerState* DXGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
+		DXRasterizerState* dxRaster = new DXRasterizerState(this);
+		if( !dxRaster->create(desc) ) {
+			delete dxRaster;
+			dxRaster = nullptr;
+			return nullptr;
+		}
+		_rasterizerStates.push_back(dxRaster);
+		return dxRaster;
 	}
 
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
@@ -322,6 +344,18 @@ namespace ciri {
 		} else {
 			_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
 		}
+	}
+
+	void DXGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
+		// todo: maybe make nullptr reset to default states? can just make a state myself and make it "default".
+		if( state == _activeRasterizerState ) {
+			return;
+		}
+		_activeRasterizerState = state;
+
+		DXRasterizerState* dxRaster = reinterpret_cast<DXRasterizerState*>(state);
+		ID3D11RasterizerState* dxState = dxRaster->getRasterizerState();
+		_immediateContext->RSSetState(dxState);
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

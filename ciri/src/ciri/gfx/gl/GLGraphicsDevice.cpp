@@ -26,7 +26,7 @@
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
 		: IGraphicsDevice(), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
-			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0) {
+			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr) {
 		// configure mrt draw buffers
 		for( int i = 0; i < MAX_MRTS; ++i ) {
 			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
@@ -67,6 +67,16 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// clean rasterizer states
+		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
+			if( _rasterizerStates[i] != nullptr ) {
+				_rasterizerStates[i]->destroy();
+				delete _rasterizerStates[i];
+				_rasterizerStates[i] = nullptr;
+			}
+		}
+		_rasterizerStates.clear();
+
 		// clean fbo
 		if( 0 != _currentFbo ) {
 			glDeleteFramebuffers(1, &_currentFbo);
@@ -211,6 +221,17 @@ namespace ciri {
 		GLRenderTarget2D* glTarget = new GLRenderTarget2D(texture);
 		_renderTarget2Ds.push_back(glTarget);
 		return glTarget;
+	}
+
+	IRasterizerState* GLGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
+		GLRasterizerState* glRaster = new GLRasterizerState();
+		if( !glRaster->create(desc) ) {
+			delete glRaster;
+			glRaster = nullptr;
+			return nullptr;
+		}
+		_rasterizerStates.push_back(glRaster);
+		return glRaster;
 	}
 
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
@@ -393,6 +414,58 @@ namespace ciri {
 			glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
 		}
 		glClear(clearFlags);
+	}
+
+	void GLGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
+		// todo: maybe make nullptr reset to default states? can just make a state myself and make it "default".
+
+		if( state == _activeRasterizerState ) {
+			return;
+		}
+		_activeRasterizerState = state;
+
+		GLRasterizerState* glRaster = reinterpret_cast<GLRasterizerState*>(state);
+		const RasterizerDesc& desc = glRaster->getDesc();
+
+		// cull mode
+		if( CullMode::None == desc.cullMode ) {
+			glDisable(GL_CULL_FACE);
+		} else {
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+			if( CullMode::Clockwise == desc.cullMode ) {
+				glFrontFace(GL_CCW);
+			} else {
+				glFrontFace(GL_CW);
+			}
+		}
+		// fill mode
+		if( FillMode::Solid == desc.fillMode ) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		} else {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		// scissor test
+		if( desc.scissorTestEnable ) {
+			glEnable(GL_SCISSOR_TEST);
+		} else {
+			glDisable(GL_SCISSOR_TEST);
+		}
+		// depth bias and slope scale depth bioas
+		if( desc.depthBias != 0.0f || desc.slopeScaleDepthBias != 0.0f ) {
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset(desc.slopeScaleDepthBias, desc.depthBias);
+		} else {
+			glDisable(GL_POLYGON_OFFSET_FILL);
+		}
+		// todo: only if depth clamping is supported (how?)
+		// depth clipping
+		if( !desc.depthClipEnable ) {
+			glEnable(GL_DEPTH_CLAMP);
+		} else {
+			glDisable(GL_DEPTH_CLAMP);
+		}
+		// todo: msaa
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

@@ -15,6 +15,7 @@
     <ClCompile Include="..\src\ciri\gfx\dx\DXConstantBuffer.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXIndexBuffer.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\dx\DXRasterizerState.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXRenderTarget2D.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXSamplerState.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXShader.cpp" />
@@ -24,6 +25,7 @@
     <ClCompile Include="..\src\ciri\gfx\gl\GLConstantBuffer.cpp" />
     <ClCompile Include="..\src\ciri\gfx\gl\GLGraphicsDevice.cpp" />
     <ClCompile Include="..\src\ciri\gfx\gl\GLIndexBuffer.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\gl\GLRasterizerState.cpp" />
     <ClCompile Include="..\src\ciri\gfx\gl\GLRenderTarget2D.cpp" />
     <ClCompile Include="..\src\ciri\gfx\gl\GLSamplerState.cpp" />
     <ClCompile Include="..\src\ciri\gfx\gl\GLShader.cpp" />
@@ -49,6 +51,7 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXIndexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXRasterizerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXRenderTarget2D.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXSamplerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXShader.hpp" />
@@ -58,6 +61,7 @@
     <ClInclude Include="..\inc\ciri\gfx\gl\GLConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLGraphicsDevice.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLIndexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLRasterizerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLRenderTarget2D.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLSamplerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLShader.hpp" />
@@ -68,6 +72,7 @@
     <ClInclude Include="..\inc\ciri\gfx\IConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IGraphicsDevice.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IIndexBuffer.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\IRasterizerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IRenderTarget2D.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ISamplerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IShader.hpp" />

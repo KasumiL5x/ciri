@@ -18,6 +18,7 @@
 #include "GLTexture2D.hpp"
 #include "GLSamplerState.hpp"
 #include "GLRenderTarget2D.hpp"
+#include "GLRasterizerState.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -36,6 +37,7 @@ namespace ciri {
 		virtual ITexture2D* createTexture2D();
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
+		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
 
 		virtual void applyShader( IShader* shader );
 
@@ -51,6 +53,8 @@ namespace ciri {
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
 		virtual void clear( ClearFlags::Flags flags, float* color );
+
+		virtual void setRasterizerState( IRasterizerState* state );
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -82,6 +86,9 @@ namespace ciri {
 		GLuint _currentFbo;
 		const static int MAX_MRTS{8};
 		GLenum _drawBuffers[MAX_MRTS];
+		//
+		std::vector<GLRasterizerState*> _rasterizerStates;
+		IRasterizerState* _activeRasterizerState;
 	};
 } // ciri
 
