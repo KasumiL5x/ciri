@@ -469,6 +469,11 @@ namespace ciri {
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
+		// todo: create old context (like below), query for compatability i desire, then create a new context
+		//       with gl3+ support and all of the lovely attribs, then delete old context.
+		// https://sites.google.com/site/opengltutorialsbyaks/introduction-to-opengl-3-2---tutorial-01
+		// http://glew.sourceforge.net/basic.html
+
 		// get the window's device context
 		_hdc = GetDC(hwnd);
 

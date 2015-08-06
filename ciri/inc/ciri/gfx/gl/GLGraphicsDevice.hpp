@@ -8,6 +8,7 @@
 #include <vector>
 #include <Windows.h>
 #include <gl/glew.h>
+#include <gl/wglew.h>
 #include <gl/gl.h>
 #include <gl/glu.h>
 #include "../IGraphicsDevice.hpp"
