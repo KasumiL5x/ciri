@@ -1,12 +1,13 @@
 #ifndef __ciri_dxgraphicsdevice__
 #define __ciri_dxgraphicsdevice__
 
+#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "dxguid.lib")
 
 #include <vector>
-#include <d3d11_1.h>
+#include <d3d11.h>
 #include "../IGraphicsDevice.hpp"
 #include "DXShader.hpp"
 #include "DXVertexBuffer.hpp"
@@ -61,15 +62,10 @@ namespace ciri {
 		D3D_PRIMITIVE_TOPOLOGY convertTopology( PrimitiveTopology::Type topology ) const;
 
 	private:
-		D3D_DRIVER_TYPE _driverType;
-		D3D_FEATURE_LEVEL _featureLevel;
-		ID3D11Device* _device;
-		ID3D11Device1* _device1;
-		ID3D11DeviceContext* _immediateContext;
-		ID3D11DeviceContext1* _immediateContext1;
 		IDXGISwapChain* _swapchain;
-		IDXGISwapChain1* _swapchain1;
-		ID3D11RenderTargetView* _renderTargetView;
+		ID3D11Device* _device;
+		ID3D11DeviceContext* _context;
+		ID3D11RenderTargetView* _backbuffer;
 		//
 		std::vector<DXShader*> _shaders;
 		std::vector<DXVertexBuffer*> _vertexBuffers;

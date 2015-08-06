@@ -4,9 +4,8 @@
 
 namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
-		: IGraphicsDevice(), _driverType(D3D_DRIVER_TYPE_NULL), _featureLevel(D3D_FEATURE_LEVEL_11_0), _device(nullptr),
-			_device1(nullptr), _immediateContext(nullptr), _immediateContext1(nullptr), _swapchain(nullptr),
-			_swapchain1(nullptr), _renderTargetView(nullptr), _activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
+		: IGraphicsDevice(), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
+			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
 			_activeRasterizerState(nullptr) {
 	}
 
@@ -105,14 +104,10 @@ namespace ciri {
 		}
 		_shaders.clear();
 
-		if( _immediateContext )  { _immediateContext->ClearState(); _immediateContext = nullptr; }
-		if( _renderTargetView )  { _renderTargetView->Release(); _renderTargetView = nullptr; }
-		if( _swapchain1 )        { _swapchain1->Release(); _swapchain1 = nullptr; }
-		if( _swapchain )         { _swapchain->Release(); _swapchain = nullptr; }
-		if( _immediateContext1 ) { _immediateContext1->Release(); _immediateContext1 = nullptr; }
-		if( _immediateContext )  { _immediateContext->Release(); _immediateContext = nullptr; }
-		if( _device1 )           { _device1->Release(); _device1 = nullptr; }
-		if( _device )            { _device->Release(); _device = nullptr; }
+		if( _backbuffer ) { _backbuffer->Release(); _backbuffer = nullptr; }
+		if( _context )    { _context->ClearState(); _context = nullptr; }
+		if( _swapchain )  { _swapchain->Release(); _swapchain = nullptr; }
+		if( _device )     { _device->Release(); _device = nullptr; }
 	}
 
 	void DXGraphicsDevice::present() {
@@ -187,34 +182,34 @@ namespace ciri {
 		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
 
 		ID3D11VertexShader* vs = dxShader->getVertexShader();
-		_immediateContext->VSSetShader(vs, nullptr, 0);
+		_context->VSSetShader(vs, nullptr, 0);
 		const std::vector<DXConstantBuffer*>& vertexConstants = dxShader->getVertexConstants();
 		for( unsigned int i = 0; i < vertexConstants.size(); ++i ) {
 			ID3D11Buffer* buffer = vertexConstants[i]->getBuffer();
 			const int index = vertexConstants[i]->getIndex();
-			_immediateContext->VSSetConstantBuffers(index, 1, &buffer);
+			_context->VSSetConstantBuffers(index, 1, &buffer);
 		}
 		ID3D11InputLayout* il = dxShader->getInputLayout();
-		_immediateContext->IASetInputLayout(il);
+		_context->IASetInputLayout(il);
 
 		ID3D11GeometryShader* gs = dxShader->getGeometryShader();
 		if( gs != nullptr ) {
-			_immediateContext->GSSetShader(gs, nullptr, 0);
+			_context->GSSetShader(gs, nullptr, 0);
 			const std::vector<DXConstantBuffer*>& geometryConstants = dxShader->getGeometryConstants();
 			for( unsigned int i = 0; i < geometryConstants.size(); ++i ) {
 				ID3D11Buffer* buffer = geometryConstants[i]->getBuffer();
 				const int index = geometryConstants[i]->getIndex();
-				_immediateContext->GSSetConstantBuffers(index, 1, &buffer);
+				_context->GSSetConstantBuffers(index, 1, &buffer);
 			}
 		}
 
 		ID3D11PixelShader* ps = dxShader->getPixelShader();
-		_immediateContext->PSSetShader(ps, nullptr, 0);
+		_context->PSSetShader(ps, nullptr, 0);
 		const std::vector<DXConstantBuffer*>& pixelConstants = dxShader->getPixelConstants();
 		for( unsigned int i = 0; i < pixelConstants.size(); ++i ) {
 			ID3D11Buffer* buffer = pixelConstants[i]->getBuffer();
 			const int index = pixelConstants[i]->getIndex();
-			_immediateContext->PSSetConstantBuffers(index, 1, &buffer);
+			_context->PSSetConstantBuffers(index, 1, &buffer);
 		}
 
 		_activeShader = dxShader;
@@ -231,7 +226,7 @@ namespace ciri {
 		UINT stride = buffer->getStride();
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
-		_immediateContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+		_context->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
 		_activeVertexBuffer = dxBuffer;
 	}
@@ -243,7 +238,7 @@ namespace ciri {
 		if( nullptr == ib ) {
 			return; // todo: error
 		}
-		_immediateContext->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
+		_context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
 
 		_activeIndexBuffer = dxBuffer;
 	}
@@ -256,13 +251,13 @@ namespace ciri {
 
 		const bool all = (shaderStage & ShaderStage::All);
 		if( all || (shaderStage & ShaderStage::Vertex) ) {
-			_immediateContext->VSSetShaderResources(index, 1, srv);
+			_context->VSSetShaderResources(index, 1, srv);
 		}
 		if( all || (shaderStage & ShaderStage::Geometry) ) {
-			_immediateContext->GSSetShaderResources(index, 1, srv);
+			_context->GSSetShaderResources(index, 1, srv);
 		}
 		if( all || (shaderStage & ShaderStage::Pixel) ) {
-			_immediateContext->PSSetShaderResources(index, 1, srv);
+			_context->PSSetShaderResources(index, 1, srv);
 		}
 	}
 
@@ -274,13 +269,13 @@ namespace ciri {
 
 		const bool all = (shaderStage & ShaderStage::All);
 		if( all || (shaderStage & ShaderStage::Vertex) ) {
-			_immediateContext->VSSetSamplers(index, 1, sampler);
+			_context->VSSetSamplers(index, 1, sampler);
 		}
 		if( all || (shaderStage & ShaderStage::Geometry) ) {
-			_immediateContext->GSSetSamplers(index, 1, sampler);
+			_context->GSSetSamplers(index, 1, sampler);
 		}
 		if( all || (shaderStage & ShaderStage::Pixel) ) {
-			_immediateContext->PSSetSamplers(index, 1, sampler);
+			_context->PSSetSamplers(index, 1, sampler);
 		}
 	}
 
@@ -305,8 +300,8 @@ namespace ciri {
 			return;
 		}
 
-		_immediateContext->IASetPrimitiveTopology(convertTopology(topology));
-		_immediateContext->Draw(vertexCount, startIndex);
+		_context->IASetPrimitiveTopology(convertTopology(topology));
+		_context->Draw(vertexCount, startIndex);
 	}
 
 	void DXGraphicsDevice::drawIndexed( PrimitiveTopology::Type topology, int indexCount ) {
@@ -325,8 +320,8 @@ namespace ciri {
 			return; // todo: error
 		}
 
-		_immediateContext->IASetPrimitiveTopology(convertTopology(topology));
-		_immediateContext->DrawIndexed(indexCount, 0, 0);
+		_context->IASetPrimitiveTopology(convertTopology(topology));
+		_context->DrawIndexed(indexCount, 0, 0);
 	}
 	
 	void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
@@ -340,9 +335,9 @@ namespace ciri {
 	void DXGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
 		if( color != nullptr ) {
 			const FLOAT clearColor[4] = {color[0], color[1], color[2], color[3]};
-			_immediateContext->ClearRenderTargetView(_renderTargetView, clearColor);
+			_context->ClearRenderTargetView(_backbuffer, clearColor);
 		} else {
-			_immediateContext->ClearRenderTargetView(_renderTargetView, DirectX::Colors::CornflowerBlue);
+			_context->ClearRenderTargetView(_backbuffer, DirectX::Colors::CornflowerBlue);
 		}
 	}
 
@@ -355,7 +350,7 @@ namespace ciri {
 
 		DXRasterizerState* dxRaster = reinterpret_cast<DXRasterizerState*>(state);
 		ID3D11RasterizerState* dxState = dxRaster->getRasterizerState();
-		_immediateContext->RSSetState(dxState);
+		_context->RSSetState(dxState);
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
@@ -363,144 +358,285 @@ namespace ciri {
 	}
 
 	ID3D11DeviceContext* DXGraphicsDevice::getContext() const {
-		return _immediateContext;
+		return _context;
 	}
 
 	bool DXGraphicsDevice::initDevice( unsigned int width, unsigned int height, HWND hwnd ) {
 		HRESULT hr = S_OK;
 
+		// todo: make these as parameters
+		const bool IS_VSYNC_ENABLED = true;
+		const UINT MSAA_SAMPLES = 1;
+
+		// create a dxgi factory
+		IDXGIFactory* factory = nullptr;
+		if( FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory)) ) {
+			return false;
+		}
+
+		// disable alt+enter
+		factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
+
+		// use factory to create an adapter for primary gpu
+		IDXGIAdapter* adapter = nullptr;
+		if( FAILED(factory->EnumAdapters(0, &adapter)) ) {
+			factory->Release();
+			return false;
+		}
+
+		// enumerate adapter output (monitor)
+		IDXGIOutput* adapterOutput = nullptr;
+		if( FAILED(adapter->EnumOutputs(0, &adapterOutput)) ) {
+			adapter->Release();
+			factory->Release();
+			return false;
+		}
+
+		// get the number of modes that fit the backbuffer display format
+		const DXGI_FORMAT backbufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		UINT numDisplayModes = 0;
+		if( FAILED(adapterOutput->GetDisplayModeList(backbufferFormat, DXGI_ENUM_MODES_INTERLACED, &numDisplayModes, nullptr)) ) {
+			adapterOutput->Release();
+			adapter->Release();
+			factory->Release();
+			return false;
+		}
+
+		// get all of the display modes
+		DXGI_MODE_DESC* displayModes = new DXGI_MODE_DESC[numDisplayModes];
+		if( FAILED(adapterOutput->GetDisplayModeList(backbufferFormat, DXGI_ENUM_MODES_INTERLACED, &numDisplayModes, displayModes)) ) {
+			delete[] displayModes;
+			return false;
+		}
+
+		// find a display mode that matches the screen width and height, and store its refresh rate information
+		UINT refreshRateNumerator = 0;
+		UINT refreshRateDenominator = 1;
+		for( unsigned int i = 0; i < numDisplayModes; ++i ) {
+			if( (width == displayModes[i].Width) && (height == displayModes[i].Height) ) {
+				refreshRateNumerator = displayModes[i].RefreshRate.Numerator;
+				refreshRateDenominator = displayModes[i].RefreshRate.Denominator;
+				//break;
+			}
+		}
+
+		// delete display modes array
+		delete[] displayModes;
+		displayModes = nullptr;
+
+		// get the adapter description
+		DXGI_ADAPTER_DESC adapterDesc;
+		if( FAILED(adapter->GetDesc(&adapterDesc)) ) {
+			return false;
+		}
+
+		// store gpu memory and gpu name
+		const int gpuMemory = static_cast<int>(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+		const std::wstring gpuName = adapterDesc.Description;
+
+		// release adapter output, adapter, and factory
+		adapterOutput->Release();
+		adapterOutput = nullptr;
+		adapter->Release();
+		adapter = nullptr;
+		factory->Release();
+		factory = nullptr;
+
+		// create and populate the swapchain description
+		DXGI_SWAP_CHAIN_DESC swapDesc;
+		ZeroMemory(&swapDesc, sizeof(swapDesc));
+		swapDesc.BufferCount = 1;
+		swapDesc.BufferDesc.Width = width;
+		swapDesc.BufferDesc.Height = height;
+		swapDesc.BufferDesc.Format = backbufferFormat;
+		swapDesc.BufferDesc.RefreshRate.Numerator = (IS_VSYNC_ENABLED) ? refreshRateNumerator : 0;
+		swapDesc.BufferDesc.RefreshRate.Denominator = (IS_VSYNC_ENABLED) ? refreshRateDenominator : 1;
+		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapDesc.OutputWindow = hwnd;
+		swapDesc.SampleDesc.Count = MSAA_SAMPLES;
+		swapDesc.SampleDesc.Quality = 0;
+		swapDesc.Windowed = TRUE; // todo: fullscreen support
+		swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swapDesc.Flags = 0;
+
+		// setup device creation flags
 		UINT createDeviceFlags = 0;
 		#ifdef _DEBUG
 			createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 		#endif
 
-		D3D_DRIVER_TYPE driverTypes[] = {
-			D3D_DRIVER_TYPE_HARDWARE,
-			D3D_DRIVER_TYPE_WARP,
-			D3D_DRIVER_TYPE_REFERENCE
-		};
-		UINT numDriverTypes = ARRAYSIZE(driverTypes);
-
-		D3D_FEATURE_LEVEL featureLevels[] = {
-			D3D_FEATURE_LEVEL_11_1,
-			D3D_FEATURE_LEVEL_11_0,
-			D3D_FEATURE_LEVEL_10_1,
-			D3D_FEATURE_LEVEL_10_0
-		};
-		UINT numFeatureLevels = ARRAYSIZE(featureLevels);
-
-		for( UINT driverTypeIdx = 0; driverTypeIdx < numDriverTypes; ++driverTypeIdx ) {
-			_driverType = driverTypes[driverTypeIdx];
-			hr = D3D11CreateDevice(nullptr, _driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels, D3D11_SDK_VERSION, &_device, &_featureLevel, &_immediateContext);
-			if( E_INVALIDARG == hr ) {
-				// dx 11.0 platforms don't recognize d3d_feature_leelv_11_1, so retry without it
-				hr = D3D11CreateDevice(nullptr, _driverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels-1, D3D11_SDK_VERSION, &_device, &_featureLevel, &_immediateContext);
-			}
-			if( SUCCEEDED(hr) ) {
-				break;
-			}
-		}
-		if( FAILED(hr) ) {
+		// create device, context, and swapchain
+		const D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
+		if( FAILED(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, &featureLevel, 1, D3D11_SDK_VERSION, &swapDesc, &_swapchain, &_device, nullptr, &_context)) ) {
 			return false;
 		}
 
-		// obtain dxgi factory from device (because we used nullptr for adapter above)
-		IDXGIFactory1* dxgiFactory = nullptr;
-		{
-			IDXGIDevice* dxgiDevice = nullptr;
-			hr = _device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice));
-			if( SUCCEEDED(hr) ) {
-				IDXGIAdapter* adapter = nullptr;
-				hr = dxgiDevice->GetAdapter(&adapter);
-				if( SUCCEEDED(hr) ) {
-					hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&dxgiFactory));
-					adapter->Release();
-				}
-				dxgiDevice->Release();
-			}
-		}
-		if( FAILED(hr) ) {
+		// get a pointer to the backbuffer
+		ID3D11Texture2D* backbufferPtr = nullptr;
+		if( FAILED(_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferPtr)) ) {
 			return false;
 		}
-
-		// create swapchain
-		IDXGIFactory2* dxgiFactory2 = nullptr;
-		hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
-		if( dxgiFactory2 ) {
-			// dx 11.1 or later
-			hr = _device->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&_device1));
-			if( SUCCEEDED(hr) ) {
-				_immediateContext->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&_immediateContext1));
-			}
-
-			DXGI_SWAP_CHAIN_DESC1 desc;
-			ZeroMemory(&desc, sizeof(desc));
-			desc.Width = width;
-			desc.Height = height;
-			desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			desc.SampleDesc.Count = 1;
-			desc.SampleDesc.Quality = 0;
-			desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			desc.BufferCount = 1;
-
-			hr = dxgiFactory2->CreateSwapChainForHwnd(_device, hwnd, &desc, nullptr, nullptr, &_swapchain1);
-			if( SUCCEEDED(hr) ) {
-				hr = _swapchain1->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&_swapchain));
-			}
-
-			dxgiFactory2->Release();
-		} else {
-			// dx 11.0
-			DXGI_SWAP_CHAIN_DESC desc;
-			ZeroMemory(&desc, sizeof(desc));
-			desc.BufferCount = 1;
-			desc.BufferDesc.Width = width;
-			desc.BufferDesc.Height = height;
-			desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			desc.BufferDesc.RefreshRate.Numerator = 60;
-			desc.BufferDesc.RefreshRate.Denominator = 1;
-			desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			desc.OutputWindow = hwnd;
-			desc.SampleDesc.Count = 1;
-			desc.SampleDesc.Quality = 0;
-			desc.Windowed = TRUE;
-
-			hr = dxgiFactory->CreateSwapChain(_device, &desc, &_swapchain);
-		}
-
-		// disable alt+enter to toggle fullscreen
-		dxgiFactory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
-
-		dxgiFactory->Release();
-
-		if( FAILED(hr) ) {
+		// create a render target view from the backbuffer
+		if( FAILED(_device->CreateRenderTargetView(backbufferPtr, nullptr, &_backbuffer)) ) {
 			return false;
 		}
+		// clean up backbuffer pointer
+		backbufferPtr->Release();
+		backbufferPtr = nullptr;
 
-		// create render target view
-		ID3D11Texture2D* backbuffer = nullptr;
-		hr = _swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backbuffer));
-		if( FAILED(hr) ) {
-			return false;
-		}
-		hr = _device->CreateRenderTargetView(backbuffer, nullptr, &_renderTargetView);
-		backbuffer->Release();
-		if( FAILED(hr) ) {
-			return false;
-		}
-		_immediateContext->OMSetRenderTargets(1, &_renderTargetView, nullptr);
-
+		// set the backbuffer as the current render target
+		_context->OMSetRenderTargets(1, &_backbuffer, nullptr);
 		// setup the viewport
 		D3D11_VIEWPORT vp;
-		vp.Width = (FLOAT)width;
-		vp.Height = (FLOAT)height;
+		vp.Width = static_cast<FLOAT>(width);
+		vp.Height = static_cast<FLOAT>(height);
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
-		_immediateContext->RSSetViewports(1, &vp);
+		_context->RSSetViewports(1, &vp);
 
+		// holy crap that was long
 		return true;
+
+
+
+		//HRESULT hr = S_OK;
+
+		//UINT createDeviceFlags = 0;
+		//#ifdef _DEBUG
+		//	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+		//#endif
+
+		//D3D_DRIVER_TYPE driverTypes[] = {
+		//	D3D_DRIVER_TYPE_HARDWARE,
+		//	D3D_DRIVER_TYPE_WARP,
+		//	D3D_DRIVER_TYPE_REFERENCE
+		//};
+		//UINT numDriverTypes = ARRAYSIZE(driverTypes);
+
+		//D3D_FEATURE_LEVEL featureLevels[] = {
+		//	D3D_FEATURE_LEVEL_11_1,
+		//	D3D_FEATURE_LEVEL_11_0,
+		//	D3D_FEATURE_LEVEL_10_1,
+		//	D3D_FEATURE_LEVEL_10_0
+		//};
+		//UINT numFeatureLevels = ARRAYSIZE(featureLevels);
+
+		//for( UINT driverTypeIdx = 0; driverTypeIdx < numDriverTypes; ++driverTypeIdx ) {
+		//	_driverType = driverTypes[driverTypeIdx];
+		//	hr = D3D11CreateDevice(nullptr, _driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels, D3D11_SDK_VERSION, &_device, &_featureLevel, &_context);
+		//	if( E_INVALIDARG == hr ) {
+		//		// dx 11.0 platforms don't recognize d3d_feature_leelv_11_1, so retry without it
+		//		hr = D3D11CreateDevice(nullptr, _driverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels-1, D3D11_SDK_VERSION, &_device, &_featureLevel, &_context);
+		//	}
+		//	if( SUCCEEDED(hr) ) {
+		//		break;
+		//	}
+		//}
+		//if( FAILED(hr) ) {
+		//	return false;
+		//}
+
+		//// obtain dxgi factory from device (because we used nullptr for adapter above)
+		//IDXGIFactory1* dxgiFactory = nullptr;
+		//{
+		//	IDXGIDevice* dxgiDevice = nullptr;
+		//	hr = _device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice));
+		//	if( SUCCEEDED(hr) ) {
+		//		IDXGIAdapter* adapter = nullptr;
+		//		hr = dxgiDevice->GetAdapter(&adapter);
+		//		if( SUCCEEDED(hr) ) {
+		//			hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&dxgiFactory));
+		//			adapter->Release();
+		//		}
+		//		dxgiDevice->Release();
+		//	}
+		//}
+		//if( FAILED(hr) ) {
+		//	return false;
+		//}
+
+		//// create swapchain
+		//IDXGIFactory2* dxgiFactory2 = nullptr;
+		//hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
+		//if( dxgiFactory2 ) {
+		//	// dx 11.1 or later
+		//	hr = _device->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&_device1));
+		//	if( SUCCEEDED(hr) ) {
+		//		_context->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&_context1));
+		//	}
+
+		//	DXGI_SWAP_CHAIN_DESC1 desc;
+		//	ZeroMemory(&desc, sizeof(desc));
+		//	desc.Width = width;
+		//	desc.Height = height;
+		//	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		//	desc.SampleDesc.Count = 1;
+		//	desc.SampleDesc.Quality = 0;
+		//	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		//	desc.BufferCount = 1;
+
+		//	hr = dxgiFactory2->CreateSwapChainForHwnd(_device, hwnd, &desc, nullptr, nullptr, &_swapchain1);
+		//	if( SUCCEEDED(hr) ) {
+		//		hr = _swapchain1->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&_swapchain));
+		//	}
+
+		//	dxgiFactory2->Release();
+		//} else {
+		//	// dx 11.0
+		//	DXGI_SWAP_CHAIN_DESC desc;
+		//	ZeroMemory(&desc, sizeof(desc));
+		//	desc.BufferCount = 1;
+		//	desc.BufferDesc.Width = width;
+		//	desc.BufferDesc.Height = height;
+		//	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		//	desc.BufferDesc.RefreshRate.Numerator = 60;
+		//	desc.BufferDesc.RefreshRate.Denominator = 1;
+		//	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		//	desc.OutputWindow = hwnd;
+		//	desc.SampleDesc.Count = 1;
+		//	desc.SampleDesc.Quality = 0;
+		//	desc.Windowed = TRUE;
+
+		//	hr = dxgiFactory->CreateSwapChain(_device, &desc, &_swapchain);
+		//}
+
+		//// disable alt+enter to toggle fullscreen
+		//dxgiFactoryDXGI_MWA_NO_ALT_ENTERMakeWindowAssociation(hwnd, ->);
+
+		//dxgiFactory->Release();
+
+		//if( FAILED(hr) ) {
+		//	return false;
+		//}
+
+		//// create render target view
+		//ID3D11Texture2D* backbuffer = nullptr;
+		//hr = _swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backbuffer));
+		//if( FAILED(hr) ) {
+		//	return false;
+		//}
+		//hr = _device->CreateRenderTargetView(backbuffer, nullptr, &_backbuffer);
+		//backbuffer->Release();
+		//if( FAILED(hr) ) {
+		//	return false;
+		//}
+		//_context->OMSetRenderTargets(1, &_backbuffer, nullptr);
+
+		//// setup the viewport
+		//D3D11_VIEWPORT vp;
+		//vp.Width = (FLOAT)width;
+		//vp.Height = (FLOAT)height;
+		//vp.MinDepth = 0.0f;
+		//vp.MaxDepth = 1.0f;
+		//vp.TopLeftX = 0;
+		//vp.TopLeftY = 0;
+		//_context->RSSetViewports(1, &vp);
+
+		//return true;
 	}
 
 	D3D_PRIMITIVE_TOPOLOGY DXGraphicsDevice::convertTopology( PrimitiveTopology::Type topology ) const {
