@@ -46,11 +46,6 @@ namespace ciri {
 			return false;
 		}
 
-		if( !configureGlew() ) {
-			destroy();
-			return false;
-		}
-
 		// temp:
 		printf("**********\n");
 		printf("Vendor: %s\n", glGetString(GL_VENDOR));
@@ -469,54 +464,78 @@ namespace ciri {
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
-		// todo: create old context (like below), query for compatability i desire, then create a new context
-		//       with gl3+ support and all of the lovely attribs, then delete old context.
-		// https://sites.google.com/site/opengltutorialsbyaks/introduction-to-opengl-3-2---tutorial-01
-		// http://glew.sourceforge.net/basic.html
-
 		// get the window's device context
 		_hdc = GetDC(hwnd);
 
-		// create pixel format descriptor
-		PIXELFORMATDESCRIPTOR pfd =
-		{
-			sizeof(PIXELFORMATDESCRIPTOR),
-			1,
-			PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-			PFD_TYPE_RGBA, // The kind of framebuffer. RGBA or palette.
-			32, // Colordepth of the framebuffer.
-			0, 0, 0, 0, 0, 0,
-			0,
-			0,
-			0,
-			0, 0, 0, 0,
-			24, // Number of bits for the depthbuffer
-			8, // Number of bits for the stencilbuffer
-			0, // Number of Aux buffers in the framebuffer.
-			PFD_MAIN_PLANE,
-			0,
-			0, 0, 0
-		};
-		// set pixel format of the device context
+		// create a pixel format descriptor
+		PIXELFORMATDESCRIPTOR pfd;
+		memset(&pfd, 0, sizeof(pfd));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 32;
+		pfd.cDepthBits = 24; // 32;
+		pfd.iLayerType = PFD_MAIN_PLANE;
+
+		// choose the pixel format
 		const int pixelFormat = ChoosePixelFormat(_hdc, &pfd);
 		if( 0 == pixelFormat ) {
 			return false;
 		}
+
+		// set the pixel format
 		if( !SetPixelFormat(_hdc, pixelFormat, &pfd) ) {
 			return false;
 		}
 
-		// create the opengl context
-		_hglrc = wglCreateContext(_hdc);
-		if( !_hglrc ) {
+		// create a temporary old context that will be deleted later
+		HGLRC tmpContext = wglCreateContext(_hdc);
+		if( !tmpContext ) {
+			return false;
+		}
+		if( !wglMakeCurrent(_hdc, tmpContext) ) {
 			return false;
 		}
 
-		// make the opengl context current
+		// initialize glew
+		if( !configureGlew() ) {
+			return false;
+		}
+
+		// todo: check for extensions i require using glew
+
+		// create the new context and its attributes
+		int contextFlags = WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
+		#ifdef _DEBUG
+			contextFlags |= WGL_CONTEXT_DEBUG_BIT_ARB;
+		#endif
+		const int attribs[] = {
+			WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+			WGL_CONTEXT_MINOR_VERSION_ARB, 3,
+			WGL_CONTEXT_FLAGS_ARB, contextFlags,
+			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+			0
+		};
+		_hglrc = wglCreateContextAttribsARB(_hdc, 0, attribs);
+		if( !_hglrc ) {
+			return false;
+		}
+		
+		// disable and delete the old context
+		if( !wglMakeCurrent(0, 0) ) {
+			return false;
+		}
+		if( !wglDeleteContext(tmpContext) ) {
+			return false;
+		}
+
+		// make the new context current
 		if( !wglMakeCurrent(_hdc, _hglrc) ) {
 			return false;
 		}
 
+		// default to full viewport
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 
 		//TODO: setup gl debug message tracing
