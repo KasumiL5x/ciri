@@ -41,6 +41,11 @@ namespace ciri {
 		_defaultWidth = window->getSize().x;
 		_defaultHeight = window->getSize().y;
 
+		if( !configureGlew() ) {
+			destroy();
+			return false;
+		}
+
 		if( !configureGl(window->getHandle()) ) {
 			destroy();
 			return false;
@@ -467,66 +472,44 @@ namespace ciri {
 		// get the window's device context
 		_hdc = GetDC(hwnd);
 
-		// create a pixel format descriptor
-		PIXELFORMATDESCRIPTOR pfd;
-		memset(&pfd, 0, sizeof(pfd));
-		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-		pfd.nVersion = 1;
-		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-		pfd.iPixelType = PFD_TYPE_RGBA;
-		pfd.cColorBits = 32;
-		pfd.cDepthBits = 24; // 32;
-		pfd.iLayerType = PFD_MAIN_PLANE;
-
 		// choose the pixel format
-		const int pixelFormat = ChoosePixelFormat(_hdc, &pfd);
-		if( 0 == pixelFormat ) {
+		const int pixelFormatAttribs[] = {
+			WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+			WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+			WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+			WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+			WGL_COLOR_BITS_ARB, 32,
+			WGL_DEPTH_BITS_ARB, 24,
+			WGL_STENCIL_BITS_ARB, 8,
+			0
+		};
+		int pixelFormat;
+		UINT numPixelFormats;
+		if( !wglChoosePixelFormatARB(_hdc, pixelFormatAttribs, NULL, 1, &pixelFormat, &numPixelFormats) ) {
 			return false;
 		}
 
-		// set the pixel format
+		// set the pixel format (pfd is redundant
+		PIXELFORMATDESCRIPTOR pfd;
+		ZeroMemory(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 		if( !SetPixelFormat(_hdc, pixelFormat, &pfd) ) {
 			return false;
 		}
 
-		// create a temporary old context that will be deleted later
-		HGLRC tmpContext = wglCreateContext(_hdc);
-		if( !tmpContext ) {
-			return false;
-		}
-		if( !wglMakeCurrent(_hdc, tmpContext) ) {
-			return false;
-		}
-
-		// initialize glew
-		if( !configureGlew() ) {
-			return false;
-		}
-
-		// todo: check for extensions i require using glew
-
-		// create the new context and its attributes
+		// create the newer opengl context
 		int contextFlags = WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
 		#ifdef _DEBUG
 			contextFlags |= WGL_CONTEXT_DEBUG_BIT_ARB;
 		#endif
-		const int attribs[] = {
+		const int contextAttribs[] = {
 			WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
 			WGL_CONTEXT_MINOR_VERSION_ARB, 3,
 			WGL_CONTEXT_FLAGS_ARB, contextFlags,
 			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
 			0
 		};
-		_hglrc = wglCreateContextAttribsARB(_hdc, 0, attribs);
+		_hglrc = wglCreateContextAttribsARB(_hdc, NULL, contextAttribs);
 		if( !_hglrc ) {
-			return false;
-		}
-		
-		// disable and delete the old context
-		if( !wglMakeCurrent(0, 0) ) {
-			return false;
-		}
-		if( !wglDeleteContext(tmpContext) ) {
 			return false;
 		}
 
@@ -535,16 +518,90 @@ namespace ciri {
 			return false;
 		}
 
-		// default to full viewport
+		// default to fullscreen viewport
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
-
-		//TODO: setup gl debug message tracing
 
 		return true;
 	}
 
+	// i shit you the fuck not, we even need a fake wndproc because of the SetPixelFormat thing mentioned below...
+	static LRESULT WINAPI FakeWndProc( HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam ) {
+		return DefWindowProc(hwnd, msg, wparam, lparam);
+	}
+
 	bool GLGraphicsDevice::configureGlew() {
-		return (glewInit() == GLEW_OK);
+		// note: because Microsoft APIs are so nice to work with, we must create a fake window to initialize a fake GL context and GLEW because you can't set the pixel format more than once
+
+		// create a dummy window
+		const char* className = "CIRI_DUMMY";
+
+		// create a dummy window
+		WNDCLASSEX wc;
+		wc.cbSize = sizeof(WNDCLASSEX);
+		wc.style = CS_HREDRAW | CS_VREDRAW;
+		wc.lpfnWndProc = (WNDPROC)FakeWndProc;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hInstance = GetModuleHandle(NULL);
+		wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+		wc.hIconSm = wc.hIcon;
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = className;
+		if( !RegisterClassEx(&wc) ) {
+			return false;
+		}
+		HINSTANCE inst = GetModuleHandle(NULL);
+		HWND hwnd = CreateWindow(className, className, WS_OVERLAPPEDWINDOW, 0, 0, CW_USEDEFAULT, CW_DEFAULT, NULL, NULL, GetModuleHandle(NULL), NULL);
+
+		// get window's HDC
+		HDC hdc = GetDC(hwnd);
+
+		// choose a pixel format
+		PIXELFORMATDESCRIPTOR pfd;
+		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 32;
+		pfd.cDepthBits = 24;
+		pfd.cStencilBits = 8;
+		pfd.iLayerType = PFD_MAIN_PLANE;
+		const int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+		if( 0 == pixelFormat ) {
+			DestroyWindow(hwnd);
+			return false;
+		}
+		if( !SetPixelFormat(hdc, pixelFormat, &pfd) ) {
+			return false;
+		}
+
+		// create an opengl 2.1 or older context
+		HGLRC fakeHglrc = wglCreateContext(hdc);
+		if( !fakeHglrc ) {
+			DestroyWindow(hwnd);
+			return false;
+		}
+		if( !wglMakeCurrent(hdc, fakeHglrc) ) {
+			DestroyWindow(hwnd);
+			return false;
+		}
+
+		// initialize GLEW
+		if( glewInit() != GLEW_OK ) {
+			DestroyWindow(hwnd);
+			return false;
+		}
+
+		// delete the fake context and window
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(fakeHglrc);
+		DeleteDC(hdc);
+		DestroyWindow(hwnd);
+
+		return true;
 	}
 
 	GLenum GLGraphicsDevice::convertTopology( PrimitiveTopology::Type topology ) const {
