@@ -1,5 +1,6 @@
 #include <ciri/gfx/gl/GLGraphicsDevice.hpp>
 #include <ciri/wnd/Window.hpp>
+#include <sstream>
 
 //static void setVSync(bool sync)
 //{	
@@ -505,6 +506,7 @@ namespace ciri {
 			WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
 			WGL_CONTEXT_MINOR_VERSION_ARB, 3,
 			WGL_CONTEXT_FLAGS_ARB, contextFlags,
+			//WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
 			0
 		};
@@ -517,6 +519,19 @@ namespace ciri {
 		if( !wglMakeCurrent(_hdc, _hglrc) ) {
 			return false;
 		}
+
+		// configure opengl debug output
+		#ifdef _DEBUG
+		if( glDebugMessageCallback != NULL ) {
+			glDebugMessageCallback(debugContextCb, this);
+		}
+		if( glDebugMessageCallbackARB != NULL ) {
+			glDebugMessageCallbackARB(debugContextCb, this);
+		}
+		if( glDebugMessageCallbackAMD != NULL ) {
+			glDebugMessageCallbackAMD(debugContextAmdCb, this);
+		}
+		#endif
 
 		// default to fullscreen viewport
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
@@ -630,5 +645,23 @@ namespace ciri {
 				return GL_INVALID_ENUM; // lol
 			}
 		}
+	}
+
+	void APIENTRY GLGraphicsDevice::debugContextCb( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
+		printf("OpenGL Error: %s\n", message);
+		std::stringstream ss;
+		ss << "OpenGL Error: ";
+		ss << message;
+		ss << "\n";
+		OutputDebugString(ss.str().c_str());
+	}
+
+	void APIENTRY GLGraphicsDevice::debugContextAmdCb( GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, void* userParam ) {
+		printf("OpenGL Error: %s\n", message);
+		std::stringstream ss;
+		ss << "OpenGL Error: ";
+		ss << message;
+		ss << "\n";
+		OutputDebugString(ss.str().c_str());
 	}
 } // ciri
