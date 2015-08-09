@@ -13,6 +13,7 @@
 #include "TextureFormat.hpp"
 #include"IRenderTarget2D.hpp"
 #include "IRasterizerState.hpp"
+#include "IDepthStencilState.hpp"
 
 namespace ciri {
 	class Window;
@@ -37,6 +38,7 @@ namespace ciri {
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format )=0;
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc )=0;
+		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc )=0;
 
 		virtual void applyShader( IShader* shader )=0;
 
@@ -54,6 +56,7 @@ namespace ciri {
 		virtual void clear( ClearFlags::Flags flags, float* color=nullptr )=0;
 
 		virtual void setRasterizerState( IRasterizerState* state )=0;
+		virtual void setDepthStencilState( IDepthStencilState* state )=0;
 	};
 } // ciri
 

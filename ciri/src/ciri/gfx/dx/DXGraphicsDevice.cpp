@@ -6,7 +6,8 @@ namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
 		: IGraphicsDevice(), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
 			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
-			_activeRasterizerState(nullptr) {
+			_activeRasterizerState(nullptr), _activeDepthStencilState(nullptr), _depthStencil(nullptr),
+			_depthStencilView(nullptr) {
 	}
 
 	DXGraphicsDevice::~DXGraphicsDevice() {
@@ -24,6 +25,15 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::destroy() {
+		// clean depth stencil states
+		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
+			if( _depthStencilStates[i] != nullptr ) {
+				_depthStencilStates[i]->destroy();
+				delete _depthStencilStates[i];
+				_depthStencilStates[i] = nullptr;
+			}
+		}
+
 		// clean rasterizer states
 		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
 			if( _rasterizerStates[i] != nullptr ) {
@@ -104,6 +114,8 @@ namespace ciri {
 		}
 		_shaders.clear();
 
+		if( _depthStencil != nullptr ) { _depthStencil->Release(); _depthStencil = nullptr; }
+		if( _depthStencilView != nullptr ) { _depthStencilView->Release(); _depthStencilView = nullptr; }
 		if( _backbuffer ) { _backbuffer->Release(); _backbuffer = nullptr; }
 		if( _context )    { _context->ClearState(); _context = nullptr; }
 		if( _swapchain )  { _swapchain->Release(); _swapchain = nullptr; }
@@ -171,6 +183,17 @@ namespace ciri {
 		}
 		_rasterizerStates.push_back(dxRaster);
 		return dxRaster;
+	}
+
+	IDepthStencilState* DXGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
+		DXDepthStencilState* dxState = new DXDepthStencilState(this);
+		if( !dxState->create(desc) ) {
+			delete dxState;
+			dxState = nullptr;
+			return nullptr;
+		}
+		_depthStencilStates.push_back(dxState);
+		return dxState;
 	}
 
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
@@ -333,16 +356,54 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
+		DirectX::XMVECTORF32 clearColor = DirectX::Colors::CornflowerBlue;
 		if( color != nullptr ) {
-			const FLOAT clearColor[4] = {color[0], color[1], color[2], color[3]};
-			_context->ClearRenderTargetView(_backbuffer, clearColor);
-		} else {
-			_context->ClearRenderTargetView(_backbuffer, DirectX::Colors::CornflowerBlue);
+			clearColor.f[0] = color[0];
+			clearColor.f[1] = color[1];
+			clearColor.f[2] = color[2];
+			clearColor.f[3] = color[3];
+		}
+
+		switch( flags ) {
+			case ClearFlags::Color: {
+				_context->ClearRenderTargetView(_backbuffer, clearColor);
+				break;
+			}
+			case ClearFlags::Depth: {
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+				break;
+			}
+			case ClearFlags::Stencil: {
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+				break;
+			}
+			case ClearFlags::ColorDepth: {
+				_context->ClearRenderTargetView(_backbuffer, clearColor);
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+				break;
+			}
+			case ClearFlags::ColorStencil: {
+				_context->ClearRenderTargetView(_backbuffer, clearColor);
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+				break;
+			}
+			case ClearFlags::DepthStencil: {
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+				break;
+			}
+			case ClearFlags::All: {
+				_context->ClearRenderTargetView(_backbuffer, clearColor);
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+				break;
+			}
 		}
 	}
 
 	void DXGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
-		// todo: maybe make nullptr reset to default states? can just make a state myself and make it "default".
+		// todo: if state is nullptr, revert to a default set state
+		if( nullptr == state ) {
+			throw; // not yet implemented
+		}
 		if( state == _activeRasterizerState ) {
 			return;
 		}
@@ -351,6 +412,22 @@ namespace ciri {
 		DXRasterizerState* dxRaster = reinterpret_cast<DXRasterizerState*>(state);
 		ID3D11RasterizerState* dxState = dxRaster->getRasterizerState();
 		_context->RSSetState(dxState);
+	}
+
+	void DXGraphicsDevice::setDepthStencilState( IDepthStencilState* state ) {
+		// todo: if state is nullptr, revert to a default set state
+		if( nullptr == state ) {
+			throw; // not yet implemented
+		}
+
+		if( state == _activeDepthStencilState ) {
+			return;
+		}
+		_activeDepthStencilState = state;
+
+		DXDepthStencilState* dxState = reinterpret_cast<DXDepthStencilState*>(state);
+		ID3D11DepthStencilState* dxDepthStencilState = dxState->getState();
+		_context->OMSetDepthStencilState(dxDepthStencilState, dxState->getStencilRef());
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
@@ -486,8 +563,37 @@ namespace ciri {
 		backbufferPtr->Release();
 		backbufferPtr = nullptr;
 
-		// set the backbuffer as the current render target
-		_context->OMSetRenderTargets(1, &_backbuffer, nullptr);
+		// create the depth stencil texture
+		D3D11_TEXTURE2D_DESC depthDesc;
+		ZeroMemory(&depthDesc, sizeof(depthDesc));
+		depthDesc.Width = width;
+		depthDesc.Height = height;
+		depthDesc.MipLevels = 1;
+		depthDesc.ArraySize = 1;
+		depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthDesc.SampleDesc.Count = 1;
+		depthDesc.SampleDesc.Quality = 0;
+		depthDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthDesc.CPUAccessFlags = 0;
+		depthDesc.MiscFlags = 0;
+		if( FAILED(_device->CreateTexture2D(&depthDesc, nullptr, &_depthStencil)) ) {
+			return false;
+		}
+
+		// create the depth stencil view
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+		dsvDesc.Format = depthDesc.Format;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Texture2D.MipSlice = 0;
+		if( FAILED(_device->CreateDepthStencilView(_depthStencil, &dsvDesc, &_depthStencilView)) ) {
+			return false;
+		}
+
+		// set the backbuffer as the current render target with the depth stencil view, too
+		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
+
 		// setup the viewport
 		D3D11_VIEWPORT vp;
 		vp.Width = static_cast<FLOAT>(width);

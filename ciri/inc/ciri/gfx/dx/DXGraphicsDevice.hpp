@@ -17,6 +17,7 @@
 #include "DXSamplerState.hpp"
 #include "DXRenderTarget2D.hpp"
 #include "DXRasterizerState.hpp"
+#include "DXDepthStencilState.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -36,6 +37,7 @@ namespace ciri {
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
+		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc );
 
 		virtual void applyShader( IShader* shader );
 
@@ -53,6 +55,7 @@ namespace ciri {
 		virtual void clear( ClearFlags::Flags flags, float* color );
 
 		virtual void setRasterizerState( IRasterizerState* state );
+		virtual void setDepthStencilState( IDepthStencilState* state );
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -85,6 +88,11 @@ namespace ciri {
 		//
 		std::vector<DXRasterizerState*> _rasterizerStates;
 		IRasterizerState* _activeRasterizerState;
+		//
+		std::vector<DXDepthStencilState*> _depthStencilStates;
+		IDepthStencilState* _activeDepthStencilState;
+		ID3D11Texture2D* _depthStencil;
+		ID3D11DepthStencilView* _depthStencilView;
 	};
 } // ciri
 

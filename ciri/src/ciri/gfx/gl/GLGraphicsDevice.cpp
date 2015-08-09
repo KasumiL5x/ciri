@@ -27,7 +27,8 @@
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
 		: IGraphicsDevice(), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
-			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr) {
+			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr),
+			_activeDepthStencilState(nullptr) {
 		// configure mrt draw buffers
 		for( int i = 0; i < MAX_MRTS; ++i ) {
 			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
@@ -60,14 +61,19 @@ namespace ciri {
 		printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 		printf("**********\n");
 
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glDepthMask(GL_TRUE);
-
 		return true;
 	}
 
 	void GLGraphicsDevice::destroy() {
+		// clean depth stencil states
+		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
+			if( _depthStencilStates[i] != nullptr ) {
+				_depthStencilStates[i]->destroy();
+				delete _depthStencilStates[i];
+				_depthStencilStates[i] = nullptr;
+			}
+		}
+
 		// clean rasterizer states
 		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
 			if( _rasterizerStates[i] != nullptr ) {
@@ -235,6 +241,17 @@ namespace ciri {
 		return glRaster;
 	}
 
+	IDepthStencilState* GLGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
+		GLDepthStencilState* glState = new GLDepthStencilState();
+		if( !glState->create(desc) ) {
+			delete glState;
+			glState = nullptr;
+			return nullptr;
+		}
+		_depthStencilStates.push_back(glState);
+		return glState;
+	}
+
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
 		if( !shader->isValid() ) {
 			_activeShader = nullptr;
@@ -374,37 +391,37 @@ namespace ciri {
 		GLbitfield clearFlags = 0;
 		switch( flags ) {
 			case ClearFlags::Color: {
-					clearFlags = GL_COLOR_BUFFER_BIT;
+				clearFlags = GL_COLOR_BUFFER_BIT;
 				break;
 			}
 
 			case ClearFlags::Depth: {
-					clearFlags = GL_DEPTH_BUFFER_BIT;
+				clearFlags = GL_DEPTH_BUFFER_BIT;
 				break;
 			}
 
 			case ClearFlags::Stencil: {
-					clearFlags = GL_STENCIL_BUFFER_BIT;
+				clearFlags = GL_STENCIL_BUFFER_BIT;
 				break;
 			}
 
 			case ClearFlags::ColorDepth: {
-					clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+				clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
 				break;
 			}
 
 			case ClearFlags::ColorStencil: {
-					clearFlags = GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+				clearFlags = GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 				break;
 			}
 
 			case ClearFlags::DepthStencil: {
-					clearFlags = GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+				clearFlags = GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 				break;
 			}
 
 			case ClearFlags::All: {
-					clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+				clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 				break;
 			}
 		}
@@ -418,8 +435,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
-		// todo: maybe make nullptr reset to default states? can just make a state myself and make it "default".
-
+		// todo: if state is nullptr, revert to a default set state
+		if( nullptr == state ) {
+			throw; // not yet implemented
+		}
 		if( state == _activeRasterizerState ) {
 			return;
 		}
@@ -469,6 +488,54 @@ namespace ciri {
 		// todo: msaa
 	}
 
+	void GLGraphicsDevice::setDepthStencilState( IDepthStencilState* state ) {
+		// todo: if state is nullptr, revert to a default set state
+		if( nullptr == state ) {
+			throw; // not yet implemented
+		}
+		if( state == _activeDepthStencilState ) {
+			return;
+		}
+		_activeDepthStencilState = state;
+
+		GLDepthStencilState* glState = reinterpret_cast<GLDepthStencilState*>(state);
+		const DepthStencilDesc& desc = glState->getDesc();
+
+		// enable depth
+		if( desc.depthEnable ) {
+			glEnable(GL_DEPTH_TEST);
+		} else {
+			glDisable(GL_DEPTH_TEST);
+		}
+
+		// depth func
+		glDepthFunc(glState->ciriToGlFunc(desc.depthFunc));
+
+		// depth write
+		glDepthMask(desc.depthWriteMask);
+
+		// enable stencil
+		if( desc.stencilEnable ) {
+			glEnable(GL_STENCIL_TEST);
+		} else {
+			glDisable(GL_STENCIL_TEST);
+		}
+
+		// stencil funcs and ops
+		if( desc.twoSidedStencil ) {
+			glStencilFuncSeparate(GL_FRONT, glState->ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilFuncSeparate(GL_BACK, glState->ciriToGlFunc(desc.backStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilOpSeparate(GL_FRONT, glState->ciriToGlOp(desc.frontStencilFailOp), glState->ciriToGlOp(desc.frontStencilDepthFailOp), glState->ciriToGlOp(desc.frontStencilPassOp));
+			glStencilOpSeparate(GL_BACK, glState->ciriToGlOp(desc.backStencilFailOp), glState->ciriToGlOp(desc.backStencilDepthFailOp), glState->ciriToGlOp(desc.backStencilPassOp));
+		} else {
+			glStencilFunc(glState->ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilOp(glState->ciriToGlOp(desc.frontStencilFailOp), glState->ciriToGlOp(desc.frontStencilDepthFailOp), glState->ciriToGlOp(desc.frontStencilPassOp));
+		}
+
+		// stencil write mask
+		glStencilMask(desc.stencilWriteMask);
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);
@@ -492,7 +559,7 @@ namespace ciri {
 
 		// set the pixel format (pfd is redundant
 		PIXELFORMATDESCRIPTOR pfd;
-		ZeroMemory(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 		if( !SetPixelFormat(_hdc, pixelFormat, &pfd) ) {
 			return false;
 		}

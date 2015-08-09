@@ -23,13 +23,14 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
 const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 
 void enableMemoryLeakChecking();
 bool createWindow();
 bool createGraphicsDevice();
 bool createRasterizerStates();
+bool createDepthStencilStates();
 bool loadShaders();
 bool createConstantBuffers();
 bool assignConstantBuffersToShaders();
@@ -51,6 +52,7 @@ Axis axis;
 ciri::ITexture2D* texture0 = nullptr;
 ciri::ISamplerState* sampler0 = nullptr;
 ciri::IRasterizerState* rasterizerState = nullptr;
+ciri::IDepthStencilState* depthStencilState = nullptr;
 
 int main() {
 	enableMemoryLeakChecking();
@@ -72,6 +74,13 @@ int main() {
 	// create rasterizer states
 	if( !createRasterizerStates() ) {
 		printf("Failed to create rasterizer states.\n");
+		cleanup();
+		return -1;
+	}
+
+	// create depth stencil states
+	if( !createDepthStencilStates() ) {
+		printf("Failed to create depth stencil states.\n");
 		cleanup();
 		return -1;
 	}
@@ -198,6 +207,8 @@ int main() {
 
 		graphicsDevice->clear(ciri::ClearFlags::ColorDepth);
 
+		graphicsDevice->setDepthStencilState(depthStencilState);
+
 		if( grid.isValid() ) {
 			if( grid.updateConstants(cameraViewProj) ) {
 				graphicsDevice->applyShader(grid.getShader());
@@ -221,7 +232,7 @@ int main() {
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);
 			graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
-			for( int i = 0; i < models.size(); ++i ) {
+			for( unsigned int i = 0; i < models.size(); ++i ) {
 				Model* mdl = models[i];
 
 				// update constant buffer for this object
@@ -277,9 +288,17 @@ bool createGraphicsDevice() {
 bool createRasterizerStates() {
 	ciri::RasterizerDesc desc;
 	desc.cullMode = ciri::CullMode::Clockwise;
+	desc.msaa = true;
 	//desc.fillMode = ciri::FillMode::Wireframe;
 	rasterizerState = graphicsDevice->createRasterizerState(desc);
 	return (rasterizerState != nullptr);
+}
+
+bool createDepthStencilStates() {
+	ciri::DepthStencilDesc desc;
+	desc.depthEnable = true;
+	depthStencilState = graphicsDevice->createDepthStencilState(desc);
+	return (depthStencilState != nullptr);
 }
 
 bool loadShaders() {
@@ -326,7 +345,7 @@ bool loadModelFromObj( const char* file, Model* outModel ) {
 	const std::vector<cc::Vec3f>& normals = obj.getNormals();
 	const std::vector<cc::Vec2f>& texcoords = obj.getTexcoords();
 	const std::vector<ciri::ObjModel::ObjVertex>& vertices = obj.getVertices();
-	for( int i = 0; i < vertices.size(); ++i ) {
+	for( unsigned int i = 0; i < vertices.size(); ++i ) {
 		Vertex vert;
 		vert.position = positions[vertices[i].position];
 		vert.normal = normals[vertices[i].normal];
@@ -380,12 +399,25 @@ bool loadTextures() {
 	return success;
 }
 
+//fhgbifiokgrijout
+// issues to solve:
+//    - mipmaps need to be (optionaly, through a flag) generated for both DX and GL
+//    - bilinear and trilinear sampling in DX seem to have no effect, whereas GL works fine (look this up online)
+//    - a million other things
+// here's some links i had open earlier:
+// http://gamedev.stackexchange.com/questions/66231/set-sampler-states-linear-bilinear-trilinear-filtering-interpolation
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ff476426(v=vs.85).aspx
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ff476499(v=vs.85).aspx
+// http://stackoverflow.com/questions/5321330/how-do-you-use-checkmultisamplequalitylevels-and-enable-multisampling
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb509695(v=vs.85).aspx
+// http://www.directxtutorial.com/Lesson.aspx?lessonid=11-4-2
+
 bool createSamplers() {
 	ciri::SamplerDesc samplerDesc;
 	samplerDesc.borderColor[0] = samplerDesc.borderColor[1] = samplerDesc.borderColor[2] = samplerDesc.borderColor[3] = 0.0f;
 	samplerDesc.comparisonFunc = ciri::SamplerComparison::Never;
 	samplerDesc.filter = ciri::SamplerFilter::Bilinear;
-	samplerDesc.maxAnisotropy = 16.0f;
+	samplerDesc.maxAnisotropy = 16;
 	samplerDesc.lodBias = 0.0f;
 	samplerDesc.maxLod = 1000.0f;
 	samplerDesc.minLod = -1000.0f;
@@ -398,7 +430,7 @@ bool createSamplers() {
 }
 
 void cleanup() {
-	for( int i = 0; i < models.size(); ++i ) {
+	for( unsigned int i = 0; i < models.size(); ++i ) {
 		if( models[i] != nullptr ) {
 			delete models[i];
 			models[i] = nullptr;

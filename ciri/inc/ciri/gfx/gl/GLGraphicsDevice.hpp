@@ -20,6 +20,7 @@
 #include "GLSamplerState.hpp"
 #include "GLRenderTarget2D.hpp"
 #include "GLRasterizerState.hpp"
+#include "GLDepthStencilState.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -39,6 +40,7 @@ namespace ciri {
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
+		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc );
 
 		virtual void applyShader( IShader* shader );
 
@@ -56,6 +58,7 @@ namespace ciri {
 		virtual void clear( ClearFlags::Flags flags, float* color );
 
 		virtual void setRasterizerState( IRasterizerState* state );
+		virtual void setDepthStencilState( IDepthStencilState* state );
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -93,6 +96,9 @@ namespace ciri {
 		//
 		std::vector<GLRasterizerState*> _rasterizerStates;
 		IRasterizerState* _activeRasterizerState;
+		//
+		std::vector<GLDepthStencilState*> _depthStencilStates;
+		IDepthStencilState* _activeDepthStencilState;
 	};
 } // ciri
 
