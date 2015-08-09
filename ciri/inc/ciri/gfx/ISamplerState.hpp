@@ -51,6 +51,17 @@ namespace ciri {
 		float maxLod;
 		float lodBias;
 		SamplerComparison::Mode comparisonFunc;
+
+		SamplerDesc() {
+			wrapU = wrapV = wrapW = SamplerWrap::Wrap;
+			filter = SamplerFilter::Bilinear;
+			maxAnisotropy = 16;
+			borderColor[0] = borderColor[1] = borderColor[2] = borderColor[3] = 0.0f;
+			minLod = -1000.0f;
+			maxLod = 1000.0f;
+			lodBias = 0.0f;
+			comparisonFunc = SamplerComparison::Always;
+		}
 	};
 
 	class ISamplerState {
