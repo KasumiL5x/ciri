@@ -97,7 +97,7 @@ namespace ciri {
 		if( forceRGBA && _format != RGBA ) {
 			unsigned char* newPixels = new unsigned char[4 * _width * _height];
 			int newPixelsOffset = 0;
-			for( unsigned int i = 0; i < (bpp * _width * _height); i += bpp ) { // loop all old pixels
+			for( int i = 0; i < (bpp * _width * _height); i += bpp ) { // loop all old pixels
 				memcpy(&newPixels[newPixelsOffset], &_pixels[i], bpp);
 				newPixels[newPixelsOffset+3] = 255; // 100% alpha
 				newPixelsOffset += 4;
