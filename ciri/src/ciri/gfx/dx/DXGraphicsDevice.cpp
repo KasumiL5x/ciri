@@ -249,7 +249,7 @@ namespace ciri {
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
 
-		const bool all = (shaderStage & ShaderStage::All);
+		const bool all = (shaderStage & ShaderStage::All) != 0;
 		if( all || (shaderStage & ShaderStage::Vertex) ) {
 			_context->VSSetShaderResources(index, 1, srv);
 		}
@@ -267,7 +267,7 @@ namespace ciri {
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11SamplerState* sampler[1] = { (state != nullptr) ? dxSampler->getSamplerState() : nullptr };
 
-		const bool all = (shaderStage & ShaderStage::All);
+		const bool all = (shaderStage & ShaderStage::All) != 0;
 		if( all || (shaderStage & ShaderStage::Vertex) ) {
 			_context->VSSetSamplers(index, 1, sampler);
 		}

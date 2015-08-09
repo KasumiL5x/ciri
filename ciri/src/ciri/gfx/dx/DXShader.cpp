@@ -46,7 +46,7 @@ namespace ciri {
 
 		bool wasBufferSet = false;
 
-		const bool all = (shaderTypeFlags & ShaderStage::All);
+		const bool all = (shaderTypeFlags & ShaderStage::All) != 0;
 
 		if( all || (shaderTypeFlags & ShaderStage::Vertex) ) {
 			const std::unordered_map<std::string, int>::const_iterator existing = _vertexConstantBufferIndices.find(name);
