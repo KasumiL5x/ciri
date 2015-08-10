@@ -2,8 +2,8 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXTexture2D::DXTexture2D( DXGraphicsDevice* device, bool isRenderTarget )
-		: ITexture2D(), _device(device), _isRenderTarget(isRenderTarget), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {
+	DXTexture2D::DXTexture2D( int flags, DXGraphicsDevice* device )
+		: ITexture2D(flags), _device(device), _flags(flags), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {
 	}
 
 	DXTexture2D::~DXTexture2D() {
@@ -31,6 +31,8 @@ namespace ciri {
 			return err::CIRI_NOT_IMPLEMENTED;
 		}
 
+		const bool isRenderTarget = (_flags & TextureFlags::RenderTarget);
+
 		D3D11_TEXTURE2D_DESC texDesc;
 		ZeroMemory(&texDesc, sizeof(texDesc));
 		texDesc.Width = width;
@@ -40,9 +42,9 @@ namespace ciri {
 		texDesc.Format = ciriToDxFormat(format);
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
-		texDesc.Usage = (_isRenderTarget) ? D3D11_USAGE_DEFAULT : D3D11_USAGE_DYNAMIC; // todo: dynamic if editing
+		texDesc.Usage = (isRenderTarget) ? D3D11_USAGE_DEFAULT : D3D11_USAGE_DYNAMIC; // todo: dynamic if editing
 		texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		if( _isRenderTarget ) {
+		if( isRenderTarget ) {
 			texDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
 		}
 		texDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // todo: write?

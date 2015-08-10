@@ -9,7 +9,7 @@ namespace ciri {
 
 	class DXTexture2D : public ITexture2D {
 	public:
-		DXTexture2D( DXGraphicsDevice* device, bool isRenderTarget );
+		DXTexture2D( int flags, DXGraphicsDevice* device );
 		virtual ~DXTexture2D();
 
 		virtual void destroy();
@@ -26,7 +26,7 @@ namespace ciri {
 
 	private:
 		DXGraphicsDevice* _device;
-		bool _isRenderTarget;
+		int _flags;
 		ID3D11Texture2D* _texture2D;
 		ID3D11ShaderResourceView* _shaderResourceView;
 		int _width;

@@ -164,7 +164,7 @@ namespace ciri {
 			return nullptr;
 		}
 
-		DXTexture2D* dxTexture = new DXTexture2D(this, (flags & TextureFlags::RenderTarget));
+		DXTexture2D* dxTexture = new DXTexture2D(flags, this);
 		if( err::failed(dxTexture->setData(0, 0, width, height, pixels, format)) ) {
 			delete dxTexture;
 			dxTexture = nullptr;

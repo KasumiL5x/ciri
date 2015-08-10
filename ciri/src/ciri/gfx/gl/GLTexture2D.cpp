@@ -1,8 +1,8 @@
 #include <ciri/gfx/gl/GLTexture2D.hpp>
 
 namespace ciri {
-	GLTexture2D::GLTexture2D()
-		: ITexture2D(), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
+	GLTexture2D::GLTexture2D( int flags )
+		: ITexture2D(flags), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
 	}
 
 	GLTexture2D::~GLTexture2D() {

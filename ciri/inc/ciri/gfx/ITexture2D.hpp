@@ -1,13 +1,14 @@
 #ifndef __ciri_itexture__
 #define __ciri_itexture__
 
+#include "TextureFlags.hpp"
 #include "TextureFormat.hpp"
 #include "../ErrorCodes.hpp"
 
 namespace ciri {
 	class ITexture2D {
 	public:
-		ITexture2D() {
+		ITexture2D( int flags ) {
 		}
 		virtual ~ITexture2D() {
 		}

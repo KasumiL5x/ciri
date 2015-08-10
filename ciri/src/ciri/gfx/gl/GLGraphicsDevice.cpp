@@ -205,7 +205,7 @@ namespace ciri {
 			return nullptr;
 		}
 
-		GLTexture2D* glTexture = new GLTexture2D();
+		GLTexture2D* glTexture = new GLTexture2D(flags);
 		if( err::failed(glTexture->setData(0, 0, width, height, pixels, format)) ) {
 			delete glTexture;
 			glTexture = nullptr;

@@ -7,7 +7,7 @@
 namespace ciri {
 	class GLTexture2D : public ITexture2D {
 	public:
-		GLTexture2D();
+		GLTexture2D( int flags );
 		virtual ~GLTexture2D();
 
 		virtual void destroy();
