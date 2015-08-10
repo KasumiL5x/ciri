@@ -11,6 +11,7 @@
 #include "ShaderStage.hpp"
 #include "ISamplerState.hpp"
 #include "TextureFormat.hpp"
+#include "TextureFlags.hpp"
 #include"IRenderTarget2D.hpp"
 #include "IRasterizerState.hpp"
 #include "IDepthStencilState.hpp"
@@ -34,7 +35,7 @@ namespace ciri {
 		virtual IVertexBuffer* createVertexBuffer()=0;
 		virtual IIndexBuffer* createIndexBuffer()=0;
 		virtual IConstantBuffer* createConstantBuffer()=0;
-		virtual ITexture2D* createTexture2D()=0;
+		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Type format, int flags, void* pixels=nullptr )=0; // TextureFlags::Flags
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format )=0;
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc )=0;

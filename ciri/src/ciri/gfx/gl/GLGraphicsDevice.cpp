@@ -200,8 +200,18 @@ namespace ciri {
 		return buffer;
 	}
 
-	ITexture2D* GLGraphicsDevice::createTexture2D() {
+	ITexture2D* GLGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Type format, int flags, void* pixels ) {
+		if( width <= 0 || height <= 0 ) {
+			return nullptr;
+		}
+
 		GLTexture2D* glTexture = new GLTexture2D();
+		if( err::failed(glTexture->setData(0, 0, width, height, pixels, format)) ) {
+			delete glTexture;
+			glTexture = nullptr;
+			return nullptr;
+		}
+
 		_texture2Ds.push_back(glTexture);
 		return glTexture;
 	}
@@ -218,12 +228,9 @@ namespace ciri {
 	}
 
 	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
-		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D());
-		if( err::failed(texture->setData(0, 0, width, height, nullptr, format)) ) {
-			texture->destroy();
-			delete texture;
-			texture = nullptr;
-			_texture2Ds.pop_back();
+		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
+		if( nullptr == texture ) {
+			return nullptr;
 		}
 		GLRenderTarget2D* glTarget = new GLRenderTarget2D(texture);
 		_renderTarget2Ds.push_back(glTarget);

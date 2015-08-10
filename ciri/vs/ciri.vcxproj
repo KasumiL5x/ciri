@@ -87,6 +87,7 @@
     <ClInclude Include="..\inc\ciri\gfx\ObjModel.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ShaderStage.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\TextureFlags.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\TextureFormat.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexElement.hpp" />

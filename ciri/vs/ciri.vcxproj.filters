@@ -277,5 +277,8 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXDepthStencilState.hpp">
       <Filter>gfx\dx</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\TextureFlags.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

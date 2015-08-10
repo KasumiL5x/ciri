@@ -159,8 +159,18 @@ namespace ciri {
 		return buffer;
 	}
 
-	ITexture2D* DXGraphicsDevice::createTexture2D() {
-		DXTexture2D* dxTexture = new DXTexture2D(this, false);
+	ITexture2D* DXGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Type format, int flags, void* pixels ) {
+		if( width <= 0 || height <= 0 ) {
+			return nullptr;
+		}
+
+		DXTexture2D* dxTexture = new DXTexture2D(this, (flags & TextureFlags::RenderTarget));
+		if( err::failed(dxTexture->setData(0, 0, width, height, pixels, format)) ) {
+			delete dxTexture;
+			dxTexture = nullptr;
+			return nullptr;
+		}
+
 		_texture2Ds.push_back(dxTexture);
 		return dxTexture;
 	}
@@ -177,13 +187,10 @@ namespace ciri {
 	}
 
 	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
-		DXTexture2D* texture = new DXTexture2D(this, true);
-		if( err::failed(texture->setData(0, 0, width, height, nullptr, format)) ) {
-			texture->destroy();
-			delete texture;
-			texture = nullptr;
+		DXTexture2D* texture = reinterpret_cast<DXTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
+		if( nullptr == texture ) {
+			return nullptr;
 		}
-		_texture2Ds.push_back(texture);
 		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(this);
 		if( !dxTarget->create(texture) ) {
 			texture->destroy();

@@ -36,7 +36,7 @@ namespace ciri {
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual IIndexBuffer* createIndexBuffer();
 		virtual IConstantBuffer* createConstantBuffer();
-		virtual ITexture2D* createTexture2D();
+		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Type format, int flags, void* pixels=nullptr );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );

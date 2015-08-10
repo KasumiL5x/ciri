@@ -1,5 +1,6 @@
 #ifndef __ciri_textureformat__
 #define __ciri_textureformat__
+
 namespace ciri {
 	class TextureFormat {
 	public:
