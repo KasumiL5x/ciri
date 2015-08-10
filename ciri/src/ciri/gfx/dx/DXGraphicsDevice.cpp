@@ -21,6 +21,10 @@ namespace ciri {
 			return false;
 		}
 
+		for( int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i ) {
+			_activeRenderTargets[i] = nullptr;
+		}
+
 		return true;
 	}
 
@@ -151,7 +155,7 @@ namespace ciri {
 	}
 
 	ITexture2D* DXGraphicsDevice::createTexture2D() {
-		DXTexture2D* dxTexture = new DXTexture2D(this);
+		DXTexture2D* dxTexture = new DXTexture2D(this, false);
 		_texture2Ds.push_back(dxTexture);
 		return dxTexture;
 	}
@@ -168,8 +172,22 @@ namespace ciri {
 	}
 
 	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
+		DXTexture2D* texture = new DXTexture2D(this, true);
+		if( err::failed(texture->setData(0, 0, width, height, nullptr, format)) ) {
+			texture->destroy();
+			delete texture;
+			texture = nullptr;
+		}
+		_texture2Ds.push_back(texture);
 		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(this);
-		//...
+		if( !dxTarget->create(texture) ) {
+			texture->destroy();
+			delete texture;
+			texture = nullptr;
+			_texture2Ds.pop_back();
+			delete dxTarget;
+			dxTarget = nullptr;
+		}
 		_renderTarget2Ds.push_back(dxTarget);
 		return dxTarget;
 	}
@@ -348,11 +366,25 @@ namespace ciri {
 	}
 	
 	void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
-		throw;
+		// build array of pointers to render targets
+		for( int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i ) {
+			if( i >= numRenderTargets ) {
+				_activeRenderTargets[i] = nullptr;
+				continue;
+			}
+			_activeRenderTargets[i] = reinterpret_cast<DXRenderTarget2D*>(renderTargets[i])->getRenderTargetView();
+		}
+
+		// todo: take either a separate depth render target, OR take the first render target's depth render target,
+		//       as by convention, they should all have the same format depth target
+		_context->OMSetRenderTargets(numRenderTargets, _activeRenderTargets, nullptr);
 	}
 
 	void DXGraphicsDevice::restoreDefaultRenderTargets() {
-		throw;
+		for( int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i ) {
+			_activeRenderTargets[i] = nullptr;
+		}
+		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 	}
 
 	void DXGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {

@@ -219,7 +219,7 @@ namespace ciri {
 
 	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
 		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D());
-		if( !texture->setData(0, 0, width, height, nullptr, format) ) {
+		if( err::failed(texture->setData(0, 0, width, height, nullptr, format)) ) {
 			texture->destroy();
 			delete texture;
 			texture = nullptr;

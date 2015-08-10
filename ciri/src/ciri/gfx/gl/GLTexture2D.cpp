@@ -92,6 +92,12 @@ namespace ciri {
 				_pixelType = GL_FLOAT;
 				break;
 			}
+
+			case TextureFormat::RGBA32_Float: {
+				_internalFormat = GL_RGBA32F;
+				_pixelFormat = GL_RGBA;
+				_pixelType = GL_FLOAT;
+			}
 		}
 	}
 } // ciri

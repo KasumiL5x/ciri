@@ -93,6 +93,7 @@ namespace ciri {
 		IDepthStencilState* _activeDepthStencilState;
 		ID3D11Texture2D* _depthStencil;
 		ID3D11DepthStencilView* _depthStencilView;
+		ID3D11RenderTargetView* _activeRenderTargets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 	};
 } // ciri
 

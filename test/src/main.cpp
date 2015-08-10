@@ -31,6 +31,7 @@ bool createWindow();
 bool createGraphicsDevice();
 bool createRasterizerStates();
 bool createDepthStencilStates();
+bool createRenderTargets();
 bool loadShaders();
 bool createConstantBuffers();
 bool assignConstantBuffersToShaders();
@@ -53,6 +54,7 @@ ciri::ITexture2D* texture0 = nullptr;
 ciri::ISamplerState* sampler0 = nullptr;
 ciri::IRasterizerState* rasterizerState = nullptr;
 ciri::IDepthStencilState* depthStencilState = nullptr;
+ciri::IRenderTarget2D* renderTarget = nullptr;
 
 int main() {
 	enableMemoryLeakChecking();
@@ -81,6 +83,13 @@ int main() {
 	// create depth stencil states
 	if( !createDepthStencilStates() ) {
 		printf("Failed to create depth stencil states.\n");
+		cleanup();
+		return -1;
+	}
+
+	// create render targets
+	if( !createRenderTargets() ) {
+		printf("Failed to create render targets.\n");
 		cleanup();
 		return -1;
 	}
@@ -228,9 +237,42 @@ int main() {
 		if( areShadersValid ) {
 			graphicsDevice->setRasterizerState(rasterizerState);
 
+			//
+			// render the scene normally to texture
+			//
+			graphicsDevice->setRenderTargets(&renderTarget, 1);
 			// render all models with the simple shader
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);
+			graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
+			for( unsigned int i = 0; i < models.size(); ++i ) {
+				Model* mdl = models[i];
+
+				// update constant buffer for this object
+				simpleConstants.world = mdl->getXform().getWorld();
+				simpleConstants.xform = simpleConstants.world * cameraViewProj;
+				if( ciri::err::failed(simpleConstantsBuffer->setData(sizeof(SimpleConstants), &simpleConstants)) ) {
+					printf("Failed to update simple constants buffer.\n");
+				}
+
+				graphicsDevice->setVertexBuffer(mdl->getVertexBuffer());
+				if( mdl->getIndexBuffer() != nullptr ) {
+					graphicsDevice->setIndexBuffer(mdl->getIndexBuffer());
+					graphicsDevice->drawIndexed(ciri::PrimitiveTopology::TriangleList, mdl->getIndexBuffer()->getIndexCount());
+				} else {
+					graphicsDevice->drawArrays(ciri::PrimitiveTopology::TriangleList, mdl->getVertexBuffer()->getVertexCount(), 0);
+				}
+			}
+			graphicsDevice->setTexture2D(0, nullptr, ciri::ShaderStage::Pixel);
+			graphicsDevice->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
+
+			//
+			// render the scene using the rendertarget as a texture
+			//
+			graphicsDevice->restoreDefaultRenderTargets();
+			// render all models with the simple shader
+			graphicsDevice->applyShader(simpleShader);
+			graphicsDevice->setTexture2D(0, renderTarget->getTexture2D(), ciri::ShaderStage::Pixel);
 			graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
 			for( unsigned int i = 0; i < models.size(); ++i ) {
 				Model* mdl = models[i];
@@ -299,6 +341,11 @@ bool createDepthStencilStates() {
 	desc.depthEnable = true;
 	depthStencilState = graphicsDevice->createDepthStencilState(desc);
 	return (depthStencilState != nullptr);
+}
+
+bool createRenderTargets() {
+	renderTarget = graphicsDevice->createRenderTarget2D(SCR_W, SCR_H, ciri::TextureFormat::RGBA32_Float);
+	return (renderTarget != nullptr);
 }
 
 bool loadShaders() {

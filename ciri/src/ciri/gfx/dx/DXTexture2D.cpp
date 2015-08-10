@@ -2,8 +2,8 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXTexture2D::DXTexture2D( DXGraphicsDevice* device )
-		: ITexture2D(), _device(device), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {
+	DXTexture2D::DXTexture2D( DXGraphicsDevice* device, bool isRenderTarget )
+		: ITexture2D(), _device(device), _isRenderTarget(isRenderTarget), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {
 	}
 
 	DXTexture2D::~DXTexture2D() {
@@ -40,8 +40,11 @@ namespace ciri {
 		texDesc.Format = ciriToDxFormat(format);
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
-		texDesc.Usage = D3D11_USAGE_DYNAMIC; // todo: dynamic if editing
+		texDesc.Usage = (_isRenderTarget) ? D3D11_USAGE_DEFAULT : D3D11_USAGE_DYNAMIC; // todo: dynamic if editing
 		texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		if( _isRenderTarget ) {
+			texDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+		}
 		texDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // todo: write?
 		texDesc.MiscFlags = 0;
 
@@ -78,6 +81,10 @@ namespace ciri {
 		return _height;
 	}
 
+	ID3D11Texture2D* DXTexture2D::getTexture() const {
+		return _texture2D;
+	}
+
 	ID3D11ShaderResourceView* DXTexture2D::getShaderResourceView() const {
 		return _shaderResourceView;
 	}
@@ -90,6 +97,10 @@ namespace ciri {
 
 			case TextureFormat::RGB32_Float: {
 				return DXGI_FORMAT_R32G32B32_FLOAT;
+			}
+
+			case TextureFormat::RGBA32_Float: {
+				return DXGI_FORMAT_R32G32B32A32_FLOAT;
 			}
 
 			default: {
