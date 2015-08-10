@@ -52,7 +52,8 @@ namespace ciri {
 
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
-		virtual void clear( ClearFlags::Flags flags, float* color );
+		virtual void setClearColor( float r, float g, float b, float a );
+		virtual void clear( int flags );
 
 		virtual void setRasterizerState( IRasterizerState* state );
 		virtual void setDepthStencilState( IDepthStencilState* state );
@@ -69,6 +70,8 @@ namespace ciri {
 		ID3D11Device* _device;
 		ID3D11DeviceContext* _context;
 		ID3D11RenderTargetView* _backbuffer;
+		//
+		float _clearColor[4];
 		//
 		std::vector<DXShader*> _shaders;
 		std::vector<DXVertexBuffer*> _vertexBuffers;

@@ -214,7 +214,7 @@ int main() {
 
 		const cc::Mat4f cameraViewProj = camera.getProj() * camera.getView();
 
-		graphicsDevice->clear(ciri::ClearFlags::ColorDepth);
+		graphicsDevice->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 		graphicsDevice->setDepthStencilState(depthStencilState);
 
@@ -241,6 +241,7 @@ int main() {
 			// render the scene normally to texture
 			//
 			graphicsDevice->setRenderTargets(&renderTarget, 1);
+			graphicsDevice->clear(ciri::ClearFlags::Color);
 			// render all models with the simple shader
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);

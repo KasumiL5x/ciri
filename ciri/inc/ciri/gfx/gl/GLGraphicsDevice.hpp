@@ -55,7 +55,8 @@ namespace ciri {
 
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
-		virtual void clear( ClearFlags::Flags flags, float* color );
+		virtual void setClearColor( float r, float g, float b, float a );
+		virtual void clear( int flags);
 
 		virtual void setRasterizerState( IRasterizerState* state );
 		virtual void setDepthStencilState( IDepthStencilState* state );

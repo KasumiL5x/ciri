@@ -25,6 +25,11 @@ namespace ciri {
 			_activeRenderTargets[i] = nullptr;
 		}
 
+		_clearColor[0] = 0.39f;
+		_clearColor[1] = 0.58f;
+		_clearColor[2] = 0.93f;
+		_clearColor[3] = 1.0f;
+
 		return true;
 	}
 
@@ -387,48 +392,46 @@ namespace ciri {
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 	}
 
-	void DXGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
-		DirectX::XMVECTORF32 clearColor = DirectX::Colors::CornflowerBlue;
-		if( color != nullptr ) {
-			clearColor.f[0] = color[0];
-			clearColor.f[1] = color[1];
-			clearColor.f[2] = color[2];
-			clearColor.f[3] = color[3];
+	void DXGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
+		_clearColor[0] = r;
+		_clearColor[1] = g;
+		_clearColor[2] = b;
+		_clearColor[3] = a;
+	}
+
+	void DXGraphicsDevice::clear( int flags ) {
+		// todo: add set depth and stencil clear value functions
+		if( nullptr == _activeRenderTargets[0] ) {
+			if( flags & ClearFlags::Color ) {
+				_context->ClearRenderTargetView(_backbuffer, _clearColor);
+			}
+			if( (flags & ClearFlags::Depth) && (flags & ClearFlags::Stencil) ) {
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+			} else if( flags & ClearFlags::Depth ) {
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+			} if( flags & ClearFlags::Stencil ) {
+				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+			}
+			return;
 		}
 
-		switch( flags ) {
-			case ClearFlags::Color: {
-				_context->ClearRenderTargetView(_backbuffer, clearColor);
-				break;
-			}
-			case ClearFlags::Depth: {
-				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-				break;
-			}
-			case ClearFlags::Stencil: {
-				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
-				break;
-			}
-			case ClearFlags::ColorDepth: {
-				_context->ClearRenderTargetView(_backbuffer, clearColor);
-				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-				break;
-			}
-			case ClearFlags::ColorStencil: {
-				_context->ClearRenderTargetView(_backbuffer, clearColor);
-				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
-				break;
-			}
-			case ClearFlags::DepthStencil: {
-				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-				break;
-			}
-			case ClearFlags::All: {
-				_context->ClearRenderTargetView(_backbuffer, clearColor);
-				_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-				break;
+		for( int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i ) {
+			if( _activeRenderTargets[i] != nullptr ) {
+				if( flags & ClearFlags::Color ) {
+					_context->ClearRenderTargetView(_activeRenderTargets[i], _clearColor);
+				}
 			}
 		}
+		// todo: once i get an _activeDepthRenderTarget variable added, do something akin to the following:
+		//if( _activeDepthRenderTarget != nullptr ) {
+		//	if( (flags & ClearFlags::Depth) && (flags & ClearFlags::Stencil) ) {
+		//		_context->ClearDepthStencilView(_activeDepthRenderTarget, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		//	} else if( flags & ClearFlags::Depth ) {
+		//		_context->ClearDepthStencilView(_activeDepthRenderTarget, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		//	} if( flags & ClearFlags::Stencil ) {
+		//		_context->ClearDepthStencilView(_activeDepthRenderTarget, D3D11_CLEAR_STENCIL, 1.0f, 0);
+		//	}
+		//}
 	}
 
 	void DXGraphicsDevice::setRasterizerState( IRasterizerState* state ) {

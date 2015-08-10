@@ -387,49 +387,20 @@ namespace ciri {
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
-	void GLGraphicsDevice::clear( ClearFlags::Flags flags, float* color ) {
+	void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
+		glClearColor(r, g, b, a);
+	}
+
+	void GLGraphicsDevice::clear( int flags ) {
 		GLbitfield clearFlags = 0;
-		switch( flags ) {
-			case ClearFlags::Color: {
-				clearFlags = GL_COLOR_BUFFER_BIT;
-				break;
-			}
-
-			case ClearFlags::Depth: {
-				clearFlags = GL_DEPTH_BUFFER_BIT;
-				break;
-			}
-
-			case ClearFlags::Stencil: {
-				clearFlags = GL_STENCIL_BUFFER_BIT;
-				break;
-			}
-
-			case ClearFlags::ColorDepth: {
-				clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-				break;
-			}
-
-			case ClearFlags::ColorStencil: {
-				clearFlags = GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
-				break;
-			}
-
-			case ClearFlags::DepthStencil: {
-				clearFlags = GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
-				break;
-			}
-
-			case ClearFlags::All: {
-				clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
-				break;
-			}
+		if( flags & ClearFlags::Color ) {
+			clearFlags |= GL_COLOR_BUFFER_BIT;
 		}
-
-		if( color != nullptr ) {
-			glClearColor(color[0], color[1], color[2], color[3]);
-		} else {
-			glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+		if( flags & ClearFlags::Depth ) {
+			clearFlags |= GL_DEPTH_BUFFER_BIT;
+		}
+		if( flags & ClearFlags::Stencil ) {
+			clearFlags |= GL_STENCIL_BUFFER_BIT;
 		}
 		glClear(clearFlags);
 	}
@@ -602,6 +573,9 @@ namespace ciri {
 
 		// default to fullscreen viewport
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
+
+		// default clear color
+		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
 
 		return true;
 	}
