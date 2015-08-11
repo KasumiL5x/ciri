@@ -27,9 +27,9 @@ namespace ciri {
 		samplerDesc.BorderColor[3] = desc.borderColor[3];
 		samplerDesc.ComparisonFunc = ciriToDxFunc(desc.comparisonFunc);
 		samplerDesc.Filter = ciriToDxFilter(desc.filter, desc.comparisonFunc != SamplerComparison::Never);
-		samplerDesc.MaxAnisotropy = desc.maxAnisotropy;
-		samplerDesc.MaxLOD = desc.maxLod;
-		samplerDesc.MinLOD = desc.minLod;
+		samplerDesc.MaxAnisotropy = SamplerFilter::hasAniso(desc.filter) ? desc.maxAnisotropy : 1.0f;
+		samplerDesc.MaxLOD = SamplerFilter::hasMipmaps(desc.filter) ? desc.maxLod : 0.0f;
+		samplerDesc.MinLOD = SamplerFilter::hasMipmaps(desc.filter) ? desc.minLod : 0.0f;
 		samplerDesc.MipLODBias = desc.lodBias;
 
 		if( FAILED(_device->getDevice()->CreateSamplerState(&samplerDesc, &_samplerState)) ) {

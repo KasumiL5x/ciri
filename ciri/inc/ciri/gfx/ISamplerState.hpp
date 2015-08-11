@@ -24,6 +24,14 @@ namespace ciri {
 			Trilinear, // min=linear; mag=linear, mip=linear
 			Anisotropic // dank filterz
 		};
+
+		static bool hasAniso( Mode filter ) {
+			return (Anisotropic == filter);
+		}
+
+		static bool hasMipmaps( Mode filter ) {
+			return (filter >= Bilinear);
+		}
 	};
 
 	class SamplerComparison {
