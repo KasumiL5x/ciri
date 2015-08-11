@@ -32,6 +32,7 @@ namespace ciri {
 		}
 
 		const bool isRenderTarget = (_flags & TextureFlags::RenderTarget);
+		const bool mipmaps = (_flags & TextureFlags::Mipmaps);
 
 		D3D11_TEXTURE2D_DESC texDesc;
 		ZeroMemory(&texDesc, sizeof(texDesc));
@@ -42,13 +43,10 @@ namespace ciri {
 		texDesc.Format = ciriToDxFormat(format);
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
-		texDesc.Usage = (isRenderTarget) ? D3D11_USAGE_DEFAULT : D3D11_USAGE_DYNAMIC; // todo: dynamic if editing
-		texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		if( isRenderTarget ) {
-			texDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
-		}
-		texDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // todo: write?
-		texDesc.MiscFlags = 0;
+		texDesc.Usage = getUsage();
+		texDesc.BindFlags = getBindFlags();
+		texDesc.CPUAccessFlags = getCpuFlags();
+		texDesc.MiscFlags = getMiscFlags();
 
 		if( data != nullptr ) {
 			D3D11_SUBRESOURCE_DATA subData;
@@ -70,7 +68,11 @@ namespace ciri {
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_texture2D, nullptr, &_shaderResourceView)) ) {
 			destroy();
 			return err::CIRI_UNKNOWN_ERROR;
-		}	
+		}
+
+		if( mipmaps ) {
+			_device->getContext()->GenerateMips(_shaderResourceView);
+		}
 
 		return err::CIRI_OK;
 	}
@@ -98,7 +100,7 @@ namespace ciri {
 			}
 
 			case TextureFormat::RGB32_Float: {
-				return DXGI_FORMAT_R32G32B32_FLOAT;
+				return DXGI_FORMAT_R32G32B32_FLOAT; // todo: this breaks DX; do not support it (seems non XYZA formats for textures do), or work around it
 			}
 
 			case TextureFormat::RGBA32_Float: {
@@ -109,5 +111,48 @@ namespace ciri {
 				return DXGI_FORMAT_UNKNOWN;
 			}
 		}
+	}
+
+	D3D11_USAGE DXTexture2D::getUsage() const {
+		if( _flags & TextureFlags::RenderTarget ) {
+			return D3D11_USAGE_DEFAULT;
+		}
+
+		if( _flags & TextureFlags::Mipmaps ) {
+			return D3D11_USAGE_DEFAULT;
+		}
+
+		// todo: if editable, return dynamic
+
+		return D3D11_USAGE_DEFAULT;
+	}
+
+	UINT DXTexture2D::getBindFlags() const {
+		UINT bindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+		if( _flags & TextureFlags::RenderTarget ) {
+			bindFlags |= D3D11_BIND_RENDER_TARGET;
+		}
+
+		if( _flags & TextureFlags::Mipmaps ) {
+			bindFlags |= D3D11_BIND_RENDER_TARGET; // lol what?
+		}
+
+		return bindFlags;
+	}
+
+	UINT DXTexture2D::getCpuFlags() const {
+		UINT cpuFlags = 0;
+		// D3D11_CPU_ACCESS_WRITE ?
+		// D3D11_CPU_ACCESS_READ ?
+		return cpuFlags;
+	}
+
+	UINT DXTexture2D::getMiscFlags() const {
+		UINT miscFlags = 0;
+		if( _flags & TextureFlags::Mipmaps ) {
+			miscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		}
+		return miscFlags;
 	}
 } // ciri

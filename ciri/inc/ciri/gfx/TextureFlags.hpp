@@ -4,7 +4,8 @@
 namespace ciri {
 	struct TextureFlags {
 		enum Flags {
-			RenderTarget = (1 << 0)
+			Mipmaps	     = (1 << 0),
+			RenderTarget = (1 << 1)
 		};
 	};
 } // ciri

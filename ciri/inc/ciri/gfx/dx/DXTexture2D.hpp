@@ -23,6 +23,10 @@ namespace ciri {
 
 	private:
 		DXGI_FORMAT ciriToDxFormat( TextureFormat::Type format ) const;
+		D3D11_USAGE getUsage() const;
+		UINT getBindFlags() const;
+		UINT getCpuFlags() const;
+		UINT getMiscFlags() const;
 
 	private:
 		DXGraphicsDevice* _device;

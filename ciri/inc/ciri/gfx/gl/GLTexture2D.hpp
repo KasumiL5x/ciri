@@ -22,6 +22,7 @@ namespace ciri {
 		void ciriFormatToGlFormat( TextureFormat::Type ciriFormat );
 
 	private:
+		int _flags;
 		GLuint _textureId;
 		GLint _internalFormat;
 		GLenum _pixelFormat;

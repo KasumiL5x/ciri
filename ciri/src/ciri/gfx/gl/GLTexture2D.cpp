@@ -2,7 +2,7 @@
 
 namespace ciri {
 	GLTexture2D::GLTexture2D( int flags )
-		: ITexture2D(flags), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
+		: ITexture2D(flags), _flags(flags), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
 	}
 
 	GLTexture2D::~GLTexture2D() {
@@ -22,13 +22,7 @@ namespace ciri {
 
 		ciriFormatToGlFormat(format);
 
-		const GLint minFilterMode = (1 > 1) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR; // (levelCount > 1) ? ... : ...;
 		const int level = 0;
-		GLint wrapMode = GL_REPEAT;
-		// clamp wrap mode to edge if not power of two
-		if( ((width & (width - 1)) != 0) || ((height & (height - 1)) != 0) ) {
-			wrapMode = GL_CLAMP_TO_EDGE;
-		}
 
 		if( _textureId != 0 ) {
 			glBindTexture(GL_TEXTURE_2D, _textureId);
@@ -43,15 +37,13 @@ namespace ciri {
 
 			glGenTextures(1, &_textureId);
 			glBindTexture(GL_TEXTURE_2D, _textureId);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterMode);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
 			glTexImage2D(GL_TEXTURE_2D, level, _internalFormat, width, height, 0, _pixelFormat, _pixelType, data);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
-			//glGenerateMipmap(GL_TEXTURE_2D);
+			if( _flags & TextureFlags::Mipmaps ) {
+				glGenerateMipmap(GL_TEXTURE_2D);
+			}
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}

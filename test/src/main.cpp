@@ -433,7 +433,7 @@ bool loadTextures() {
 		printf("Failed to load tga0.\n");
 		success = false;
 	} else {
-		texture0 = graphicsDevice->createTexture2D(tga0.getWidth(), tga0.getHeight(), ciri::TextureFormat::Color, 0, tga0.getPixels());
+		texture0 = graphicsDevice->createTexture2D(tga0.getWidth(), tga0.getHeight(), ciri::TextureFormat::Color, ciri::TextureFlags::Mipmaps, tga0.getPixels());
 		if( nullptr == texture0 ) {
 			success = false;
 			printf("Failed to set texture0 data from tga0.\n");
