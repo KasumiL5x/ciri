@@ -17,21 +17,16 @@ namespace ciri {
 	class SamplerFilter {
 	public:
 		enum Mode {
-			Point, // min=point; mag=point; mip=point
-			PointLinear, // min=point; mag=linear; mip=point
-			LinearPoint, // min=linear; mag=point; mip=point
-			Bilinear, // min=linear; mag=linear; mip=point
-			Trilinear, // min=linear; mag=linear, mip=linear
-			Anisotropic // dank filterz
+			Point,
+			Linear,
+			Anisotropic,
+			LinearMipPoint,
+			PointMipLinear,
+			MinLinearMagPointMipLinear,
+			MinLinearMagPointMipPoint,
+			MinPointMagLinearMipLinear,
+			MinPointMagLinearMipPoint
 		};
-
-		static bool hasAniso( Mode filter ) {
-			return (Anisotropic == filter);
-		}
-
-		static bool hasMipmaps( Mode filter ) {
-			return (filter >= Bilinear);
-		}
 	};
 
 	class SamplerComparison {
@@ -59,16 +54,18 @@ namespace ciri {
 		float maxLod;
 		float lodBias;
 		SamplerComparison::Mode comparisonFunc;
+		bool useMipmaps;
 
 		SamplerDesc() {
 			wrapU = wrapV = wrapW = SamplerWrap::Wrap;
-			filter = SamplerFilter::Bilinear;
+			filter = SamplerFilter::Linear;
 			maxAnisotropy = 16;
 			borderColor[0] = borderColor[1] = borderColor[2] = borderColor[3] = 0.0f;
 			minLod = -1000.0f;
 			maxLod = 1000.0f;
 			lodBias = 0.0f;
 			comparisonFunc = SamplerComparison::Always;
+			useMipmaps = false;
 		}
 	};
 

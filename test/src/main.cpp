@@ -23,7 +23,7 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
 const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 
 void enableMemoryLeakChecking();
@@ -417,9 +417,9 @@ bool loadModels() {
 	//}
 
 	// create a floor
-	Model* floor = modelgen::createCube(10.0f, 0.25f, 60.0f, 4.0f, 4.0f, graphicsDevice);
+	Model* floor = modelgen::createCube(10.0f, 0.25f, 60.0f, 40.0f, 8.0f, graphicsDevice);
 	if( floor != nullptr ) {
-		floor->getXform().setPosition(cc::Vec3f(0.0f, 0.0f, -2.0f));
+		floor->getXform().setPosition(cc::Vec3f(0.0f, 0.0f, -25.0f));
 		models.push_back(floor);
 	}
 
@@ -448,8 +448,6 @@ bool loadTextures() {
 //fhgbifiokgrijout
 // issues to solve:
 //		- change viewport when assigning render targets???
-//    - mipmaps need to be (optionaly, through a flag) generated for both DX and GL
-//    - bilinear and trilinear sampling in DX seem to have no effect, whereas GL works fine (look this up online)
 //    - a million other things
 // here's some links i had open earlier:
 // http://gamedev.stackexchange.com/questions/66231/set-sampler-states-linear-bilinear-trilinear-filtering-interpolation
@@ -464,6 +462,7 @@ bool createSamplers() {
 	samplerDesc.borderColor[0] = samplerDesc.borderColor[1] = samplerDesc.borderColor[2] = samplerDesc.borderColor[3] = 0.0f;
 	samplerDesc.comparisonFunc = ciri::SamplerComparison::Never;
 	samplerDesc.filter = ciri::SamplerFilter::Anisotropic;
+	samplerDesc.useMipmaps = true;
 	samplerDesc.maxAnisotropy = 16;
 	samplerDesc.lodBias = 0.0f;
 	samplerDesc.maxLod = 3.402823466e+38f;//1000.0f;

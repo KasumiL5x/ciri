@@ -17,28 +17,33 @@ namespace ciri {
 
 		glGenSamplers(1, &_samplerId);
 
+		GLint filterMin;
+		GLint filterMag;
+		ciriToGlFilter(desc.filter, &filterMin, &filterMag, desc.useMipmaps);
+		glSamplerParameteri(_samplerId, GL_TEXTURE_MIN_FILTER, filterMin);
+		glSamplerParameteri(_samplerId, GL_TEXTURE_MAG_FILTER, filterMag);
+
+		GLfloat maxAnisotropy;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+		const float anisotropy = (SamplerFilter::Anisotropic == desc.filter) ? cc::math::clamp(static_cast<float>(desc.maxAnisotropy), 1.0f, maxAnisotropy) : 1.0f;
+		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropy);
+
 		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_S, ciriToGlWrap(desc.wrapU));
 		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_T, ciriToGlWrap(desc.wrapV));
 		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_R, ciriToGlWrap(desc.wrapW));
 
-		GLint filterMin;
-		GLint filterMax;
-		ciriToGlFilter(desc.filter, &filterMin, &filterMax);
-		glSamplerParameteri(_samplerId, GL_TEXTURE_MIN_FILTER, filterMin);
-		glSamplerParameteri(_samplerId, GL_TEXTURE_MAG_FILTER, filterMax);
-
-		GLfloat maxAniso;
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
-		const float aniso = cc::math::clamp<float>(static_cast<float>(desc.maxAnisotropy), 1.0f, maxAniso);
-		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso); // todo: if supported??
-
 		glSamplerParameterfv(_samplerId, GL_TEXTURE_BORDER_COLOR, &desc.borderColor[0]);
 
-		glSamplerParameterf(_samplerId, GL_TEXTURE_MIN_LOD, desc.minLod);
-		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_LOD, desc.maxLod);
+		glSamplerParameterf(_samplerId, GL_TEXTURE_MIN_LOD, desc.useMipmaps ? desc.minLod : 0.0f);
+		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_LOD, desc.useMipmaps ? desc.maxLod : 0.0f);
 		glSamplerParameterf(_samplerId, GL_TEXTURE_LOD_BIAS, desc.lodBias);
 
-		glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_FUNC, ciriToClFunc(desc.comparisonFunc));
+		if( desc.comparisonFunc != SamplerComparison::Never ) {
+			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_FUNC, ciriToGlFunc(desc.comparisonFunc));
+		} else {
+			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+		}
 
 		return true;
 	}
@@ -82,56 +87,61 @@ namespace ciri {
 		}
 	}
 
-	void GLSamplerState::ciriToGlFilter( SamplerFilter::Mode mode, GLint* outMin, GLint* outMag ) const {
+	void GLSamplerState::ciriToGlFilter( SamplerFilter::Mode mode, GLint* outMin, GLint* outMag, bool mipmaps ) const {
 		// note: mag can only be nearest or linear; min controls everything else
 		// https://www.opengl.org/wiki/Sampler_Object#Filtering
 
+		// from monogame
 		switch( mode ) {
 			case SamplerFilter::Point: {
-				*outMin = GL_NEAREST;
+				*outMin = (mipmaps) ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 				*outMag = GL_NEAREST;
 				break;
 			}
-
-			case SamplerFilter::PointLinear: {
-				*outMin = GL_NEAREST;
+			case SamplerFilter::Linear: {
+				*outMin = (mipmaps) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 				*outMag = GL_LINEAR;
 				break;
 			}
-
-			case SamplerFilter::LinearPoint: {
-				*outMin = GL_LINEAR;
-				*outMag = GL_NEAREST;
-				break;
-			}
-
-			case SamplerFilter::Bilinear: {
-				*outMin = GL_LINEAR;
-				*outMag = GL_LINEAR;
-				break;
-			}
-
-			case SamplerFilter::Trilinear: {
-				*outMin = GL_LINEAR_MIPMAP_LINEAR;
-				*outMag = GL_LINEAR;
-				break;
-			}
-
 			case SamplerFilter::Anisotropic: {
-				*outMin = GL_LINEAR_MIPMAP_LINEAR;
+				*outMin = (mipmaps) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 				*outMag = GL_LINEAR;
 				break;
 			}
-
-			default: {
-				*outMin = GL_NEAREST;
-				*outMag = GL_NEAREST; // point filtering by default
+			case SamplerFilter::PointMipLinear: {
+				*outMin = (mipmaps) ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
+				*outMag = GL_NEAREST;
+				break;
+			}
+			case SamplerFilter::LinearMipPoint: {
+				*outMin = (mipmaps) ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR;
+				*outMag = GL_LINEAR;
+				break;
+			}
+			case SamplerFilter::MinLinearMagPointMipLinear: {
+				*outMin = (mipmaps) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+				*outMag = GL_NEAREST;
+				break;
+			}
+			case SamplerFilter::MinLinearMagPointMipPoint: {
+				*outMin = (mipmaps) ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR;
+				*outMag = GL_NEAREST;
+				break;
+			}
+			case SamplerFilter::MinPointMagLinearMipLinear: {
+				*outMin = (mipmaps) ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
+				*outMag = GL_LINEAR;
+				break;
+			}
+			case SamplerFilter::MinPointMagLinearMipPoint: {
+				*outMin = (mipmaps) ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
+				*outMag = GL_LINEAR;
 				break;
 			}
 		}
 	}
 
-	GLint GLSamplerState::ciriToClFunc( SamplerComparison::Mode mode ) const {
+	GLint GLSamplerState::ciriToGlFunc( SamplerComparison::Mode mode ) const {
 		switch( mode ) {
 			case SamplerComparison::Never: {
 				return GL_NEVER;

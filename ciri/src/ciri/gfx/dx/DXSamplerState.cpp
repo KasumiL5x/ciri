@@ -1,5 +1,6 @@
 #include <ciri/gfx/dx/DXSamplerState.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
+#include <cc/Common.hpp>
 
 namespace ciri {
 	DXSamplerState::DXSamplerState( DXGraphicsDevice* device )
@@ -21,15 +22,20 @@ namespace ciri {
 		samplerDesc.AddressU = ciriToDxWrap(desc.wrapU);
 		samplerDesc.AddressV = ciriToDxWrap(desc.wrapV);
 		samplerDesc.AddressW = ciriToDxWrap(desc.wrapW);
+
 		samplerDesc.BorderColor[0] = desc.borderColor[0];
 		samplerDesc.BorderColor[1] = desc.borderColor[1];
 		samplerDesc.BorderColor[2] = desc.borderColor[2];
 		samplerDesc.BorderColor[3] = desc.borderColor[3];
+
 		samplerDesc.ComparisonFunc = ciriToDxFunc(desc.comparisonFunc);
+
 		samplerDesc.Filter = ciriToDxFilter(desc.filter, desc.comparisonFunc != SamplerComparison::Never);
-		samplerDesc.MaxAnisotropy = SamplerFilter::hasAniso(desc.filter) ? desc.maxAnisotropy : 1.0f;
-		samplerDesc.MaxLOD = SamplerFilter::hasMipmaps(desc.filter) ? desc.maxLod : 0.0f;
-		samplerDesc.MinLOD = SamplerFilter::hasMipmaps(desc.filter) ? desc.minLod : 0.0f;
+		const int anisotropy = (SamplerFilter::Anisotropic == desc.filter) ? cc::math::clamp(static_cast<int>(desc.maxAnisotropy), 1, 16) : 1;
+		samplerDesc.MaxAnisotropy = anisotropy;
+
+		samplerDesc.MaxLOD = desc.useMipmaps ? desc.maxLod : 0.0f;
+		samplerDesc.MinLOD = desc.useMipmaps ? desc.minLod : 0.0f;
 		samplerDesc.MipLODBias = desc.lodBias;
 
 		if( FAILED(_device->getDevice()->CreateSamplerState(&samplerDesc, &_samplerState)) ) {
@@ -126,34 +132,36 @@ namespace ciri {
 				filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 				break;
 			}
-
-			case SamplerFilter::PointLinear: {
-				filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
-				break;
-			}
-
-			case SamplerFilter::LinearPoint: {
-				filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
-				break;
-			}
-
-			case SamplerFilter::Bilinear: {
-				filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-				break;
-			}
-
-			case SamplerFilter::Trilinear: {
+			case SamplerFilter::Linear: {
 				filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 				break;
 			}
-
 			case SamplerFilter::Anisotropic: {
 				filter = D3D11_FILTER_ANISOTROPIC;
 				break;
 			}
-
-			default: {
-				filter = D3D11_FILTER_MIN_MAG_MIP_POINT; // point filtering by default
+			case SamplerFilter::PointMipLinear: {
+					filter = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+				break;
+			}
+			case SamplerFilter::LinearMipPoint: {
+				filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+				break;
+			}
+			case SamplerFilter::MinLinearMagPointMipLinear: {
+				filter = D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
+				break;
+			}
+			case SamplerFilter::MinLinearMagPointMipPoint: {
+				filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+				break;
+			}
+			case SamplerFilter::MinPointMagLinearMipLinear: {
+				filter = D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
+				break;
+			}
+			case SamplerFilter::MinPointMagLinearMipPoint: {
+				filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
 				break;
 			}
 		}
