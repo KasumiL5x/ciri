@@ -23,7 +23,7 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
 const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 
 void enableMemoryLeakChecking();
@@ -240,8 +240,8 @@ int main() {
 			//
 			// render the scene normally to texture
 			//
-			graphicsDevice->setRenderTargets(&renderTarget, 1);
-			graphicsDevice->clear(ciri::ClearFlags::Color);
+			//graphicsDevice->setRenderTargets(&renderTarget, 1);
+			graphicsDevice->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 			// render all models with the simple shader
 			graphicsDevice->applyShader(simpleShader);
 			graphicsDevice->setTexture2D(0, texture0, ciri::ShaderStage::Pixel);
@@ -251,7 +251,7 @@ int main() {
 
 				// update constant buffer for this object
 				simpleConstants.world = mdl->getXform().getWorld();
-				simpleConstants.xform = simpleConstants.world * cameraViewProj;
+				simpleConstants.xform = cameraViewProj * simpleConstants.world;
 				if( ciri::err::failed(simpleConstantsBuffer->setData(sizeof(SimpleConstants), &simpleConstants)) ) {
 					printf("Failed to update simple constants buffer.\n");
 				}
@@ -267,34 +267,34 @@ int main() {
 			graphicsDevice->setTexture2D(0, nullptr, ciri::ShaderStage::Pixel);
 			graphicsDevice->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
 
-			//
-			// render the scene using the rendertarget as a texture
-			//
-			graphicsDevice->restoreDefaultRenderTargets();
-			// render all models with the simple shader
-			graphicsDevice->applyShader(simpleShader);
-			graphicsDevice->setTexture2D(0, renderTarget->getTexture2D(), ciri::ShaderStage::Pixel);
-			graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
-			for( unsigned int i = 0; i < models.size(); ++i ) {
-				Model* mdl = models[i];
+			////
+			//// render the scene using the rendertarget as a texture
+			////
+			//graphicsDevice->restoreDefaultRenderTargets();
+			//// render all models with the simple shader
+			//graphicsDevice->applyShader(simpleShader);
+			//graphicsDevice->setTexture2D(0, renderTarget->getTexture2D(), ciri::ShaderStage::Pixel);
+			//graphicsDevice->setSamplerState(0, sampler0, ciri::ShaderStage::Pixel);
+			//for( unsigned int i = 0; i < models.size(); ++i ) {
+			//	Model* mdl = models[i];
 
-				// update constant buffer for this object
-				simpleConstants.world = mdl->getXform().getWorld();
-				simpleConstants.xform = simpleConstants.world * cameraViewProj;
-				if( ciri::err::failed(simpleConstantsBuffer->setData(sizeof(SimpleConstants), &simpleConstants)) ) {
-					printf("Failed to update simple constants buffer.\n");
-				}
+			//	// update constant buffer for this object
+			//	simpleConstants.world = mdl->getXform().getWorld();
+			//	simpleConstants.xform = simpleConstants.world * cameraViewProj;
+			//	if( ciri::err::failed(simpleConstantsBuffer->setData(sizeof(SimpleConstants), &simpleConstants)) ) {
+			//		printf("Failed to update simple constants buffer.\n");
+			//	}
 
-				graphicsDevice->setVertexBuffer(mdl->getVertexBuffer());
-				if( mdl->getIndexBuffer() != nullptr ) {
-					graphicsDevice->setIndexBuffer(mdl->getIndexBuffer());
-					graphicsDevice->drawIndexed(ciri::PrimitiveTopology::TriangleList, mdl->getIndexBuffer()->getIndexCount());
-				} else {
-					graphicsDevice->drawArrays(ciri::PrimitiveTopology::TriangleList, mdl->getVertexBuffer()->getVertexCount(), 0);
-				}
-			}
-			graphicsDevice->setTexture2D(0, nullptr, ciri::ShaderStage::Pixel);
-			graphicsDevice->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
+			//	graphicsDevice->setVertexBuffer(mdl->getVertexBuffer());
+			//	if( mdl->getIndexBuffer() != nullptr ) {
+			//		graphicsDevice->setIndexBuffer(mdl->getIndexBuffer());
+			//		graphicsDevice->drawIndexed(ciri::PrimitiveTopology::TriangleList, mdl->getIndexBuffer()->getIndexCount());
+			//	} else {
+			//		graphicsDevice->drawArrays(ciri::PrimitiveTopology::TriangleList, mdl->getVertexBuffer()->getVertexCount(), 0);
+			//	}
+			//}
+			//graphicsDevice->setTexture2D(0, nullptr, ciri::ShaderStage::Pixel);
+			//graphicsDevice->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
 		}
 
 		graphicsDevice->present();
@@ -417,8 +417,9 @@ bool loadModels() {
 	//}
 
 	// create a floor
-	Model* floor = modelgen::createCube(10.0f, 0.25f, 10.0f, 4.0f, 4.0f, graphicsDevice);
+	Model* floor = modelgen::createCube(10.0f, 0.25f, 60.0f, 4.0f, 4.0f, graphicsDevice);
 	if( floor != nullptr ) {
+		floor->getXform().setPosition(cc::Vec3f(0.0f, 0.0f, -2.0f));
 		models.push_back(floor);
 	}
 
@@ -462,11 +463,11 @@ bool createSamplers() {
 	ciri::SamplerDesc samplerDesc;
 	samplerDesc.borderColor[0] = samplerDesc.borderColor[1] = samplerDesc.borderColor[2] = samplerDesc.borderColor[3] = 0.0f;
 	samplerDesc.comparisonFunc = ciri::SamplerComparison::Never;
-	samplerDesc.filter = ciri::SamplerFilter::Bilinear;
+	samplerDesc.filter = ciri::SamplerFilter::Anisotropic;
 	samplerDesc.maxAnisotropy = 16;
 	samplerDesc.lodBias = 0.0f;
-	samplerDesc.maxLod = 1000.0f;
-	samplerDesc.minLod = -1000.0f;
+	samplerDesc.maxLod = 3.402823466e+38f;//1000.0f;
+	samplerDesc.minLod = 0.0f;//-1000.0f;
 	samplerDesc.wrapU = ciri::SamplerWrap::Wrap;
 	samplerDesc.wrapV = ciri::SamplerWrap::Wrap;
 	samplerDesc.wrapW = ciri::SamplerWrap::Wrap;
