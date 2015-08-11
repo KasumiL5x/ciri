@@ -17,6 +17,8 @@ namespace ciri {
 	}
 
 	err::ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+		// todo: some check about size differences when updating
+
 		_width = (width > _width) ? width : _width;
 		_height = (height > _height) ? height : _height;
 

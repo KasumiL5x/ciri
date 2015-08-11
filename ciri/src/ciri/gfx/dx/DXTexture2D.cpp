@@ -23,6 +23,8 @@ namespace ciri {
 	}
 
 	err::ErrorCode DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+		// todo: some check about size differences when updating
+
 		_width = (width > _width) ? width : _width;
 		_height = (height > _height) ? height : _height;
 
@@ -31,15 +33,17 @@ namespace ciri {
 			return err::CIRI_NOT_IMPLEMENTED;
 		}
 
-		const bool isRenderTarget = (_flags & TextureFlags::RenderTarget);
-		const bool mipmaps = (_flags & TextureFlags::Mipmaps);
+		// https://msdn.microsoft.com/en-us/library/windows/desktop/ff476521(v=vs.85).aspx
+		// https://msdn.microsoft.com/en-us/library/windows/desktop/ff476486(v=vs.85).aspx
+		// https://msdn.microsoft.com/en-us/library/windows/desktop/ff476203(v=vs.85).aspx
+		// http://www.gamedev.net/topic/630864-directx11-mip-mapping/page-2
 
 		D3D11_TEXTURE2D_DESC texDesc;
 		ZeroMemory(&texDesc, sizeof(texDesc));
 		texDesc.Width = width;
 		texDesc.Height = height;
-		texDesc.MipLevels = 1; // todo: mipCount;
-		texDesc.ArraySize = 1; // todo: arraySize;
+		texDesc.MipLevels = getMipLevels();
+		texDesc.ArraySize = 1; // todo: arraySize (for cube textures and whatnot)
 		texDesc.Format = ciriToDxFormat(format);
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
@@ -48,21 +52,16 @@ namespace ciri {
 		texDesc.CPUAccessFlags = getCpuFlags();
 		texDesc.MiscFlags = getMiscFlags();
 
+		// multisampled textures require initialization with nullptr first, so just do it this way for everything for simplicity
+		if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, nullptr, &_texture2D)) ) {
+			destroy();
+			return err::CIRI_UNKNOWN_ERROR;
+		}
+
+		// update the subresource (a.k.a set pixel data) if there is any
 		if( data != nullptr ) {
-			D3D11_SUBRESOURCE_DATA subData;
-			ZeroMemory(&subData, sizeof(subData));
-			subData.pSysMem = data;
-			subData.SysMemPitch = width * TextureFormat::bytesPerPixel(format);
-			subData.SysMemSlicePitch = width * height * TextureFormat::bytesPerPixel(format);
-			if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, &subData, &_texture2D)) ) {
-				destroy();
-				return err::CIRI_UNKNOWN_ERROR;
-			}
-		} else {
-			if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, nullptr, &_texture2D)) ) {
-				destroy();
-				return err::CIRI_UNKNOWN_ERROR;
-			}
+			const UINT pitch = width * TextureFormat::bytesPerPixel(format);
+			_device->getContext()->UpdateSubresource(_texture2D, 0, nullptr, data, pitch, 0);
 		}
 
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_texture2D, nullptr, &_shaderResourceView)) ) {
@@ -70,7 +69,7 @@ namespace ciri {
 			return err::CIRI_UNKNOWN_ERROR;
 		}
 
-		if( mipmaps ) {
+		if( _flags & TextureFlags::Mipmaps ) {
 			_device->getContext()->GenerateMips(_shaderResourceView);
 		}
 
@@ -111,6 +110,10 @@ namespace ciri {
 				return DXGI_FORMAT_UNKNOWN;
 			}
 		}
+	}
+
+	UINT DXTexture2D::getMipLevels() const {
+		return (_flags & TextureFlags::Mipmaps) ? 0 : 1;
 	}
 
 	D3D11_USAGE DXTexture2D::getUsage() const {
