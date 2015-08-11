@@ -26,7 +26,7 @@ namespace ciri {
 		samplerDesc.BorderColor[2] = desc.borderColor[2];
 		samplerDesc.BorderColor[3] = desc.borderColor[3];
 		samplerDesc.ComparisonFunc = ciriToDxFunc(desc.comparisonFunc);
-		samplerDesc.Filter = ciriToDxFilter(desc.filter);
+		samplerDesc.Filter = ciriToDxFilter(desc.filter, desc.comparisonFunc != SamplerComparison::Never);
 		samplerDesc.MaxAnisotropy = desc.maxAnisotropy;
 		samplerDesc.MaxLOD = desc.maxLod;
 		samplerDesc.MinLOD = desc.minLod;
@@ -119,35 +119,43 @@ namespace ciri {
 		}
 	}
 
-	D3D11_FILTER DXSamplerState::ciriToDxFilter( SamplerFilter::Mode mode ) const {
+	D3D11_FILTER DXSamplerState::ciriToDxFilter( SamplerFilter::Mode mode, bool comparison ) const {
+		int filter = 0;
 		switch( mode ) {
 			case SamplerFilter::Point: {
-				return D3D11_FILTER_MIN_MAG_MIP_POINT;
+				filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 			}
 
 			case SamplerFilter::PointLinear: {
-				return D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+				filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
 			}
 
 			case SamplerFilter::LinearPoint: {
-				return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+				filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
 			}
 
 			case SamplerFilter::Bilinear: {
-				return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+				filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 			}
 
 			case SamplerFilter::Trilinear: {
-				return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+				filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 			}
 
 			case SamplerFilter::Anisotropic: {
-				return D3D11_FILTER_ANISOTROPIC;
+				filter = D3D11_FILTER_ANISOTROPIC;
 			}
 
 			default: {
-				return D3D11_FILTER_MIN_MAG_MIP_POINT; // point filtering by default
+				filter = D3D11_FILTER_MIN_MAG_MIP_POINT; // point filtering by default
 			}
 		}
+
+		// thanks, http://www.humus.name/!
+		if( comparison ) {
+			filter |= 0x80;
+		}
+
+		return (D3D11_FILTER)filter;
 	}
 } // ciri
