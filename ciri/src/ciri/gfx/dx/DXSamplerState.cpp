@@ -124,30 +124,37 @@ namespace ciri {
 		switch( mode ) {
 			case SamplerFilter::Point: {
 				filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+				break;
 			}
 
 			case SamplerFilter::PointLinear: {
 				filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+				break;
 			}
 
 			case SamplerFilter::LinearPoint: {
 				filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+				break;
 			}
 
 			case SamplerFilter::Bilinear: {
 				filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+				break;
 			}
 
 			case SamplerFilter::Trilinear: {
 				filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+				break;
 			}
 
 			case SamplerFilter::Anisotropic: {
 				filter = D3D11_FILTER_ANISOTROPIC;
+				break;
 			}
 
 			default: {
 				filter = D3D11_FILTER_MIN_MAG_MIP_POINT; // point filtering by default
+				break;
 			}
 		}
 
