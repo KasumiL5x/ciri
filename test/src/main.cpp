@@ -299,7 +299,7 @@ int main() {
 
 		graphicsDevice->present();
 
-		if( currKeyState.isKeyDown(ciri::Keyboard::F2) && prevKeyState.isKeyUp(ciri::Keyboard::F9) ) {
+		if( currKeyState.isKeyDown(ciri::Keyboard::F2) && prevKeyState.isKeyUp(ciri::Keyboard::F2) ) {
 			if( !renderTarget->getTexture2D()->writeToTGA("C:/Users/kasum/Desktop/rendertarget.tga") ) {
 				printf("Failed to write rendertarget to file.\n");
 			} else {
