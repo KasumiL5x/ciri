@@ -84,6 +84,10 @@ namespace ciri {
 		return _height;
 	}
 
+	bool DXTexture2D::writeToTGA( const char* file ) {
+		return false;
+	}
+
 	ID3D11Texture2D* DXTexture2D::getTexture() const {
 		return _texture2D;
 	}

@@ -18,6 +18,8 @@ namespace ciri {
 		virtual int getWidth() const;
 		virtual int getHeight() const;
 
+		virtual bool writeToTGA( const char* file );
+
 		ID3D11Texture2D* getTexture() const;
 		ID3D11ShaderResourceView* getShaderResourceView() const;
 

@@ -16,6 +16,8 @@ namespace ciri {
 		virtual int getWidth() const;
 		virtual int getHeight() const;
 
+		virtual bool writeToTGA( const char* file );
+
 		GLuint getTextureId() const;
 
 	private:
@@ -23,6 +25,7 @@ namespace ciri {
 
 	private:
 		int _flags;
+		TextureFormat::Type _format;
 		GLuint _textureId;
 		GLint _internalFormat;
 		GLenum _pixelFormat;

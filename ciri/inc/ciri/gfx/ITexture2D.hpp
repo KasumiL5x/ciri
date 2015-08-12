@@ -19,6 +19,8 @@ namespace ciri {
 
 		virtual int getWidth() const=0;
 		virtual int getHeight() const=0;
+
+		virtual bool writeToTGA( const char* file )=0;
 	};
 } // ciri
 

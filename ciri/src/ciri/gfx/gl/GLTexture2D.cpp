@@ -1,8 +1,9 @@
 #include <ciri/gfx/gl/GLTexture2D.hpp>
+#include <ciri/util/TGA.hpp>
 
 namespace ciri {
 	GLTexture2D::GLTexture2D( int flags )
-		: ITexture2D(flags), _flags(flags), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
+		: ITexture2D(flags), _flags(flags), _format(TextureFormat::Color), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {
 	}
 
 	GLTexture2D::~GLTexture2D() {
@@ -22,6 +23,7 @@ namespace ciri {
 		_width = (width > _width) ? width : _width;
 		_height = (height > _height) ? height : _height;
 
+		_format = format;
 		ciriFormatToGlFormat(format);
 
 		const int level = 0;
@@ -59,6 +61,34 @@ namespace ciri {
 
 	int GLTexture2D::getHeight() const {
 		return _height;
+	}
+
+	bool GLTexture2D::writeToTGA( const char* file ) {
+		// todo: return ciri error codes instead of a boolean
+		if( nullptr == file || 0 == _textureId ) {
+			return false;
+		}
+
+		GLuint tmpFbo;
+		glGenFramebuffers(1, &tmpFbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, tmpFbo);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _textureId, 0);
+
+		// todo: what if i want to support other formats in the future like floating point textures? another function probably!
+		unsigned char* pixels = new unsigned char[_width * _height * TextureFormat::bytesPerPixel(_format)];
+		glReadPixels(0, 0, _width, _height, _pixelFormat, GL_UNSIGNED_BYTE, pixels); // _pixelType
+		glDeleteFramebuffers(1, &tmpFbo);
+
+		if( !TGA::writeToFile(file, _width, _height, pixels, TextureFormat::hasAlpha(_format) ? TGA::RGBA : TGA::RGB, true) ) {
+			delete[] pixels;
+			pixels = nullptr;
+			return false;
+		}
+
+		delete[] pixels;
+		pixels = nullptr;
+
+		return true;
 	}
 
 	GLuint GLTexture2D::getTextureId() const {
