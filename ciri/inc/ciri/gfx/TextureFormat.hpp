@@ -17,7 +17,7 @@ namespace ciri {
 						return 4;
 				}
 
-				case RGB32_Float:
+				case RGB32_Float: // 3???
 				case RGBA32_Float: {
 						return 4;
 				}
@@ -26,6 +26,11 @@ namespace ciri {
 					return -1;
 				}
 			}
+		}
+
+		static bool hasAlpha( Type type ) {
+			return (Color == type) ||
+						 (RGBA32_Float == type);
 		}
 	};
 } // ciri
