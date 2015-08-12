@@ -132,4 +132,40 @@ namespace ciri {
 	unsigned char* TGA::getPixels() const {
 		return _pixels;
 	}
+
+	bool TGA::writeToFile( const char* file, unsigned int width, unsigned int height, unsigned char* pixels, Format format, bool swap ) {
+		if( nullptr == file || nullptr == pixels ) {
+			return false;
+		}
+		std::ofstream out(file, std::ios::binary);
+		if( !out.is_open() ) {
+			return false;
+		}
+
+		Header header;
+		header.idLength = 0;
+		header.colorMapType = 0;
+		header.imageType = 2; // uncompressed
+		header.firstEntryIndex = 0;
+		header.colorMapLength = 0;
+		header.colorMapEntrySize = 0;
+		header.xOrigin = 0;
+		header.yOrigin = 0;
+		header.imageWidth = width;
+		header.imageHeight = height;
+		header.pixelDepth = (RGB == format) ? 24 : 32;;
+		header.imageDesc = (RGB == format) ? 0 : 8;
+		out.write((char*)&header, sizeof(Header));
+
+		const int bpp = (RGB == format) ? 3 : 4;
+		if( swap ) {
+			for( int i = 0; i < (bpp * width * height); i += bpp ) {
+				pixels[i] ^= pixels[i+2] ^= pixels[i] ^= pixels[i+2];
+			}
+		}
+		out.write((char*)pixels, width * height * bpp);
+
+		out.close();
+		return true;
+	}
 } // ciri

@@ -40,6 +40,19 @@ namespace ciri {
 		int getHeight() const;
 		unsigned char* getPixels() const;
 
+		/**
+		 * Writes pixels to a file.
+		 * @param[in] file The output image file.
+		 * @param[in] width The width of the image in pixels.
+		 * @param[in] height The height of the image in pixels.
+		 * @param[in] pixels A pointer to an array of pixels.
+		 * @param[in] format The format to write the TGA in.
+		 * @param[in] swap Whether or not to swap the red and blue bits for each pixel (i.e. RGB->BGR or BGR->RGB).
+		 * @remarks When writing data, the pixels pointer will be read width*height*bpp, where bpp is 3 for RGB formats or 4 for RGBA formats.
+		 *          If swapping is requested, the provided pixels pointer is directly modified and a copy is not created.
+		 */
+		static bool writeToFile( const char* file, unsigned int width, unsigned int height, unsigned char* pixels, Format format, bool swap );
+
 	private:
 		Format _format;
 		int _width;
