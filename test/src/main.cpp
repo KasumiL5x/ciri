@@ -300,7 +300,7 @@ int main() {
 		graphicsDevice->present();
 
 		if( currKeyState.isKeyDown(ciri::Keyboard::F2) && prevKeyState.isKeyUp(ciri::Keyboard::F2) ) {
-			if( !renderTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/rendertarget.dds") ) {
+			if( ciri::err::failed(renderTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/rendertarget.dds")) ) {
 				printf("Failed to write rendertarget to file.\n");
 			} else {
 				printf("Successfully written rendertarget to file.\n");

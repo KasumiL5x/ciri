@@ -63,10 +63,10 @@ namespace ciri {
 		return _height;
 	}
 
-	bool GLTexture2D::writeToTGA( const char* file ) {
+	err::ErrorCode GLTexture2D::writeToTGA( const char* file ) {
 		// todo: return ciri error codes instead of a boolean
 		if( nullptr == file || 0 == _textureId ) {
-			return false;
+			return err::CIRI_UNKNOWN_ERROR; // todo
 		}
 
 		GLuint tmpFbo;
@@ -82,18 +82,18 @@ namespace ciri {
 		if( !TGA::writeToFile(file, _width, _height, pixels, TextureFormat::hasAlpha(_format) ? TGA::RGBA : TGA::RGB, true) ) {
 			delete[] pixels;
 			pixels = nullptr;
-			return false;
+			return err::CIRI_UNKNOWN_ERROR; // todo
 		}
 
 		delete[] pixels;
 		pixels = nullptr;
 
-		return true;
+		return err::CIRI_OK;
 	}
 
-	bool GLTexture2D::writeToDDS( const char* file ) {
+	err::ErrorCode GLTexture2D::writeToDDS( const char* file ) {
 		// not supported
-		return false;
+		return err::CIRI_NOT_IMPLEMENTED;;
 	}
 
 	GLuint GLTexture2D::getTextureId() const {
