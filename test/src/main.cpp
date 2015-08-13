@@ -23,7 +23,7 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
 const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 
 void enableMemoryLeakChecking();
@@ -300,7 +300,7 @@ int main() {
 		graphicsDevice->present();
 
 		if( currKeyState.isKeyDown(ciri::Keyboard::F2) && prevKeyState.isKeyUp(ciri::Keyboard::F2) ) {
-			if( !renderTarget->getTexture2D()->writeToTGA("C:/Users/kasum/Desktop/rendertarget.tga") ) {
+			if( !renderTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/rendertarget.dds") ) {
 				printf("Failed to write rendertarget to file.\n");
 			} else {
 				printf("Successfully written rendertarget to file.\n");

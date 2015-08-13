@@ -17,6 +17,7 @@ namespace ciri {
 		virtual int getHeight() const;
 
 		virtual bool writeToTGA( const char* file );
+		virtual bool writeToDDS( const char* file );
 
 		GLuint getTextureId() const;
 

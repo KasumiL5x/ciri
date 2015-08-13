@@ -19,6 +19,9 @@
     <Filter Include="input">
       <UniqueIdentifier>{2b1202f0-e285-4e82-a97e-b0cdf9f5a380}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gfx\dx\msft">
+      <UniqueIdentifier>{f997e1d8-0ca1-430a-afac-bf635fc7ac5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ciri\wnd\Window.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="..\src\ciri\gfx\dx\DXDepthStencilState.cpp">
       <Filter>gfx\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.cpp">
+      <Filter>gfx\dx\msft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -279,6 +285,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\TextureFlags.hpp">
       <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h">
+      <Filter>gfx\dx\msft</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -91,6 +91,11 @@ namespace ciri {
 		return true;
 	}
 
+	bool GLTexture2D::writeToDDS( const char* file ) {
+		// not supported
+		return false;
+	}
+
 	GLuint GLTexture2D::getTextureId() const {
 		return _textureId;
 	}
