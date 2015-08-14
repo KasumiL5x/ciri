@@ -126,6 +126,9 @@
     <ClCompile Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.cpp">
       <Filter>gfx\dx\msft</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\util\Log.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -288,6 +291,12 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h">
       <Filter>gfx\dx\msft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\gl\CheckGLError.hpp">
+      <Filter>gfx\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\util\Log.hpp">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
