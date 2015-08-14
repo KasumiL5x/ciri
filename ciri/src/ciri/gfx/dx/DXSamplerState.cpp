@@ -80,7 +80,7 @@ namespace ciri {
 			}
 
 			default: {
-				return D3D11_TEXTURE_ADDRESS_WRAP; // no fail available
+				return D3D11_TEXTURE_ADDRESS_WRAP;
 			}
 		}
 	}
@@ -120,7 +120,7 @@ namespace ciri {
 			}
 
 			default: {
-				return D3D11_COMPARISON_NEVER; // no fail available
+				return D3D11_COMPARISON_NEVER;
 			}
 		}
 	}

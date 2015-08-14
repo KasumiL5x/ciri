@@ -82,15 +82,12 @@ namespace ciri {
 			}
 
 			default: {
-				return GL_REPEAT; // dx has no fail, so match its default return type
+				return GL_REPEAT;
 			}
 		}
 	}
 
 	void GLSamplerState::ciriToGlFilter( SamplerFilter::Mode mode, GLint* outMin, GLint* outMag, bool mipmaps ) const {
-		// note: mag can only be nearest or linear; min controls everything else
-		// https://www.opengl.org/wiki/Sampler_Object#Filtering
-
 		// from monogame
 		switch( mode ) {
 			case SamplerFilter::Point: {
@@ -176,7 +173,7 @@ namespace ciri {
 			}
 
 			default: {
-				return GL_NEVER; // dx has no fail, so match it
+				return GL_NEVER;
 			}
 		}
 	}

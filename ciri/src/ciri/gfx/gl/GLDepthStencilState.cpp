@@ -48,7 +48,7 @@ namespace ciri {
 				return GL_NOTEQUAL;
 			}
 			default: {
-					throw; // todo: throw all? return a default and print an error? idk yet
+					return GL_LESS;
 			}
 		}
 	}
@@ -80,7 +80,7 @@ namespace ciri {
 				return GL_INVERT;
 			}
 			default: {
-				throw;
+				return GL_KEEP;
 			}
 		}
 	}

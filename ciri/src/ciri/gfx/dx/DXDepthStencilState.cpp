@@ -94,7 +94,7 @@ namespace ciri {
 				return D3D11_COMPARISON_NOT_EQUAL;
 			}
 			default: {
-					throw; // todo: throw all? return a default and print an error? idk yet
+					return D3D11_COMPARISON_LESS;
 			}
 		}
 	}
@@ -126,7 +126,7 @@ namespace ciri {
 				return D3D11_STENCIL_OP_INVERT;
 			}
 			default: {
-				throw;
+				return D3D11_STENCIL_OP_KEEP;
 			}
 		}
 	}
