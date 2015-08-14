@@ -64,6 +64,7 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\CheckGLError.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLDepthStencilState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLGraphicsDevice.hpp" />
