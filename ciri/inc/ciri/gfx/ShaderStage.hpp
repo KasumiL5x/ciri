@@ -2,8 +2,7 @@
 #define __ciri_shaderstage__
 
 namespace ciri {
-	class ShaderStage {
-	public:
+	struct ShaderStage {
 		enum Stage {
 			Vertex   = (1 << 0),
 			Geometry = (1 << 1),

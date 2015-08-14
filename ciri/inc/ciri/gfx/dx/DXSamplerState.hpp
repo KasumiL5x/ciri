@@ -20,7 +20,7 @@ namespace ciri {
 	private:
 		D3D11_TEXTURE_ADDRESS_MODE ciriToDxWrap( SamplerWrap::Mode mode ) const;
 		D3D11_COMPARISON_FUNC ciriToDxFunc( SamplerComparison::Mode mode ) const;
-		D3D11_FILTER ciriToDxFilter( SamplerFilter::Mode mode, bool comparison ) const;
+		D3D11_FILTER ciriToDxFilter( SamplerFilter::Filter mode, bool comparison ) const;
 
 	private:
 		DXGraphicsDevice* _device;

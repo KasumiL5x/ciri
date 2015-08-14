@@ -2,17 +2,16 @@
 #define __ciri_textureformat__
 
 namespace ciri {
-	class TextureFormat {
-	public:
-		enum Type {
+	struct TextureFormat {
+		enum Format {
 			Color = 0,		// unsigned 32bit ARGB; 8 bits per channel
 			RGB32_Float,
 			RGBA32_Float
 		};
 
 		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetSize
-		static int bytesPerPixel( Type type ) {
-			switch( type ) {
+		static int bytesPerPixel( Format format ) {
+			switch( format ) {
 				case Color: {
 						return 4;
 				}
@@ -23,14 +22,14 @@ namespace ciri {
 				}
 
 				default: {
-					return -1;
+					return 0;
 				}
 			}
 		}
 
-		static bool hasAlpha( Type type ) {
-			return (Color == type) ||
-						 (RGBA32_Float == type);
+		static bool hasAlpha( Format format ) {
+			return (Color == format) ||
+						 (RGBA32_Float == format);
 		}
 	};
 } // ciri

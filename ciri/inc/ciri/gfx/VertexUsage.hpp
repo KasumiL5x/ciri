@@ -2,9 +2,8 @@
 #define __ciri_vertexusage__
 
 namespace ciri {
-	class VertexUsage {
-	public:
-		enum Type {
+	struct VertexUsage {
+		enum Usage {
 			Position,
 			Color,
 			Texcoord,

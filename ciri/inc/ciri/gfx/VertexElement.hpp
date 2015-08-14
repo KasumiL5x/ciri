@@ -8,18 +8,18 @@ namespace ciri {
 	class VertexElement {
 	public:
 		VertexElement();
-		VertexElement( VertexFormat::Type format, VertexUsage::Type usage, int usageIndex );
+		VertexElement( VertexFormat::Format format, VertexUsage::Usage usage, int usageIndex );
 		~VertexElement();
 
-		VertexFormat::Type getFormat() const;
-		VertexUsage::Type getUsage() const;
+		VertexFormat::Format getFormat() const;
+		VertexUsage::Usage getUsage() const;
 		int getUsageIndex() const;
 		int getSize() const;
 		int getMultiplicity() const;
 
 	private:
-		VertexFormat::Type _format;
-		VertexUsage::Type _usage;
+		VertexFormat::Format _format;
+		VertexUsage::Usage _usage;
 		int _usageIndex;
 	};
 } // ciri

@@ -24,7 +24,7 @@ namespace ciri {
 		}
 	}
 
-	err::ErrorCode DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+	err::ErrorCode DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format ) {
 		// todo: some check about size differences when updating
 
 		_width = (width > _width) ? width : _width;
@@ -114,7 +114,7 @@ namespace ciri {
 		return _shaderResourceView;
 	}
 
-	DXGI_FORMAT DXTexture2D::ciriToDxFormat( TextureFormat::Type format ) const {
+	DXGI_FORMAT DXTexture2D::ciriToDxFormat( TextureFormat::Format format ) const {
 		switch( format ) {
 			case TextureFormat::Color: {
 				return DXGI_FORMAT_R8G8B8A8_UNORM;

@@ -2,16 +2,14 @@
 #define __ciri_irasterizerstate__
 
 namespace ciri {
-	class FillMode {
-	public:
+	struct  FillMode {
 		enum Mode {
 			Solid,
 			Wireframe
 		};
 	};
 
-	class CullMode {
-	public:
+	struct CullMode {
 		enum Mode {
 			None,
 			Clockwise,

@@ -2,8 +2,7 @@
 #define __ciri_clearflags__
 
 namespace ciri {
-	class ClearFlags {
-	public:
+	struct ClearFlags {
 		enum Flags {
 			Color		=	(1 << 0),
 			Depth		=	(1 << 1),

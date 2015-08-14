@@ -17,7 +17,7 @@ namespace ciri {
 		}
 	}
 
-	err::ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format ) {
+	err::ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format ) {
 		// todo: some check about size differences when updating
 
 		_width = (width > _width) ? width : _width;
@@ -100,7 +100,7 @@ namespace ciri {
 		return _textureId;
 	}
 
-	void GLTexture2D::ciriFormatToGlFormat( TextureFormat::Type ciriFormat ) {
+	void GLTexture2D::ciriFormatToGlFormat( TextureFormat::Format ciriFormat ) {
 		// http://www.opentk.com/files/doc/namespace_open_t_k_1_1_graphics_1_1_open_g_l.html#ae0f3f1e7b978e4937984b34fdebabf62a8f0fb883eb5a52838534191513e365a2
 		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetGLFormat
 		_internalFormat = GL_RGBA;

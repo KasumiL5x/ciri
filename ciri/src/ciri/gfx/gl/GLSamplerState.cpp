@@ -87,7 +87,7 @@ namespace ciri {
 		}
 	}
 
-	void GLSamplerState::ciriToGlFilter( SamplerFilter::Mode mode, GLint* outMin, GLint* outMag, bool mipmaps ) const {
+	void GLSamplerState::ciriToGlFilter( SamplerFilter::Filter mode, GLint* outMin, GLint* outMag, bool mipmaps ) const {
 		// from monogame
 		switch( mode ) {
 			case SamplerFilter::Point: {

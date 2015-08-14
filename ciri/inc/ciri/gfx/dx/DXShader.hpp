@@ -38,7 +38,7 @@ namespace ciri {
 		const std::vector<DXConstantBuffer*>& getPixelConstants() const;
 
 	private:
-		DXGI_FORMAT convertInputFormat( VertexFormat::Type type ) const;
+		DXGI_FORMAT convertInputFormat( VertexFormat::Format format ) const;
 
 	private:
 		DXGraphicsDevice* _device;
@@ -55,7 +55,7 @@ namespace ciri {
 		VertexDeclaration _vertexDeclaration;
 		std::string _lastError;
 		//
-		std::unordered_map<VertexUsage::Type, std::string> _dxUsageStrings;
+		std::unordered_map<VertexUsage::Usage, std::string> _dxUsageStrings;
 		//
 		std::unordered_map<std::string, int> _vertexConstantBufferIndices;
 		std::unordered_map<std::string, int> _geometryConstantBufferIndices;

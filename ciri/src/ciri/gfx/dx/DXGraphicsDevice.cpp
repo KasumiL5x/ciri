@@ -159,7 +159,7 @@ namespace ciri {
 		return buffer;
 	}
 
-	ITexture2D* DXGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Type format, int flags, void* pixels ) {
+	ITexture2D* DXGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
@@ -186,7 +186,7 @@ namespace ciri {
 		return dxSampler;
 	}
 
-	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Type format ) {
+	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
 		DXTexture2D* texture = reinterpret_cast<DXTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
 		if( nullptr == texture ) {
 			return nullptr;
@@ -332,7 +332,7 @@ namespace ciri {
 		}
 	}
 
-	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex ) {
+	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) {
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -357,7 +357,7 @@ namespace ciri {
 		_context->Draw(vertexCount, startIndex);
 	}
 
-	void DXGraphicsDevice::drawIndexed( PrimitiveTopology::Type topology, int indexCount ) {
+	void DXGraphicsDevice::drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) {
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -650,7 +650,7 @@ namespace ciri {
 		return true;
 	}
 
-	D3D_PRIMITIVE_TOPOLOGY DXGraphicsDevice::convertTopology( PrimitiveTopology::Type topology ) const {
+	D3D_PRIMITIVE_TOPOLOGY DXGraphicsDevice::convertTopology( PrimitiveTopology::Topology topology ) const {
 		switch( topology ) {
 			case PrimitiveTopology::PointList: {
 				return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;

@@ -11,7 +11,7 @@ namespace ciri {
 		virtual ~GLTexture2D();
 
 		virtual void destroy();
-		virtual err::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format );
+		virtual err::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format );
 
 		virtual int getWidth() const;
 		virtual int getHeight() const;
@@ -22,11 +22,11 @@ namespace ciri {
 		GLuint getTextureId() const;
 
 	private:
-		void ciriFormatToGlFormat( TextureFormat::Type ciriFormat );
+		void ciriFormatToGlFormat( TextureFormat::Format ciriFormat );
 
 	private:
 		int _flags;
-		TextureFormat::Type _format;
+		TextureFormat::Format _format;
 		GLuint _textureId;
 		GLint _internalFormat;
 		GLenum _pixelFormat;

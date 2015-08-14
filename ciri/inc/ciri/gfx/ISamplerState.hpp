@@ -3,8 +3,7 @@
 
 namespace ciri {
 
-	class SamplerWrap {
-	public:
+	struct SamplerWrap {
 		enum Mode {
 			Wrap,
 			Mirror,
@@ -14,9 +13,8 @@ namespace ciri {
 		};
 	};
 
-	class SamplerFilter {
-	public:
-		enum Mode {
+	struct SamplerFilter {
+		enum Filter {
 			Point,
 			Linear,
 			Anisotropic,
@@ -29,8 +27,7 @@ namespace ciri {
 		};
 	};
 
-	class SamplerComparison {
-	public:
+	struct SamplerComparison {
 		enum Mode {
 			Never,
 			Always,
@@ -47,7 +44,7 @@ namespace ciri {
 		SamplerWrap::Mode wrapU;
 		SamplerWrap::Mode wrapV;
 		SamplerWrap::Mode wrapW;
-		SamplerFilter::Mode filter;
+		SamplerFilter::Filter filter;
 		int maxAnisotropy;
 		float borderColor[4];
 		float minLod;

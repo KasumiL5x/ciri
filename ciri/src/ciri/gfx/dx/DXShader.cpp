@@ -345,8 +345,8 @@ namespace ciri {
 		return _pixelConstantBuffers;
 	}
 
-	DXGI_FORMAT DXShader::convertInputFormat( VertexFormat::Type type ) const {
-		switch( type ) {
+	DXGI_FORMAT DXShader::convertInputFormat( VertexFormat::Format format ) const {
+		switch( format ) {
 			case VertexFormat::Float: {
 				return DXGI_FORMAT_R32_FLOAT;
 			}

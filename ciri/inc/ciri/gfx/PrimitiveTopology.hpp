@@ -2,9 +2,8 @@
 #define __ciri_primitivetopology__
 
 namespace ciri {
-	class PrimitiveTopology {
-	public:
-		enum Type {
+	struct PrimitiveTopology {
+		enum Topology {
 			PointList,
 			LineList,
 			LineStrip,

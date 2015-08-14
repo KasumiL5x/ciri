@@ -33,9 +33,9 @@ namespace ciri {
 		virtual IVertexBuffer* createVertexBuffer();
 		virtual IIndexBuffer* createIndexBuffer();
 		virtual IConstantBuffer* createConstantBuffer();
-		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Type format, int flags, void* pixels=nullptr );
+		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr );
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
-		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Type format );
+		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc );
 
@@ -47,8 +47,8 @@ namespace ciri {
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
 
-		virtual void drawArrays( PrimitiveTopology::Type topology, int vertexCount, int startIndex );
-		virtual void drawIndexed( PrimitiveTopology::Type topology, int indexCount );
+		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex );
+		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount );
 
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
@@ -63,7 +63,7 @@ namespace ciri {
 
 	private:
 		bool initDevice( unsigned int width, unsigned int height, HWND hwnd );
-		D3D_PRIMITIVE_TOPOLOGY convertTopology( PrimitiveTopology::Type topology ) const;
+		D3D_PRIMITIVE_TOPOLOGY convertTopology( PrimitiveTopology::Topology topology ) const;
 
 	private:
 		IDXGISwapChain* _swapchain;

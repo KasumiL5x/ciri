@@ -13,7 +13,7 @@ namespace ciri {
 		virtual ~DXTexture2D();
 
 		virtual void destroy();
-		virtual err::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Type format );
+		virtual err::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format );
 
 		virtual int getWidth() const;
 		virtual int getHeight() const;
@@ -25,7 +25,7 @@ namespace ciri {
 		ID3D11ShaderResourceView* getShaderResourceView() const;
 
 	private:
-		DXGI_FORMAT ciriToDxFormat( TextureFormat::Type format ) const;
+		DXGI_FORMAT ciriToDxFormat( TextureFormat::Format format ) const;
 		UINT getMipLevels() const;
 		D3D11_USAGE getUsage() const;
 		UINT getBindFlags() const;
@@ -35,7 +35,7 @@ namespace ciri {
 	private:
 		DXGraphicsDevice* _device;
 		int _flags;
-		TextureFormat::Type _format;
+		TextureFormat::Format _format;
 		ID3D11Texture2D* _texture2D;
 		ID3D11ShaderResourceView* _shaderResourceView;
 		int _width;

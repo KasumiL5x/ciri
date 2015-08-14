@@ -125,7 +125,7 @@ namespace ciri {
 		}
 	}
 
-	D3D11_FILTER DXSamplerState::ciriToDxFilter( SamplerFilter::Mode mode, bool comparison ) const {
+	D3D11_FILTER DXSamplerState::ciriToDxFilter( SamplerFilter::Filter mode, bool comparison ) const {
 		int filter = 0;
 		switch( mode ) {
 			case SamplerFilter::Point: {
