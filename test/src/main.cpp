@@ -11,6 +11,7 @@
 #include <ciri/gfx/ObjModel.hpp>
 #include "Grid.hpp"
 #include "Axis.hpp"
+#include <ciri/util/Log.hpp>
 #if defined(_DEBUG)
 	#include <crtdbg.h>
 #endif
@@ -23,7 +24,7 @@ struct SimpleConstants {
 
 const int SCR_W = 1280;
 const int SCR_H = 720;
-const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::DirectX;
+const ciri::GraphicsDeviceFactory::DeviceType GRAPHICS_DEVICE_TYPE = ciri::GraphicsDeviceFactory::OpenGL;
 const std::string SHADER_EXT = (ciri::GraphicsDeviceFactory::OpenGL == GRAPHICS_DEVICE_TYPE) ? ".glsl" : ".hlsl";
 
 void enableMemoryLeakChecking();
@@ -55,9 +56,18 @@ ciri::ISamplerState* sampler0 = nullptr;
 ciri::IRasterizerState* rasterizerState = nullptr;
 ciri::IDepthStencilState* depthStencilState = nullptr;
 ciri::IRenderTarget2D* renderTarget = nullptr;
+ciri::Log logger;
 
 int main() {
 	enableMemoryLeakChecking();
+
+	if( !logger.open("log.txt") ) {
+		printf("Couldn't even open logfile... good luck.");
+		cleanup();
+		return -1;
+	}
+
+	logger.print("ciri test");
 
 	// create the window
 	if( !createWindow() ) {
