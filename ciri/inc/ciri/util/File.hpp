@@ -11,13 +11,14 @@ namespace ciri {
 		File( const char* file );
 		~File();
 
-		bool open( const char* file );
+		bool open( const char* file, bool append=true);
+		bool write( const std::string& msg );
 		void close();
-		std::string toString() const;
+		std::string toString();
 		bool isOpen() const;
 
 	private:
-		std::ifstream _stream;
+		std::fstream _stream;
 	};
 } // ciri
 
