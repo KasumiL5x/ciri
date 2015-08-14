@@ -42,6 +42,7 @@
     <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp" />
     <ClCompile Include="..\src\ciri\input\Input.cpp" />
     <ClCompile Include="..\src\ciri\util\File.cpp" />
+    <ClCompile Include="..\src\ciri\util\Log.cpp" />
     <ClCompile Include="..\src\ciri\util\TGA.cpp" />
     <ClCompile Include="..\src\ciri\util\Timer.cpp" />
     <ClCompile Include="..\src\ciri\wnd\Window.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="..\inc\ciri\gfx\VertexUsage.hpp" />
     <ClInclude Include="..\inc\ciri\input\Input.hpp" />
     <ClInclude Include="..\inc\ciri\util\File.hpp" />
+    <ClInclude Include="..\inc\ciri\util\Log.hpp" />
     <ClInclude Include="..\inc\ciri\util\StrUtil.hpp" />
     <ClInclude Include="..\inc\ciri\util\TGA.hpp" />
     <ClInclude Include="..\inc\ciri\util\Timer.hpp" />
@@ -150,7 +152,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_DEBUG;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -164,7 +166,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>NDEBUG;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
