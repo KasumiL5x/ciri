@@ -56,18 +56,13 @@ ciri::ISamplerState* sampler0 = nullptr;
 ciri::IRasterizerState* rasterizerState = nullptr;
 ciri::IDepthStencilState* depthStencilState = nullptr;
 ciri::IRenderTarget2D* renderTarget = nullptr;
-ciri::Log logger;
 
 int main() {
 	enableMemoryLeakChecking();
 
-	if( !logger.open("log.txt") ) {
-		printf("Couldn't even open logfile... good luck.");
-		cleanup();
-		return -1;
-	}
-
-	logger.print("ciri test");
+	// start the debug log file
+	ciri::Logs::get(ciri::Logs::Debug).open("debug.txt");
+	ciri::Logs::get(ciri::Logs::Debug).printInfo("Debug log started!");
 
 	// create the window
 	if( !createWindow() ) {

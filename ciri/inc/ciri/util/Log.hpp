@@ -2,6 +2,7 @@
 #define __ciri_log__
 
 #include <string>
+#include <unordered_map>
 #include "File.hpp"
 
 namespace ciri {
@@ -27,6 +28,20 @@ namespace ciri {
 		File _file;
 		bool _appendNewLine;
 		bool _prefixTimestamp;
+	};
+
+	class Logs {
+	public:
+		enum Channel {
+			Default,
+			Debug,
+			Custom
+		};
+
+		static Log& get( Channel channel );
+
+	private:
+		static std::unordered_map<Channel, Log> _logs;
 	};
 } // ciri
 

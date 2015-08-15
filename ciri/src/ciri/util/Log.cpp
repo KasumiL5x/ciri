@@ -77,4 +77,9 @@ namespace ciri {
 
 		//return std::ctime(&timeT); // screw your ctime_s!  call the cops, idgaf!
 	}
+
+	std::unordered_map<Logs::Channel, Log> Logs::_logs;
+	Log& Logs::get( Logs::Channel channel ) {
+		return Logs::_logs[channel];
+	}
 } // ciri
