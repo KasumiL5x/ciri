@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Axis.cpp" />
+    <ClCompile Include="..\src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
@@ -19,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Axis.hpp" />
+    <ClInclude Include="..\src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
+    <ClInclude Include="..\src\demos\IDemo.hpp" />
     <ClInclude Include="..\src\Grid.hpp" />
     <ClInclude Include="..\src\Model.hpp" />
     <ClInclude Include="..\src\ModelGen.hpp" />

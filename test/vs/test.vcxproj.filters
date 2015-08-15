@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\Axis.cpp" />
+    <ClCompile Include="..\src\Grid.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Model.cpp" />
+    <ClCompile Include="..\src\Transform.cpp" />
+    <ClCompile Include="..\src\demos\dynvb\DynamicVertexBufferDemo.cpp">
+      <Filter>demos\dynvb</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Axis.hpp" />
+    <ClInclude Include="..\src\Grid.hpp" />
+    <ClInclude Include="..\src\Model.hpp" />
+    <ClInclude Include="..\src\ModelGen.hpp" />
+    <ClInclude Include="..\src\Transform.hpp" />
+    <ClInclude Include="..\src\Vertex.hpp" />
+    <ClInclude Include="..\src\demos\dynvb\DynamicVertexBufferDemo.hpp">
+      <Filter>demos\dynvb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\demos\IDemo.hpp">
+      <Filter>demos</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="demos">
+      <UniqueIdentifier>{4b2de6ff-3dfd-4cea-9553-325ca2add14c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\dynvb">
+      <UniqueIdentifier>{07e28a53-d705-4262-b921-60c673cde53b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
