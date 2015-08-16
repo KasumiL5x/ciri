@@ -12,6 +12,7 @@ namespace ciri {
 
 		float getYaw() const;
 		float getPitch() const;
+		float getOffset() const;
 		cc::Vec3f getLocalUp() const;
 		cc::Vec3f getLocalRight() const;
 

@@ -18,6 +18,10 @@ namespace ciri {
 		return _pitch;
 	}
 
+	float MayaCamera::getOffset() const {
+		return _offset;
+	}
+
 	cc::Vec3f MayaCamera::getLocalUp() const {
 		const cc::Mat4f rotation = cc::math::rotate(_pitch, cc::Vec3f(1.0f, 0.0f, 0.0f)) *
 															 cc::math::rotate(_yaw, cc::Vec3f(0.0f, 1.0f, 0.0f));
