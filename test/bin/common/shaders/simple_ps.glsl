@@ -1,5 +1,11 @@
 #version 330
 
+layout (std140) uniform MaterialConstants {
+	vec3 diffuseColor;
+	int hasDiffuseTexture;
+	
+} Material;
+
 uniform sampler2D TestTexture;
 
 in vec3 vo_position;
@@ -34,7 +40,10 @@ void main() {
 	vec3 N = normalize(vo_normal);
 	vec3 lighting = AmbientLightColor + lambert(L, N, LightColor, 1.0f);
 	// texture sample
-	vec3 textureSample = texture(TestTexture, vo_texcoord).rgb;
+	vec3 textureSample = Material.diffuseColor;//vec3(Material.r, Material.g, Material.b);
+	if( Material.hasDiffuseTexture != 0 ) {
+		textureSample = texture(TestTexture, vo_texcoord).rgb;
+	}
 	// final
 	out_color = vec4(textureSample * lighting, 1.0f);
 }

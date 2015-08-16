@@ -1,3 +1,8 @@
+cbuffer SimpleConstants : register(b1) {
+	float3 diffuseColor;
+	int hasDiffuseTexture;
+};
+
 Texture2D TestTexture : register(t0);
 SamplerState TestSampler : register(s0);
 
@@ -34,7 +39,10 @@ float4 main( Input input ) : SV_Target {
 	float3 N = normalize(input.normal);
 	float3 lighting = AmbientLightColor + lambert(L, N, LightColor, 1.0f);
 	// texture sample
-	float3 textureSample = TestTexture.Sample(TestSampler, input.Tex).rgb;
+	float3 textureSample = diffuseColor;
+	if( hasDiffuseTexture != 0 ) {
+		textureSample = TestTexture.Sample(TestSampler, input.Tex).rgb;
+	}
 	// final
 	return float4(textureSample * lighting, 1.0f);
 }

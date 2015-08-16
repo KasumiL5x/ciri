@@ -13,12 +13,14 @@ public:
 
 	void addVertex( const Vertex& vertex );
 	void addIndex( int index );
+	bool addFromObj( const char* file );
 	bool build( ciri::IGraphicsDevice* device );
 
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
-
 	Transform& getXform();
+	ciri::IShader* getShader() const;
+	void setShader( ciri::IShader* val );
 
 private:
 	std::vector<Vertex> _vertices;
@@ -26,6 +28,7 @@ private:
 	ciri::IVertexBuffer* _vertexBuffer;
 	ciri::IIndexBuffer* _indexBuffer;
 	Transform _xform;
+	ciri::IShader* _shader;
 };
 
 #endif /* __test_model__ */

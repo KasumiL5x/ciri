@@ -44,8 +44,8 @@ bool Axis::create( float length, const std::string& shaderExt, ciri::IGraphicsDe
 	}
 
 	_shader = device->createShader();
-	_shader->addVertexShader(("data/axis_vs" + shaderExt).c_str());
-	_shader->addPixelShader(("data/axis_ps" + shaderExt).c_str());
+	_shader->addVertexShader(("common/shaders/axis_vs" + shaderExt).c_str());
+	_shader->addPixelShader(("common/shaders/axis_ps" + shaderExt).c_str());
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
 	if( ciri::err::failed(_shader->build()) ) {

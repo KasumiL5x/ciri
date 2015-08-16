@@ -1,9 +1,10 @@
 #include "Model.hpp"
 #include <ciri/gfx/IVertexBuffer.hpp>
 #include <ciri/gfx/IIndexBuffer.hpp>
+#include <ciri/gfx/ObjModel.hpp>
 
 Model::Model()
-	: _vertexBuffer(nullptr), _indexBuffer(nullptr) {
+	: _vertexBuffer(nullptr), _indexBuffer(nullptr), _shader(nullptr) {
 }
 
 Model::~Model() {
@@ -15,6 +16,35 @@ void Model::addVertex( const Vertex& vertex ) {
 
 void Model::addIndex( int index ){
 	_indices.push_back(index);
+}
+
+bool Model::addFromObj( const char* file ) {
+	ciri::ObjModel obj;
+	if( !obj.parse(file) ) {
+		return false;
+	}
+
+	_vertices.clear();
+	_indices.clear();
+
+	const std::vector<cc::Vec3f>& positions = obj.getPositions();
+	const std::vector<cc::Vec3f>& normals = obj.getNormals();
+	const std::vector<cc::Vec2f>& texcoords = obj.getTexcoords();
+	const std::vector<ciri::ObjModel::ObjVertex>& objVertices = obj.getVertices();
+
+	if( objVertices.size() == 0 ) {
+		return false;
+	}
+
+	for( unsigned int i = 0; i < objVertices.size(); ++i ) {
+		Vertex vert;
+		vert.position = positions[objVertices[i].position];
+		vert.normal = normals[objVertices[i].normal];
+		vert.texcoord = texcoords[objVertices[i].texcoord];
+		_vertices.push_back(vert);
+	}
+
+	return true;
 }
 
 bool Model::build( ciri::IGraphicsDevice* device ) {
@@ -60,4 +90,12 @@ ciri::IIndexBuffer* Model::getIndexBuffer() const {
 
 Transform& Model::getXform() {
 	return _xform;
+}
+
+ciri::IShader* Model::getShader() const {
+	return _shader;
+}
+
+void Model::setShader( ciri::IShader* val ) {
+	_shader = val;
 }

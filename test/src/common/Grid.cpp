@@ -167,8 +167,8 @@ bool Grid::createBuffers() {
 
 bool Grid::loadShader( const std::string& shaderExt ) {
 	_shader = _device->createShader();
-	_shader->addVertexShader(("data/grid_vs" + shaderExt).c_str());
-	_shader->addPixelShader(("data/grid_ps" + shaderExt).c_str());
+	_shader->addVertexShader(("common/shaders/grid_vs" + shaderExt).c_str());
+	_shader->addPixelShader(("common/shaders/grid_ps" + shaderExt).c_str());
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
 	if( ciri::err::failed(_shader->build()) ) {
