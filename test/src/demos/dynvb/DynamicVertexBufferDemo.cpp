@@ -28,7 +28,7 @@ void DynamicVertexBufferDemo::onInitialize( ciri::Window* window, ciri::IGraphic
 	_camera.setYaw(247.9f);
 	_camera.setPitch(22.4f);
 	_camera.setOffset(49.5f);
-	_camera.setSensitivity(100.0f, 50.0f, 10.0f);
+	_camera.setSensitivity(1.0f, 1.0f, 0.25f);
 	_camera.setLerpStrength(100.0f);
 	_camera.resetPosition();
 }
@@ -87,21 +87,21 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		if( currMouseState.isButtonDown(ciri::MouseButton::Left) ) {
 			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
 			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
-			_camera.rotateYaw(-dx * deltaTime);
-			_camera.rotatePitch(-dy * deltaTime);
+			_camera.rotateYaw(-dx);
+			_camera.rotatePitch(-dy);
 		}
 		// dolly
 		if( currMouseState.isButtonDown(ciri::MouseButton::Right) ) {
 			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
 			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
 			const float val = (fabsf(dx) > fabsf(dy)) ? dx : dy;
-			_camera.dolly(val * deltaTime);
+			_camera.dolly(val);
 		}
 		// pan
 		if( currMouseState.isButtonDown(ciri::MouseButton::Middle) ) {
 			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
 			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
-			_camera.pan(dx * deltaTime, -dy * deltaTime);
+			_camera.pan(dx, -dy);
 		}
 	}
 	_camera.update(deltaTime);
