@@ -11,15 +11,16 @@ namespace ciri {
 		Log();
 		~Log();
 
-		bool open( const char* file );
-		bool print( const std::string& msg );
-		bool printInfo( const std::string& msg );
-		bool printWarning( const std::string& msg );
-		bool printError( const std::string& msg );
-		void close();
+		void print( const std::string& msg );
+		void printInfo( const std::string& msg );
+		void printWarning( const std::string& msg );
+		void printError( const std::string& msg );
 
+		bool setFile( const char* file );
+		void closeFile();
 		void setAppendNewLine( bool val );
 		void setPrefixTimestamp( bool val );
+		void setLogToStd( bool val );
 
 	private:
 		std::string generateTimestampString() const;
@@ -28,6 +29,7 @@ namespace ciri {
 		File _file;
 		bool _appendNewLine;
 		bool _prefixTimestamp;
+		bool _logToStd;
 	};
 
 	class Logs {
