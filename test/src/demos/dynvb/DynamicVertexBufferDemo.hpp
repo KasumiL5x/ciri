@@ -33,6 +33,9 @@ private:
 	ciri::KeyboardState _prevKeyState;
 	ciri::MouseState _prevMouseState;
 	//
+	ciri::IDepthStencilState* _depthStencilState;
+	ciri::IRasterizerState* _rasterizerState;
+	//
 	Grid _grid;
 	Axis _axis;
 	//

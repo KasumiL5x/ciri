@@ -2,7 +2,7 @@
 #include <ciri/util/Log.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
-	: IDemo(), _graphicsDevice(nullptr), _window(nullptr) {
+	: IDemo(), _graphicsDevice(nullptr), _window(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr) {
 }
 
 DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
@@ -34,6 +34,19 @@ void DynamicVertexBufferDemo::onInitialize( ciri::Window* window, ciri::IGraphic
 }
 
 void DynamicVertexBufferDemo::onLoadContent() {
+	ciri::DepthStencilDesc depthDesc;
+	_depthStencilState = _graphicsDevice->createDepthStencilState(depthDesc);
+	if( nullptr == _depthStencilState ) {
+		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create depth stencil state.");
+	}
+
+	ciri::RasterizerDesc rasterDesc;
+	rasterDesc.cullMode = ciri::CullMode::Clockwise;
+	_rasterizerState = _graphicsDevice->createRasterizerState(rasterDesc);
+	if( nullptr == _rasterizerState ) {
+		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create rasterizer state.");
+	}
+
 	if( !_grid.create(_graphicsDevice, _shaderExtension) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create grid.");
 	}
@@ -112,7 +125,9 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 }
 
 void DynamicVertexBufferDemo::onDraw() {
-	_graphicsDevice->clear(ciri::ClearFlags::Color);
+	_graphicsDevice->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
+	_graphicsDevice->setDepthStencilState(_depthStencilState);
+	_graphicsDevice->setRasterizerState(_rasterizerState);
 
 	// camera's viewproj matrix
 	const cc::Mat4f cameraViewProj = _camera.getProj() * _camera.getView();
