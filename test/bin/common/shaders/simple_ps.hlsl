@@ -1,4 +1,4 @@
-cbuffer SimpleConstants : register(b1) {
+cbuffer MaterialConstants : register(b0) {
 	float3 diffuseColor;
 	int hasDiffuseTexture;
 };
