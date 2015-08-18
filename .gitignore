@@ -12,3 +12,5 @@ test/tmp
 test/bin/*.exe
 test/bin/*.ilk
 test/bin/*.pdb
+test/bin/*.iobj
+test/bin/*.ipdb
