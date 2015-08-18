@@ -17,6 +17,7 @@
     <ClCompile Include="..\src\common\ShaderPresets.cpp" />
     <ClCompile Include="..\src\common\Transform.cpp" />
     <ClCompile Include="..\src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
+    <ClCompile Include="..\src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +29,7 @@
     <ClInclude Include="..\src\common\Transform.hpp" />
     <ClInclude Include="..\src\common\Vertex.hpp" />
     <ClInclude Include="..\src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
+    <ClInclude Include="..\src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="..\src\demos\IDemo.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -20,6 +20,9 @@
     <ClCompile Include="..\src\common\ShaderPresets.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\demos\dynvb\OpenCloth.cpp">
+      <Filter>demos\dynvb</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\demos\dynvb\DynamicVertexBufferDemo.hpp">
@@ -48,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="..\src\common\ShaderPresets.hpp">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\demos\dynvb\OpenCloth.hpp">
+      <Filter>demos\dynvb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

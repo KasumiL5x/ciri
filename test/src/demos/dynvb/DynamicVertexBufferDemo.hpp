@@ -9,8 +9,14 @@
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"
+#include "OpenCloth.hpp"
 
 class DynamicVertexBufferDemo : public IDemo {
+private:
+	struct FlagVertex {
+		cc::Vec3f position;
+	};
+
 public:
 	DynamicVertexBufferDemo();
 	virtual ~DynamicVertexBufferDemo();
@@ -41,6 +47,8 @@ private:
 	//
 	SimpleShader _simpleShader;
 	Model _flagpole;
+	//
+	OpenCloth _cloth;
 };
 
 #endif /* __dynamicvertexbufferdemo__ */

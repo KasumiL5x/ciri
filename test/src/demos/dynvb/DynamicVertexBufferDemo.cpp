@@ -1,5 +1,6 @@
 #include "DynamicVertexBufferDemo.hpp"
 #include <ciri/util/Log.hpp>
+#include <cc/MatrixFunc.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
 	: IDemo(), _graphicsDevice(nullptr), _window(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr) {
@@ -41,7 +42,8 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	}
 
 	ciri::RasterizerDesc rasterDesc;
-	rasterDesc.cullMode = ciri::CullMode::Clockwise;
+	rasterDesc.cullMode = ciri::CullMode::None;//Clockwise;
+	rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = _graphicsDevice->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create rasterizer state.");
@@ -67,6 +69,8 @@ void DynamicVertexBufferDemo::onLoadContent() {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to load flag-pole.obj.");
 	}
 	_flagpole.setShader(_simpleShader.getShader());
+
+	_cloth.build(_graphicsDevice);
 }
 
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
@@ -118,6 +122,9 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		}
 	}
 	_camera.update(deltaTime);
+
+	// update cloth
+	_cloth.update(deltaTime);
 
 	// update previous input states
 	_prevKeyState = currKeyState;
@@ -172,6 +179,20 @@ void DynamicVertexBufferDemo::onDraw() {
 		} else {
 			_graphicsDevice->drawArrays(ciri::PrimitiveTopology::TriangleList, _flagpole.getVertexBuffer()->getVertexCount(), 0);
 		}
+	}
+
+	// render the cloth
+	if( true ) {
+		// todo: apply separate shader
+		// todo: update separate constants properly
+
+		_simpleShader.getConstants().world = cc::math::translate(cc::Vec3f(0, 18.25f, 4)) * cc::math::rotate(90.0f, cc::Vec3f::up());
+		_simpleShader.getConstants().xform = cameraViewProj * _simpleShader.getConstants().world;
+		_simpleShader.updateConstants();
+
+		_graphicsDevice->setVertexBuffer(_cloth.getVertexBuffer());
+		_graphicsDevice->setIndexBuffer(_cloth.getIndexBuffer());
+		_graphicsDevice->drawIndexed(ciri::PrimitiveTopology::TriangleList, _cloth.getIndexBuffer()->getIndexCount());
 	}
 
 	_graphicsDevice->present();
