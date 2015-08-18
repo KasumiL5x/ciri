@@ -16,7 +16,11 @@ namespace ciri {
 
 		// todo: add remapping (updating) support
 		if( _vbo != 0 ) {
-			return err::CIRI_NOT_IMPLEMENTED;
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, vertexStride * vertexCount, vertices);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			return err::CIRI_OK;
+			//return err::CIRI_NOT_IMPLEMENTED;
 		}
 
 		_vertexStride = vertexStride;
