@@ -28,6 +28,7 @@ public:
 	void setGravity( const cc::Vec3f& gravity );
 	void build( ciri::IGraphicsDevice* device );
 	void update( float deltaTime );
+	void clean();
 
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
@@ -39,7 +40,7 @@ private:
 	void computeForces( float deltaTime );
 	void integrateVerlet( float deltaTime );
 	void provotDynamicInverse();
-	void addSpring( int a, int b, float ks, float kd );
+	void addSpring( int* idx, int a, int b, float ks, float kd );
 	__forceinline cc::Vec3f getVerletVelocity( const cc::Vec3f& pos, const cc::Vec3f& lastPos, float deltaTime );
 	
 
@@ -49,22 +50,24 @@ private:
 	ciri::IGraphicsDevice* _device;
 	ciri::IVertexBuffer* _vertexBuffer;
 	ciri::IIndexBuffer* _indexBuffer;
-	std::vector<Vertex> _vertices;
-	std::vector<int> _indices;
+	Vertex* _vertices;
+	int* _indices;
 	//
 	int _divsX; // number of divisions in the x axis
 	int _divsY; // number of divisions in the y axis
 	int _totalPoints; // total number of points in the simulation
 	int _size; // scaling value for the points' positions
 	float _horizontalSize; // horizontal scaling value for the x coordinate of the points
-	std::vector<cc::Vec3f> _positions; // current positions of all points
-	std::vector<cc::Vec3f> _lastPositions; // previous positions of all points
-	std::vector<cc::Vec3f> _forces; // forces acting upon each point
-	std::vector<Spring> _springs; // all springs (structure, shear, bend)
+	cc::Vec3f* _positions; // current positions of all points
+	cc::Vec3f* _lastPositions; // previous positions of all points
+	cc::Vec3f* _forces; // forces acting upon each point
+	int _springCount;
+	Spring* _springs; // all springs (structure, shear, bend)
 	float _timeStep; // timestep to run the simulation at
 	float _timeAccumulator; // accumulator for knowing when to update
 	cc::Vec3f _gravity; // vvvvv
 	float _mass; // mass assigned to each particle (used for forces and integration)
+	float _invMass; // 1/mass for optimization
 	float _damping; // damping used to damp velocity
 	float _ksStruct; // ks term for structural springs
 	float _kdStruct; // kd term for structural springs

@@ -1,7 +1,8 @@
 #include "OpenCloth.hpp"
 
 OpenCloth::OpenCloth()
-	: _built(false), _device(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr) {
+	: _built(false), _device(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr), _vertices(nullptr), _indices(nullptr),
+		_positions(nullptr), _lastPositions(nullptr), _forces(nullptr), _springCount(0), _springs(nullptr) {
 	setDivisions(20, 20);
 	setSize(7);
 	setMass(1.0f);
@@ -14,6 +15,7 @@ OpenCloth::OpenCloth()
 }
 
 OpenCloth::~OpenCloth() {
+	clean();
 }
 
 void OpenCloth::setDivisions( int x, int y ) {
@@ -41,6 +43,7 @@ void OpenCloth::setMass( float mass ) {
 	}
 
 	_mass = mass;
+	_invMass = 1.0f / mass;
 }
 
 void OpenCloth::setDamping( float damping ) {
@@ -75,9 +78,9 @@ void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 
 	_device = device;
 
-	_positions.resize(_totalPoints);
-	_lastPositions.resize(_totalPoints);
-	_forces.resize(_totalPoints);
+	_positions = new cc::Vec3f[_totalPoints];
+	_lastPositions = new cc::Vec3f[_totalPoints];
+	_forces = new cc::Vec3f[_totalPoints];
 
 	// fill in positions
 	const int u = _divsX+1;
@@ -94,12 +97,23 @@ void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 		}
 	}
 
+	// compute number of springs and allocate space
+	_springCount = v * (u - 1); // horizontal structure springs
+	_springCount += u * (v - 1); // vertical structure springs
+	_springCount += ((v - 1) * (u - 1)) * 2; // shear springs
+	_springCount += (v * (u - 1)); // bend springs 1
+	_springCount += (u * (v - 1)); // bend springs 2
+	_springs = new Spring[_springCount];
+
+	// tracks which spring we are modifying; is incremented by addspring()
+	int currSpring = 0;
+
 	// horizontal structure springs
 	for( int l1 = 0; l1 < v; ++l1 ) {
 		for( int l2 = 0; l2 < (u - 1); ++l2 ) {
 			const int a = (l1 * u) + l2;
 			const int b = (l1 * u) + l2 + 1;
-			addSpring(a, b, _ksStruct, _kdStruct);
+			addSpring(&currSpring, a, b, _ksStruct, _kdStruct);
 		}
 	}
 	// vertical structure springs
@@ -107,7 +121,7 @@ void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 		for( int l2 = 0; l2 < (v - 1); ++l2 ) {
 			const int a = (l2 * u) + l1;
 			const int b = ((l2 + 1) * u) + l1;
-			addSpring(a, b, _ksStruct, _kdStruct);
+			addSpring(&currSpring, a, b, _ksStruct, _kdStruct);
 		}
 	}
 	// shear springs
@@ -115,10 +129,10 @@ void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 		for( int l2 = 0; l2 < (u - 1); ++l2 ) {
 			const int a1 = (l1 * u) + l2;
 			const int b1 = ((l1 + 1) * u) + l2 + 1;
-			addSpring(a1, b1, _ksShear, _kdShear);
+			addSpring(&currSpring, a1, b1, _ksShear, _kdShear);
 			const int a2 = ((l1 + 1) * u) + l2;
 			const int b2 = (l1 * u) + l2 + 1;
-			addSpring(a2, b2, _ksShear, _kdShear);
+			addSpring(&currSpring, a2, b2, _ksShear, _kdShear);
 		}
 	}
 	// bend springs
@@ -126,21 +140,21 @@ void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 		for( int l2 = 0; l2 < (u - 2); ++l2 ) {
 			const int a1 = (l1 * u) + l2;
 			const int b1 = (l1 * u) + l2 + 2;
-			addSpring(a1, b1, _ksBend, _kdBend);
+			addSpring(&currSpring, a1, b1, _ksBend, _kdBend);
 		}
 		const int a2 = (l1 * u) + (u - 3);
 		const int b2 = (l1 * u) + (u - 1);
-		addSpring(a2, b2, _ksBend, _kdBend);
+		addSpring(&currSpring, a2, b2, _ksBend, _kdBend);
 	}
 	for( int l1 = 0; l1 < u; ++l1 ) {
 		for( int l2 = 0; l2 < (v - 2); ++l2 ) {
 			const int a1 = (l2 * u) + l1;
 			const int b1 = ((l2 + 2) * u) + l1;
-			addSpring(a1, b1, _ksBend, _kdBend);
+			addSpring(&currSpring, a1, b1, _ksBend, _kdBend);
 		}
 		const int a2 = ((v - 3) * u) + l1;
 		const int b2 = ((v - 1) * u) + l1;
-		addSpring(a2, b2, _ksBend, _kdBend);
+		addSpring(&currSpring, a2, b2, _ksBend, _kdBend);
 	}
 
 	// create gpu stuff
@@ -160,6 +174,42 @@ void OpenCloth::update( float deltaTime ) {
 	updateGpuVertexBuffer();
 }
 
+void OpenCloth::clean() {
+	if( !_built ) {
+		return;
+	}
+
+	if( _springs != nullptr ) {
+		delete[] _springs;
+		_springs = nullptr;
+	}
+
+	if( _forces != nullptr ) {
+		delete[] _forces;
+		_forces = nullptr;
+	}
+
+	if( _lastPositions != nullptr ) {
+		delete[] _lastPositions;
+		_lastPositions = nullptr;
+	}
+
+	if( _positions != nullptr ) {
+		delete[] _positions;
+		_positions = nullptr;
+	}
+
+	if( _indices != nullptr ) {
+		delete[] _indices;
+		_indices = nullptr;
+	}
+
+	if( _vertices != nullptr ) {
+		delete[] _vertices;
+		_vertices = nullptr;
+	}
+}
+
 ciri::IVertexBuffer* OpenCloth::getVertexBuffer() const {
 	return _vertexBuffer;
 }
@@ -171,12 +221,13 @@ ciri::IIndexBuffer* OpenCloth::getIndexBuffer() const {
 void OpenCloth::createGpuBuffers() {
 	//  create the vertex buffer, allocate raw vertices, upload vertices to gpu
 	_vertexBuffer = _device->createVertexBuffer();
-	_vertices.resize(_totalPoints);
+	_vertices = new Vertex[_totalPoints];
 	updateGpuVertexBuffer();
 
 	// create index buffer, allocate and compute indices, upload indices to gpu
 	_indexBuffer = _device->createIndexBuffer();
-	_indices.resize(_divsX * _divsY * 2 * 3);
+	const int indexCount = _divsX * _divsY * 2 * 3;
+	_indices = new int[indexCount];
 	int* id = &_indices[0];
 	for( int i = 0; i < _divsY; ++i ) {
 		for( int j = 0; j < _divsX; ++j ) {
@@ -193,14 +244,14 @@ void OpenCloth::createGpuBuffers() {
 			}
 		}
 	}
-	_indexBuffer->set(_indices.data(), _indices.size(), false);
+	_indexBuffer->set(_indices, indexCount, false);
 }
 
 void OpenCloth::updateGpuVertexBuffer() {
 	for( int i = 0; i < _totalPoints; ++i ) {
 		_vertices[i].position = _positions[i];
 	}
-	_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), true);
+	_vertexBuffer->set(_vertices, sizeof(Vertex), _totalPoints, true);
 }
 
 void OpenCloth::step( float deltaTime ) {
@@ -211,7 +262,7 @@ void OpenCloth::step( float deltaTime ) {
 
 void OpenCloth::computeForces( float deltaTime ) {
 	for( int i = 0; i < _totalPoints; ++i ) {
-		_forces[i] = cc::Vec3f::zero();
+		_forces[i].x = _forces[i].y = _forces[i].z = 0.0f;
 		const cc::Vec3f velocity = getVerletVelocity(_positions[i], _lastPositions[i], deltaTime);
 		if( (i != 0) && (i != _divsX) ) {
 			_forces[i] += _gravity * _mass;
@@ -219,11 +270,11 @@ void OpenCloth::computeForces( float deltaTime ) {
 		_forces[i] += _damping * velocity;
 	}
 
-	for( unsigned int i = 0; i < _springs.size(); ++i ) {
-		const cc::Vec3f p1 = _positions[_springs[i].p1];
-		const cc::Vec3f p1Last = _lastPositions[_springs[i].p1];
-		const cc::Vec3f p2 = _positions[_springs[i].p2];
-		const cc::Vec3f p2Last = _lastPositions[_springs[i].p2];
+	for( unsigned int i = 0; i < _springCount; ++i ) {
+		const cc::Vec3f& p1 = _positions[_springs[i].p1];
+		const cc::Vec3f& p1Last = _lastPositions[_springs[i].p1];
+		const cc::Vec3f& p2 = _positions[_springs[i].p2];
+		const cc::Vec3f& p2Last = _lastPositions[_springs[i].p2];
 
 		const cc::Vec3f v1 = getVerletVelocity(p1, p1Last, deltaTime);
 		const cc::Vec3f v2 = getVerletVelocity(p2, p2Last, deltaTime);
@@ -246,19 +297,19 @@ void OpenCloth::computeForces( float deltaTime ) {
 }
 
 void OpenCloth::integrateVerlet( float deltaTime ) {
-	const float deltaTime2Mass = (deltaTime * deltaTime) / _mass;
+	const float deltaTime2Mass = (deltaTime * deltaTime) * _invMass;
 
 	for( int i = 0; i < _totalPoints; ++i ) {
-		const cc::Vec3f buffer = _positions[i];
+		const cc::Vec3f tmp = _positions[i]; // copy
 		_positions[i] = _positions[i] + (_positions[i] - _lastPositions[i]) + deltaTime2Mass * _forces[i];
-		_lastPositions[i] = buffer;
+		_lastPositions[i] = tmp;
 	}
 }
 
 void OpenCloth::provotDynamicInverse() {
-	for( unsigned int i = 0; i < _springs.size(); ++i ) {
-		const cc::Vec3f p1 = _positions[_springs[i].p1];
-		const cc::Vec3f p2 = _positions[_springs[i].p2];
+	for( unsigned int i = 0; i < _springCount; ++i ) {
+		const cc::Vec3f& p1 = _positions[_springs[i].p1];
+		const cc::Vec3f& p2 = _positions[_springs[i].p2];
 		cc::Vec3f deltaP = p1 - p2;
 		float dist = deltaP.magnitude();
 		if( dist > _springs[i].restLength ) {
@@ -278,15 +329,15 @@ void OpenCloth::provotDynamicInverse() {
 	}
 }
 
-void OpenCloth::addSpring( int a, int b, float ks, float kd ) {
-	Spring spring;
-	spring.p1 = a;
-	spring.p2 = b;
-	spring.ks = ks;
-	spring.kd = kd;
+void OpenCloth::addSpring( int* idx, int a, int b, float ks, float kd ) {
+	_springs[*idx].p1 = a;
+	_springs[*idx].p2 = b;
+	_springs[*idx].ks = ks;
+	_springs[*idx].kd = kd;
 	const cc::Vec3f deltaP = _positions[a] - _positions[b];
-	spring.restLength = sqrtf(deltaP.dot(deltaP));
-	_springs.push_back(spring);
+	_springs[*idx].restLength = sqrtf(deltaP.dot(deltaP));
+
+	*idx += 1;
 }
 
 cc::Vec3f OpenCloth::getVerletVelocity( const cc::Vec3f& pos, const cc::Vec3f& lastPos, float deltaTime ) {

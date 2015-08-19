@@ -204,5 +204,6 @@ void DynamicVertexBufferDemo::onDraw() {
 }
 
 void DynamicVertexBufferDemo::onUnloadContent() {
+	_cloth.clean();
 	_grid.clean();
 }
