@@ -70,6 +70,11 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	}
 	_flagpole.setShader(_simpleShader.getShader());
 
+	_cloth.setDivisions(20, 20);
+	_cloth.setSize(7);
+	_cloth.setMass(1.0f);
+	_cloth.setDamping(-0.0125f);
+	_cloth.setGravity(cc::Vec3f(0.0f, -9.81f, 0.0f));
 	_cloth.build(_graphicsDevice);
 }
 
