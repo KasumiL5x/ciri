@@ -1,7 +1,7 @@
 #include "OpenCloth.hpp"
 
 OpenCloth::OpenCloth()
-	: _built(false), _device(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr), _vertices(nullptr), _indices(nullptr),
+	: _built(false), _device(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr), _vertices(nullptr), _indexCount(0), _indices(nullptr),
 		_positions(nullptr), _lastPositions(nullptr), _forces(nullptr), _springCount(0), _springs(nullptr) {
 	setDivisions(20, 20);
 	setSize(7);
@@ -171,6 +171,7 @@ void OpenCloth::update( float deltaTime ) {
 		_timeAccumulator -= _timeStep;
 	}
 
+	computeNormals();
 	updateGpuVertexBuffer();
 }
 
@@ -226,8 +227,8 @@ void OpenCloth::createGpuBuffers() {
 
 	// create index buffer, allocate and compute indices, upload indices to gpu
 	_indexBuffer = _device->createIndexBuffer();
-	const int indexCount = _divsX * _divsY * 2 * 3;
-	_indices = new int[indexCount];
+	_indexCount = _divsX * _divsY * 2 * 3;
+	_indices = new int[_indexCount];
 	int* id = &_indices[0];
 	for( int i = 0; i < _divsY; ++i ) {
 		for( int j = 0; j < _divsX; ++j ) {
@@ -244,7 +245,7 @@ void OpenCloth::createGpuBuffers() {
 			}
 		}
 	}
-	_indexBuffer->set(_indices, indexCount, false);
+	_indexBuffer->set(_indices, _indexCount, false);
 }
 
 void OpenCloth::updateGpuVertexBuffer() {
@@ -270,7 +271,7 @@ void OpenCloth::computeForces( float deltaTime ) {
 		_forces[i] += _damping * velocity;
 	}
 
-	for( unsigned int i = 0; i < _springCount; ++i ) {
+	for( int i = 0; i < _springCount; ++i ) {
 		const cc::Vec3f& p1 = _positions[_springs[i].p1];
 		const cc::Vec3f& p1Last = _lastPositions[_springs[i].p1];
 		const cc::Vec3f& p2 = _positions[_springs[i].p2];
@@ -307,7 +308,7 @@ void OpenCloth::integrateVerlet( float deltaTime ) {
 }
 
 void OpenCloth::provotDynamicInverse() {
-	for( unsigned int i = 0; i < _springCount; ++i ) {
+	for( int i = 0; i < _springCount; ++i ) {
 		const cc::Vec3f& p1 = _positions[_springs[i].p1];
 		const cc::Vec3f& p2 = _positions[_springs[i].p2];
 		cc::Vec3f deltaP = p1 - p2;
@@ -326,6 +327,22 @@ void OpenCloth::provotDynamicInverse() {
 				_positions[_springs[i].p2] += deltaP;
 			}
 		}
+	}
+}
+
+void OpenCloth::computeNormals() {
+	for( int i = 0; i < (_indexCount - 3); i += 3 ) {
+		const cc::Vec3f& p0 = _positions[_indices[i]];
+		const cc::Vec3f& p1 = _positions[_indices[i+1]];
+		const cc::Vec3f& p2 = _positions[_indices[i+2]];
+		const cc::Vec3f nrm = (p1 - p0).cross(p2 - p0);
+		_vertices[_indices[i]].normal += nrm;
+		_vertices[_indices[i+1]].normal += nrm;
+		_vertices[_indices[i+2]].normal += nrm;
+	}
+
+	for( int i = 0; i < _totalPoints; ++i ) {
+		_vertices[i].normal.normalize();
 	}
 }
 

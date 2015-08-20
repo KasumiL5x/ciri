@@ -40,6 +40,7 @@ private:
 	void computeForces( float deltaTime );
 	void integrateVerlet( float deltaTime );
 	void provotDynamicInverse();
+	void computeNormals();
 	void addSpring( int* idx, int a, int b, float ks, float kd );
 	__forceinline cc::Vec3f getVerletVelocity( const cc::Vec3f& pos, const cc::Vec3f& lastPos, float deltaTime );
 	
@@ -51,6 +52,7 @@ private:
 	ciri::IVertexBuffer* _vertexBuffer;
 	ciri::IIndexBuffer* _indexBuffer;
 	Vertex* _vertices;
+	int _indexCount;
 	int* _indices;
 	//
 	int _divsX; // number of divisions in the x axis
