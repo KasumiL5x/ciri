@@ -3,7 +3,8 @@
 #include <cc/MatrixFunc.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
-	: IDemo(), _graphicsDevice(nullptr), _window(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr) {
+	: IDemo(), _graphicsDevice(nullptr), _window(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr),
+		_clothRunning(true) {
 }
 
 DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
@@ -43,7 +44,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;//Clockwise;
-	rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = _graphicsDevice->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create rasterizer state.");
@@ -129,7 +130,12 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	_camera.update(deltaTime);
 
 	// update cloth
-	_cloth.update(deltaTime);
+	if( currKeyState.isKeyDown(ciri::Keyboard::P) && _prevKeyState.isKeyUp(ciri::Keyboard::P) ) {
+		_clothRunning = !_clothRunning;
+	}
+	if( _clothRunning ) {
+		_cloth.update(deltaTime);
+	}
 
 	// update previous input states
 	_prevKeyState = currKeyState;

@@ -49,6 +49,7 @@ private:
 	Model _flagpole;
 	//
 	OpenCloth _cloth;
+	bool _clothRunning;
 };
 
 #endif /* __dynamicvertexbufferdemo__ */
