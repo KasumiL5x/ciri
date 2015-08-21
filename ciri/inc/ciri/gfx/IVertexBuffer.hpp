@@ -11,6 +11,7 @@ namespace ciri {
 		virtual ~IVertexBuffer() {
 		}
 
+		// todo: don't require full buffer to be set (right now assumes entire buffer is being set)
 		virtual err::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic )=0;
 		virtual void destroy()=0;
 		virtual int getStride() const=0;

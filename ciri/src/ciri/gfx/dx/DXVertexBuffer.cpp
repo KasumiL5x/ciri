@@ -24,7 +24,14 @@ namespace ciri {
 
 		// todo: add remapping (updating) support
 		if( _vertexBuffer != nullptr ) {
-			return err::CIRI_NOT_IMPLEMENTED;
+			D3D11_MAPPED_SUBRESOURCE map;
+			ZeroMemory(&map, sizeof(map));
+			if( FAILED(_device->getContext()->Map(_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map)) ) {
+				return err::CIRI_UNKNOWN_ERROR; // todo
+			}
+			memcpy(map.pData, vertices, (vertexStride * vertexCount));
+			_device->getContext()->Unmap(_vertexBuffer, 0);
+			return err::CIRI_OK;
 		}
 
 		_vertexStride = vertexStride;

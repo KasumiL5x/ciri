@@ -12,7 +12,7 @@ DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
 
 DemoConfig DynamicVertexBufferDemo::getConfig() {
 	DemoConfig cfg;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
 	_shaderExtension = (ciri::GraphicsDeviceFactory::OpenGL == cfg.deviceType) ? ".glsl" : ".hlsl";
 	return cfg;
 }
