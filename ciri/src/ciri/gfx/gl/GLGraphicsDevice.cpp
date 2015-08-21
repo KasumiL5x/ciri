@@ -28,7 +28,7 @@ namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
 		: IGraphicsDevice(), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
 			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr),
-			_activeDepthStencilState(nullptr) {
+			_activeDepthStencilState(nullptr), _shaderExt(".glsl") {
 		// configure mrt draw buffers
 		for( int i = 0; i < MAX_MRTS; ++i ) {
 			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
@@ -514,6 +514,14 @@ namespace ciri {
 		glStencilMask(desc.stencilWriteMask);
 	}
 
+	void GLGraphicsDevice::setShaderExt( const char* ext ) {
+		_shaderExt = ext;
+	}
+
+	const char* GLGraphicsDevice::getShaderExt() const {
+		return _shaderExt.c_str();
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);
@@ -527,6 +535,8 @@ namespace ciri {
 			WGL_COLOR_BITS_ARB, 32,
 			WGL_DEPTH_BITS_ARB, 24,
 			WGL_STENCIL_BITS_ARB, 8,
+			WGL_SAMPLE_BUFFERS_ARB, 1,
+			WGL_SAMPLES_ARB, 1,
 			0
 		};
 		int pixelFormat;

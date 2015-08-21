@@ -6,6 +6,7 @@
 #pragma comment(lib, "glew32s.lib")
 
 #include <vector>
+#include <string>
 #include <Windows.h>
 #include <gl/glew.h>
 #include <gl/wglew.h>
@@ -61,6 +62,9 @@ namespace ciri {
 		virtual void setRasterizerState( IRasterizerState* state );
 		virtual void setDepthStencilState( IDepthStencilState* state );
 
+		virtual void setShaderExt( const char* ext );
+		virtual const char* getShaderExt() const;
+
 	private:
 		bool configureGl( HWND hwnd );
 		bool configureGlew();
@@ -100,6 +104,8 @@ namespace ciri {
 		//
 		std::vector<GLDepthStencilState*> _depthStencilStates;
 		IDepthStencilState* _activeDepthStencilState;
+		//
+		std::string _shaderExt;
 	};
 } // ciri
 

@@ -20,7 +20,7 @@ bool Axis::isValid() const {
 	return (_vertexBuffer != nullptr) && (_shader != nullptr) && (_constantsBuffer != nullptr);
 }
 
-bool Axis::create( float length, const std::string& shaderExt, ciri::IGraphicsDevice* device ) {
+bool Axis::create( float length, ciri::IGraphicsDevice* device ) {
 	std::vector<AxisVertex> vertices;
 	const cc::Vec3f RED = cc::Vec3f(1.0f, 0.0f, 0.0f);
 	const cc::Vec3f GREEN = cc::Vec3f(0.0f, 1.0f, 0.0f);
@@ -42,6 +42,8 @@ bool Axis::create( float length, const std::string& shaderExt, ciri::IGraphicsDe
 	if( ciri::err::failed(_vertexBuffer->set(vertices.data(), sizeof(AxisVertex), 6, false)) ) {
 		return false;
 	}
+
+	const std::string shaderExt = device->getShaderExt();
 
 	_shader = device->createShader();
 	_shader->addVertexShader(("common/shaders/axis_vs" + shaderExt).c_str());

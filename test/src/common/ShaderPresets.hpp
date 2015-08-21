@@ -30,7 +30,7 @@ public:
 	void* operator new( size_t i );
 	void operator delete( void* p );
 
-	bool create( ciri::IGraphicsDevice* device, const std::string& ext );
+	bool create( ciri::IGraphicsDevice* device );
 
 	ciri::IShader* getShader() const;
 	Constants& getConstants();

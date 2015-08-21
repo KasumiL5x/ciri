@@ -59,6 +59,9 @@ namespace ciri {
 
 		virtual void setRasterizerState( IRasterizerState* state )=0;
 		virtual void setDepthStencilState( IDepthStencilState* state )=0;
+
+		virtual void setShaderExt( const char* ext )=0;
+		virtual const char* getShaderExt() const=0;
 	};
 } // ciri
 

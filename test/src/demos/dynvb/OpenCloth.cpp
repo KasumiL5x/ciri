@@ -71,7 +71,7 @@ void OpenCloth::setGravity( const cc::Vec3f& gravity ) {
 	_gravity = gravity;
 }
 
-void OpenCloth::build( ciri::IGraphicsDevice* device, const std::string& shaderExt ) {
+void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 	if( _built ) {
 		return;
 	}
@@ -79,7 +79,7 @@ void OpenCloth::build( ciri::IGraphicsDevice* device, const std::string& shaderE
 	_device = device;
 
 	// gpu resources can fail, so create them first
-	if( !createGpuResources(shaderExt) ) {
+	if( !createGpuResources() ) {
 		return;
 	}
 
@@ -252,8 +252,9 @@ bool OpenCloth::updateConstants() {
 	return success;
 }
 
-bool OpenCloth::createGpuResources( const std::string& shaderExt ) {
+bool OpenCloth::createGpuResources() {
 	// create the shader
+	const std::string shaderExt = _device->getShaderExt();
 	_shader = _device->createShader();
 	_shader->addVertexShader(("dynvb/fabric_plaid_vs" + shaderExt).c_str());
 	_shader->addPixelShader(("dynvb/fabric_plaid_ps" + shaderExt).c_str());

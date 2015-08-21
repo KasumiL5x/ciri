@@ -35,7 +35,7 @@ public:
 	void setDamping( float damping );
 	void setSpringParams( float structKs, float structKd, float shearKs, float shearKd, float bendKs, float bendKd );
 	void setGravity( const cc::Vec3f& gravity );
-	void build( ciri::IGraphicsDevice* device, const std::string& shaderExt );
+	void build( ciri::IGraphicsDevice* device );
 	void update( float deltaTime );
 	void clean();
 
@@ -48,7 +48,7 @@ public:
 	bool updateConstants();
 
 private:
-	bool createGpuResources( const std::string& shaderExt );
+	bool createGpuResources();
 	void createGpuBuffers();
 	void updateGpuVertexBuffer();
 	void step( float deltaTime );

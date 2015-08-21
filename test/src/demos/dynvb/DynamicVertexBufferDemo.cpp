@@ -13,7 +13,6 @@ DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
 DemoConfig DynamicVertexBufferDemo::getConfig() {
 	DemoConfig cfg;
 	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
-	_shaderExtension = (ciri::GraphicsDeviceFactory::OpenGL == cfg.deviceType) ? ".glsl" : ".hlsl";
 	return cfg;
 }
 
@@ -50,15 +49,15 @@ void DynamicVertexBufferDemo::onLoadContent() {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create rasterizer state.");
 	}
 
-	if( !_grid.create(_graphicsDevice, _shaderExtension) ) {
+	if( !_grid.create(_graphicsDevice) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create grid.");
 	}
 
-	if( !_axis.create(5.0f, _shaderExtension, _graphicsDevice) ) {
+	if( !_axis.create(5.0f, _graphicsDevice) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create axis.");
 	}
 
-	if( !_simpleShader.create(_graphicsDevice, _shaderExtension) ) {
+	if( !_simpleShader.create(_graphicsDevice) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create simple shader.");
 	}
 
@@ -76,7 +75,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	_cloth.setMass(1.0f);
 	_cloth.setDamping(-0.0125f);
 	_cloth.setGravity(cc::Vec3f(0.0f, -9.81f, 0.0f));
-	_cloth.build(_graphicsDevice, _shaderExtension);
+	_cloth.build(_graphicsDevice);
 }
 
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {

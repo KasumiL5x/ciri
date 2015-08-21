@@ -32,7 +32,6 @@ public:
 private:
 	ciri::IGraphicsDevice* _graphicsDevice;
 	ciri::Window* _window;
-	std::string _shaderExtension;
 	//
 	ciri::MayaCamera _camera;
 	//

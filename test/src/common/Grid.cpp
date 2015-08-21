@@ -8,7 +8,7 @@ Grid::Grid()
 Grid::~Grid() {
 }
 
-bool Grid::create( ciri::IGraphicsDevice* device, const std::string& shaderExt ) {
+bool Grid::create( ciri::IGraphicsDevice* device ) {
 	if( _initialized ) {
 		return false;
 	}
@@ -17,7 +17,7 @@ bool Grid::create( ciri::IGraphicsDevice* device, const std::string& shaderExt )
 
 	createVertices();
 
-	if( !createBuffers() || !loadShader(shaderExt)) {
+	if( !createBuffers() || !loadShader()) {
 		clean();
 		return false;
 	}
@@ -165,7 +165,9 @@ bool Grid::createBuffers() {
 	return ciri::err::success(_vertexBuffer->set(_gridVertices.data(), sizeof(GridVertex), _gridVertices.size(), false));
 }
 
-bool Grid::loadShader( const std::string& shaderExt ) {
+bool Grid::loadShader() {
+	const std::string shaderExt = _device->getShaderExt();
+
 	_shader = _device->createShader();
 	_shader->addVertexShader(("common/shaders/grid_vs" + shaderExt).c_str());
 	_shader->addPixelShader(("common/shaders/grid_ps" + shaderExt).c_str());

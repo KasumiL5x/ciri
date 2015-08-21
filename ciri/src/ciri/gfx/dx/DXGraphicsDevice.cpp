@@ -7,7 +7,7 @@ namespace ciri {
 		: IGraphicsDevice(), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
 			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
 			_activeRasterizerState(nullptr), _activeDepthStencilState(nullptr), _depthStencil(nullptr),
-			_depthStencilView(nullptr) {
+			_depthStencilView(nullptr), _shaderExt(".hlsl") {
 	}
 
 	DXGraphicsDevice::~DXGraphicsDevice() {
@@ -470,6 +470,14 @@ namespace ciri {
 		DXDepthStencilState* dxState = reinterpret_cast<DXDepthStencilState*>(state);
 		ID3D11DepthStencilState* dxDepthStencilState = dxState->getState();
 		_context->OMSetDepthStencilState(dxDepthStencilState, dxState->getStencilRef());
+	}
+
+	void DXGraphicsDevice::setShaderExt( const char* ext ) {
+		_shaderExt = ext;
+	}
+
+	const char* DXGraphicsDevice::getShaderExt() const {
+		return _shaderExt.c_str();
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

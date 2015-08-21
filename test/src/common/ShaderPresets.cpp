@@ -15,11 +15,12 @@ void SimpleShader::operator delete( void* p ) {
 	_mm_free(p);
 }
 
-bool SimpleShader::create( ciri::IGraphicsDevice* device, const std::string& ext ) {
+bool SimpleShader::create( ciri::IGraphicsDevice* device ) {
 	// create the shader
+	const std::string shaderExt = device->getShaderExt();
 	_shader = device->createShader();
-	_shader->addVertexShader(("common/shaders/simple_vs" + ext).c_str());
-	_shader->addPixelShader(("common/shaders/simple_ps" + ext).c_str());
+	_shader->addVertexShader(("common/shaders/simple_vs" + shaderExt).c_str());
+	_shader->addPixelShader(("common/shaders/simple_ps" + shaderExt).c_str());
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));

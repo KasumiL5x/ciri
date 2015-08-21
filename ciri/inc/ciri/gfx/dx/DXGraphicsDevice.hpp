@@ -7,6 +7,7 @@
 #pragma comment(lib, "dxguid.lib")
 
 #include <vector>
+#include <string>
 #include <d3d11.h>
 #include "../IGraphicsDevice.hpp"
 #include "DXShader.hpp"
@@ -58,6 +59,9 @@ namespace ciri {
 		virtual void setRasterizerState( IRasterizerState* state );
 		virtual void setDepthStencilState( IDepthStencilState* state );
 
+		virtual void setShaderExt( const char* ext );
+		virtual const char* getShaderExt() const;
+
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
 
@@ -97,6 +101,8 @@ namespace ciri {
 		ID3D11Texture2D* _depthStencil;
 		ID3D11DepthStencilView* _depthStencilView;
 		ID3D11RenderTargetView* _activeRenderTargets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+		//
+		std::string _shaderExt;
 	};
 } // ciri
 
