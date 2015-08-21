@@ -2,7 +2,7 @@
 
 OpenCloth::OpenCloth()
 	: _built(false), _device(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr), _vertices(nullptr), _indexCount(0), _indices(nullptr),
-		_positions(nullptr), _lastPositions(nullptr), _forces(nullptr), _springCount(0), _springs(nullptr) {
+		_positions(nullptr), _lastPositions(nullptr), _forces(nullptr), _springCount(0), _springs(nullptr), _shader(nullptr), _constantsBuffer(nullptr) {
 	setDivisions(20, 20);
 	setSize(7);
 	setMass(1.0f);
@@ -71,12 +71,17 @@ void OpenCloth::setGravity( const cc::Vec3f& gravity ) {
 	_gravity = gravity;
 }
 
-void OpenCloth::build( ciri::IGraphicsDevice* device ) {
+void OpenCloth::build( ciri::IGraphicsDevice* device, const std::string& shaderExt ) {
 	if( _built ) {
 		return;
 	}
 
 	_device = device;
+
+	// gpu resources can fail, so create them first
+	if( !createGpuResources(shaderExt) ) {
+		return;
+	}
 
 	_positions = new cc::Vec3f[_totalPoints];
 	_lastPositions = new cc::Vec3f[_totalPoints];
@@ -165,6 +170,10 @@ void OpenCloth::build( ciri::IGraphicsDevice* device ) {
 }
 
 void OpenCloth::update( float deltaTime ) {
+	if( !_built ) {
+		return;
+	}
+
 	_timeAccumulator += deltaTime;
 	if( _timeAccumulator >= _timeStep ) { // while???
 		step(_timeStep);
@@ -211,12 +220,63 @@ void OpenCloth::clean() {
 	}
 }
 
+bool OpenCloth::isBuilt() const {
+	return _built;
+}
+
 ciri::IVertexBuffer* OpenCloth::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
 ciri::IIndexBuffer* OpenCloth::getIndexBuffer() const {
 	return _indexBuffer;
+}
+
+ciri::IShader* OpenCloth::getShader() const {
+	return _shader;
+}
+
+OpenCloth::Constants& OpenCloth::getConstants() {
+	return _constants;
+}
+
+bool OpenCloth::updateConstants() {
+	if( !_built ) {
+		return false;
+	}
+
+	bool success = true;
+	if( ciri::err::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
+		success = false;
+	}
+	return success;
+}
+
+bool OpenCloth::createGpuResources( const std::string& shaderExt ) {
+	// create the shader
+	_shader = _device->createShader();
+	_shader->addVertexShader(("dynvb/fabric_plaid_vs" + shaderExt).c_str());
+	_shader->addPixelShader(("dynvb/fabric_plaid_ps" + shaderExt).c_str());
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	if( ciri::err::failed(_shader->build()) ) {
+		printf("%s\n", _shader->getLastError());
+		return false;
+	}
+
+	// create constant buffers
+	_constantsBuffer = _device->createConstantBuffer();
+	if( ciri::err::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
+		return false;
+	}
+
+	// assign constant buffers to shader
+	if( ciri::err::failed(_shader->addConstants(_constantsBuffer, "Constants", ciri::ShaderStage::Vertex)) ) {
+		return false;
+	}
+
+	return true;
 }
 
 void OpenCloth::createGpuBuffers() {

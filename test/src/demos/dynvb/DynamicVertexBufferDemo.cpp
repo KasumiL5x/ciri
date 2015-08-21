@@ -76,7 +76,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	_cloth.setMass(1.0f);
 	_cloth.setDamping(-0.0125f);
 	_cloth.setGravity(cc::Vec3f(0.0f, -9.81f, 0.0f));
-	_cloth.build(_graphicsDevice);
+	_cloth.build(_graphicsDevice, _shaderExtension);
 }
 
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
@@ -193,13 +193,12 @@ void DynamicVertexBufferDemo::onDraw() {
 	}
 
 	// render the cloth
-	if( true ) {
-		// todo: apply separate shader
-		// todo: update separate constants properly
-
-		_simpleShader.getConstants().world = cc::math::translate(cc::Vec3f(0, 18.25f, 4)) * cc::math::rotate(90.0f, cc::Vec3f::up());
-		_simpleShader.getConstants().xform = cameraViewProj * _simpleShader.getConstants().world;
-		_simpleShader.updateConstants();
+	if( _cloth.isBuilt() ) {
+		_graphicsDevice->applyShader(_cloth.getShader());
+		_cloth.getConstants().world = cc::math::translate(cc::Vec3f(0, 18.25f, 4)) * cc::math::rotate(90.0f, cc::Vec3f::up());
+		_cloth.getConstants().xform = cameraViewProj * _cloth.getConstants().world;
+		_cloth.getConstants().camdir = _camera.getPosition();
+		_cloth.updateConstants();
 
 		_graphicsDevice->setVertexBuffer(_cloth.getVertexBuffer());
 		_graphicsDevice->setIndexBuffer(_cloth.getIndexBuffer());

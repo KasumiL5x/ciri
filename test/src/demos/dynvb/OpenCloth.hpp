@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cc/Vec3.hpp>
+#include <cc/Mat4.hpp>
 #include <ciri/gfx/IGraphicsDevice.hpp>
 #include "../../common/Vertex.hpp"
 
@@ -17,6 +18,14 @@ private:
 	};
 
 public:
+	_declspec(align(16))
+	struct Constants {
+		cc::Mat4f world;
+		cc::Mat4f xform;
+		cc::Vec3f camdir;
+	};
+
+public:
 	OpenCloth();
 	~OpenCloth();
 
@@ -26,14 +35,20 @@ public:
 	void setDamping( float damping );
 	void setSpringParams( float structKs, float structKd, float shearKs, float shearKd, float bendKs, float bendKd );
 	void setGravity( const cc::Vec3f& gravity );
-	void build( ciri::IGraphicsDevice* device );
+	void build( ciri::IGraphicsDevice* device, const std::string& shaderExt );
 	void update( float deltaTime );
 	void clean();
 
+	bool isBuilt() const;
+
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
+	ciri::IShader* getShader() const;
+	Constants& getConstants();
+	bool updateConstants();
 
 private:
+	bool createGpuResources( const std::string& shaderExt );
 	void createGpuBuffers();
 	void updateGpuVertexBuffer();
 	void step( float deltaTime );
@@ -77,6 +92,10 @@ private:
 	float _kdShear; // kd term for shear springs
 	float _ksBend; // ks term for bend springs
 	float _kdBend; // kd term for bend springs
+	//
+	ciri::IShader* _shader;
+	Constants _constants;
+	ciri::IConstantBuffer* _constantsBuffer;
 };
 
 #endif /* __opencloth__ */
