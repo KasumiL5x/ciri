@@ -79,6 +79,12 @@ void DynamicVertexBufferDemo::onLoadContent() {
 }
 
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
+	switch( evt.type) {
+		case ciri::WindowEvent::Resized: {
+				_graphicsDevice->resizeDefaultRenderTargets(evt.size.width, evt.size.height);
+			break;
+		}
+	}
 }
 
 void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {

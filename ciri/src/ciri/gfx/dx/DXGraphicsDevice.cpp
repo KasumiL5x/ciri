@@ -5,6 +5,7 @@
 namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
 		: IGraphicsDevice(), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
+			_defaultWidth(0), _defaultHeight(0),
 			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
 			_activeRasterizerState(nullptr), _activeDepthStencilState(nullptr), _depthStencil(nullptr),
 			_depthStencilView(nullptr), _shaderExt(".hlsl") {
@@ -15,6 +16,9 @@ namespace ciri {
 	}
 
 	bool DXGraphicsDevice::create( Window* window ) {
+		_defaultWidth = window->getSize().x;
+		_defaultHeight = window->getSize().y;
+
 		cc::Vec2ui windowSize = window->getSize();
 		if( !initDevice(windowSize.x, windowSize.y, window->getHandle()) ) {
 			destroy();
@@ -397,6 +401,79 @@ namespace ciri {
 			_activeRenderTargets[i] = nullptr;
 		}
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
+	}
+
+	void DXGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+		// todo: check for erroneous sizes
+
+		// don't resize if the same size
+		if( width == _defaultWidth && height == _defaultHeight ) {
+			return;
+		}
+
+		// update default width and height
+		_defaultWidth = width;
+		_defaultHeight = height;
+
+		// remove all render targets
+		_context->OMSetRenderTargets(0, 0, 0);
+		// release backbuffer pointers
+		_backbuffer->Release();
+		// resize buffers
+		if( FAILED(_swapchain->ResizeBuffers(0, _defaultWidth, _defaultHeight, DXGI_FORMAT_UNKNOWN, 0)) ) {
+			return;
+		}
+		// get pointer to backbuffer texture and create backbuffer rendertargetview
+		ID3D11Texture2D* backbufferTexture;
+		if( FAILED(_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferTexture)) ) {
+			return;
+		}
+		if( FAILED(_device->CreateRenderTargetView(backbufferTexture, NULL, &_backbuffer)) ) {
+			return;
+		}
+		// release backbuffer texture
+		backbufferTexture->Release();
+
+		// release depth stenicl and its texture
+		_depthStencilView->Release();
+		_depthStencil->Release();
+		// recreate the depth stencil texture and its view
+		D3D11_TEXTURE2D_DESC depthDesc;
+		ZeroMemory(&depthDesc, sizeof(depthDesc));
+		depthDesc.Width = width;
+		depthDesc.Height = height;
+		depthDesc.MipLevels = 1;
+		depthDesc.ArraySize = 1;
+		depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthDesc.SampleDesc.Count = 1;
+		depthDesc.SampleDesc.Quality = 0;
+		depthDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthDesc.CPUAccessFlags = 0;
+		depthDesc.MiscFlags = 0;
+		if( FAILED(_device->CreateTexture2D(&depthDesc, nullptr, &_depthStencil)) ) {
+			return;
+		}
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+		dsvDesc.Format = depthDesc.Format;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Texture2D.MipSlice = 0;
+		if( FAILED(_device->CreateDepthStencilView(_depthStencil, &dsvDesc, &_depthStencilView)) ) {
+			return;
+		}
+
+		// set render target back to backbuffer
+		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
+		// create and set the new viewport
+		D3D11_VIEWPORT vp;
+		vp.Width = width;
+		vp.Height = height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		_context->RSSetViewports(1, &vp);
 	}
 
 	void DXGraphicsDevice::setClearColor( float r, float g, float b, float a ) {

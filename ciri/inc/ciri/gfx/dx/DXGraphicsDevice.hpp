@@ -53,6 +53,7 @@ namespace ciri {
 
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
+		virtual void resizeDefaultRenderTargets( int width, int height );
 		virtual void setClearColor( float r, float g, float b, float a );
 		virtual void clear( int flags );
 
@@ -74,6 +75,8 @@ namespace ciri {
 		ID3D11Device* _device;
 		ID3D11DeviceContext* _context;
 		ID3D11RenderTargetView* _backbuffer;
+		int _defaultWidth;
+		int _defaultHeight;
 		//
 		float _clearColor[4];
 		//

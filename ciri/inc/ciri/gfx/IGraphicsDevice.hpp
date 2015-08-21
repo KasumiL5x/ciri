@@ -54,6 +54,7 @@ namespace ciri {
 
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets )=0;
 		virtual void restoreDefaultRenderTargets()=0;
+		virtual void resizeDefaultRenderTargets( int width, int height )=0;
 		virtual void setClearColor( float r, float g, float b, float a )=0;
 		virtual void clear( int flags )=0; // ClearFlags::Flags
 
