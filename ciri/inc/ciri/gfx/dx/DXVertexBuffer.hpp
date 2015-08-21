@@ -24,6 +24,7 @@ namespace ciri {
 		ID3D11Buffer* _vertexBuffer;
 		int _vertexStride;
 		int _vertexCount;
+		bool _isDynamic;
 	};
 } // ciri
 

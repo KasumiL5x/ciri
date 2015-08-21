@@ -2,7 +2,7 @@
 
 namespace ciri {
 	GLVertexBuffer::GLVertexBuffer()
-		: IVertexBuffer(), _vbo(0), _vertexStride(0), _vertexCount(0) {
+		: IVertexBuffer(), _vbo(0), _vertexStride(0), _vertexCount(0), _isDynamic(false) {
 	}
 
 	GLVertexBuffer::~GLVertexBuffer() {
@@ -14,17 +14,26 @@ namespace ciri {
 			return err::CIRI_INVALID_ARGUMENT;
 		}
 
-		// todo: add remapping (updating) support
 		if( _vbo != 0 ) {
+			// cannot update a static vertex buffer
+			if( !_isDynamic ) {
+				return err::CIRI_STATIC_BUFFER_AS_DYNAMIC;
+			}
+
+			// for now, size must be the same as the original data
+			if( vertexStride != _vertexStride || vertexCount != _vertexCount ) {
+				return err::CIRI_NOT_IMPLEMENTED; // todo
+			}
+
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, vertexStride * vertexCount, vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			return err::CIRI_OK;
-			//return err::CIRI_NOT_IMPLEMENTED;
 		}
 
 		_vertexStride = vertexStride;
 		_vertexCount = vertexCount;
+		_isDynamic = dynamic;
 
 		glGenBuffers(1, &_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);

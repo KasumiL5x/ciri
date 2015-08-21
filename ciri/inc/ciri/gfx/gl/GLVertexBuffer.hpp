@@ -21,6 +21,7 @@ class GLVertexBuffer : public IVertexBuffer {
 		GLuint _vbo;
 		int _vertexStride;
 		int _vertexCount;
+		bool _isDynamic;
 	};
 } // ciri
 

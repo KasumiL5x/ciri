@@ -3,7 +3,7 @@
 
 namespace ciri {
 	DXVertexBuffer::DXVertexBuffer( DXGraphicsDevice* device )
-		: IVertexBuffer(), _device(device), _vertexBuffer(nullptr), _vertexStride(0), _vertexCount(0) {
+		: IVertexBuffer(), _device(device), _vertexBuffer(nullptr), _vertexStride(0), _vertexCount(0), _isDynamic(false) {
 	}
 
 	DXVertexBuffer::~DXVertexBuffer() {
@@ -22,12 +22,21 @@ namespace ciri {
 			return err::CIRI_INVALID_ARGUMENT;
 		}
 
-		// todo: add remapping (updating) support
 		if( _vertexBuffer != nullptr ) {
+			// cannot update a static vertex buffer
+			if( !_isDynamic ) {
+				return err::CIRI_STATIC_BUFFER_AS_DYNAMIC;
+			}
+
+			// for now, size must be the same as the original data
+			if( vertexStride != _vertexStride || vertexCount != _vertexCount ) {
+				return err::CIRI_NOT_IMPLEMENTED; // todo
+			}
+
 			D3D11_MAPPED_SUBRESOURCE map;
 			ZeroMemory(&map, sizeof(map));
 			if( FAILED(_device->getContext()->Map(_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map)) ) {
-				return err::CIRI_UNKNOWN_ERROR; // todo
+				return err::CIRI_BUFFER_MAP_FAILED;
 			}
 			memcpy(map.pData, vertices, (vertexStride * vertexCount));
 			_device->getContext()->Unmap(_vertexBuffer, 0);
@@ -36,6 +45,7 @@ namespace ciri {
 
 		_vertexStride = vertexStride;
 		_vertexCount = vertexCount;
+		_isDynamic = dynamic;
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
@@ -54,7 +64,7 @@ namespace ciri {
 
 		if( FAILED(_device->getDevice()->CreateBuffer(&desc, &data, &_vertexBuffer)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::CIRI_UNKNOWN_ERROR; // todo
 		}
 
 		return err::CIRI_OK;
