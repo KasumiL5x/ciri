@@ -7,15 +7,17 @@ namespace ciri {
 	namespace err {
 		enum ErrorCode : int {
 			CIRI_OK = 0,
-			CIRI_UNKNOWN_ERROR					= -1,
-			CIRI_FILE_NOT_FOUND					= -2,
-			CIRI_PATH_NOT_FOUND					= -3,
-			CIRI_SHADER_COMPILE_FAILED	=	-4,
-			CIRI_SHADER_LINK_FAILED			=	-5,
-			CIRI_SHADER_INCOMPLETE			=	-6,
-			CIRI_SHADER_INVALID					=	-7,
-			CIRI_INVALID_ARGUMENT				= -8,
-			CIRI_NOT_IMPLEMENTED				=	-9
+			CIRI_UNKNOWN_ERROR						= -1,
+			CIRI_FILE_NOT_FOUND						= -2,
+			CIRI_PATH_NOT_FOUND						= -3,
+			CIRI_SHADER_COMPILE_FAILED		=	-4,
+			CIRI_SHADER_LINK_FAILED				=	-5,
+			CIRI_SHADER_INCOMPLETE				=	-6,
+			CIRI_SHADER_INVALID						=	-7,
+			CIRI_INVALID_ARGUMENT					= -8,
+			CIRI_STATIC_BUFFER_AS_DYNAMIC = -9,
+			CIRI_BUFFER_MAP_FAILED				= -10,
+			CIRI_NOT_IMPLEMENTED					=	-11
 		};
 
 		static std::unordered_map<ErrorCode, const char*> errorStrings = {
@@ -28,6 +30,8 @@ namespace ciri {
 			{ CIRI_SHADER_INCOMPLETE, "Shader data incomplete" },
 			{ CIRI_SHADER_INVALID, "Shader is invalid" },
 			{ CIRI_INVALID_ARGUMENT, "Invalid argument" },
+			{ CIRI_STATIC_BUFFER_AS_DYNAMIC, "Attempted to treat a static buffer as a dynamic buffer" },
+			{ CIRI_BUFFER_MAP_FAILED, "Failed to map a buffer" },
 			{ CIRI_NOT_IMPLEMENTED, "Not yet implemented" }
 		};
 
