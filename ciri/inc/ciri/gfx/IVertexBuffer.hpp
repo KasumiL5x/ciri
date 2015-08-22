@@ -17,7 +17,7 @@ namespace ciri {
 		 * @param vertexStride Size in bytes of a single vertex.
 		 * @param vertexCount  Total number of vertices in the array.
 		 * @param dynamic      True if the buffer is dynamic; i.e. will be updated.
-		 * @returns ErrorCode indicating success or failure.
+		 * @returns err::ErrorCode indicating success or failure.
 		 */
 		virtual err::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic )=0;
 

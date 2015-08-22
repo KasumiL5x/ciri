@@ -16,7 +16,7 @@ namespace ciri {
 		 * Sets or updates the contents of the constant buffer.
 		 * @param dataSize Size in bytes of the data.
 		 * @param data     Pointer to the data to set.
-		 * @returns ErrorCode indicating success or failure.
+		 * @returns err::ErrorCode indicating success or failure.
 		 */
 		virtual err::ErrorCode setData( int dataSize, void* data )=0;
 
