@@ -1,4 +1,5 @@
 #include <ciri/gfx/gl/GLSamplerState.hpp>
+#include <ciri/gfx/gl/CiriToGl.hpp>
 #include <cc/Common.hpp>
 
 namespace ciri {
@@ -38,7 +39,7 @@ namespace ciri {
 		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_LOD, desc.useMipmaps ? desc.maxLod : 0.0f);
 		glSamplerParameterf(_samplerId, GL_TEXTURE_LOD_BIAS, desc.lodBias);
 
-		if( desc.comparisonFunc != SamplerComparison::Never ) {
+		if( desc.comparisonFunc != CompareFunction::Never ) {
 			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_FUNC, ciriToGlFunc(desc.comparisonFunc));
 		} else {
@@ -134,46 +135,6 @@ namespace ciri {
 				*outMin = (mipmaps) ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 				*outMag = GL_LINEAR;
 				break;
-			}
-		}
-	}
-
-	GLint GLSamplerState::ciriToGlFunc( SamplerComparison::Mode mode ) const {
-		switch( mode ) {
-			case SamplerComparison::Never: {
-				return GL_NEVER;
-			}
-
-			case SamplerComparison::Always: {
-				return GL_ALWAYS;
-			}
-
-			case SamplerComparison::Less: {
-				return GL_LESS;
-			}
-
-			case SamplerComparison::Equal: {
-				return GL_EQUAL;
-			}
-
-			case SamplerComparison::LessEqual: {
-				return GL_LEQUAL;
-			}
-
-			case SamplerComparison::Greater: {
-				return GL_GREATER;
-			}
-
-			case SamplerComparison::GreaterEqual: {
-				return GL_GEQUAL;
-			}
-
-			case SamplerComparison::NotEqual: {
-				return GL_NOTEQUAL;
-			}
-
-			default: {
-				return GL_NEVER;
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 #ifndef __ciri_idepthstencilstate__
 #define __ciri_idepthstencilstate__
 
+#include "CompareFunction.hpp"
+
 namespace ciri {
 	struct StencilOperation {
 		/**
@@ -15,22 +17,6 @@ namespace ciri {
 			IncrementSaturation, /**< Increment the stencil data by 1 and clamp the result. */
 			DecrementSaturation, /**< Decrement the stencil data by 1 and clamp the result. */
 			Invert               /**< Invert the stencil data. */
-		};
-	};
-
-	struct CompareFunction {
-		/**
-		 * Comparison functions.
-		 */
-		enum Function {
-			Always,       /**< Always pass. */
-			Never,        /**< Never pass. */
-			Less,         /**< Pass if source data is less than destination data. */
-			LessEqual,    /**< Pass if source data is less than or equal to the destination data. */
-			Equal,        /**< Pass is the source data is equal to the destination data. */
-			GreaterEqual, /**< Pass if the source data is greater than or equal to the destination data. */
-			Greater,      /**< Pass if the source data is greater than the destination data. */
-			NotEqual      /**< Pass if the source data is not equal to the destination data. */
 		};
 	};
 

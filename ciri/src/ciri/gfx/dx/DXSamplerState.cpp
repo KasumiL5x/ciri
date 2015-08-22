@@ -1,5 +1,6 @@
 #include <ciri/gfx/dx/DXSamplerState.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/dx/CiriToDx.hpp>
 #include <cc/Common.hpp>
 
 namespace ciri {
@@ -30,7 +31,7 @@ namespace ciri {
 
 		samplerDesc.ComparisonFunc = ciriToDxFunc(desc.comparisonFunc);
 
-		samplerDesc.Filter = ciriToDxFilter(desc.filter, desc.comparisonFunc != SamplerComparison::Never);
+		samplerDesc.Filter = ciriToDxFilter(desc.filter, desc.comparisonFunc != CompareFunction::Never);
 		const int anisotropy = (SamplerFilter::Anisotropic == desc.filter) ? cc::math::clamp(static_cast<int>(desc.maxAnisotropy), 1, 16) : 1;
 		samplerDesc.MaxAnisotropy = anisotropy;
 
@@ -81,46 +82,6 @@ namespace ciri {
 
 			default: {
 				return D3D11_TEXTURE_ADDRESS_WRAP;
-			}
-		}
-	}
-
-	D3D11_COMPARISON_FUNC DXSamplerState::ciriToDxFunc( SamplerComparison::Mode mode ) const {
-		switch( mode ) {
-			case SamplerComparison::Never: {
-				return D3D11_COMPARISON_NEVER;
-			}
-
-			case SamplerComparison::Always: {
-				return D3D11_COMPARISON_ALWAYS;
-			}
-
-			case SamplerComparison::Less: {
-				return D3D11_COMPARISON_LESS;
-			}
-
-			case SamplerComparison::Equal: {
-				return D3D11_COMPARISON_EQUAL;
-			}
-
-			case SamplerComparison::LessEqual: {
-				return D3D11_COMPARISON_LESS_EQUAL;
-			}
-
-			case SamplerComparison::Greater: {
-				return D3D11_COMPARISON_GREATER;
-			}
-
-			case SamplerComparison::GreaterEqual: {
-				return D3D11_COMPARISON_GREATER_EQUAL;
-			}
-
-			case SamplerComparison::NotEqual: {
-				return D3D11_COMPARISON_NOT_EQUAL;
-			}
-
-			default: {
-				return D3D11_COMPARISON_NEVER;
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #include <ciri/gfx/gl/GLGraphicsDevice.hpp>
 #include <ciri/wnd/Window.hpp>
 #include <sstream>
+#include <ciri/gfx/gl/CiriToGl.hpp>
 
 //static void setVSync(bool sync)
 //{	
@@ -616,7 +617,7 @@ namespace ciri {
 		}
 
 		// depth func
-		glDepthFunc(glState->ciriToGlFunc(desc.depthFunc));
+		glDepthFunc(ciriToGlFunc(desc.depthFunc));
 
 		// depth write
 		glDepthMask(desc.depthWriteMask);
@@ -630,12 +631,12 @@ namespace ciri {
 
 		// stencil funcs and ops
 		if( desc.twoSidedStencil ) {
-			glStencilFuncSeparate(GL_FRONT, glState->ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
-			glStencilFuncSeparate(GL_BACK, glState->ciriToGlFunc(desc.backStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilFuncSeparate(GL_FRONT, ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilFuncSeparate(GL_BACK, ciriToGlFunc(desc.backStencilFunc), desc.stencilRef, desc.stencilReadMask);
 			glStencilOpSeparate(GL_FRONT, glState->ciriToGlOp(desc.frontStencilFailOp), glState->ciriToGlOp(desc.frontStencilDepthFailOp), glState->ciriToGlOp(desc.frontStencilPassOp));
 			glStencilOpSeparate(GL_BACK, glState->ciriToGlOp(desc.backStencilFailOp), glState->ciriToGlOp(desc.backStencilDepthFailOp), glState->ciriToGlOp(desc.backStencilPassOp));
 		} else {
-			glStencilFunc(glState->ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilFunc(ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
 			glStencilOp(glState->ciriToGlOp(desc.frontStencilFailOp), glState->ciriToGlOp(desc.frontStencilDepthFailOp), glState->ciriToGlOp(desc.frontStencilPassOp));
 		}
 

@@ -21,38 +21,6 @@ namespace ciri {
 		return _desc;
 	}
 
-	GLenum GLDepthStencilState::ciriToGlFunc( const CompareFunction::Function func ) const {
-		switch( func ) {
-			case CompareFunction::Always: {
-				return GL_ALWAYS;
-			}
-			case CompareFunction::Never: {
-				return GL_NEVER;
-			}
-			case CompareFunction::Less: {
-				return GL_LESS;
-			}
-			case CompareFunction::LessEqual: {
-				return GL_LEQUAL;
-			}
-			case CompareFunction::Equal: {
-				return GL_EQUAL;
-			}
-			case CompareFunction::GreaterEqual: {
-				return GL_GEQUAL;
-			}
-			case CompareFunction::Greater: {
-				return GL_GREATER;
-			}
-			case CompareFunction::NotEqual: {
-				return GL_NOTEQUAL;
-			}
-			default: {
-					return GL_LESS;
-			}
-		}
-	}
-
 	GLenum GLDepthStencilState::ciriToGlOp( const StencilOperation::Operation op ) const {
 		switch( op ) {
 			case StencilOperation::Keep: {

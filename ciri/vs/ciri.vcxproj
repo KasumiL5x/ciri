@@ -52,6 +52,8 @@
     <ClInclude Include="..\inc\ciri\ErrorCodes.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ClearFlags.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\CompareFunction.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\CiriToDx.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXDepthStencilState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp" />
@@ -65,6 +67,7 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CheckGLError.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\CiriToGl.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLDepthStencilState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLGraphicsDevice.hpp" />

@@ -15,7 +15,6 @@ namespace ciri {
 
 		const DepthStencilDesc& getDesc() const;
 
-		GLenum ciriToGlFunc( const CompareFunction::Function func ) const;
 		GLenum ciriToGlOp( const StencilOperation::Operation op ) const;
 
 	private:
