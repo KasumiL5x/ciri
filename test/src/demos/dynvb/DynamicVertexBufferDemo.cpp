@@ -12,7 +12,9 @@ DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
 
 DemoConfig DynamicVertexBufferDemo::getConfig() {
 	DemoConfig cfg;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
+	cfg.windowWidth = 1280;
+	cfg.windowHeight = 720;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 
@@ -81,7 +83,9 @@ void DynamicVertexBufferDemo::onLoadContent() {
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
-				_graphicsDevice->resizeDefaultRenderTargets(evt.size.width, evt.size.height);
+			if( _graphicsDevice->resizeDefaultRenderTargets(evt.size.width, evt.size.height) != ciri::err::CIRI_OK ) {
+				printf("Failed to resize default render targets.\n");
+			}
 			break;
 		}
 	}

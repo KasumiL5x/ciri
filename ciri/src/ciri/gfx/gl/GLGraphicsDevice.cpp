@@ -482,16 +482,16 @@ namespace ciri {
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
-	void GLGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+	err::ErrorCode GLGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
 		if( !_isValid ) {
-			return;
+			return err::CIRI_UNKNOWN_ERROR;
 		}
 
 		// todo: check for erroneous sizes
 
 		// don't resize if the same size
 		if( width == _defaultWidth && height == _defaultHeight ) {
-			return;
+			return err::CIRI_OK; // not incorrect; just ignore it
 		}
 
 		// update default width and height
@@ -501,6 +501,8 @@ namespace ciri {
 		// bind backbuffer and resize the viewport
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
+
+		return err::CIRI_OK;
 	}
 
 	void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {

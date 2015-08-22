@@ -491,16 +491,16 @@ namespace ciri {
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 	}
 
-	void DXGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+	err::ErrorCode DXGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
 		if( !_isValid ) {
-			return;
+			return err::CIRI_UNKNOWN_ERROR;
 		}
 
 		// todo: check for erroneous sizes
 
 		// don't resize if the same size
 		if( width == _defaultWidth && height == _defaultHeight ) {
-			return;
+			return err::CIRI_OK; // not incorrect; just ignore it
 		}
 
 		// update default width and height
@@ -513,11 +513,11 @@ namespace ciri {
 		_backbuffer->Release();
 		// resize buffers
 		if( FAILED(_swapchain->ResizeBuffers(0, _defaultWidth, _defaultHeight, DXGI_FORMAT_UNKNOWN, 0)) ) {
-			return;
+			return err::CIRI_UNKNOWN_ERROR;
 		}
 		// recreate RTV for backbuffer
 		if( !createBackbufferRtv() ) {
-			return;
+			return err::CIRI_UNKNOWN_ERROR;
 		}
 
 		// release depth stencil and its texture
@@ -525,7 +525,7 @@ namespace ciri {
 		_depthStencil->Release();
 		// recreate depth stencil and its texture
 		if( !createDepthStencilView() ) {
-			return;
+			return err::CIRI_UNKNOWN_ERROR;
 		}
 
 		// set render target back to backbuffer
@@ -539,6 +539,8 @@ namespace ciri {
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
 		_context->RSSetViewports(1, &vp);
+
+		return err::CIRI_OK;
 	}
 
 	void DXGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
