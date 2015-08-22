@@ -6,6 +6,9 @@
 		},
 		{
 			"path": "test"
+		},
+		{
+			"path": "ciri\\src"
 		}
 	]
 }
