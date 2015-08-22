@@ -63,6 +63,8 @@ namespace ciri {
 		virtual void setShaderExt( const char* ext );
 		virtual const char* getShaderExt() const;
 
+		virtual Window* getWindow() const;
+
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
 
@@ -74,6 +76,7 @@ namespace ciri {
 
 	private:
 		bool _isValid;
+		Window* _window;
 		//
 		IDXGISwapChain* _swapchain;
 		ID3D11Device* _device;

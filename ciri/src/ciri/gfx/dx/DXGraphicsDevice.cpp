@@ -4,7 +4,7 @@
 
 namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
-		: IGraphicsDevice(), _isValid(false), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
+		: IGraphicsDevice(), _isValid(false), _window(nullptr), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
 			_defaultWidth(0), _defaultHeight(0),
 			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
 			_activeRasterizerState(nullptr), _activeDepthStencilState(nullptr), _depthStencil(nullptr),
@@ -19,6 +19,8 @@ namespace ciri {
 		if( _isValid ) {
 			return false;
 		}
+
+		_window = window;
 
 		_defaultWidth = window->getSize().x;
 		_defaultHeight = window->getSize().y;
@@ -532,8 +534,8 @@ namespace ciri {
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 		// create and set the new viewport
 		D3D11_VIEWPORT vp;
-		vp.Width = width;
-		vp.Height = height;
+		vp.Width = static_cast<FLOAT>(width);
+		vp.Height = static_cast<FLOAT>(height);
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 		vp.TopLeftX = 0;
@@ -638,6 +640,10 @@ namespace ciri {
 
 	const char* DXGraphicsDevice::getShaderExt() const {
 		return _shaderExt.c_str();
+	}
+
+	Window* DXGraphicsDevice::getWindow() const {
+		return _window;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

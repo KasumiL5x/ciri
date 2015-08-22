@@ -26,7 +26,7 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _isValid(false), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
+		: IGraphicsDevice(), _isValid(false), _window(nullptr), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
 			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr),
 			_activeDepthStencilState(nullptr), _shaderExt(".glsl") {
 		// configure mrt draw buffers
@@ -43,6 +43,8 @@ namespace ciri {
 		if( _isValid ) {
 			return false;
 		}
+
+		_window = window;
 
 		_defaultWidth = window->getSize().x;
 		_defaultHeight = window->getSize().y;
@@ -647,6 +649,10 @@ namespace ciri {
 
 	const char* GLGraphicsDevice::getShaderExt() const {
 		return _shaderExt.c_str();
+	}
+
+	Window* GLGraphicsDevice::getWindow() const {
+		return _window;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {

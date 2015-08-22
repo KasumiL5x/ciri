@@ -66,6 +66,8 @@ namespace ciri {
 		virtual void setShaderExt( const char* ext );
 		virtual const char* getShaderExt() const;
 
+		virtual Window* getWindow() const;
+
 	private:
 		bool configureGl( HWND hwnd );
 		bool configureGlew();
@@ -76,6 +78,7 @@ namespace ciri {
 
 	private:
 		bool _isValid;
+		Window* _window;
 		//
 		HDC _hdc;
 		HGLRC _hglrc;

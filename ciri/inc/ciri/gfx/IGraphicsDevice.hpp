@@ -63,6 +63,8 @@ namespace ciri {
 
 		virtual void setShaderExt( const char* ext )=0;
 		virtual const char* getShaderExt() const=0;
+
+		virtual Window* getWindow() const=0;
 	};
 } // ciri
 
