@@ -515,43 +515,16 @@ namespace ciri {
 		if( FAILED(_swapchain->ResizeBuffers(0, _defaultWidth, _defaultHeight, DXGI_FORMAT_UNKNOWN, 0)) ) {
 			return;
 		}
-		// get pointer to backbuffer texture and create backbuffer rendertargetview
-		ID3D11Texture2D* backbufferTexture;
-		if( FAILED(_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferTexture)) ) {
+		// recreate RTV for backbuffer
+		if( !createBackbufferRtv() ) {
 			return;
 		}
-		if( FAILED(_device->CreateRenderTargetView(backbufferTexture, NULL, &_backbuffer)) ) {
-			return;
-		}
-		// release backbuffer texture
-		backbufferTexture->Release();
 
-		// release depth stenicl and its texture
+		// release depth stencil and its texture
 		_depthStencilView->Release();
 		_depthStencil->Release();
-		// recreate the depth stencil texture and its view
-		D3D11_TEXTURE2D_DESC depthDesc;
-		ZeroMemory(&depthDesc, sizeof(depthDesc));
-		depthDesc.Width = width;
-		depthDesc.Height = height;
-		depthDesc.MipLevels = 1;
-		depthDesc.ArraySize = 1;
-		depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthDesc.SampleDesc.Count = 1;
-		depthDesc.SampleDesc.Quality = 0;
-		depthDesc.Usage = D3D11_USAGE_DEFAULT;
-		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		depthDesc.CPUAccessFlags = 0;
-		depthDesc.MiscFlags = 0;
-		if( FAILED(_device->CreateTexture2D(&depthDesc, nullptr, &_depthStencil)) ) {
-			return;
-		}
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-		ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-		dsvDesc.Format = depthDesc.Format;
-		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dsvDesc.Texture2D.MipSlice = 0;
-		if( FAILED(_device->CreateDepthStencilView(_depthStencil, &dsvDesc, &_depthStencilView)) ) {
+		// recreate depth stencil and its texture
+		if( !createDepthStencilView() ) {
 			return;
 		}
 
@@ -785,44 +758,11 @@ namespace ciri {
 			return false;
 		}
 
-		// get a pointer to the backbuffer
-		ID3D11Texture2D* backbufferPtr = nullptr;
-		if( FAILED(_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferPtr)) ) {
-			return false;
-		}
-		// create a render target view from the backbuffer
-		if( FAILED(_device->CreateRenderTargetView(backbufferPtr, nullptr, &_backbuffer)) ) {
-			return false;
-		}
-		// clean up backbuffer pointer
-		backbufferPtr->Release();
-		backbufferPtr = nullptr;
-
-		// create the depth stencil texture
-		D3D11_TEXTURE2D_DESC depthDesc;
-		ZeroMemory(&depthDesc, sizeof(depthDesc));
-		depthDesc.Width = width;
-		depthDesc.Height = height;
-		depthDesc.MipLevels = 1;
-		depthDesc.ArraySize = 1;
-		depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthDesc.SampleDesc.Count = 1;
-		depthDesc.SampleDesc.Quality = 0;
-		depthDesc.Usage = D3D11_USAGE_DEFAULT;
-		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		depthDesc.CPUAccessFlags = 0;
-		depthDesc.MiscFlags = 0;
-		if( FAILED(_device->CreateTexture2D(&depthDesc, nullptr, &_depthStencil)) ) {
+		if( !createBackbufferRtv() ) {
 			return false;
 		}
 
-		// create the depth stencil view
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-		ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-		dsvDesc.Format = depthDesc.Format;
-		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dsvDesc.Texture2D.MipSlice = 0;
-		if( FAILED(_device->CreateDepthStencilView(_depthStencil, &dsvDesc, &_depthStencilView)) ) {
+		if( !createDepthStencilView() ) {
 			return false;
 		}
 
@@ -840,6 +780,62 @@ namespace ciri {
 		_context->RSSetViewports(1, &vp);
 
 		// holy crap that was long
+		return true;
+	}
+
+	bool DXGraphicsDevice::createBackbufferRtv() {
+		// get a pointer to the backbuffer texture
+		ID3D11Texture2D* backbufferPtr = nullptr;
+		if( FAILED(_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferPtr)) ) {
+			return false;
+		}
+		
+		// create a render target view from the backbuffer texture
+		if( FAILED(_device->CreateRenderTargetView(backbufferPtr, nullptr, &_backbuffer)) ) {
+			backbufferPtr->Release();
+			return false;
+		}
+
+		// clean up backbuffer texture pointer
+		backbufferPtr->Release();
+		backbufferPtr = nullptr;
+
+		return true;
+	}
+
+	bool DXGraphicsDevice::createDepthStencilView() {
+		// create the depth stencil texture
+		D3D11_TEXTURE2D_DESC depthDesc;
+		ZeroMemory(&depthDesc, sizeof(depthDesc));
+		depthDesc.Width = _defaultWidth;
+		depthDesc.Height = _defaultHeight;
+		depthDesc.MipLevels = 1;
+		depthDesc.ArraySize = 1;
+		depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthDesc.SampleDesc.Count = 1;
+		depthDesc.SampleDesc.Quality = 0;
+		depthDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthDesc.CPUAccessFlags = 0;
+		depthDesc.MiscFlags = 0;
+		if( FAILED(_device->CreateTexture2D(&depthDesc, nullptr, &_depthStencil)) ) {
+			_depthStencil = nullptr;
+			return false;
+		}
+
+		// create the depth stencil view
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+		dsvDesc.Format = depthDesc.Format;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Texture2D.MipSlice = 0;
+		if( FAILED(_device->CreateDepthStencilView(_depthStencil, &dsvDesc, &_depthStencilView)) ) {
+			_depthStencil->Release();
+			_depthStencil = nullptr;
+			_depthStencilView = nullptr;
+			return false;
+		}
+
 		return true;
 	}
 

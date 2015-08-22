@@ -68,6 +68,8 @@ namespace ciri {
 
 	private:
 		bool initDevice( unsigned int width, unsigned int height, HWND hwnd );
+		bool createBackbufferRtv();
+		bool createDepthStencilView();
 		D3D_PRIMITIVE_TOPOLOGY convertTopology( PrimitiveTopology::Topology topology ) const;
 
 	private:
