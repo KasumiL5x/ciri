@@ -4,7 +4,7 @@
 
 namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
-		: IGraphicsDevice(), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
+		: IGraphicsDevice(), _isValid(false), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
 			_defaultWidth(0), _defaultHeight(0),
 			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
 			_activeRasterizerState(nullptr), _activeDepthStencilState(nullptr), _depthStencil(nullptr),
@@ -16,6 +16,10 @@ namespace ciri {
 	}
 
 	bool DXGraphicsDevice::create( Window* window ) {
+		if( _isValid ) {
+			return false;
+		}
+
 		_defaultWidth = window->getSize().x;
 		_defaultHeight = window->getSize().y;
 
@@ -34,10 +38,16 @@ namespace ciri {
 		_clearColor[2] = 0.93f;
 		_clearColor[3] = 1.0f;
 
+		_isValid = true;
+
 		return true;
 	}
 
 	void DXGraphicsDevice::destroy() {
+		if( !_isValid ) {
+			return;
+		}
+
 		// clean depth stencil states
 		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
 			if( _depthStencilStates[i] != nullptr ) {
@@ -133,37 +143,63 @@ namespace ciri {
 		if( _context )    { _context->ClearState(); _context = nullptr; }
 		if( _swapchain )  { _swapchain->Release(); _swapchain = nullptr; }
 		if( _device )     { _device->Release(); _device = nullptr; }
+
+		_isValid = false;
 	}
 
 	void DXGraphicsDevice::present() {
+		if( !_isValid ) {
+			return;
+		}
+
 		_swapchain->Present(0, 0);
 	}
 
 	IShader* DXGraphicsDevice::createShader() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXShader* shader = new DXShader(this);
 		_shaders.push_back(shader);
 		return shader;
 	}
 
 	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXVertexBuffer* buffer = new DXVertexBuffer(this);
 		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
 	IIndexBuffer* DXGraphicsDevice::createIndexBuffer() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXIndexBuffer* buffer = new DXIndexBuffer(this);
 		_indexBuffers.push_back(buffer);
 		return buffer;
 	}
 
 	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXConstantBuffer* buffer = new DXConstantBuffer(this);
 		_constantBuffers.push_back(buffer);
 		return buffer;
 	}
 
 	ITexture2D* DXGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
@@ -180,6 +216,10 @@ namespace ciri {
 	}
 
 	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXSamplerState* dxSampler = new DXSamplerState(this);
 		if( !dxSampler->create(desc) ) {
 			delete dxSampler;
@@ -191,6 +231,10 @@ namespace ciri {
 	}
 
 	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXTexture2D* texture = reinterpret_cast<DXTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
 		if( nullptr == texture ) {
 			return nullptr;
@@ -209,6 +253,10 @@ namespace ciri {
 	}
 
 	IRasterizerState* DXGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXRasterizerState* dxRaster = new DXRasterizerState(this);
 		if( !dxRaster->create(desc) ) {
 			delete dxRaster;
@@ -220,6 +268,10 @@ namespace ciri {
 	}
 
 	IDepthStencilState* DXGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		DXDepthStencilState* dxState = new DXDepthStencilState(this);
 		if( !dxState->create(desc) ) {
 			delete dxState;
@@ -231,6 +283,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		if( !shader->isValid() ) {
 			_activeShader = nullptr;
 			return;
@@ -273,6 +329,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// gl cannot set parameters with no active shader; dx can, but let's stay consistent
 		if( nullptr == _activeShader ) {
 			_activeVertexBuffer = nullptr;
@@ -289,6 +349,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		DXIndexBuffer* dxBuffer = reinterpret_cast<DXIndexBuffer*>(buffer);
 
 		ID3D11Buffer* ib = dxBuffer->getIndexBuffer();
@@ -301,6 +365,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture);
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
@@ -319,6 +387,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state);
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
@@ -337,6 +409,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -362,6 +438,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -382,6 +462,10 @@ namespace ciri {
 	}
 	
 	void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// build array of pointers to render targets
 		for( int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i ) {
 			if( i >= numRenderTargets ) {
@@ -397,6 +481,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::restoreDefaultRenderTargets() {
+		if( !_isValid ) {
+			return;
+		}
+
 		for( int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i ) {
 			_activeRenderTargets[i] = nullptr;
 		}
@@ -404,6 +492,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: check for erroneous sizes
 
 		// don't resize if the same size
@@ -477,6 +569,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
+		if( !_isValid ) { // gl requires an active context, so behave the same in dx
+			return;
+		}
+
 		_clearColor[0] = r;
 		_clearColor[1] = g;
 		_clearColor[2] = b;
@@ -484,6 +580,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::clear( int flags ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: add set depth and stencil clear value functions
 		if( nullptr == _activeRenderTargets[0] ) {
 			if( flags & ClearFlags::Color ) {
@@ -519,6 +619,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
 			throw; // not yet implemented
@@ -534,6 +638,10 @@ namespace ciri {
 	}
 
 	void DXGraphicsDevice::setDepthStencilState( IDepthStencilState* state ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
 			throw; // not yet implemented

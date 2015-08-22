@@ -71,6 +71,8 @@ namespace ciri {
 		D3D_PRIMITIVE_TOPOLOGY convertTopology( PrimitiveTopology::Topology topology ) const;
 
 	private:
+		bool _isValid;
+		//
 		IDXGISwapChain* _swapchain;
 		ID3D11Device* _device;
 		ID3D11DeviceContext* _context;

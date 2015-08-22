@@ -26,7 +26,7 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
+		: IGraphicsDevice(), _isValid(false), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
 			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr),
 			_activeDepthStencilState(nullptr), _shaderExt(".glsl") {
 		// configure mrt draw buffers
@@ -40,6 +40,10 @@ namespace ciri {
 	}
 
 	bool GLGraphicsDevice::create( Window* window ) {
+		if( _isValid ) {
+			return false;
+		}
+
 		_defaultWidth = window->getSize().x;
 		_defaultHeight = window->getSize().y;
 
@@ -61,10 +65,16 @@ namespace ciri {
 		printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 		printf("**********\n");
 
+		_isValid = true;
+
 		return true;
 	}
 
 	void GLGraphicsDevice::destroy() {
+		if( !_isValid ) {
+			return;
+		}
+
 		// clean depth stencil states
 		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
 			if( _depthStencilStates[i] != nullptr ) {
@@ -168,31 +178,53 @@ namespace ciri {
 
 		// delete device context
 		if( _hdc ) { DeleteDC(_hdc); _hdc = 0; }
+
+		_isValid = false;
 	}
 
 	void GLGraphicsDevice::present() {
+		if( !_isValid ) {
+			return;
+		}
+
 		SwapBuffers(_hdc);
 	}
 
 	IShader* GLGraphicsDevice::createShader() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLShader* shader = new GLShader();
 		_shaders.push_back(shader);
 		return shader;
 	}
 
 	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLVertexBuffer* buffer = new GLVertexBuffer();
 		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
 	IIndexBuffer* GLGraphicsDevice::createIndexBuffer() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLIndexBuffer* buffer = new GLIndexBuffer();
 		_indexBuffers.push_back(buffer);
 		return buffer;
 	}
 
 	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		// note: using the size of a vector as the index means they can't be removed.
 		// todo: update the index to a smarter system that allows for reuse of deleted buffer indices
 		GLConstantBuffer* buffer = new GLConstantBuffer(_constantBuffers.size());
@@ -201,6 +233,10 @@ namespace ciri {
 	}
 
 	ITexture2D* GLGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
@@ -217,6 +253,10 @@ namespace ciri {
 	}
 
 	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLSamplerState* glSampler = new GLSamplerState();
 		if( !glSampler->create(desc) ) {
 			delete glSampler;
@@ -228,6 +268,10 @@ namespace ciri {
 	}
 
 	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
 		if( nullptr == texture ) {
 			return nullptr;
@@ -238,6 +282,10 @@ namespace ciri {
 	}
 
 	IRasterizerState* GLGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLRasterizerState* glRaster = new GLRasterizerState();
 		if( !glRaster->create(desc) ) {
 			delete glRaster;
@@ -249,6 +297,10 @@ namespace ciri {
 	}
 
 	IDepthStencilState* GLGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
 		GLDepthStencilState* glState = new GLDepthStencilState();
 		if( !glState->create(desc) ) {
 			delete glState;
@@ -260,6 +312,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		if( !shader->isValid() ) {
 			_activeShader = nullptr;
 			return;
@@ -271,6 +327,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// cannot set parameters with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -306,6 +366,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		GLIndexBuffer* glBuffer = reinterpret_cast<GLIndexBuffer*>(buffer);
 
 		const GLuint evbo = glBuffer->getEvbo();
@@ -318,17 +382,29 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
 	}
 
 	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -353,6 +429,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// cannot draw with no active shader
 		if( nullptr == _activeShader ) {
 			return;
@@ -372,6 +452,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// create and bind a framebuffer
 		if( 0 == _currentFbo ) { glGenFramebuffers(1, &_currentFbo); }
 		glBindFramebuffer(GL_FRAMEBUFFER, _currentFbo);
@@ -390,11 +474,19 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::restoreDefaultRenderTargets() {
+		if( !_isValid ) {
+			return;
+		}
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
 	void GLGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: check for erroneous sizes
 
 		// don't resize if the same size
@@ -412,10 +504,18 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		glClearColor(r, g, b, a);
 	}
 
 	void GLGraphicsDevice::clear( int flags ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		GLbitfield clearFlags = 0;
 		if( flags & ClearFlags::Color ) {
 			clearFlags |= GL_COLOR_BUFFER_BIT;
@@ -430,6 +530,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
 			throw; // not yet implemented
@@ -484,6 +588,10 @@ namespace ciri {
 	}
 
 	void GLGraphicsDevice::setDepthStencilState( IDepthStencilState* state ) {
+		if( !_isValid ) {
+			return;
+		}
+
 		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
 			throw; // not yet implemented

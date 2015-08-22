@@ -75,6 +75,8 @@ namespace ciri {
 		static void APIENTRY debugContextAmdCb( GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, void* userParam );
 
 	private:
+		bool _isValid;
+		//
 		HDC _hdc;
 		HGLRC _hglrc;
 		int _defaultWidth;
