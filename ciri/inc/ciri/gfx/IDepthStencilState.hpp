@@ -3,52 +3,58 @@
 
 namespace ciri {
 	struct StencilOperation {
+		/**
+		 * Stencil testing operations.
+		 */
 		enum Operation {
-			Keep,
-			Zero,
-			Replace,
-			Increment,
-			Decrement,
-			IncrementSaturation,
-			DecrementSaturation,
-			Invert
+			Keep,                /**< Keep existing stencil data. */
+			Zero,                /**< Set stencil data to zero. */
+			Replace,             /**< Set the data to the defined reference value. */
+			Increment,           /**< Increment the stencil data by 1. */
+			Decrement,           /**< Decrement the stencil data by 1. */
+			IncrementSaturation, /**< Increment the stencil data by 1 and clamp the result. */
+			DecrementSaturation, /**< Decrement the stencil data by 1 and clamp the result. */
+			Invert               /**< Invert the stencil data. */
 		};
 	};
 
 	struct CompareFunction {
+		/**
+		 * Comparison functions.
+		 */
 		enum Function {
-			Always,
-			Never,
-			Less,
-			LessEqual,
-			Equal,
-			GreaterEqual,
-			Greater,
-			NotEqual
+			Always,       /**< Always pass. */
+			Never,        /**< Never pass. */
+			Less,         /**< Pass if source data is less than destination data. */
+			LessEqual,    /**< Pass if source data is less than or equal to the destination data. */
+			Equal,        /**< Pass is the source data is equal to the destination data. */
+			GreaterEqual, /**< Pass if the source data is greater than or equal to the destination data. */
+			Greater,      /**< Pass if the source data is greater than the destination data. */
+			NotEqual      /**< Pass if the source data is not equal to the destination data. */
 		};
 	};
 
 	struct DepthStencilDesc {
-		bool depthEnable;
-		bool depthWriteMask;
-		CompareFunction::Function depthFunc;
+		bool depthEnable;                    /**< Enable or disable depth testing. */
+		bool depthWriteMask;                 /**< Enable or disable writing to the depth buffer. */
+		CompareFunction::Function depthFunc; /**< Function for comparing depth data against existing depth data. */
 		//
-		bool stencilEnable;
-		int stencilReadMask;
-		int stencilWriteMask;
+		bool stencilEnable;   /**< Enable or disable stencil testing. */
+		int stencilReadMask;  /**< Mask value for reading stencil data. */
+		int stencilWriteMask; /**< Mask value for writing stencil data. */
 		//
-		StencilOperation::Operation frontStencilFailOp;
-		StencilOperation::Operation frontStencilDepthFailOp;
-		StencilOperation::Operation frontStencilPassOp;
-		CompareFunction::Function frontStencilFunc;
+		StencilOperation::Operation frontStencilFailOp;      /**< Operation when stencil testing fails. */
+		StencilOperation::Operation frontStencilDepthFailOp; /**< Operation when stencil testing passes but depth testing fails. */
+		StencilOperation::Operation frontStencilPassOp;      /**< Operation when stencil testing and depth testing both pass. */
+		CompareFunction::Function frontStencilFunc;          /**< Function for comparing stencil data against existing stencil data. */
 		//
-		StencilOperation::Operation backStencilFailOp;
-		StencilOperation::Operation backStencilDepthFailOp;
-		StencilOperation::Operation backStencilPassOp;
-		CompareFunction::Function backStencilFunc;
+		StencilOperation::Operation backStencilFailOp;      /**< Operation when stencil testing fails. */
+		StencilOperation::Operation backStencilDepthFailOp; /**< Operation when stencil testing passes but depth testing fails. */
+		StencilOperation::Operation backStencilPassOp;      /**< Operation when stencil testing and depth testing both pass. */
+		CompareFunction::Function backStencilFunc;          /**< Function for comparing stencil data against existing stencil data. */
 		//
-		bool twoSidedStencil;
-		int stencilRef;
+		bool twoSidedStencil; /**< If two sided, front and back stenciling are separated; otherwise, both are set to front. */
+		int stencilRef;       /**< Reference value for comparison with stenciling. */
 
 		DepthStencilDesc() {
 			depthEnable = true;
@@ -81,6 +87,9 @@ namespace ciri {
 		virtual ~IDepthStencilState() {
 		}
 
+		/**
+		 * Uninitializes the depth stencil state.
+		 */
 		virtual void destroy()=0;
 	};
 } // ciri

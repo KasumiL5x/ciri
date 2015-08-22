@@ -174,7 +174,7 @@ namespace ciri {
 		 * Resizes the backbuffer and depth stencil to the given dimensions.
 		 * @param width  Width in pixels.
 		 * @param height Weight in pixels.
-		 * @returns ErrorCode defining success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
 		virtual err::ErrorCode resizeDefaultRenderTargets( int width, int height )=0;
 

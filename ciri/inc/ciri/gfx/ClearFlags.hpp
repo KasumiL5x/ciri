@@ -2,12 +2,9 @@
 #define __ciri_clearflags__
 
 namespace ciri {
-	/**
-	 * Bitflags for clearing.
-	 */
 	struct ClearFlags {
 		/**
-		 * @see ClearFlags
+		 * Bitflags for clearing.
 		 */
 		enum Flags {
 			Color		=	(1 << 0), /**< Color channel bit. */
