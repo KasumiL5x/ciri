@@ -1,0 +1,602 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"release",
+				"Release"
+			],
+			[
+				"dxg",
+				"DXGraphicsDevice"
+			],
+			[
+				"campo",
+				"campos"
+			],
+			[
+				"vopos",
+				"vo_position"
+			],
+			[
+				"pat",
+				"patt"
+			],
+			[
+				"num",
+				"num_problems"
+			],
+			[
+				"kasstr",
+				"kasStretchyIk"
+			],
+			[
+				"curren",
+				"currentJoint"
+			],
+			[
+				"muldiv",
+				"mulDivNode"
+			],
+			[
+				"condi",
+				"conditionNode"
+			],
+			[
+				"distanceno",
+				"distanceNode"
+			],
+			[
+				"codi",
+				"conditionNode"
+			],
+			[
+				"poit",
+				"point1"
+			],
+			[
+				"tr",
+				"translate"
+			],
+			[
+				"prev",
+				"prevJointPosition"
+			],
+			[
+				"curr",
+				"currentPosition"
+			],
+			[
+				"sel",
+				"selection"
+			],
+			[
+				"Reger",
+				"RegexReplacer"
+			],
+			[
+				"rbfil",
+				"rb_filter_regex"
+			],
+			[
+				"replacete",
+				"txt_replace_text"
+			],
+			[
+				"allobj",
+				"__all_objects"
+			],
+			[
+				"shortna",
+				"short_names"
+			],
+			[
+				"rege",
+				"RegexReplacer"
+			],
+			[
+				"dist",
+				"distance"
+			],
+			[
+				"tex",
+				"textureSample"
+			],
+			[
+				"pos",
+				"Pos"
+			],
+			[
+				"out",
+				"OUT"
+			],
+			[
+				"spec",
+				"specular"
+			],
+			[
+				"cancl",
+				"Cancel"
+			],
+			[
+				"Anim",
+				"AnimCurveToolbox"
+			],
+			[
+				"curveobj",
+				"curve_obj"
+			],
+			[
+				"curr_te",
+				"curr_text"
+			],
+			[
+				"form",
+				"formValidObjectName"
+			],
+			[
+				"if",
+				"ifmain	if __name__ == '__main__'"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 81.0,
+		"last_filter": "install",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"reomve",
+				"Package Control: Remove Package"
+			],
+			[
+				"packages",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/D/projects/ciri/ciri/inc/ciri/ErrorCodes.hpp",
+		"/D/projects/ciri/ciri/inc/ciri/gfx/ClearFlags.hpp",
+		"/D/projects/ciri/ciri.sublime-project",
+		"/D/projects/ciri/ciri.sublime-workspace",
+		"/D/projects/ciri/ciri/inc/ciri/gfx/IGraphicsDevice.hpp",
+		"/C/Users/kasum/AppData/Roaming/Sublime Text 3/Packages/User/DoxyDoc.sublime-settings",
+		"/C/Users/kasum/AppData/Roaming/Sublime Text 3/Packages/DoxyDoc/DoxyDoc.sublime-settings",
+		"/D/programs/Autodesk/Maya2016/include/maya/MFnMesh.h",
+		"/D/programs/Autodesk/Maya2016/include/maya/MEvent.h",
+		"/D/programs/Autodesk/Maya2016/include/maya/MDrawInfo.h",
+		"/D/programs/Autodesk/Maya2016/include/maya/MDagPath.h",
+		"/D/programs/Autodesk/Maya2016/include/maya/d3dx11effect.h",
+		"/D/programs/Autodesk/Maya2016/devkit/plug-ins/cvExpandCmd/cvExpandCmd.cpp",
+		"/C/Users/kasum/Desktop/1773EMS1.504",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_1773EMS1.504.zip/1773EMS1.504/FLASHROM.DEF",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_1773EMS1.504.zip/1773EMS1.504/Win8 EC Update using WinFlash.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_1773EMS1.504.zip/1773EMS1.504/Script.ini",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_1773EMS1.504.zip/1773EMS1.504/config.ini",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_1773EMS1.504.zip/1773EMS1.504/ªpª≤º≤╖sEC.TXT",
+		"/C/Users/kasum/Desktop/MSI SCM x64 13.015.04213 for ClickPad/install.bat",
+		"/C/Users/kasum/Desktop/ica_element_1/sourcecode/main.cpp",
+		"/C/Users/kasum/Desktop/ica_element_1/sourcecode/main.h",
+		"/D/docs/edu/uni/first/programming/assignments/ica_element_2/application/ica_element_2/src/Game.hpp",
+		"/D/docs/edu/uni/first/programming/assignments/ica_element_2/application/ica_element_2/src/Game.cpp",
+		"/D/docs/edu/uni/first/programming/assignments/ica_element_2/application/ica_element_2/src/Player.cpp",
+		"/D/docs/edu/uni/first/programming/assignments/ica_element_2/application/ica_element_2/src/Player.h",
+		"/D/msi-drivers/sound/nahimic/readme.txt",
+		"/D/msi-drivers/keyboard/readme.txt",
+		"/D/msi-drivers/wireless-bluetooth-model.txt",
+		"/D/msi-drivers/!old/drivers/wirelessbluetooth.txt",
+		"/D/msi-drivers/!old/drivers/bigfoot-lan-lwan-crashes-during-install/lan_bigfoot_8.1.0.23_1.1.46.1056 package_0x2bb46369_w81700/Suite_VersionsInThisBuild.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_KillerSuite_1.1.51.1426_Win7_Win81.zip/notice.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_Killer1535_1.1.50.1075_Win7_Win81-MSI_8.1.0.23(with msi logo 1.1.50.1075).zip/notice.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_Kb9xRadioBtn_Release_Win10_v1_1b_1.1.2.0.zip/Kb9xRadioBtn_Release_Win10_v1_1b/Release.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_win10_win64_154004.zip/Installation_Readme.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_win10_win64_154004.zip/ReadMe.txt",
+		"/D/msi-drivers/embedded_controller/readme.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_win64_154004.zip/ReadMe.txt",
+		"/D/downloads/Weapon Configurator.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_stkcs-for-pack-efigspcjh-patch-any-10.zip/GH3D.txt",
+		"/D/msi-drivers/sound/sbcinema/readme.txt",
+		"/D/msi-drivers/bios/readme.txt",
+		"/D/laptop-stuff/utils/sound/nahimic/readme.txt",
+		"/D/laptop-stuff/bios/readme.txt",
+		"/D/laptop-stuff/utils/sound/sbcinema/readme.txt",
+		"/D/projects/ciri/ciri/src/ciri/gfx/dx/DXGraphicsDevice.cpp",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_Direct3D Tutorial Win32 Sample.zip/C++/Tutorial07/Tutorial07.cpp",
+		"/C/Users/kasum/Documents/Assassin's Creed Revelations/ACRevelations.ini",
+		"/D/projects/ciri/test/bin/dynvb/fabric_plaid_vs.hlsl",
+		"/D/projects/ciri/test/bin/dynvb/fabric_plaid_ps.hlsl",
+		"/D/projects/ciri/test/bin/dynvb/fabric_plaid_ps.glsl",
+		"/D/projects/ciri/test/bin/dynvb/fabric_plaid_vs.glsl",
+		"/D/projects/ciri/test/bin/common/shaders/simple_ps.hlsl",
+		"/D/projects/ciri/test/bin/common/shaders/simple_vs.hlsl",
+		"/C/Users/kasum/Desktop/shaders/demo/src/fabric_plaid.vs",
+		"/C/Users/kasum/Desktop/shaders/demo/src/fabric_plaid.fs",
+		"/D/projects/lhs/data/simple_fs.glsl",
+		"/D/projects/ciri/test/bin/common/shaders/simple_vs.glsl",
+		"/D/projects/ciri/test/bin/common/shaders/simple_ps.glsl",
+		"/C/Users/kasum/Desktop/shaders/demo/src/src/reusable.h",
+		"/C/Users/kasum/Desktop/shaders/demo/src/verlet_cloth.fs",
+		"/C/Users/kasum/Desktop/shaders/demo/src/src/phys_sim.cpp",
+		"/C/Users/kasum/Desktop/opencloth-master/bin/shaders/render.fs",
+		"/C/Users/kasum/Desktop/opencloth-master/bin/shaders/render.vs",
+		"/C/Users/kasum/Desktop/opencloth-master/bin/shaders/verlet.fs",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_cloth.zip/Cloth Simulation/Main.cpp",
+		"/C/Users/kasum/Desktop/opencloth-master/OpenCloth_Verlet/OpenCloth_Verlet/main.cpp",
+		"/D/docs/papers/interactive-thin-elastic-materials-for-virtual-reality-applications/cloth-2010/src/cloth/cloth.cpp",
+		"/C/Users/kasum/Desktop/opencloth-master/OpenCloth_ExplicitEuler/OpenCloth_ExplicitEuler/main.cpp",
+		"/C/Users/kasum/Desktop/opencloth-master/OpenCloth_Verlet_GLSL(GPGPU)/OpenCloth_Verlet_GLSL(GPGPU)/main.cpp",
+		"/C/Users/kasum/Desktop/opencloth-master/OpenCloth_Verlet_GLSL(GPGPU)/OpenCloth_Verlet_GLSL(GPGPU)/GLSLShader.h",
+		"/D/projects/ciri/test/src/demos/dynvb/DynamicVertexBufferDemo.cpp",
+		"/C/Users/kasum/Desktop/cppcheck-master/build-pcre.txt",
+		"/C/Users/kasum/Desktop/cppcheck-master/runastyle.bat",
+		"/C/Users/kasum/Desktop/cppcheck-master/build.bat",
+		"/D/docs/pwd/accounts.txt",
+		"/D/projects/ciri/.gitignore",
+		"/C/Users/kasum/Desktop/geg2-chapter22/demo/src/src/phys_sim.cpp",
+		"/C/Users/kasum/Desktop/geg2-chapter22/demo/src/src/particle_system.h",
+		"/C/Users/kasum/Desktop/geg2-chapter22/demo/src/src/reusable.h",
+		"/D/docs/papers/interactive-thin-elastic-materials-for-virtual-reality-applications/cloth-2010/src/cloth/cloth.hpp",
+		"/D/docs/papers/interactive-thin-elastic-materials-for-virtual-reality-applications/cloth-2010/src/main.cpp",
+		"/D/prg/proj/cpp/sklcs/src/multi-layer/multi-layered-object.cpp",
+		"/D/prg/proj/cpp/sklcs/src/multi-layer/multi-layered-object.hpp",
+		"/D/prg/proj/cpp/sklcs/src/multi-layer/multi-layer.cpp",
+		"/C/Users/kasum/Desktop/Cloth Simulation/BALL.h",
+		"/C/Users/kasum/Desktop/Cloth Simulation/SPRING.h",
+		"/C/Users/kasum/Desktop/Cloth Simulation/Main.h",
+		"/C/Users/kasum/Desktop/Cloth Simulation/Main.cpp",
+		"/D/projects/ciri/test/src/demos/dynvb/freecloth/README",
+		"/D/projects/ciri/test/src/demos/dynvb/freecloth/freecloth/base/math.h",
+		"/D/projects/ciri/test/src/demos/dynvb/freecloth/freecloth/clothApp/clothApp.h",
+		"/C/Users/kasum/AppData/Local/Temp/7zOAF92.tmp/cloth.cpp",
+		"/C/Users/kasum/Desktop/Cloth Simulation/Readme.txt",
+		"/C/Users/kasum/Desktop/Cloth Simulation/Maths/VECTOR3D.h",
+		"/D/docs/papers/interactive-thin-elastic-materials-for-virtual-reality-applications/cloth-2010.7z",
+		"/D/tools/maya/scripts/kas/kasStretchyIk.mel",
+		"/D/art/rigging/stretchy-joint-chain/kasStretchyIk.mel",
+		"/D/tools/maya/scripts/kas/qttopy.py",
+		"/D/tools/maya/scripts/kas/animcurvetb.py",
+		"/D/tools/maya/scripts/kas/src/AnimCurveToolbox/gui.py",
+		"/C/Users/kasum/Desktop/日本語",
+		"/D/projects/ciri/test/bin/unins000.exe",
+		"/C/Users/kasum/Desktop/fix.bat",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_jlpt_kanji_level_5_base.zip/jlpt_kanji_level_4_base.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_SRP_v1.0.6.zip/SRP v1.0.6 - Readme.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_SRP_v1.0.6.zip/SRP v1.0.6 - Optional Features.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_SRP_v1.0.6.zip/Optional Features/#2. (Choose From This Folder Last)/Sleeping Bag + No Intro Movies/Decane's readme.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_SRP_v1.0.6.zip/Optional Features/#2. (Choose From This Folder Last)/Sleeping Bag + No Intro Movies/Original readme.txt",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_SRP_v1.0.6.zip/Optional Features/#1. (Choose From This Folder First)/Improved LuaJIT Library/Readme - Improved LuaJIT Library.txt",
+		"/C/Users/kasum/Desktop/pizza/pizza.py",
+		"/C/Users/kasum/Desktop/ecoins/ecoins.py",
+		"/D/docs/careers/applications/vitei/vitei-test-cpp/vitei-test-cpp/Main.cpp",
+		"/D/docs/careers/applications/vitei/questions-i-didnt-finish",
+		"/D/docs/careers/applications/vitei/vitei-application.txt",
+		"/D/docs/careers/applications/status.txt",
+		"/C/Users/kasum/Desktop/numpy-1.9.2/INSTALL.txt",
+		"/D/projects/ciri/test/bin/common/shaders/simple_fs.glsl",
+		"/D/projects/ciri/test/src/Axis.cpp",
+		"/D/tools/maya/dev/plug-ins/KasNetClient/Game1.cs",
+		"/D/ebooks/prg/3d_computer_graphics/cd/learning/LEARN.TXT",
+		"/D/projects/ciri/test/bin/debug.txt",
+		"/D/projects/ciri/test/bin/log.txt",
+		"/D/backup/desktop/MonoGame-develop/MonoGame.Framework/Graphics/GraphicsDevice.OpenGL.cs",
+		"/D/backup/desktop/MonoGame-develop/MonoGame.Framework/Graphics/GraphicsExtensions.cs",
+		"/D/prg/proj/cpp/GraphicsDemo/src/Framework/Log.cpp",
+		"/D/prg/proj/cpp/GraphicsDemo/src/Framework/Log.hpp",
+		"/C/Users/kasum/AppData/Local/Temp/Temp1_GamesEngineConstruction_ICA_08-Jan-2012_Daniel-Green.zip/Kawaii/Kawaii/Inc/Vector.hpp"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 108.0,
+		"where_history":
+		[
+			"",
+			"D:\\projects\\ciri\\ciri\\inc,D:\\projects\\ciri\\ciri\\src,D:\\projects\\ciri\\test\\src,D:\\projects\\ciri\\test\\bin\\data\\New folder",
+			"<current file>"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			".sub.",
+			".sub",
+			"return ",
+			"bit",
+			"[in]",
+			"key",
+			"fn",
+			"createBackbufferRtv",
+			"create the depth",
+			"createDepthStencilView",
+			"_backbuffer",
+			"initdev",
+			"size",
+			"resize",
+			"vo_",
+			"vo_pos",
+			"vec3",
+			");\n",
+			"freqq",
+			"gl_modelview",
+			"normal",
+			"gl_NormalMatrix",
+			"m_ROTSCALE",
+			"vec",
+			"cam",
+			"camera",
+			"view",
+			"vbo[",
+			"lo",
+			"renderShaderProgram",
+			"shader",
+			"draw",
+			"normal",
+			"ApplyProvotDynamicInverse",
+			"step",
+			"draw",
+			"integrate",
+			"StepPhysics",
+			"DEFAULT_DAMPING",
+			"computeforces",
+			"accumulator",
+			"timeStep",
+			"step",
+			"accumulator",
+			"onidle",
+			"stepph",
+			"integr",
+			"onrender",
+			"KsStruct",
+			"F[",
+			"F.",
+			"F",
+			"initgl",
+			"texcoords",
+			"ps.",
+			"particlesys",
+			"restlength",
+			"update",
+			"points",
+			"clothverte",
+			"clothvertex",
+			"update",
+			"mlo",
+			"velocity",
+			"damping",
+			"constant",
+			"resetcloth",
+			"timePassedInSeconds",
+			"step",
+			"_timestep",
+			"step",
+			"glbufferdata",
+			"resetcloth",
+			"Dialog",
+			"__build_ui",
+			"forest",
+			"simpleConstantsBuffer",
+			"loadShaders",
+			"loadshader",
+			"loadModel",
+			"grid.",
+			"enablemem",
+			"creategraphicsdev",
+			"createWindow",
+			"win10",
+			"return ",
+			"_Copy24bppScanline",
+			"SaveToTGAFile",
+			"TGA",
+			"tga",
+			"_DetermineImageArray",
+			"_SetupImageArray",
+			"pixels",
+			"GetImage",
+			"ComputePitch",
+			"computepitch",
+			"copmutepitch",
+			"rowpitch",
+			"ScratchImage",
+			"ComputeScanlines",
+			"getdata",
+			"image",
+			"platformgetdata",
+			"getdata",
+			"tga",
+			"getdata",
+			"save",
+			"minlinearmagpointmippoint",
+			"aniso",
+			"samplerStates",
+			"BILINEAR_ANISO",
+			"hasAniso",
+			"hasaniso",
+			"hasAniso",
+			"filters",
+			".filter",
+			"aniso",
+			"mipmap",
+			"mimap",
+			"createSRV",
+			"createsrv",
+			"m_depthStencilBuffer",
+			"depth",
+			"g_pDepthStencil",
+			"CounterClockwise",
+			"_referenceStencil",
+			"gravatar",
+			"depth"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"",
+			"float3",
+			"freq",
+			"BACKFACE_",
+			"self",
+			"/",
+			"\n",
+			"self",
+			"/",
+			"",
+			"D:"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 38.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "ciri.sublime-project",
+	"replace":
+	{
+		"height": 70.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"clea",
+				"ciri\\inc\\ciri\\gfx\\ClearFlags.hpp"
+			],
+			[
+				"err",
+				"ciri\\inc\\ciri\\ErrorCodes.hpp"
+			],
+			[
+				"image",
+				"DirectXTex\\DirectXTexImage.cpp"
+			],
+			[
+				"d3d11",
+				"DirectXTex\\DirectXTexD3D11.cpp"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 129.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
