@@ -171,12 +171,10 @@ namespace ciri {
 		virtual void restoreDefaultRenderTargets()=0;
 
 		/**
-		 * Resizes the backbuffer and depth stencil to the given dimensions.
-		 * @param width  Width in pixels.
-		 * @param height Weight in pixels.
+		 * Resizes the backbuffer and depth stencil to the bound window's size.
 		 * @returns err::ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode resizeDefaultRenderTargets( int width, int height )=0;
+		virtual err::ErrorCode resizeDefaultRenderTargets()=0;
 
 		/**
 		 * Sets the color that will be applied to the active render targets when the clear function is called.

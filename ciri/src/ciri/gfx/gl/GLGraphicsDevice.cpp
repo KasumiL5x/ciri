@@ -485,12 +485,16 @@ namespace ciri {
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
-	err::ErrorCode GLGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+	err::ErrorCode GLGraphicsDevice::resizeDefaultRenderTargets() {
 		if( !_isValid ) {
 			return err::CIRI_UNKNOWN_ERROR;
 		}
 
 		// todo: check for erroneous sizes
+
+		// get new window size
+		const int width = _window->getSize().x;
+		const int height = _window->getSize().y;
 
 		// don't resize if the same size
 		if( width == _defaultWidth && height == _defaultHeight ) {

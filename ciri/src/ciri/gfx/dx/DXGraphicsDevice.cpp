@@ -493,12 +493,16 @@ namespace ciri {
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 	}
 
-	err::ErrorCode DXGraphicsDevice::resizeDefaultRenderTargets( int width, int height ) {
+	err::ErrorCode DXGraphicsDevice::resizeDefaultRenderTargets() {
 		if( !_isValid ) {
 			return err::CIRI_UNKNOWN_ERROR;
 		}
 
 		// todo: check for erroneous sizes
+
+		// get new window size
+		const int width = _window->getSize().x;
+		const int height = _window->getSize().y;
 
 		// don't resize if the same size
 		if( width == _defaultWidth && height == _defaultHeight ) {
