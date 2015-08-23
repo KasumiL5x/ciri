@@ -3,9 +3,12 @@
 
 namespace ciri {
 	struct TextureFlags {
+		/**
+		 * Texture flags.
+		 */
 		enum Flags {
-			Mipmaps	     = (1 << 0),
-			RenderTarget = (1 << 1)
+			Mipmaps	     = (1 << 0), /**< If present, mipmaps will be generated. */
+			RenderTarget = (1 << 1)  /**< If present, the texture is a render target. */
 		};
 	};
 } // ciri

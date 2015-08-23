@@ -3,12 +3,14 @@
 
 namespace ciri {
 	struct VertexFormat {
+		/**
+		 * Defines the format of a VertexElement.
+		 */
 		enum Format {
-			Float,  // single 32-bit float
-			Float2, // two 32-bit floats
-			Float3, // three 32-bit floats
-			Float4, // four 32-bit floats
-			MAX
+			Float,  /**< Single 32 bit float. */
+			Float2, /**< Two 32 bit floats. */
+			Float3, /**< Three 32 bit floats. */
+			Float4  /**< Four 32 bit floats. */
 		};
 	};
 } // ciri

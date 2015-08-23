@@ -3,14 +3,16 @@
 
 namespace ciri {
 	struct VertexUsage {
+		/**
+		 * Defines how a VertexElement is used.
+		 */
 		enum Usage {
-			Position,
-			Color,
-			Texcoord,
-			Normal,
-			Binormal,
-			Tangent,
-			MAX
+			Position, /**< Treat as position. */
+			Color,    /**< Treat as color. */
+			Texcoord, /**< Treat as texcoord. */
+			Normal,   /**< Treat as normal. */
+			Binormal, /**< Treat as binormal. */
+			Tangent   /**< Treat as tangent. */
 		};
 	};
 } // ciri
