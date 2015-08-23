@@ -54,7 +54,7 @@ namespace ciri {
 	
 	void MayaCamera::setPitch( float val ) {
 		_pitch = val;
-		_pitch = cc::math::clamp(_pitch, -90.0f, 90.0f);
+		_pitch = cc::math::clamp(_pitch, -89.9f, 89.9f);
 		_viewDirty = true;
 	}
 	
@@ -88,7 +88,7 @@ namespace ciri {
 	
 	void MayaCamera::rotatePitch( float val ) {
 		_pitch += val * _rotateSensitivity;
-		_pitch = cc::math::clamp(_pitch, -90.0f, 90.0f);
+		_pitch = cc::math::clamp(_pitch, -89.9f, 89.9f);
 		_viewDirty = true;
 	}
 	
