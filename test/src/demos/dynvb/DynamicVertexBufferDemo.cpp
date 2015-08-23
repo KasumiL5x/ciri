@@ -14,7 +14,7 @@ DemoConfig DynamicVertexBufferDemo::getConfig() {
 	DemoConfig cfg;
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 
@@ -28,11 +28,12 @@ void DynamicVertexBufferDemo::onInitialize( ciri::Window* window, ciri::IGraphic
 	// configure the camera
 	_camera.setAspect((float)windowSize.x / (float)windowSize.y);
 	_camera.setPlanes(0.1f, 1000.0f);
-	_camera.setYaw(247.9f);
-	_camera.setPitch(22.4f);
-	_camera.setOffset(49.5f);
+	_camera.setYaw(238.9f);
+	_camera.setPitch(16.4f);
+	_camera.setOffset(33.5f);
 	_camera.setSensitivity(1.0f, 1.0f, 0.25f);
 	_camera.setLerpStrength(100.0f);
+	_camera.setTarget(cc::Vec3f(0.0f, 8.0f, 5.0f));
 	_camera.resetPosition();
 }
 
@@ -110,7 +111,8 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		const float yaw = _camera.getYaw();
 		const float pitch = _camera.getPitch();
 		const float dolly = _camera.getOffset();
-		printf("pos(%f/%f/%f); yaw(%f); pitch(%f); dolly(%f)\n", pos.x, pos.y, pos.z, yaw, pitch, dolly);
+		const cc::Vec3f& target = _camera.getTarget();
+		printf("pos(%f/%f/%f); yaw(%f); pitch(%f); dolly(%f); target(%f/%f/%f)\n", pos.x, pos.y, pos.z, yaw, pitch, dolly, target.x, target.y, target.z);
 	}
 
 	// camera movement
