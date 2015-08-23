@@ -16,10 +16,6 @@ namespace ciri {
 		GLuint getSamplerId() const;
 
 	private:
-		GLint ciriToGlWrap( SamplerWrap::Mode mode ) const;
-		void ciriToGlFilter( SamplerFilter::Filter mode, GLint* outMin, GLint* outMag, bool mipmaps ) const;
-
-	private:
 		GLuint _samplerId;
 	};
 }

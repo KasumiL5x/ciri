@@ -1,28 +1,10 @@
 #ifndef __ciri_irasterizerstate__
 #define __ciri_irasterizerstate__
 
+#include "FillMode.hpp"
+#include "CullMode.hpp"
+
 namespace ciri {
-	struct  FillMode {
-		/**
-		 * Fill mode used when rendering.
-		 */
-		enum Mode {
-			Solid,    /**< Fills triangles formed by vertices. */
-			Wireframe /**< Draws lines connecting vertices. */
-		};
-	};
-
-	struct CullMode {
-		/**
-		 * Triangle winding order cull mode.
-		 */
-		enum Mode {
-			None,            /**< Do not cull triangles regardless of vertex ordering. */
-			Clockwise,       /**< Cull triangles with clockwise vertex ordering. */
-			CounterClockwise /**< Cull triangles with counter-clockwise vertex ordering. */
-		};
-	};
-
 	struct RasterizerDesc {
 		CullMode::Mode cullMode;   /**< Culls certain a vertex winding order. */
 		float depthBias;           /**< Depth value added to a given pixel. */

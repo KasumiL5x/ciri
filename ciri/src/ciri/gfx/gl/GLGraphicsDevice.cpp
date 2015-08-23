@@ -637,11 +637,11 @@ namespace ciri {
 		if( desc.twoSidedStencil ) {
 			glStencilFuncSeparate(GL_FRONT, ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
 			glStencilFuncSeparate(GL_BACK, ciriToGlFunc(desc.backStencilFunc), desc.stencilRef, desc.stencilReadMask);
-			glStencilOpSeparate(GL_FRONT, glState->ciriToGlOp(desc.frontStencilFailOp), glState->ciriToGlOp(desc.frontStencilDepthFailOp), glState->ciriToGlOp(desc.frontStencilPassOp));
-			glStencilOpSeparate(GL_BACK, glState->ciriToGlOp(desc.backStencilFailOp), glState->ciriToGlOp(desc.backStencilDepthFailOp), glState->ciriToGlOp(desc.backStencilPassOp));
+			glStencilOpSeparate(GL_FRONT, ciriToGlOp(desc.frontStencilFailOp), ciriToGlOp(desc.frontStencilDepthFailOp), ciriToGlOp(desc.frontStencilPassOp));
+			glStencilOpSeparate(GL_BACK, ciriToGlOp(desc.backStencilFailOp), ciriToGlOp(desc.backStencilDepthFailOp), ciriToGlOp(desc.backStencilPassOp));
 		} else {
 			glStencilFunc(ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
-			glStencilOp(glState->ciriToGlOp(desc.frontStencilFailOp), glState->ciriToGlOp(desc.frontStencilDepthFailOp), glState->ciriToGlOp(desc.frontStencilPassOp));
+			glStencilOp(ciriToGlOp(desc.frontStencilFailOp), ciriToGlOp(desc.frontStencilDepthFailOp), ciriToGlOp(desc.frontStencilPassOp));
 		}
 
 		// stencil write mask

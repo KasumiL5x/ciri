@@ -18,10 +18,6 @@ namespace ciri {
 		ID3D11SamplerState* getSamplerState() const;
 
 	private:
-		D3D11_TEXTURE_ADDRESS_MODE ciriToDxWrap( SamplerWrap::Mode mode ) const;
-		D3D11_FILTER ciriToDxFilter( SamplerFilter::Filter mode, bool comparison ) const;
-
-	private:
 		DXGraphicsDevice* _device;
 		ID3D11SamplerState* _samplerState;
 	};

@@ -16,11 +16,7 @@ namespace ciri {
 		virtual void destroy();
 
 		ID3D11DepthStencilState* getState();
-		int getStencilRef() const;
-
-	private:
-		D3D11_COMPARISON_FUNC ciriToDxFunc( CompareFunction::Function func ) const;
-		D3D11_STENCIL_OP ciriToDxOp( StencilOperation::Operation op ) const;
+		int getStencilRef() const;		
 
 	private:
 		DXGraphicsDevice* _device;

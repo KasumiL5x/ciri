@@ -53,6 +53,7 @@
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ClearFlags.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\CompareFunction.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\CullMode.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\CiriToDx.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXDepthStencilState.hpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h" />
+    <ClInclude Include="..\inc\ciri\gfx\FillMode.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CheckGLError.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CiriToGl.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLConstantBuffer.hpp" />
@@ -93,7 +95,10 @@
     <ClInclude Include="..\inc\ciri\gfx\MayaCamera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ObjModel.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\SamplerFilter.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\SamplerWrap.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ShaderStage.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\StencilOperation.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\TextureFlags.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\TextureFormat.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\VertexDeclaration.hpp" />

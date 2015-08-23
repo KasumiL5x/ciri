@@ -307,5 +307,20 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\CiriToDx.hpp">
       <Filter>gfx\dx</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\StencilOperation.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\FillMode.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\CullMode.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\SamplerWrap.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\SamplerFilter.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include <ciri/gfx/dx/DXDepthStencilState.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/dx/CiriToDx.hpp>
 
 namespace ciri {
 	DXDepthStencilState::DXDepthStencilState( DXGraphicsDevice* device )
@@ -65,69 +66,5 @@ namespace ciri {
 
 	int DXDepthStencilState::getStencilRef() const {
 		return _desc.stencilRef;
-	}
-
-	D3D11_COMPARISON_FUNC DXDepthStencilState::ciriToDxFunc( CompareFunction::Function func ) const {
-		switch( func ) {
-			case CompareFunction::Always: {
-				return D3D11_COMPARISON_ALWAYS;
-			}
-			case CompareFunction::Never: {
-				return D3D11_COMPARISON_NEVER;
-			}
-			case CompareFunction::Less: {
-				return D3D11_COMPARISON_LESS;
-			}
-			case CompareFunction::LessEqual: {
-				return D3D11_COMPARISON_LESS_EQUAL;
-			}
-			case CompareFunction::Equal: {
-				return D3D11_COMPARISON_EQUAL;
-			}
-			case CompareFunction::GreaterEqual: {
-				return D3D11_COMPARISON_GREATER_EQUAL;
-			}
-			case CompareFunction::Greater: {
-				return D3D11_COMPARISON_GREATER;
-			}
-			case CompareFunction::NotEqual: {
-				return D3D11_COMPARISON_NOT_EQUAL;
-			}
-			default: {
-					return D3D11_COMPARISON_LESS;
-			}
-		}
-	}
-
-	D3D11_STENCIL_OP DXDepthStencilState::ciriToDxOp( StencilOperation::Operation op ) const {
-		switch( op ) {
-			case StencilOperation::Keep: {
-				return D3D11_STENCIL_OP_KEEP;
-			}
-			case StencilOperation::Zero: {
-				return D3D11_STENCIL_OP_ZERO;
-			}
-			case StencilOperation::Replace: {
-				return D3D11_STENCIL_OP_REPLACE;
-			}
-			case StencilOperation::Increment: {
-				return D3D11_STENCIL_OP_INCR;
-			}
-			case StencilOperation::Decrement: {
-				return D3D11_STENCIL_OP_DECR;
-			}
-			case StencilOperation::IncrementSaturation: {
-				return D3D11_STENCIL_OP_INCR_SAT;
-			}
-			case StencilOperation::DecrementSaturation: {
-				return D3D11_STENCIL_OP_DECR_SAT;
-			}
-			case StencilOperation::Invert: {
-				return D3D11_STENCIL_OP_INVERT;
-			}
-			default: {
-				return D3D11_STENCIL_OP_KEEP;
-			}
-		}
 	}
 } // ciri

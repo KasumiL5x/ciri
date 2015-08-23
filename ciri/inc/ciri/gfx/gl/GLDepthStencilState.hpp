@@ -15,8 +15,6 @@ namespace ciri {
 
 		const DepthStencilDesc& getDesc() const;
 
-		GLenum ciriToGlOp( const StencilOperation::Operation op ) const;
-
 	private:
 		DepthStencilDesc _desc;
 	};

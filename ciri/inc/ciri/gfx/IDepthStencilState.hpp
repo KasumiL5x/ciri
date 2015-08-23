@@ -2,24 +2,9 @@
 #define __ciri_idepthstencilstate__
 
 #include "CompareFunction.hpp"
+#include "StencilOperation.hpp"
 
 namespace ciri {
-	struct StencilOperation {
-		/**
-		 * Stencil testing operations.
-		 */
-		enum Operation {
-			Keep,                /**< Keep existing stencil data. */
-			Zero,                /**< Set stencil data to zero. */
-			Replace,             /**< Set the data to the defined reference value. */
-			Increment,           /**< Increment the stencil data by 1. */
-			Decrement,           /**< Decrement the stencil data by 1. */
-			IncrementSaturation, /**< Increment the stencil data by 1 and clamp the result. */
-			DecrementSaturation, /**< Decrement the stencil data by 1 and clamp the result. */
-			Invert               /**< Invert the stencil data. */
-		};
-	};
-
 	struct DepthStencilDesc {
 		bool depthEnable;                    /**< Enable or disable depth testing. */
 		bool depthWriteMask;                 /**< Enable or disable writing to the depth buffer. */
