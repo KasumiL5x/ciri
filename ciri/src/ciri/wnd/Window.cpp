@@ -45,6 +45,13 @@ namespace ciri {
 		_hwnd = 0;
 	}
 
+	void Window::setTitle( const char* str ) {
+		if( 0 == _hwnd ) {
+			return;
+		}
+		SetWindowText(_hwnd, str);
+	}
+
 	cc::Vec2ui Window::getSize() const {
 		RECT rc;
 		GetClientRect(_hwnd, &rc);

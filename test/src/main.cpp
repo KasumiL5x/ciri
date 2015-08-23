@@ -41,6 +41,9 @@ int main() {
 		return -1;
 	}
 
+	// set the window parameters
+	window.setTitle(config.windowTitle.c_str());
+
 	// create and initalize a graphics device
 	ciri::IGraphicsDevice* graphicsDevice = ciri::GraphicsDeviceFactory::create(config.deviceType);
 	if( !graphicsDevice->create(&window) ) {
