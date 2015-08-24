@@ -17,7 +17,8 @@ namespace ciri {
 			CIRI_INVALID_ARGUMENT					= -8,
 			CIRI_STATIC_BUFFER_AS_DYNAMIC = -9,
 			CIRI_BUFFER_MAP_FAILED				= -10,
-			CIRI_NOT_IMPLEMENTED					=	-11
+			CIRI_BUFFER_CREATION_FAILED   = -11,
+			CIRI_NOT_IMPLEMENTED					=	-12
 		};
 
 		static std::unordered_map<ErrorCode, const char*> errorStrings = {
@@ -32,6 +33,7 @@ namespace ciri {
 			{ CIRI_INVALID_ARGUMENT, "Invalid argument" },
 			{ CIRI_STATIC_BUFFER_AS_DYNAMIC, "Attempted to treat a static buffer as a dynamic buffer" },
 			{ CIRI_BUFFER_MAP_FAILED, "Failed to map a buffer" },
+			{ CIRI_BUFFER_CREATION_FAILED, "Failed to create a buffer" },
 			{ CIRI_NOT_IMPLEMENTED, "Not yet implemented" }
 		};
 
