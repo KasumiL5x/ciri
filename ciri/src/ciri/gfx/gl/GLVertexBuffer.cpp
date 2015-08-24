@@ -14,6 +14,7 @@ namespace ciri {
 			return err::CIRI_INVALID_ARGUMENT;
 		}
 
+		// update if already valid
 		if( _vbo != 0 ) {
 			// cannot update a static vertex buffer
 			if( !_isDynamic ) {
@@ -25,9 +26,11 @@ namespace ciri {
 				return err::CIRI_NOT_IMPLEMENTED; // todo
 			}
 
+			// bind, upload new data, and unbind
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, vertexStride * vertexCount, vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 			return err::CIRI_OK;
 		}
 
@@ -35,12 +38,11 @@ namespace ciri {
 		_vertexCount = vertexCount;
 		_isDynamic = dynamic;
 
+		// generate a new buffer, bind it, set the data, and unbind it
 		glGenBuffers(1, &_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 		glBufferData(GL_ARRAY_BUFFER, vertexStride * vertexCount, vertices, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		// todo: check for fail
 
 		return err::CIRI_OK;
 	}
