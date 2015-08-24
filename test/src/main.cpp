@@ -61,14 +61,15 @@ int main() {
 	timer.start();
 
 	// main loop
-	while( window.isOpen() ) {
+	bool running = true;
+	while( running && !demo->hasRequestedToQuit() ) {
 		// event processing
 		ciri::WindowEvent evt;
 		while( window.pollEvent(evt) ) {
-			demo->onEvent(evt); // call before so Closed doesn't get truncated
+			demo->onEvent(evt);
 
 			if( ciri::WindowEvent::Closed == evt.type ) {
-				window.destroy();
+				running = false;
 				break;
 			}
 		}

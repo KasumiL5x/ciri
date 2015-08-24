@@ -102,7 +102,7 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 	// check for close w/ escape
 	if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
-		_window->destroy();
+		this->gtfo();
 		return;
 	}
 

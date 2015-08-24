@@ -21,8 +21,12 @@ struct DemoConfig {
 };
 
 class IDemo {
+private:
+	bool _shouldGtfo;
+
 public:
-	IDemo() {
+	IDemo()
+		: _shouldGtfo(false) {
 	}
 	virtual ~IDemo() {
 	}
@@ -67,6 +71,20 @@ public:
 	 * Called upon destruction of the demo.  Unload resources here.
 	 */
 	virtual void onUnloadContent()=0;
+
+	/**
+	 * Closes the demo.
+	 */
+	void gtfo() {
+		_shouldGtfo = true;
+	}
+
+	/**
+	 * Gets if the user requested for the demo to quit.
+	 */
+	bool hasRequestedToQuit() const {
+		return _shouldGtfo;
+	}
 };
 
 #endif /* __idemo__ */
