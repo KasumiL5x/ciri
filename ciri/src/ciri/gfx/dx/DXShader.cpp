@@ -1,11 +1,12 @@
 #include <ciri/gfx/dx/DXShader.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <d3dcompiler.h>
+#include <ciri/util/File.hpp>
 #include <ciri/util/StrUtil.hpp>
 
 namespace ciri {
 	DXShader::DXShader( DXGraphicsDevice* device )
-		: IShader(), _device(device), _vsFile(""), _gsFile(""), _psFile(""), _vertexShader(nullptr), _geometryShader(nullptr), _pixelShader(nullptr), _inputLayout(nullptr) {
+		: IShader(), _device(device), _vertexShader(nullptr), _geometryShader(nullptr), _pixelShader(nullptr), _inputLayout(nullptr) {
 		_dxUsageStrings[VertexUsage::Position] = "POSITION";
 		_dxUsageStrings[VertexUsage::Color] = "COLOR";
 		_dxUsageStrings[VertexUsage::Texcoord] = "TEXCOORD";
@@ -15,18 +16,6 @@ namespace ciri {
 	}
 
 	DXShader::~DXShader() {
-	}
-
-	void DXShader::addVertexShader( const char* filename ) {
-		_vsFile = filename;
-	}
-
-	void DXShader::addGeometryShader( const char* filename ) {
-		_gsFile = filename;
-	}
-
-	void DXShader::addPixelShader( const char* filename ) {
-		_psFile = filename;
 	}
 
 	void DXShader::addInputElement( const VertexElement& element ) {
@@ -89,9 +78,47 @@ namespace ciri {
 		return err::CIRI_OK;
 	}
 
-	err::ErrorCode DXShader::build() {
+	err::ErrorCode DXShader::loadFromFile( const char* vs, const char* gs, const char* ps ) {
 		// must have at least VS and PS
-		if( _vsFile.empty() && _psFile.empty() ) {
+		if( nullptr == vs || nullptr == ps ) {
+			return err::CIRI_SHADER_INCOMPLETE;
+		}
+
+		// load vs file
+		File vsFile(vs);
+		if( !vsFile.isOpen() ) {
+			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+			return err::CIRI_FILE_NOT_FOUND;
+		}
+		const std::string vsStr = vsFile.toString();
+
+		// load gs file
+		std::string gsStr = ""; // optional shader, so create empty string for it now
+		if( gs != nullptr ) {
+			File gsFile(gs);
+			if( !gsFile.isOpen() ) {
+				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+				return err::CIRI_FILE_NOT_FOUND;
+			}
+			gsStr = gsFile.toString();
+		}
+
+		// load ps file
+		File psFile(ps);
+		if( !psFile.isOpen() ) {
+			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")");;
+			return err::CIRI_FILE_NOT_FOUND;
+		}
+		const std::string psStr = psFile.toString();
+
+		return loadFromMemory(vsStr.c_str(), (nullptr==gs) ? nullptr : gsStr.c_str(), psStr.c_str());
+	}
+
+	err::ErrorCode DXShader::loadFromMemory( const char* vs, const char* gs, const char* ps ) {
+		// todo: if valid, destroy and make new one
+
+		// must have at least VS and PS
+		if( nullptr == vs || nullptr == ps ) {
 			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
@@ -108,16 +135,16 @@ namespace ciri {
 		// todo: change all unknown errors below to proper error codes
 
 		// build the vertex shader
-		if( !_vsFile.empty() ) {
-			hr = D3DCompileFromFile(strutil::str2wstr(_vsFile).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
+		{
+			hr = D3DCompile(vs, strlen(vs), NULL, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
 				err::ErrorCode ciriErr;
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
 					ciriErr = err::CIRI_FILE_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + _vsFile + std::string(")");
+					_lastError = err::getString(ciriErr) + std::string(" (") + vs + std::string(")");
 				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
 					ciriErr = err::CIRI_PATH_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + _vsFile + std::string(")");
+					_lastError = err::getString(ciriErr) + std::string(" (") + vs + std::string(")");
 				} else {
 					ciriErr = err::CIRI_SHADER_COMPILE_FAILED;
 					_lastError = err::getString(ciriErr) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
@@ -182,16 +209,16 @@ namespace ciri {
 		}
 
 		// build the geometry shader
-		if( !_gsFile.empty() ) {
-			hr = D3DCompileFromFile(strutil::str2wstr(_gsFile).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_5_0", flags, 0, &shaderBlob, &errorBlob);
+		if( gs != nullptr ) {
+			hr = D3DCompile(gs, strlen(gs), NULL, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
 				err::ErrorCode ciriErr;
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
 					ciriErr = err::CIRI_FILE_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + _gsFile + std::string(")");
+					_lastError = err::getString(ciriErr) + std::string(" (") + gs + std::string(")");
 				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
 					ciriErr = err::CIRI_PATH_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + _gsFile + std::string(")");
+					_lastError = err::getString(ciriErr) + std::string(" (") + gs + std::string(")");
 				} else {
 					ciriErr = err::CIRI_SHADER_COMPILE_FAILED;
 					_lastError = err::getString(ciriErr) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
@@ -226,17 +253,17 @@ namespace ciri {
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
-		// build the fragment shader
-		if( !_psFile.empty() ) {
-			hr = D3DCompileFromFile(strutil::str2wstr(_psFile).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
+		// build the pixel shader
+		{
+			hr = D3DCompile(ps, strlen(ps), NULL, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
 				err::ErrorCode ciriErr;
 				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
 					ciriErr = err::CIRI_FILE_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + _psFile + std::string(")");
+					_lastError = err::getString(ciriErr) + std::string(" (") + ps + std::string(")");
 				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
 					ciriErr = err::CIRI_PATH_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + _psFile + std::string(")");
+					_lastError = err::getString(ciriErr) + std::string(" (") + ps + std::string(")");
 				} else {
 					ciriErr = err::CIRI_SHADER_COMPILE_FAILED;
 					_lastError = err::getString(ciriErr) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
@@ -272,11 +299,6 @@ namespace ciri {
 		}
 
 		return err::CIRI_OK;
-	}
-
-	err::ErrorCode DXShader::rebuild() {
-		destroy();
-		return build();
 	}
 
 	void DXShader::destroy() {

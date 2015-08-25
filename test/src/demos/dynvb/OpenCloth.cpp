@@ -254,14 +254,14 @@ bool OpenCloth::updateConstants() {
 
 bool OpenCloth::createGpuResources() {
 	// create the shader
-	const std::string shaderExt = _device->getShaderExt();
 	_shader = _device->createShader();
-	_shader->addVertexShader(("dynvb/fabric_plaid_vs" + shaderExt).c_str());
-	_shader->addPixelShader(("dynvb/fabric_plaid_ps" + shaderExt).c_str());
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
-	if( ciri::err::failed(_shader->build()) ) {
+	const std::string shaderExt = _device->getShaderExt();
+	const std::string vsFile = ("dynvb/fabric_plaid_vs" + shaderExt);
+	const std::string psFile = ("dynvb/fabric_plaid_ps" + shaderExt);
+	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("%s\n", _shader->getLastError());
 		return false;
 	}

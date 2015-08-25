@@ -14,13 +14,10 @@ namespace ciri {
 		GLShader();
 		virtual ~GLShader();
 
-		virtual void addVertexShader( const char* filename );
-		virtual void addGeometryShader( const char* filename );
-		virtual void addPixelShader( const char* filename );
 		virtual void addInputElement( const VertexElement& element );
+		virtual err::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps );
+		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps );
 		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags );
-		virtual err::ErrorCode build();
-		virtual err::ErrorCode rebuild();
 		virtual void destroy();
 		virtual const char* getLastError() const;
 		virtual bool isValid() const;
@@ -32,10 +29,6 @@ namespace ciri {
 		const VertexDeclaration& getVertexDeclaration() const;
 
 	private:
-		std::string _vsFile;
-		std::string _gsFile;
-		std::string _psFile;
-		//
 		GLuint _vertexShader;
 		GLuint _geometryShader;
 		GLuint _pixelShader;

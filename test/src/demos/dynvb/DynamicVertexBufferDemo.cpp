@@ -15,7 +15,7 @@ DemoConfig DynamicVertexBufferDemo::getConfig() {
 	cfg.windowTitle = "ciri : Dynamic Vertex Buffer Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
 	return cfg;
 }
 

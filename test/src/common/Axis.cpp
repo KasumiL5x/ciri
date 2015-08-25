@@ -43,14 +43,13 @@ bool Axis::create( float length, ciri::IGraphicsDevice* device ) {
 		return false;
 	}
 
-	const std::string shaderExt = device->getShaderExt();
-
 	_shader = device->createShader();
-	_shader->addVertexShader(("common/shaders/axis_vs" + shaderExt).c_str());
-	_shader->addPixelShader(("common/shaders/axis_ps" + shaderExt).c_str());
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
-	if( ciri::err::failed(_shader->build()) ) {
+	const std::string shaderExt = device->getShaderExt();
+	const std::string vsFile = ("common/shaders/axis_vs" + shaderExt);
+	const std::string psFile = ("common/shaders/axis_ps" + shaderExt);
+	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		return false;
 	}
 

@@ -4,22 +4,10 @@
 
 namespace ciri {
 	GLShader::GLShader()
-		: IShader(), _vsFile(""), _gsFile(""), _psFile(""), _vertexShader(0), _geometryShader(0), _pixelShader(0), _program(0) {
+		: IShader(), _vertexShader(0), _geometryShader(0), _pixelShader(0), _program(0) {
 	}
 
 	GLShader::~GLShader() {
-	}
-
-	void GLShader::addVertexShader( const char* filename ) {
-		_vsFile = filename;
-	}
-
-	void GLShader::addGeometryShader( const char* filename ) {
-		_gsFile = filename;
-	}
-
-	void GLShader::addPixelShader( const char* filename ) {
-		_psFile = filename;
 	}
 
 	void GLShader::addInputElement( const VertexElement& element ) {
@@ -59,9 +47,47 @@ namespace ciri {
 		return err::CIRI_OK;
 	}
 
-	err::ErrorCode GLShader::build() {
+	err::ErrorCode GLShader::loadFromFile( const char* vs, const char* gs, const char* ps ) {
 		// must have at least VS and PS
-		if( _vsFile.empty() && _psFile.empty() ) {
+		if( nullptr == vs || nullptr == ps ) {
+			return err::CIRI_SHADER_INCOMPLETE;
+		}
+
+		// load vs file
+		File vsFile(vs);
+		if( !vsFile.isOpen() ) {
+			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+			return err::CIRI_FILE_NOT_FOUND;
+		}
+		const std::string vsStr = vsFile.toString();
+
+		// load gs file
+		std::string gsStr = ""; // optional shader, so create empty string for it now
+		if( gs != nullptr ) {
+			File gsFile(gs);
+			if( !gsFile.isOpen() ) {
+				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+				return err::CIRI_FILE_NOT_FOUND;
+			}
+			gsStr = gsFile.toString();
+		}
+
+		// load ps file
+		File psFile(ps);
+		if( !psFile.isOpen() ) {
+			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")");;
+			return err::CIRI_FILE_NOT_FOUND;
+		}
+		const std::string psStr = psFile.toString();
+
+		return loadFromMemory(vsStr.c_str(), (nullptr==gs) ? nullptr : gsStr.c_str(), psStr.c_str());
+	}
+
+	err::ErrorCode GLShader::loadFromMemory( const char* vs, const char* gs, const char* ps ) {
+		// todo: if valid, destroy and make new one
+
+		// must have at least VS and PS
+		if( nullptr == vs || nullptr == ps ) {
 			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
@@ -70,17 +96,9 @@ namespace ciri {
 		GLint status = GL_TRUE;
 
 		// build the vertex shader
-		if( !_vsFile.empty() ) {
-			File file(_vsFile.c_str());
-			if( !file.isOpen() ) {
-				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + _vsFile + std::string(")");;
-				destroy();
-				return err::CIRI_FILE_NOT_FOUND;
-			}
-			const std::string str = file.toString();
-			const char* ptr = str.c_str();
+		{
 			_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(_vertexShader, 1, (const GLchar**)&ptr, 0);
+			glShaderSource(_vertexShader, 1, (const GLchar**)&vs, 0);
 			glCompileShader(_vertexShader);
 			glGetShaderiv(_vertexShader, GL_COMPILE_STATUS, &status);
 			if( status != GL_TRUE ) {
@@ -93,17 +111,9 @@ namespace ciri {
 		}
 
 		// build the geometry shader
-		if( !_gsFile.empty() ) {
-			File file(_gsFile.c_str());
-			if( !file.isOpen() ) {
-				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + _gsFile + std::string(")");;
-				destroy();
-				return err::CIRI_FILE_NOT_FOUND;
-			}
-			const std::string str = file.toString();
-			const char* ptr = str.c_str();
+		if( gs != nullptr ) {
 			_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-			glShaderSource(_geometryShader, 1, (const GLchar**)&ptr, 0);
+			glShaderSource(_geometryShader, 1, (const GLchar**)&gs, 0);
 			glCompileShader(_geometryShader);
 			glGetShaderiv(_geometryShader, GL_COMPILE_STATUS, &status);
 			if( status != GL_TRUE ) {
@@ -116,17 +126,9 @@ namespace ciri {
 		}
 
 		// build the fragment shader
-		if( !_psFile.empty() ) {
-			File file(_psFile.c_str());
-			if( !file.isOpen() ) {
-				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + _psFile + std::string(")");;
-				destroy();
-				return err::CIRI_FILE_NOT_FOUND;
-			}
-			const std::string str = file.toString();
-			const char* ptr = str.c_str();
+		{
 			_pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(_pixelShader, 1, (const GLchar**)&ptr, 0);
+			glShaderSource(_pixelShader, 1, (const GLchar**)&ps, 0);
 			glCompileShader(_pixelShader);
 			glGetShaderiv(_pixelShader, GL_COMPILE_STATUS, &status);
 			if( status != GL_TRUE ) {
@@ -138,17 +140,15 @@ namespace ciri {
 			}
 		}
 
+		// todo: check for errors now and return if they exist
+
 		// create the program and link the shaders
 		_program = glCreateProgram();
-		if( !_vsFile.empty() ) {
-			glAttachShader(_program, _vertexShader);
-		}
-		if( !_gsFile.empty() ) {
+		glAttachShader(_program, _vertexShader);
+		if( gs != nullptr ) {
 			glAttachShader(_program, _geometryShader);
 		}
-		if( !_psFile.empty() ) {
-			glAttachShader(_program, _pixelShader);
-		}
+		glAttachShader(_program, _pixelShader);
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &status);
 		if( status != GL_TRUE ) {
@@ -160,11 +160,6 @@ namespace ciri {
 		}
 
 		return err::CIRI_OK;
-	}
-
-	err::ErrorCode GLShader::rebuild() {
-		destroy();
-		return build();
 	}
 
 	void GLShader::destroy() {

@@ -15,28 +15,28 @@ namespace ciri {
 		}
 
 		/**
-		 * Sets the file to load as a vertex shader when building.
-		 * @param filename Filename of the standalone vertex shader.
-		 */
-		virtual void addVertexShader( const char* filename )=0;
-
-		/**
-		 * Sets the file to load as a geometry shader when building.
-		 * @param filename Filename of the standalone geometry shader.
-		 */
-		virtual void addGeometryShader( const char* filename )=0;
-
-		/**
-		 * Sets the file to load as a pixel shader when building.
-		 * @param filename Filename of the standalone pixel shader.
-		 */
-		virtual void addPixelShader( const char* filename )=0;
-
-		/**
 		 * Adds an input element defining the input vertex structure to the shader.
 		 * @param element Element to add.
 		 */
 		virtual void addInputElement( const VertexElement& element )=0;
+
+		/**
+		 * Builds the shader from existing files.  Both the vertex shader and pixel shader must be valid, but the geometry shader is optional.
+		 * @param vs Vertex shader file.  This must not be null.
+		 * @param gs Geometry shader file.  This can optionally be null.
+		 * @param ps Pixel shader file.  This must not be null.
+		 * @returns err::ErrorCode indicating success or failure.
+		 */
+		virtual err::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps )=0;
+
+		/**
+		 * Builds the shader from memory.  Both the vertex shader and pixel shader must be valid, but the geometry shader is optional.
+		 * @param vs Vertex shader string.  This must not be null.
+		 * @param gs Geometry shader string.  This can optionally be null.
+		 * @param ps Pixel shader string.  This must not be null.
+		 * @returns err::ErrorCode indicating success or failure.
+		 */
+		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps )=0;
 
 		/**
 		 * Attaches a constant buffer to the shader at a specific stage.
@@ -47,19 +47,6 @@ namespace ciri {
 		 * @returns err::ErrorCode indicating success or failure.
 		 */
 		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags )=0;
-
-		/**
-		 * Builds the shader using already set parameters.
-		 * Note that the last occurred error can be retrieved with getLastError().
-		 * @returns err::ErrorCode indicating success or failure.
-		 */
-		virtual err::ErrorCode build()=0;
-
-		/**
-		 * Rebuild an already build shader (for instance, if a shader file was modified).
-		 * @returns err::ErrorCode indicating success or failure.
-		 */
-		virtual err::ErrorCode rebuild()=0;
 
 		/**
 		 * Uninitializes the shader.

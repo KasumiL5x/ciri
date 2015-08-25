@@ -17,14 +17,14 @@ void SimpleShader::operator delete( void* p ) {
 
 bool SimpleShader::create( ciri::IGraphicsDevice* device ) {
 	// create the shader
-	const std::string shaderExt = device->getShaderExt();
 	_shader = device->createShader();
-	_shader->addVertexShader(("common/shaders/simple_vs" + shaderExt).c_str());
-	_shader->addPixelShader(("common/shaders/simple_ps" + shaderExt).c_str());
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
-	if( ciri::err::failed(_shader->build()) ) {
+	const std::string shaderExt = device->getShaderExt();
+	const std::string vsFile = ("common/shaders/simple_vs" + shaderExt);
+	const std::string psFile = ("common/shaders/simple_ps" + shaderExt);
+	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		return false;
 	}
 

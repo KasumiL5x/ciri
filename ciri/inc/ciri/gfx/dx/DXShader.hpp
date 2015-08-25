@@ -17,13 +17,10 @@ namespace ciri {
 		DXShader( DXGraphicsDevice* device );
 		virtual ~DXShader();
 
-		virtual void addVertexShader( const char* filename );
-		virtual void addGeometryShader( const char* filename );
-		virtual void addPixelShader( const char* filename );
 		virtual void addInputElement( const VertexElement& element );
+		virtual err::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps );
+		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps );
 		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags );
-		virtual err::ErrorCode build();
-		virtual err::ErrorCode rebuild();
 		virtual void destroy();
 		virtual const char* getLastError() const;
 		virtual bool isValid() const;
@@ -42,10 +39,6 @@ namespace ciri {
 
 	private:
 		DXGraphicsDevice* _device;
-		//
-		std::string _vsFile;
-		std::string _gsFile;
-		std::string _psFile;
 		//
 		ID3D11VertexShader* _vertexShader;
 		ID3D11GeometryShader* _geometryShader;
