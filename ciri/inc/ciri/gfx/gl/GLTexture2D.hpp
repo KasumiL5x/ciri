@@ -22,9 +22,6 @@ namespace ciri {
 		GLuint getTextureId() const;
 
 	private:
-		void ciriFormatToGlFormat( TextureFormat::Format ciriFormat );
-
-	private:
 		int _flags;
 		TextureFormat::Format _format;
 		GLuint _textureId;

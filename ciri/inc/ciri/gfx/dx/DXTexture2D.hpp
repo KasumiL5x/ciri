@@ -25,7 +25,6 @@ namespace ciri {
 		ID3D11ShaderResourceView* getShaderResourceView() const;
 
 	private:
-		DXGI_FORMAT ciriToDxFormat( TextureFormat::Format format ) const;
 		UINT getMipLevels() const;
 		D3D11_USAGE getUsage() const;
 		UINT getBindFlags() const;

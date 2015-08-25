@@ -6,6 +6,7 @@
 #include "../StencilOperation.hpp"
 #include "../SamplerWrap.hpp"
 #include "../SamplerFilter.hpp"
+#include "../TextureFormat.hpp"
 
 namespace ciri {
 	static D3D11_COMPARISON_FUNC ciriToDxFunc( CompareFunction::Function func ) {
@@ -155,6 +156,26 @@ namespace ciri {
 		}
 
 		return (D3D11_FILTER)filter;
+	}
+
+	static DXGI_FORMAT ciriToDxFormat( TextureFormat::Format format ) {
+		switch( format ) {
+			case TextureFormat::Color: {
+				return DXGI_FORMAT_R8G8B8A8_UNORM;
+			}
+
+			case TextureFormat::RGB32_Float: {
+				return DXGI_FORMAT_R32G32B32_FLOAT; // todo: this breaks DX; do not support it (seems non XYZA formats for textures do), or work around it
+			}
+
+			case TextureFormat::RGBA32_Float: {
+				return DXGI_FORMAT_R32G32B32A32_FLOAT;
+			}
+
+			default: {
+				return DXGI_FORMAT_UNKNOWN;
+			}
+		}
 	}
 } // ciri
 

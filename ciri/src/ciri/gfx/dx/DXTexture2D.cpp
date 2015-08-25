@@ -1,5 +1,6 @@
 #include <ciri/gfx/dx/DXTexture2D.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/dx/CiriToDx.hpp>
 #include <ciri/gfx/dx/msft/ScreenGrab.h>
 #include <ciri/util/StrUtil.hpp>
 
@@ -25,16 +26,34 @@ namespace ciri {
 	}
 
 	err::ErrorCode DXTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format ) {
-		// todo: some check about size differences when updating
-
-		_width = (width > _width) ? width : _width;
-		_height = (height > _height) ? height : _height;
-
+		// update if already valid
 		if( _shaderResourceView != nullptr ) {
+			// format must be the same
+			if( format != _format ) {
+				return err::CIRI_INVALID_ARGUMENT;
+			}
+
+			// for now, the enture texture must be updated, and it must therefore be of the same size
+			if( width != _width || height != _height || xOffset != 0 || yOffset != 0 ) {
+				return err::CIRI_NOT_IMPLEMENTED;
+			}
+
 			// todo: support editing (also change below to dynamic)
 			return err::CIRI_NOT_IMPLEMENTED;
 		}
 
+		// offsets must be zero when initializing the texture
+		if( xOffset != 0 || yOffset != 0 ) {
+			return err::CIRI_INVALID_ARGUMENT;
+		}
+
+		// width and height must be positive
+		if( width <= 0 || height <= 0 ) {
+			return err::CIRI_INVALID_ARGUMENT;
+		}
+
+		_width = width;
+		_height = height;
 		_format = format;
 
 		D3D11_TEXTURE2D_DESC texDesc;
@@ -54,7 +73,7 @@ namespace ciri {
 		// multisampled textures require initialization with nullptr first, so just do it this way for everything for simplicity
 		if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, nullptr, &_texture2D)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::CIRI_UNKNOWN_ERROR; // todo: texture create failure
 		}
 
 		// update the subresource (a.k.a set pixel data) if there is any
@@ -63,11 +82,13 @@ namespace ciri {
 			_device->getContext()->UpdateSubresource(_texture2D, 0, nullptr, data, pitch, 0);
 		}
 
+		// create actual shader resource view
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_texture2D, nullptr, &_shaderResourceView)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::CIRI_UNKNOWN_ERROR; // todo: texture create failure
 		}
 
+		// generate mipmaps
 		if( _flags & TextureFlags::Mipmaps ) {
 			_device->getContext()->GenerateMips(_shaderResourceView);
 		}
@@ -112,26 +133,6 @@ namespace ciri {
 
 	ID3D11ShaderResourceView* DXTexture2D::getShaderResourceView() const {
 		return _shaderResourceView;
-	}
-
-	DXGI_FORMAT DXTexture2D::ciriToDxFormat( TextureFormat::Format format ) const {
-		switch( format ) {
-			case TextureFormat::Color: {
-				return DXGI_FORMAT_R8G8B8A8_UNORM;
-			}
-
-			case TextureFormat::RGB32_Float: {
-				return DXGI_FORMAT_R32G32B32_FLOAT; // todo: this breaks DX; do not support it (seems non XYZA formats for textures do), or work around it
-			}
-
-			case TextureFormat::RGBA32_Float: {
-				return DXGI_FORMAT_R32G32B32A32_FLOAT;
-			}
-
-			default: {
-				return DXGI_FORMAT_UNKNOWN;
-			}
-		}
 	}
 
 	UINT DXTexture2D::getMipLevels() const {

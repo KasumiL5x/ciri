@@ -1,4 +1,5 @@
 #include <ciri/gfx/gl/GLTexture2D.hpp>
+#include <ciri/gfx/gl/CiriToGl.hpp>
 #include <ciri/util/TGA.hpp>
 
 namespace ciri {
@@ -18,39 +19,68 @@ namespace ciri {
 	}
 
 	err::ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format ) {
-		// todo: some check about size differences when updating
-
-		_width = (width > _width) ? width : _width;
-		_height = (height > _height) ? height : _height;
-
-		_format = format;
-		ciriFormatToGlFormat(format);
-
-		const int level = 0;
-
+		// update if already valid
 		if( _textureId != 0 ) {
+			// format must be the same
+			if( format != _format ) {
+				return err::CIRI_INVALID_ARGUMENT;
+			}
+
+			// for now, the enture texture must be updated, and it must therefore be of the same size
+			if( width != _width || height != _height || xOffset != 0 || yOffset != 0 ) {
+				return err::CIRI_NOT_IMPLEMENTED;
+			}
+
+			//
+			// NOTE: updating below is completely untested
+			//
+
+			const int level = 0; // todo
 			glBindTexture(GL_TEXTURE_2D, _textureId);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
 			glTexSubImage2D(GL_TEXTURE_2D, level, xOffset, yOffset, width, height, _pixelFormat, _pixelType, data);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 			glBindTexture(GL_TEXTURE_2D, 0);
-		} else {
-			if( xOffset != 0 || yOffset != 0 ) {
-				return err::CIRI_UNKNOWN_ERROR; // todo: error (cannot set a nonzeroed rect on a blank image)
-			}
 
-			glGenTextures(1, &_textureId);
-			glBindTexture(GL_TEXTURE_2D, _textureId);
-			glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
-			glTexImage2D(GL_TEXTURE_2D, level, _internalFormat, width, height, 0, _pixelFormat, _pixelType, data);
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
-			if( _flags & TextureFlags::Mipmaps ) {
-				glGenerateMipmap(GL_TEXTURE_2D);
-			}
-
-			glBindTexture(GL_TEXTURE_2D, 0);
+			return err::CIRI_OK;
 		}
+
+		// offsets must be zero when initializing the texture
+		if( xOffset != 0 || yOffset != 0 ) {
+			return err::CIRI_INVALID_ARGUMENT;
+		}
+
+		// width and height must be positive
+		if( width <= 0 || height <= 0 ) {
+			return err::CIRI_INVALID_ARGUMENT;
+		}
+
+
+		_width = width;
+		_height = height;
+		_format = format;
+
+		// convert to appropriate gl formats
+		ciriToGlTextureFormat(format, &_internalFormat, &_pixelFormat, &_pixelType);
+
+		const int level = 0; // todo
+		// generate and bind the texture
+		glGenTextures(1, &_textureId);
+		glBindTexture(GL_TEXTURE_2D, _textureId);
+		// change the pixel store to match that of the format's bytes per pixel
+		glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
+		// set the texture data
+		glTexImage2D(GL_TEXTURE_2D, level, _internalFormat, width, height, 0, _pixelFormat, _pixelType, data);
+		// reset pixel store back to default
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+		// generate mipmaps
+		if( _flags & TextureFlags::Mipmaps ) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
+		// unbind texture
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		return err::CIRI_OK;
 	}
@@ -98,35 +128,5 @@ namespace ciri {
 
 	GLuint GLTexture2D::getTextureId() const {
 		return _textureId;
-	}
-
-	void GLTexture2D::ciriFormatToGlFormat( TextureFormat::Format ciriFormat ) {
-		// http://www.opentk.com/files/doc/namespace_open_t_k_1_1_graphics_1_1_open_g_l.html#ae0f3f1e7b978e4937984b34fdebabf62a8f0fb883eb5a52838534191513e365a2
-		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetGLFormat
-		_internalFormat = GL_RGBA;
-		_pixelFormat = GL_RGBA;
-		_pixelType = GL_UNSIGNED_BYTE;
-
-		switch( ciriFormat ) {
-			case TextureFormat::Color: {
-				_internalFormat = GL_RGBA;
-				_pixelFormat = GL_RGBA;
-				_pixelType = GL_UNSIGNED_BYTE;
-				break;
-			}
-
-			case TextureFormat::RGB32_Float: {
-				_internalFormat = GL_RGB32F;
-				_pixelFormat = GL_RGB;
-				_pixelType = GL_FLOAT;
-				break;
-			}
-
-			case TextureFormat::RGBA32_Float: {
-				_internalFormat = GL_RGBA32F;
-				_pixelFormat = GL_RGBA;
-				_pixelType = GL_FLOAT;
-			}
-		}
 	}
 } // ciri

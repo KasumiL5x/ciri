@@ -6,6 +6,7 @@
 #include "../StencilOperation.hpp"
 #include "../SamplerWrap.hpp"
 #include "../SamplerFilter.hpp"
+#include "../TextureFormat.hpp"
 
 namespace ciri {
 	static GLenum ciriToGlFunc( CompareFunction::Function func ) {
@@ -147,6 +148,40 @@ namespace ciri {
 				*outMin = (mipmaps) ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 				*outMag = GL_LINEAR;
 				break;
+			}
+		}
+	}
+
+	static void ciriToGlTextureFormat( TextureFormat::Format ciriFormat, GLint* internalFormat, GLenum* pixelFormat, GLenum* pixelType ) {
+		if( nullptr == internalFormat || nullptr == pixelFormat || nullptr == pixelType ) {
+			return;
+		}
+
+		// http://www.opentk.com/files/doc/namespace_open_t_k_1_1_graphics_1_1_open_g_l.html#ae0f3f1e7b978e4937984b34fdebabf62a8f0fb883eb5a52838534191513e365a2
+		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetGLFormat
+		*internalFormat = GL_RGBA;
+		*pixelFormat = GL_RGBA;
+		*pixelType = GL_UNSIGNED_BYTE;
+
+		switch( ciriFormat ) {
+			case TextureFormat::Color: {
+				*internalFormat = GL_RGBA;
+				*pixelFormat = GL_RGBA;
+				*pixelType = GL_UNSIGNED_BYTE;
+				break;
+			}
+
+			case TextureFormat::RGB32_Float: {
+				*internalFormat = GL_RGB32F;
+				*pixelFormat = GL_RGB;
+				*pixelType = GL_FLOAT;
+				break;
+			}
+
+			case TextureFormat::RGBA32_Float: {
+				*internalFormat = GL_RGBA32F;
+				*pixelFormat = GL_RGBA;
+				*pixelType = GL_FLOAT;
 			}
 		}
 	}
