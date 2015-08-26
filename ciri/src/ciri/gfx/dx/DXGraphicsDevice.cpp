@@ -1,4 +1,5 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
+#include <ciri/gfx/dx/CiriToDx.hpp>
 #include <ciri/wnd/Window.hpp>
 #include <DirectXColors.h>
 
@@ -435,7 +436,7 @@ namespace ciri {
 			return;
 		}
 
-		_context->IASetPrimitiveTopology(convertTopology(topology));
+		_context->IASetPrimitiveTopology(ciriToDxTopology(topology));
 		_context->Draw(vertexCount, startIndex);
 	}
 
@@ -459,7 +460,7 @@ namespace ciri {
 			return; // todo: error
 		}
 
-		_context->IASetPrimitiveTopology(convertTopology(topology));
+		_context->IASetPrimitiveTopology(ciriToDxTopology(topology));
 		_context->DrawIndexed(indexCount, 0, 0);
 	}
 	
@@ -849,33 +850,5 @@ namespace ciri {
 		}
 
 		return true;
-	}
-
-	D3D_PRIMITIVE_TOPOLOGY DXGraphicsDevice::convertTopology( PrimitiveTopology::Topology topology ) const {
-		switch( topology ) {
-			case PrimitiveTopology::PointList: {
-				return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
-			}
-
-			case PrimitiveTopology::LineList: {
-				return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-			}
-
-			case PrimitiveTopology::LineStrip: {
-				return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
-			}
-
-			case PrimitiveTopology::TriangleList: {
-				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			}
-
-			case PrimitiveTopology::TriangleStrip: {
-				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-			}
-
-			default: {
-				return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
-			}
-		}
 	}
 } // ciri

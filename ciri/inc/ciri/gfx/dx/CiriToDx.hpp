@@ -8,6 +8,7 @@
 #include "../SamplerFilter.hpp"
 #include "../TextureFormat.hpp"
 #include "../VertexFormat.hpp"
+#include "../PrimitiveTopology.hpp"
 
 namespace ciri {
 	static D3D11_COMPARISON_FUNC ciriToDxComparisonFunc( CompareFunction::Function func ) {
@@ -199,6 +200,34 @@ namespace ciri {
 
 			default: {
 				return DXGI_FORMAT_UNKNOWN;
+			}
+		}
+	}
+
+	static D3D_PRIMITIVE_TOPOLOGY ciriToDxTopology( PrimitiveTopology::Topology topology ) {
+		switch( topology ) {
+			case PrimitiveTopology::PointList: {
+				return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+			}
+
+			case PrimitiveTopology::LineList: {
+				return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+			}
+
+			case PrimitiveTopology::LineStrip: {
+				return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+			}
+
+			case PrimitiveTopology::TriangleList: {
+				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			}
+
+			case PrimitiveTopology::TriangleStrip: {
+				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+			}
+
+			default: {
+				return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 			}
 		}
 	}

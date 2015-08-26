@@ -428,7 +428,7 @@ namespace ciri {
 			return;
 		}
 
-		glDrawArrays(convertTopology(topology), startIndex, vertexCount);
+		glDrawArrays(ciriToGlTopology(topology), startIndex, vertexCount);
 	}
 
 	void GLGraphicsDevice::drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) {
@@ -451,7 +451,7 @@ namespace ciri {
 			return; // todo: error
 		}
 
-		glDrawElements(convertTopology(topology), indexCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(ciriToGlTopology(topology), indexCount, GL_UNSIGNED_INT, 0);
 	}
 
 	void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) {
@@ -813,34 +813,6 @@ namespace ciri {
 		DestroyWindow(hwnd);
 
 		return true;
-	}
-
-	GLenum GLGraphicsDevice::convertTopology( PrimitiveTopology::Topology topology ) const {
-		switch( topology ) {
-			case PrimitiveTopology::PointList: {
-				return GL_POINTS;
-			}
-
-			case PrimitiveTopology::LineList: {
-				return GL_LINES; // wrong?
-			}
-
-			case PrimitiveTopology::LineStrip: {
-				return GL_LINE_STRIP;
-			}
-
-			case PrimitiveTopology::TriangleList: {
-				return GL_TRIANGLES; // wrong?
-			}
-
-			case PrimitiveTopology::TriangleStrip: {
-				return GL_TRIANGLE_STRIP;
-			}
-
-			default: {
-				return GL_INVALID_ENUM; // lol
-			}
-		}
 	}
 
 	void APIENTRY GLGraphicsDevice::debugContextCb( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {

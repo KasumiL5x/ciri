@@ -7,6 +7,7 @@
 #include "../SamplerWrap.hpp"
 #include "../SamplerFilter.hpp"
 #include "../TextureFormat.hpp"
+#include "../PrimitiveTopology.hpp"
 
 namespace ciri {
 	static GLenum ciriToGlComparisonFunc( CompareFunction::Function func ) {
@@ -182,6 +183,34 @@ namespace ciri {
 				*internalFormat = GL_RGBA32F;
 				*pixelFormat = GL_RGBA;
 				*pixelType = GL_FLOAT;
+			}
+		}
+	}
+
+	static GLenum ciriToGlTopology( PrimitiveTopology::Topology topology ) {
+		switch( topology ) {
+			case PrimitiveTopology::PointList: {
+				return GL_POINTS;
+			}
+
+			case PrimitiveTopology::LineList: {
+				return GL_LINES;
+			}
+
+			case PrimitiveTopology::LineStrip: {
+				return GL_LINE_STRIP;
+			}
+
+			case PrimitiveTopology::TriangleList: {
+				return GL_TRIANGLES;
+			}
+
+			case PrimitiveTopology::TriangleStrip: {
+				return GL_TRIANGLE_STRIP;
+			}
+
+			default: {
+				return GL_INVALID_ENUM; // lol
 			}
 		}
 	}
