@@ -65,6 +65,8 @@ namespace ciri {
 
 		virtual Window* getWindow() const;
 
+		virtual const char* getGpuName() const;
+
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
 
@@ -112,6 +114,8 @@ namespace ciri {
 		ID3D11RenderTargetView* _activeRenderTargets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		//
 		std::string _shaderExt;
+		//
+		std::string _gpuName;
 	};
 } // ciri
 

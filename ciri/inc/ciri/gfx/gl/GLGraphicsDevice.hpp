@@ -68,6 +68,8 @@ namespace ciri {
 
 		virtual Window* getWindow() const;
 
+		virtual const char* getGpuName() const;
+
 	private:
 		bool configureGl( HWND hwnd );
 		bool configureGlew();
@@ -111,6 +113,8 @@ namespace ciri {
 		IDepthStencilState* _activeDepthStencilState;
 		//
 		std::string _shaderExt;
+		//
+		std::string _gpuName;
 	};
 } // ciri
 

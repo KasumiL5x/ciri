@@ -61,12 +61,12 @@ namespace ciri {
 		}
 
 		// temp:
-		printf("**********\n");
-		printf("Vendor: %s\n", glGetString(GL_VENDOR));
-		printf("Renderer: %s\n", glGetString(GL_RENDERER));
-		printf("Version: %s\n", glGetString(GL_VERSION));
-		printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-		printf("**********\n");
+		//printf("**********\n");
+		//printf("Vendor: %s\n", glGetString(GL_VENDOR));
+		//printf("Renderer: %s\n", glGetString(GL_RENDERER));
+		//printf("Version: %s\n", glGetString(GL_VERSION));
+		//printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		//printf("**********\n");
 
 		_isValid = true;
 
@@ -660,6 +660,10 @@ namespace ciri {
 		return _window;
 	}
 
+	const char* GLGraphicsDevice::getGpuName() const {
+		return _gpuName.c_str();
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);
@@ -725,6 +729,11 @@ namespace ciri {
 			glDebugMessageCallbackAMD(debugContextAmdCb, this);
 		}
 		#endif
+
+		// get gpu information
+		const std::string vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+		const std::string renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+		_gpuName = vendor + " " + renderer;
 
 		// default to fullscreen viewport
 		glViewport(0, 0, _defaultWidth, _defaultHeight);

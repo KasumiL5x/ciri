@@ -222,6 +222,11 @@ namespace ciri {
 		 * @returns Pointer to the attached window.
 		 */
 		virtual Window* getWindow() const=0;
+
+		/**
+		 * Gets the name of the GPU being used.
+		 */
+		virtual const char* getGpuName() const=0;
 	};
 } // ciri
 

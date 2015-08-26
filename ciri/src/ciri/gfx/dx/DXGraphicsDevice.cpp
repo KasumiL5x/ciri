@@ -1,6 +1,7 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <ciri/gfx/dx/CiriToDx.hpp>
 #include <ciri/wnd/Window.hpp>
+#include <ciri/util/StrUtil.hpp>
 #include <DirectXColors.h>
 
 namespace ciri {
@@ -651,6 +652,10 @@ namespace ciri {
 		return _window;
 	}
 
+	const char* DXGraphicsDevice::getGpuName() const {
+		return _gpuName.c_str();
+	}
+
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
 		return _device;
 	}
@@ -728,9 +733,9 @@ namespace ciri {
 			return false;
 		}
 
-		// store gpu memory and gpu name
-		const int gpuMemory = static_cast<int>(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
-		const std::wstring gpuName = adapterDesc.Description;
+		// get gpu information
+		//const int gpuMemory = static_cast<int>(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+		_gpuName = strutil::wstr2str(adapterDesc.Description);
 
 		// release adapter output, adapter, and factory
 		adapterOutput->Release();

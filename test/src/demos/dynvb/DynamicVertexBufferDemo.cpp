@@ -23,6 +23,9 @@ void DynamicVertexBufferDemo::onInitialize( ciri::Window* window, ciri::IGraphic
 	_window = window;
 	_graphicsDevice = graphicsDevice;
 
+	// print driver information
+	printf("Device: %s\n", graphicsDevice->getGpuName());
+
 	// window size
 	const cc::Vec2ui windowSize = window->getSize();
 

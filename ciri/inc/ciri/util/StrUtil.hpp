@@ -18,6 +18,16 @@ namespace ciri {
 			return wstr;
 		}
 
+		static std::string wstr2str( const std::wstring& wstr ) {
+			const int sLength = (int)wstr.length() + 1;
+			const int len = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), sLength, 0, 0, 0, 0);
+			char* buf = new char[len];
+			WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), sLength, buf, len, 0, 0);
+			std::string str(buf);
+			delete[] buf;
+			return str;
+		}
+
 		static std::vector<std::string>* split( const char* str, char delim, std::vector<std::string>* outVec ) {
 			do {
 				const char* begin = str;
