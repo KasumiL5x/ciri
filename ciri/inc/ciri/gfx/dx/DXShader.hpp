@@ -22,7 +22,7 @@ namespace ciri {
 		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps );
 		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags );
 		virtual void destroy();
-		virtual const char* getLastError() const;
+		virtual const std::vector<ShaderError>& getErrors() const;
 		virtual bool isValid() const;
 
 		ID3D11VertexShader* getVertexShader() const;
@@ -36,6 +36,8 @@ namespace ciri {
 
 	private:
 		DXGI_FORMAT convertInputFormat( VertexFormat::Format format ) const;
+		void addError( err::ErrorCode code, const std::string& msg );
+		void clearErrors();
 
 	private:
 		DXGraphicsDevice* _device;
@@ -45,8 +47,9 @@ namespace ciri {
 		ID3D11PixelShader* _pixelShader;
 		ID3D11InputLayout* _inputLayout;
 		//
+		std::vector<ShaderError> _errors;
+		//
 		VertexDeclaration _vertexDeclaration;
-		std::string _lastError;
 		//
 		std::unordered_map<VertexUsage::Usage, std::string> _dxUsageStrings;
 		//

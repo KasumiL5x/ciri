@@ -48,15 +48,18 @@ namespace ciri {
 	}
 
 	err::ErrorCode GLShader::loadFromFile( const char* vs, const char* gs, const char* ps ) {
+		clearErrors();
+
 		// must have at least VS and PS
 		if( nullptr == vs || nullptr == ps ) {
+			addError(err::CIRI_SHADER_INCOMPLETE, err::getString(err::CIRI_SHADER_INCOMPLETE));
 			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
 		// load vs file
 		File vsFile(vs);
 		if( !vsFile.isOpen() ) {
-			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
 		}
 		const std::string vsStr = vsFile.toString();
@@ -66,7 +69,7 @@ namespace ciri {
 		if( gs != nullptr ) {
 			File gsFile(gs);
 			if( !gsFile.isOpen() ) {
-				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+				addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + gs + std::string(")"));
 				return err::CIRI_FILE_NOT_FOUND;
 			}
 			gsStr = gsFile.toString();
@@ -75,7 +78,7 @@ namespace ciri {
 		// load ps file
 		File psFile(ps);
 		if( !psFile.isOpen() ) {
-			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")");;
+			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
 		}
 		const std::string psStr = psFile.toString();
@@ -86,13 +89,15 @@ namespace ciri {
 	err::ErrorCode GLShader::loadFromMemory( const char* vs, const char* gs, const char* ps ) {
 		// todo: if valid, destroy and make new one
 
+		clearErrors();
+
 		// must have at least VS and PS
 		if( nullptr == vs || nullptr == ps ) {
+			addError(err::CIRI_SHADER_INCOMPLETE, err::getString(err::CIRI_SHADER_INCOMPLETE));
 			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
 		const int ERROR_LOG_SIZE = 1024;
-
 		GLint status = GL_TRUE;
 
 		// build the vertex shader
@@ -104,9 +109,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_vertexShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log);
-				destroy();
-				return err::CIRI_SHADER_COMPILE_FAILED;
+				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
 			}
 		}
 
@@ -119,9 +122,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_geometryShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log);
-				destroy();
-				return err::CIRI_SHADER_COMPILE_FAILED;
+				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
 			}
 		}
 
@@ -134,13 +135,9 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_pixelShader, ERROR_LOG_SIZE, 0, log);
-				_lastError = err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log);
-				destroy();
-				return err::CIRI_SHADER_COMPILE_FAILED;
+				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
 			}
 		}
-
-		// todo: check for errors now and return if they exist
 
 		// create the program and link the shaders
 		_program = glCreateProgram();
@@ -154,9 +151,13 @@ namespace ciri {
 		if( status != GL_TRUE ) {
 			GLchar log[ERROR_LOG_SIZE] = "";
 			glGetProgramInfoLog(_program, ERROR_LOG_SIZE, 0, log);
-			_lastError = err::getString(err::CIRI_SHADER_LINK_FAILED) + std::string(": ") + std::string(log);
+			addError(err::CIRI_SHADER_LINK_FAILED, err::getString(err::CIRI_SHADER_LINK_FAILED) + std::string(": ") + std::string(log));
+		}
+
+		// if any errors have occurred, clean up and return the first error code
+		if( !_errors.empty() ) {
 			destroy();
-			return err::CIRI_SHADER_LINK_FAILED;
+			return _errors[0].code;
 		}
 
 		return err::CIRI_OK;
@@ -184,8 +185,8 @@ namespace ciri {
 		}
 	}
 
-	const char* GLShader::getLastError() const {
-		return _lastError.c_str();
+	const std::vector<IShader::ShaderError>& GLShader::getErrors() const {
+		return _errors;
 	}
 
 	bool GLShader::isValid() const {
@@ -210,5 +211,13 @@ namespace ciri {
 
 	const VertexDeclaration& GLShader::getVertexDeclaration() const {
 		return _vertexDeclaration;
+	}
+
+	void GLShader::addError( err::ErrorCode code, const std::string& msg ) {
+		_errors.push_back(ShaderError(code, msg));
+	}
+
+	void GLShader::clearErrors() {
+		_errors.clear();
 	}
 } // ciri

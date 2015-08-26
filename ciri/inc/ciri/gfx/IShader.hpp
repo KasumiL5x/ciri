@@ -9,6 +9,18 @@ namespace ciri {
 
 	class IShader {
 	public:
+		struct ShaderError {
+			err::ErrorCode code;
+			std::string msg;
+
+			ShaderError() {
+			}
+			ShaderError( err::ErrorCode theCode, const std::string& theMsg )
+				: code(theCode), msg(theMsg) {
+			}
+		};
+
+	public:
 		IShader() {
 		}
 		virtual ~IShader() {
@@ -25,7 +37,7 @@ namespace ciri {
 		 * @param vs Vertex shader file.  This must not be null.
 		 * @param gs Geometry shader file.  This can optionally be null.
 		 * @param ps Pixel shader file.  This must not be null.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns err::ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
 		 */
 		virtual err::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps )=0;
 
@@ -34,7 +46,7 @@ namespace ciri {
 		 * @param vs Vertex shader string.  This must not be null.
 		 * @param gs Geometry shader string.  This can optionally be null.
 		 * @param ps Pixel shader string.  This must not be null.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns err::ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
 		 */
 		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps )=0;
 
@@ -54,10 +66,10 @@ namespace ciri {
 		virtual void destroy()=0;
 
 		/**
-		 * Gets the last error that occurred.
-		 * @return Last error string.
+		 * Gets a vector of errors that have occurred.  Previously accumulated errors are discarded for new loads.
+		 * @returns Vector of ShaderErrors.
 		 */
-		virtual const char* getLastError() const=0;
+		virtual const std::vector<ShaderError>& getErrors() const=0;
 
 		/**
 		 * Checks if the shader is valid.

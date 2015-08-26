@@ -1,6 +1,7 @@
 #ifndef __ciri_glshader__
 #define __ciri_glshader__
 
+#include <vector>
 #include <string>
 #include <gl/glew.h>
 #include "../IShader.hpp"
@@ -19,7 +20,7 @@ namespace ciri {
 		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps );
 		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags );
 		virtual void destroy();
-		virtual const char* getLastError() const;
+		virtual const std::vector<ShaderError>& getErrors() const;
 		virtual bool isValid() const;
 
 		GLuint getVertexShader() const;
@@ -29,12 +30,16 @@ namespace ciri {
 		const VertexDeclaration& getVertexDeclaration() const;
 
 	private:
+		void addError( err::ErrorCode code, const std::string& msg );
+		void clearErrors();
+
+	private:
 		GLuint _vertexShader;
 		GLuint _geometryShader;
 		GLuint _pixelShader;
 		GLuint _program;
 		//
-		std::string _lastError;
+		std::vector<ShaderError> _errors;
 		//
 		VertexDeclaration _vertexDeclaration;
 		//

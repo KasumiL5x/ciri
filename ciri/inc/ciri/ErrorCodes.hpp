@@ -28,7 +28,7 @@ namespace ciri {
 			{ CIRI_PATH_NOT_FOUND, "Path not found" },
 			{ CIRI_SHADER_COMPILE_FAILED, "Shader compile failed" },
 			{ CIRI_SHADER_LINK_FAILED, "Shader link failed" },
-			{ CIRI_SHADER_INCOMPLETE, "Shader data incomplete" },
+			{ CIRI_SHADER_INCOMPLETE, "Shader data incomplete; shaders must have both a vertex and pixel shader" },
 			{ CIRI_SHADER_INVALID, "Shader is invalid" },
 			{ CIRI_INVALID_ARGUMENT, "Invalid argument" },
 			{ CIRI_STATIC_BUFFER_AS_DYNAMIC, "Attempted to treat a static buffer as a dynamic buffer" },

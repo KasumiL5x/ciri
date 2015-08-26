@@ -173,7 +173,10 @@ bool Grid::loadShader() {
 	const std::string vsFile = ("common/shaders/grid_vs" + shaderExt);
 	const std::string psFile = ("common/shaders/grid_ps" + shaderExt);
 	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
-		printf("Failed to build Grid shader: %s\n", _shader->getLastError());
+		printf("Failed to build the Grid shader:\n");
+		for( unsigned int i = 0; i < _shader->getErrors().size(); ++i ) {
+			printf("%s\n", _shader->getErrors()[i].msg.c_str());
+		}
 		return false;
 	}
 

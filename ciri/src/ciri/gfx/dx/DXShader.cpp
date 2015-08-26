@@ -79,15 +79,18 @@ namespace ciri {
 	}
 
 	err::ErrorCode DXShader::loadFromFile( const char* vs, const char* gs, const char* ps ) {
+		clearErrors();
+
 		// must have at least VS and PS
 		if( nullptr == vs || nullptr == ps ) {
+			addError(err::CIRI_SHADER_INCOMPLETE, err::getString(err::CIRI_SHADER_INCOMPLETE));
 			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
 		// load vs file
 		File vsFile(vs);
 		if( !vsFile.isOpen() ) {
-			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
 		}
 		const std::string vsStr = vsFile.toString();
@@ -97,7 +100,7 @@ namespace ciri {
 		if( gs != nullptr ) {
 			File gsFile(gs);
 			if( !gsFile.isOpen() ) {
-				_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")");;
+				addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + gs + std::string(")"));
 				return err::CIRI_FILE_NOT_FOUND;
 			}
 			gsStr = gsFile.toString();
@@ -106,7 +109,7 @@ namespace ciri {
 		// load ps file
 		File psFile(ps);
 		if( !psFile.isOpen() ) {
-			_lastError = err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")");;
+			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
 		}
 		const std::string psStr = psFile.toString();
@@ -117,8 +120,11 @@ namespace ciri {
 	err::ErrorCode DXShader::loadFromMemory( const char* vs, const char* gs, const char* ps ) {
 		// todo: if valid, destroy and make new one
 
+		clearErrors();
+
 		// must have at least VS and PS
 		if( nullptr == vs || nullptr == ps ) {
+			addError(err::CIRI_SHADER_INCOMPLETE, err::getString(err::CIRI_SHADER_INCOMPLETE));
 			return err::CIRI_SHADER_INCOMPLETE;
 		}
 
@@ -138,71 +144,50 @@ namespace ciri {
 		{
 			hr = D3DCompile(vs, strlen(vs), NULL, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
-				err::ErrorCode ciriErr;
-				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
-					ciriErr = err::CIRI_FILE_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + vs + std::string(")");
-				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
-					ciriErr = err::CIRI_PATH_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + vs + std::string(")");
+				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
+			} else {
+				hr = _device->getDevice()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_vertexShader);
+				if( FAILED(hr) ) {
+					addError(err::CIRI_UNKNOWN_ERROR, err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
 				} else {
-					ciriErr = err::CIRI_SHADER_COMPILE_FAILED;
-					_lastError = err::getString(ciriErr) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				}
-				destroy();
-				return ciriErr;
-			}
+					// build the input layout
+					int offset = 0;
+					const std::vector<VertexElement>& elements = _vertexDeclaration.getElements();
+					D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[elements.size()];
+					for( unsigned int i = 0; i < elements.size(); ++i ) {
+						layout[i].SemanticName = _dxUsageStrings[elements[i].getUsage()].c_str();
+						layout[i].SemanticIndex = 0;
+						layout[i].Format = convertInputFormat(elements[i].getFormat());
+						layout[i].InputSlot = 0;
+						layout[i].AlignedByteOffset = offset;
+						layout[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+						layout[i].InstanceDataStepRate = 0;
+						offset += elements[i].getSize(); // sizeof(datatype) * numberOfThem;
+					}
+					hr = _device->getDevice()->CreateInputLayout(layout, elements.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &_inputLayout);
+					delete[] layout; layout = nullptr;
+					if( FAILED(hr) ) {
+						addError(err::CIRI_UNKNOWN_ERROR, err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
+					} else {
+						// reflect the constant buffers of the vertex shader
+						ID3D11ShaderReflection* refl = nullptr;
+						D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
+						int index = 0;
+						while( true ) {
+							D3D11_SHADER_BUFFER_DESC desc;
+							if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
+								break;
+							}
 
-			hr = _device->getDevice()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_vertexShader);
-			if( FAILED(hr) ) {
-				_lastError = err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				destroy();
-				return err::CIRI_UNKNOWN_ERROR;
-			}
+							_vertexConstantBufferIndices[std::string(desc.Name)] = index;
 
-			// build the input layout
-			int offset = 0;
-			const std::vector<VertexElement>& elements = _vertexDeclaration.getElements();
-			D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[elements.size()];
-			for( unsigned int i = 0; i < elements.size(); ++i ) {
-				layout[i].SemanticName = _dxUsageStrings[elements[i].getUsage()].c_str();
-				layout[i].SemanticIndex = 0;
-				layout[i].Format = convertInputFormat(elements[i].getFormat());
-				layout[i].InputSlot = 0;
-				layout[i].AlignedByteOffset = offset;
-				layout[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-				layout[i].InstanceDataStepRate = 0;
-				offset += elements[i].getSize(); // sizeof(datatype) * numberOfThem;
-			}
-			hr = _device->getDevice()->CreateInputLayout(layout, elements.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &_inputLayout);
-			if( FAILED(hr) ) {
-				if( E_INVALIDARG == hr ) {
-					_lastError = err::getString(err::CIRI_UNKNOWN_ERROR);
-				} else {
-					_lastError = err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				}
-				destroy();
-				return err::CIRI_UNKNOWN_ERROR;
-			}
-			delete[] layout;
-			layout = nullptr;
+							index += 1;
+						}
+					} // CreateInputLayout success
+				} // CreateVertexShader success
+			} // D3DCompile success
 
-			// reflect the constant buffers of the vertex shader
-			ID3D11ShaderReflection* refl = nullptr;
-			D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
-			int index = 0;
-			while( true ) {
-				D3D11_SHADER_BUFFER_DESC desc;
-				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
-					break;
-				}
-
-				_vertexConstantBufferIndices[std::string(desc.Name)] = index;
-
-				index += 1;
-			}
-
-
+			// release shader and error blobs
 			shaderBlob->Release();
 			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
@@ -212,42 +197,29 @@ namespace ciri {
 		if( gs != nullptr ) {
 			hr = D3DCompile(gs, strlen(gs), NULL, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
-				err::ErrorCode ciriErr;
-				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
-					ciriErr = err::CIRI_FILE_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + gs + std::string(")");
-				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
-					ciriErr = err::CIRI_PATH_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + gs + std::string(")");
+				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
+			} else {
+				hr = _device->getDevice()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_geometryShader);
+				if( FAILED(hr) ) {
+					addError(err::CIRI_UNKNOWN_ERROR, err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
 				} else {
-					ciriErr = err::CIRI_SHADER_COMPILE_FAILED;
-					_lastError = err::getString(ciriErr) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				}
-				destroy();
-				return ciriErr;
-			}
+					// reflect the constant buffers of the geometry shader
+					ID3D11ShaderReflection* refl = nullptr;
+					D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
+					int index = 0;
+					while( true ) {
+						D3D11_SHADER_BUFFER_DESC desc;
+						if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
+							break;
+						}
+						_geometryConstantBufferIndices[std::string(desc.Name)] = index;
 
-			hr = _device->getDevice()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_geometryShader);
-			if( FAILED(hr) ) {
-				_lastError = err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				destroy();
-				return err::CIRI_UNKNOWN_ERROR;
-			}
+						index += 1;
+					}
+				} // CreateGeometryShader success
+			} // D3DCompile success
 
-			// reflect the constant buffers of the geometry shader
-			ID3D11ShaderReflection* refl = nullptr;
-			D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
-			int index = 0;
-			while( true ) {
-				D3D11_SHADER_BUFFER_DESC desc;
-				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
-					break;
-				}
-				_geometryConstantBufferIndices[std::string(desc.Name)] = index;
-
-				index += 1;
-			}
-
+			// release shader and error blobs
 			shaderBlob->Release();
 			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
@@ -257,45 +229,38 @@ namespace ciri {
 		{
 			hr = D3DCompile(ps, strlen(ps), NULL, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
 			if( FAILED(hr) ) {
-				err::ErrorCode ciriErr;
-				if( HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) == hr ) {
-					ciriErr = err::CIRI_FILE_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + ps + std::string(")");
-				} else if( HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND) == hr ) {
-					ciriErr = err::CIRI_PATH_NOT_FOUND;
-					_lastError = err::getString(ciriErr) + std::string(" (") + ps + std::string(")");
+				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
+			} else {
+				hr = _device->getDevice()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_pixelShader);
+				if( FAILED(hr) ) {
+					addError(err::CIRI_UNKNOWN_ERROR, err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
 				} else {
-					ciriErr = err::CIRI_SHADER_COMPILE_FAILED;
-					_lastError = err::getString(ciriErr) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				}
-				destroy();
-				return ciriErr;
-			}
+					// reflect the constant buffers of the pixel shader
+					ID3D11ShaderReflection* refl = nullptr;
+					D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
+					int index = 0;
+					while( true ) {
+						D3D11_SHADER_BUFFER_DESC desc;
+						if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
+							break;
+						}
+						_pixelConstantBufferIndices[std::string(desc.Name)] = index;
 
-			hr = _device->getDevice()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &_pixelShader);
-			if( FAILED(hr) ) {
-				_lastError = err::getString(err::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer());
-				destroy();
-				return err::CIRI_UNKNOWN_ERROR;
-			}
+						index += 1;
+					}
+				} // CreatePixelShader success
+			} // D3DCompile success
 
-			// reflect the constant buffers of the pixel shader
-			ID3D11ShaderReflection* refl = nullptr;
-			D3DReflect(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&refl);
-			int index = 0;
-			while( true ) {
-				D3D11_SHADER_BUFFER_DESC desc;
-				if( FAILED(refl->GetConstantBufferByIndex(index)->GetDesc(&desc)) ) {
-					break;
-				}
-				_pixelConstantBufferIndices[std::string(desc.Name)] = index;
-
-				index += 1;
-			}
-
+			// release shader and error blobs
 			shaderBlob->Release();
 			shaderBlob = nullptr;
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
+		}
+
+		// if any errors have occurred, clean up and return the first error code
+		if( !_errors.empty() ) {
+			destroy();
+			return _errors[0].code;
 		}
 
 		return err::CIRI_OK;
@@ -331,8 +296,8 @@ namespace ciri {
 		}
 	}
 
-	const char* DXShader::getLastError() const {
-		return _lastError.c_str();
+	const std::vector<IShader::ShaderError>& DXShader::getErrors() const {
+		throw;
 	}
 
 	bool DXShader::isValid() const {
@@ -389,5 +354,13 @@ namespace ciri {
 				return DXGI_FORMAT_UNKNOWN;
 			}
 		}
+	}
+
+	void DXShader::addError( err::ErrorCode code, const std::string& msg ) {
+		_errors.push_back(ShaderError(code, msg));
+	}
+
+	void DXShader::clearErrors() {
+		_errors.clear();
 	}
 } // ciri
