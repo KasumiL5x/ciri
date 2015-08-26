@@ -69,6 +69,7 @@ namespace ciri {
 		virtual Window* getWindow() const;
 
 		virtual const char* getGpuName() const;
+		virtual const char* getApiInfo() const;
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -115,6 +116,7 @@ namespace ciri {
 		std::string _shaderExt;
 		//
 		std::string _gpuName;
+		std::string _apiInfo;
 	};
 } // ciri
 

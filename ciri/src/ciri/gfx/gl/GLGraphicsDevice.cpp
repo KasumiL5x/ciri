@@ -664,6 +664,10 @@ namespace ciri {
 		return _gpuName.c_str();
 	}
 
+	const char* GLGraphicsDevice::getApiInfo() const {
+		return _apiInfo.c_str();
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);
@@ -734,6 +738,9 @@ namespace ciri {
 		const std::string vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
 		const std::string renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
 		_gpuName = vendor + " " + renderer;
+		const std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+		const std::string glslVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+		_apiInfo = "OpenGL " + glVersion + "; GLSL " + glslVersion;
 
 		// default to fullscreen viewport
 		glViewport(0, 0, _defaultWidth, _defaultHeight);

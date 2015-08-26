@@ -656,6 +656,10 @@ namespace ciri {
 		return _gpuName.c_str();
 	}
 
+	const char* DXGraphicsDevice::getApiInfo() const {
+		return _apiInfo.c_str();
+	}
+
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
 		return _device;
 	}
@@ -736,6 +740,7 @@ namespace ciri {
 		// get gpu information
 		//const int gpuMemory = static_cast<int>(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 		_gpuName = strutil::wstr2str(adapterDesc.Description);
+		_apiInfo = "DX11";
 
 		// release adapter output, adapter, and factory
 		adapterOutput->Release();

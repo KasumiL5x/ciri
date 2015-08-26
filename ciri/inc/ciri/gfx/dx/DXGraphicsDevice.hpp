@@ -66,6 +66,7 @@ namespace ciri {
 		virtual Window* getWindow() const;
 
 		virtual const char* getGpuName() const;
+		virtual const char* getApiInfo() const;
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -116,6 +117,7 @@ namespace ciri {
 		std::string _shaderExt;
 		//
 		std::string _gpuName;
+		std::string _apiInfo;
 	};
 } // ciri
 

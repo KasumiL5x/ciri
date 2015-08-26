@@ -227,6 +227,11 @@ namespace ciri {
 		 * Gets the name of the GPU being used.
 		 */
 		virtual const char* getGpuName() const=0;
+
+		/**
+		 * Gets a string representing the underlying api version.
+		 */
+		virtual const char* getApiInfo() const=0;
 	};
 } // ciri
 
