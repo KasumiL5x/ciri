@@ -17,3 +17,9 @@ test/bin/*.ipdb
 
 # doxygen html output
 docs/html
+
+# sublime text workspace
+*.sublime-workspace
+
+# texture comparison file I want to keep but not upload
+texture_comparisons.psd
