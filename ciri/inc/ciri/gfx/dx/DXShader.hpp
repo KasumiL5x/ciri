@@ -35,7 +35,6 @@ namespace ciri {
 		const std::vector<DXConstantBuffer*>& getPixelConstants() const;
 
 	private:
-		DXGI_FORMAT convertInputFormat( VertexFormat::Format format ) const;
 		void addError( err::ErrorCode code, const std::string& msg );
 		void clearErrors();
 

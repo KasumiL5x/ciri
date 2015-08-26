@@ -7,6 +7,7 @@
 #include "../SamplerWrap.hpp"
 #include "../SamplerFilter.hpp"
 #include "../TextureFormat.hpp"
+#include "../VertexFormat.hpp"
 
 namespace ciri {
 	static D3D11_COMPARISON_FUNC ciriToDxFunc( CompareFunction::Function func ) {
@@ -169,6 +170,30 @@ namespace ciri {
 			}
 
 			case TextureFormat::RGBA32_Float: {
+				return DXGI_FORMAT_R32G32B32A32_FLOAT;
+			}
+
+			default: {
+				return DXGI_FORMAT_UNKNOWN;
+			}
+		}
+	}
+
+	static DXGI_FORMAT ciriToDxVertexFormat( VertexFormat::Format format ) {
+		switch( format ) {
+			case VertexFormat::Float: {
+				return DXGI_FORMAT_R32_FLOAT;
+			}
+
+			case VertexFormat::Float2: {
+				return DXGI_FORMAT_R32G32_FLOAT;
+			}
+
+			case VertexFormat::Float3: {
+				return DXGI_FORMAT_R32G32B32_FLOAT;
+			}
+
+			case VertexFormat::Float4: {
 				return DXGI_FORMAT_R32G32B32A32_FLOAT;
 			}
 

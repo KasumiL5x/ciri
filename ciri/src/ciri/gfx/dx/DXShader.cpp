@@ -1,8 +1,9 @@
 #include <ciri/gfx/dx/DXShader.hpp>
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
-#include <d3dcompiler.h>
+#include <ciri/gfx/dx/CiriToDx.hpp>
 #include <ciri/util/File.hpp>
 #include <ciri/util/StrUtil.hpp>
+#include <d3dcompiler.h>
 
 namespace ciri {
 	DXShader::DXShader( DXGraphicsDevice* device )
@@ -157,7 +158,7 @@ namespace ciri {
 					for( unsigned int i = 0; i < elements.size(); ++i ) {
 						layout[i].SemanticName = _dxUsageStrings[elements[i].getUsage()].c_str();
 						layout[i].SemanticIndex = 0;
-						layout[i].Format = convertInputFormat(elements[i].getFormat());
+						layout[i].Format = ciriToDxVertexFormat(elements[i].getFormat());
 						layout[i].InputSlot = 0;
 						layout[i].AlignedByteOffset = offset;
 						layout[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
@@ -330,30 +331,6 @@ namespace ciri {
 
 	const std::vector<DXConstantBuffer*>& DXShader::getPixelConstants() const {
 		return _pixelConstantBuffers;
-	}
-
-	DXGI_FORMAT DXShader::convertInputFormat( VertexFormat::Format format ) const {
-		switch( format ) {
-			case VertexFormat::Float: {
-				return DXGI_FORMAT_R32_FLOAT;
-			}
-
-			case VertexFormat::Float2: {
-				return DXGI_FORMAT_R32G32_FLOAT;
-			}
-
-			case VertexFormat::Float3: {
-				return DXGI_FORMAT_R32G32B32_FLOAT;
-			}
-
-			case VertexFormat::Float4: {
-				return DXGI_FORMAT_R32G32B32A32_FLOAT;
-			}
-
-			default: {
-				return DXGI_FORMAT_UNKNOWN;
-			}
-		}
 	}
 
 	void DXShader::addError( err::ErrorCode code, const std::string& msg ) {
