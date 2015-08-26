@@ -23,22 +23,22 @@ namespace ciri {
 
 		dxDesc.DepthEnable = desc.depthEnable;
 		dxDesc.DepthWriteMask = (desc.depthWriteMask) ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-		dxDesc.DepthFunc = ciriToDxFunc(desc.depthFunc);
+		dxDesc.DepthFunc = ciriToDxComparisonFunc(desc.depthFunc);
 		
 		dxDesc.StencilEnable = desc.stencilEnable;
 		dxDesc.StencilReadMask = desc.stencilReadMask;
 		dxDesc.StencilWriteMask = desc.stencilWriteMask;
 
-		dxDesc.FrontFace.StencilFailOp = ciriToDxOp(desc.frontStencilFailOp);
-		dxDesc.FrontFace.StencilDepthFailOp = ciriToDxOp(desc.frontStencilDepthFailOp);
-		dxDesc.FrontFace.StencilPassOp = ciriToDxOp(desc.frontStencilPassOp);
-		dxDesc.FrontFace.StencilFunc = ciriToDxFunc(desc.frontStencilFunc);
+		dxDesc.FrontFace.StencilFailOp = ciriToDxStencilOp(desc.frontStencilFailOp);
+		dxDesc.FrontFace.StencilDepthFailOp = ciriToDxStencilOp(desc.frontStencilDepthFailOp);
+		dxDesc.FrontFace.StencilPassOp = ciriToDxStencilOp(desc.frontStencilPassOp);
+		dxDesc.FrontFace.StencilFunc = ciriToDxComparisonFunc(desc.frontStencilFunc);
 
 		if( desc.twoSidedStencil ) {
-			dxDesc.BackFace.StencilFailOp = ciriToDxOp(desc.backStencilFailOp);
-			dxDesc.BackFace.StencilDepthFailOp = ciriToDxOp(desc.backStencilDepthFailOp);
-			dxDesc.BackFace.StencilPassOp = ciriToDxOp(desc.backStencilPassOp);
-			dxDesc.BackFace.StencilFunc = ciriToDxFunc(desc.backStencilFunc);
+			dxDesc.BackFace.StencilFailOp = ciriToDxStencilOp(desc.backStencilFailOp);
+			dxDesc.BackFace.StencilDepthFailOp = ciriToDxStencilOp(desc.backStencilDepthFailOp);
+			dxDesc.BackFace.StencilPassOp = ciriToDxStencilOp(desc.backStencilPassOp);
+			dxDesc.BackFace.StencilFunc = ciriToDxComparisonFunc(desc.backStencilFunc);
 		} else {
 			dxDesc.BackFace.StencilFailOp = dxDesc.FrontFace.StencilFailOp;
 			dxDesc.BackFace.StencilDepthFailOp = dxDesc.FrontFace.StencilDepthFailOp;

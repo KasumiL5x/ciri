@@ -621,7 +621,7 @@ namespace ciri {
 		}
 
 		// depth func
-		glDepthFunc(ciriToGlFunc(desc.depthFunc));
+		glDepthFunc(ciriToGlComparisonFunc(desc.depthFunc));
 
 		// depth write
 		glDepthMask(desc.depthWriteMask);
@@ -635,13 +635,13 @@ namespace ciri {
 
 		// stencil funcs and ops
 		if( desc.twoSidedStencil ) {
-			glStencilFuncSeparate(GL_FRONT, ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
-			glStencilFuncSeparate(GL_BACK, ciriToGlFunc(desc.backStencilFunc), desc.stencilRef, desc.stencilReadMask);
-			glStencilOpSeparate(GL_FRONT, ciriToGlOp(desc.frontStencilFailOp), ciriToGlOp(desc.frontStencilDepthFailOp), ciriToGlOp(desc.frontStencilPassOp));
-			glStencilOpSeparate(GL_BACK, ciriToGlOp(desc.backStencilFailOp), ciriToGlOp(desc.backStencilDepthFailOp), ciriToGlOp(desc.backStencilPassOp));
+			glStencilFuncSeparate(GL_FRONT, ciriToGlComparisonFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilFuncSeparate(GL_BACK, ciriToGlComparisonFunc(desc.backStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilOpSeparate(GL_FRONT, ciriToGlStencilOp(desc.frontStencilFailOp), ciriToGlStencilOp(desc.frontStencilDepthFailOp), ciriToGlStencilOp(desc.frontStencilPassOp));
+			glStencilOpSeparate(GL_BACK, ciriToGlStencilOp(desc.backStencilFailOp), ciriToGlStencilOp(desc.backStencilDepthFailOp), ciriToGlStencilOp(desc.backStencilPassOp));
 		} else {
-			glStencilFunc(ciriToGlFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
-			glStencilOp(ciriToGlOp(desc.frontStencilFailOp), ciriToGlOp(desc.frontStencilDepthFailOp), ciriToGlOp(desc.frontStencilPassOp));
+			glStencilFunc(ciriToGlComparisonFunc(desc.frontStencilFunc), desc.stencilRef, desc.stencilReadMask);
+			glStencilOp(ciriToGlStencilOp(desc.frontStencilFailOp), ciriToGlStencilOp(desc.frontStencilDepthFailOp), ciriToGlStencilOp(desc.frontStencilPassOp));
 		}
 
 		// stencil write mask

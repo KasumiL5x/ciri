@@ -10,7 +10,7 @@
 #include "../VertexFormat.hpp"
 
 namespace ciri {
-	static D3D11_COMPARISON_FUNC ciriToDxFunc( CompareFunction::Function func ) {
+	static D3D11_COMPARISON_FUNC ciriToDxComparisonFunc( CompareFunction::Function func ) {
 		switch( func ) {
 			case CompareFunction::Never: {
 				return D3D11_COMPARISON_NEVER;
@@ -50,7 +50,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D11_STENCIL_OP ciriToDxOp( StencilOperation::Operation op ) {
+	static D3D11_STENCIL_OP ciriToDxStencilOp( StencilOperation::Operation op ) {
 		switch( op ) {
 			case StencilOperation::Keep: {
 				return D3D11_STENCIL_OP_KEEP;
@@ -82,7 +82,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D11_TEXTURE_ADDRESS_MODE ciriToDxWrap( SamplerWrap::Mode mode ) {
+	static D3D11_TEXTURE_ADDRESS_MODE ciriToDxSamplerWrap( SamplerWrap::Mode mode ) {
 		switch( mode ) {
 			case SamplerWrap::Wrap: {
 				return D3D11_TEXTURE_ADDRESS_WRAP;
@@ -110,7 +110,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D11_FILTER ciriToDxFilter( SamplerFilter::Filter mode, bool comparison ) {
+	static D3D11_FILTER ciriToDxSamplerFilter( SamplerFilter::Filter mode, bool comparison ) {
 		int filter = 0;
 		switch( mode ) {
 			case SamplerFilter::Point: {
@@ -159,7 +159,7 @@ namespace ciri {
 		return (D3D11_FILTER)filter;
 	}
 
-	static DXGI_FORMAT ciriToDxFormat( TextureFormat::Format format ) {
+	static DXGI_FORMAT ciriToDxTextureFormat( TextureFormat::Format format ) {
 		switch( format ) {
 			case TextureFormat::Color: {
 				return DXGI_FORMAT_R8G8B8A8_UNORM;

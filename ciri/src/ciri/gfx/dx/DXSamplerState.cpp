@@ -20,18 +20,18 @@ namespace ciri {
 		D3D11_SAMPLER_DESC samplerDesc;
 		ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 
-		samplerDesc.AddressU = ciriToDxWrap(desc.wrapU);
-		samplerDesc.AddressV = ciriToDxWrap(desc.wrapV);
-		samplerDesc.AddressW = ciriToDxWrap(desc.wrapW);
+		samplerDesc.AddressU = ciriToDxSamplerWrap(desc.wrapU);
+		samplerDesc.AddressV = ciriToDxSamplerWrap(desc.wrapV);
+		samplerDesc.AddressW = ciriToDxSamplerWrap(desc.wrapW);
 
 		samplerDesc.BorderColor[0] = desc.borderColor[0];
 		samplerDesc.BorderColor[1] = desc.borderColor[1];
 		samplerDesc.BorderColor[2] = desc.borderColor[2];
 		samplerDesc.BorderColor[3] = desc.borderColor[3];
 
-		samplerDesc.ComparisonFunc = ciriToDxFunc(desc.comparisonFunc);
+		samplerDesc.ComparisonFunc = ciriToDxComparisonFunc(desc.comparisonFunc);
 
-		samplerDesc.Filter = ciriToDxFilter(desc.filter, desc.comparisonFunc != CompareFunction::Never);
+		samplerDesc.Filter = ciriToDxSamplerFilter(desc.filter, desc.comparisonFunc != CompareFunction::Never);
 		const int anisotropy = (SamplerFilter::Anisotropic == desc.filter) ? cc::math::clamp(static_cast<int>(desc.maxAnisotropy), 1, 16) : 1;
 		samplerDesc.MaxAnisotropy = anisotropy;
 

@@ -9,7 +9,7 @@
 #include "../TextureFormat.hpp"
 
 namespace ciri {
-	static GLenum ciriToGlFunc( CompareFunction::Function func ) {
+	static GLenum ciriToGlComparisonFunc( CompareFunction::Function func ) {
 		switch( func ) {
 			case CompareFunction::Always: {
 				return GL_ALWAYS;
@@ -41,7 +41,7 @@ namespace ciri {
 		}
 	}
 
-	static GLenum ciriToGlOp( const StencilOperation::Operation op ) {
+	static GLenum ciriToGlStencilOp( const StencilOperation::Operation op ) {
 		switch( op ) {
 			case StencilOperation::Keep: {
 				return GL_KEEP;
@@ -73,7 +73,7 @@ namespace ciri {
 		}
 	}
 
-	static GLint ciriToGlWrap( SamplerWrap::Mode mode ) {
+	static GLint ciriToGlSamplerWrap( SamplerWrap::Mode mode ) {
 		switch( mode ) {
 			case SamplerWrap::Wrap: {
 				return GL_REPEAT;
@@ -101,7 +101,7 @@ namespace ciri {
 		}
 	}
 
-	static void ciriToGlFilter( SamplerFilter::Filter mode, GLint* outMin, GLint* outMag, bool mipmaps ) {
+	static void ciriToGlSamplerFilter( SamplerFilter::Filter mode, GLint* outMin, GLint* outMag, bool mipmaps ) {
 		// from monogame
 		switch( mode ) {
 			case SamplerFilter::Point: {

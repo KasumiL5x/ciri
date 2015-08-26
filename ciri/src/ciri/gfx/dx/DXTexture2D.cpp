@@ -62,7 +62,7 @@ namespace ciri {
 		texDesc.Height = height;
 		texDesc.MipLevels = getMipLevels();
 		texDesc.ArraySize = 1; // todo: arraySize (for cube textures and whatnot)
-		texDesc.Format = ciriToDxFormat(format);
+		texDesc.Format = ciriToDxTextureFormat(format);
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
 		texDesc.Usage = getUsage();

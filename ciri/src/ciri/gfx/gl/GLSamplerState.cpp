@@ -20,7 +20,7 @@ namespace ciri {
 
 		GLint filterMin;
 		GLint filterMag;
-		ciriToGlFilter(desc.filter, &filterMin, &filterMag, desc.useMipmaps);
+		ciriToGlSamplerFilter(desc.filter, &filterMin, &filterMag, desc.useMipmaps);
 		glSamplerParameteri(_samplerId, GL_TEXTURE_MIN_FILTER, filterMin);
 		glSamplerParameteri(_samplerId, GL_TEXTURE_MAG_FILTER, filterMag);
 
@@ -29,9 +29,9 @@ namespace ciri {
 		const float anisotropy = (SamplerFilter::Anisotropic == desc.filter) ? cc::math::clamp(static_cast<float>(desc.maxAnisotropy), 1.0f, maxAnisotropy) : 1.0f;
 		glSamplerParameterf(_samplerId, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropy);
 
-		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_S, ciriToGlWrap(desc.wrapU));
-		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_T, ciriToGlWrap(desc.wrapV));
-		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_R, ciriToGlWrap(desc.wrapW));
+		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_S, ciriToGlSamplerWrap(desc.wrapU));
+		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_T, ciriToGlSamplerWrap(desc.wrapV));
+		glSamplerParameteri(_samplerId, GL_TEXTURE_WRAP_R, ciriToGlSamplerWrap(desc.wrapW));
 
 		glSamplerParameterfv(_samplerId, GL_TEXTURE_BORDER_COLOR, &desc.borderColor[0]);
 
@@ -41,7 +41,7 @@ namespace ciri {
 
 		if( desc.comparisonFunc != CompareFunction::Never ) {
 			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_FUNC, ciriToGlFunc(desc.comparisonFunc));
+			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_FUNC, ciriToGlComparisonFunc(desc.comparisonFunc));
 		} else {
 			glSamplerParameteri(_samplerId, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 		}
