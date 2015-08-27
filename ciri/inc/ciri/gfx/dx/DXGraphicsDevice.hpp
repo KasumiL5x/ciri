@@ -39,32 +39,23 @@ namespace ciri {
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc );
-
 		virtual void applyShader( IShader* shader );
-
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual void setIndexBuffer( IIndexBuffer* buffer );
-
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
-
 		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex );
 		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount );
-
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
 		virtual err::ErrorCode resizeDefaultRenderTargets();
 		virtual void setClearColor( float r, float g, float b, float a );
 		virtual void clear( int flags );
-
 		virtual void setRasterizerState( IRasterizerState* state );
 		virtual void setDepthStencilState( IDepthStencilState* state );
-
 		virtual void setShaderExt( const char* ext );
 		virtual const char* getShaderExt() const;
-
 		virtual Window* getWindow() const;
-
 		virtual const char* getGpuName() const;
 		virtual const char* getApiInfo() const;
 

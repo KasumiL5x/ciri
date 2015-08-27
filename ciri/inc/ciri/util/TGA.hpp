@@ -32,16 +32,47 @@ namespace ciri {
 		TGA();
 		~TGA();
 
+		/**
+		 * Loads a TGA file into memory from file.
+		 * 
+		 * @param file      TGA file to open.
+		 * @param forceRGBA If true, and the source image does not contain alpha, the image will be remapped to RGBA.
+		 * 
+		 * @return Success of loading and parsing of the specified TGA file.
+		 */
 		bool loadFromFile( const char* file, bool forceRGBA );
+
+		/**
+		 * Cleans up allocated memory.
+		 */
 		void destroy();
 
+		/**
+		 * Gets the internal format of the image.
+		 * @return Internal Format of the image.
+		 */
 		Format getFormat() const;
+
+		/**
+		 * Gets the width of the image in pixels.
+		 * @return Width of image in pixels.
+		 */
 		int getWidth() const;
+
+		/**
+		 * Gets the height of the image in pixels.
+		 * @return Height of image in pixels.
+		 */
 		int getHeight() const;
+
+		/**
+		 * Gets a pointer to an array of the image's pixels.  If not loaded, this will be null.
+		 * @return Pointer to image pixels.
+		 */
 		unsigned char* getPixels() const;
 
 		/**
-		 * Writes pixels to a file.
+		 * Writes pixels to a TGA file.
 		 * @param[in] file The output image file.
 		 * @param[in] width The width of the image in pixels.
 		 * @param[in] height The height of the image in pixels.
