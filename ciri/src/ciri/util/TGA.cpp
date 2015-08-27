@@ -157,9 +157,9 @@ namespace ciri {
 		header.imageDesc = (RGB == format) ? 0 : 8;
 		out.write((char*)&header, sizeof(Header));
 
-		const int bpp = (RGB == format) ? 3 : 4;
+		const unsigned int bpp = (RGB == format) ? 3 : 4;
 		if( swap ) {
-			for( int i = 0; i < (bpp * width * height); i += bpp ) {
+			for( unsigned int i = 0; i < (bpp * width * height); i += bpp ) {
 				pixels[i] ^= pixels[i+2] ^= pixels[i] ^= pixels[i+2];
 			}
 		}
