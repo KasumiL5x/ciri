@@ -23,6 +23,9 @@
     <ClCompile Include="..\src\demos\dynvb\OpenCloth.cpp">
       <Filter>demos\dynvb</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\demos\refl\ReflectionsDemo.cpp">
+      <Filter>demos\refl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\demos\dynvb\DynamicVertexBufferDemo.hpp">
@@ -55,6 +58,9 @@
     <ClInclude Include="..\src\demos\dynvb\OpenCloth.hpp">
       <Filter>demos\dynvb</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\demos\refl\ReflectionsDemo.hpp">
+      <Filter>demos\refl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="demos">
@@ -65,6 +71,9 @@
     </Filter>
     <Filter Include="common">
       <UniqueIdentifier>{55cfe643-068a-4c03-87fb-65557b2c0a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\refl">
+      <UniqueIdentifier>{fc299fbd-2046-438e-ac47-9cefb5ef583b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

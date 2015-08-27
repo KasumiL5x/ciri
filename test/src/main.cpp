@@ -2,18 +2,24 @@
 #include <ciri/gfx/GraphicsDeviceFactory.hpp>
 #include <ciri/util/Timer.hpp>
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
+#include "demos/refl/ReflectionsDemo.hpp"
 #if defined(_DEBUG)
 #include <crtdbg.h>
 #endif
 
 enum DemoType {
-	DynamicVertexBuffer
+	DynamicVertexBuffer,
+	Reflections
 };
 
 IDemo* createDemo( DemoType demo ) {
 	switch( demo ) {
 		case DynamicVertexBuffer: {
 			return new DynamicVertexBufferDemo();
+		}
+
+		case Reflections: {
+			return new ReflectionsDemo();
 		}
 
 		default: {
