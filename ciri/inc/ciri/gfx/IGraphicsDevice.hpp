@@ -174,7 +174,7 @@ namespace ciri {
 		 * Resizes the backbuffer and depth stencil to the bound window's size.
 		 * @returns err::ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode resizeDefaultRenderTargets()=0;
+		virtual err::ErrorCode resize()=0;
 
 		/**
 		 * Sets the color that will be applied to the active render targets when the clear function is called.

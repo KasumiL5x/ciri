@@ -495,7 +495,7 @@ namespace ciri {
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 	}
 
-	err::ErrorCode DXGraphicsDevice::resizeDefaultRenderTargets() {
+	err::ErrorCode DXGraphicsDevice::resize() {
 		if( !_isValid ) {
 			return err::CIRI_UNKNOWN_ERROR;
 		}

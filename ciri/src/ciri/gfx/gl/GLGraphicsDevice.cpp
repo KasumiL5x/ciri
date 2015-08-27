@@ -485,7 +485,7 @@ namespace ciri {
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 	}
 
-	err::ErrorCode GLGraphicsDevice::resizeDefaultRenderTargets() {
+	err::ErrorCode GLGraphicsDevice::resize() {
 		if( !_isValid ) {
 			return err::CIRI_UNKNOWN_ERROR;
 		}

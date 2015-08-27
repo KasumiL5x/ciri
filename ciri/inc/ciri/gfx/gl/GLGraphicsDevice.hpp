@@ -51,7 +51,7 @@ namespace ciri {
 		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount );
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
 		virtual void restoreDefaultRenderTargets();
-		virtual err::ErrorCode resizeDefaultRenderTargets();
+		virtual err::ErrorCode resize();
 		virtual void setClearColor( float r, float g, float b, float a );
 		virtual void clear( int flags);
 		virtual void setRasterizerState( IRasterizerState* state );

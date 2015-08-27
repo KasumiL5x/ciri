@@ -88,7 +88,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
-			if( graphicsDevice()->resizeDefaultRenderTargets() != ciri::err::CIRI_OK ) {
+			if( graphicsDevice()->resize() != ciri::err::CIRI_OK ) {
 				printf("Failed to resize default render targets.\n");
 			}
 			break;
