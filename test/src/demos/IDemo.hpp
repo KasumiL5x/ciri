@@ -23,12 +23,44 @@ struct DemoConfig {
 class IDemo {
 private:
 	bool _shouldGtfo;
+	ciri::IGraphicsDevice* _graphicsDevice;
+	ciri::Window* _window;
 
 public:
 	IDemo()
-		: _shouldGtfo(false) {
+		: _shouldGtfo(false), _graphicsDevice(nullptr), _window(nullptr) {
 	}
 	virtual ~IDemo() {
+	}
+
+	/**
+	 * Sets the graphics device.  This should never be called by implementing demos.
+	 * @param device Pointer to the graphics device.
+	 */
+	void setGraphicsDevice( ciri::IGraphicsDevice* device ) {
+		_graphicsDevice = device;
+	}
+
+	/**
+	 * Gets the graphics device.
+	 */
+	ciri::IGraphicsDevice* graphicsDevice() const {
+		return _graphicsDevice;
+	}
+
+	/**
+	 * Sets the window.  This should never be called by implementing demos.
+	 * @param window Pointer to the window.
+	 */
+	void setWindow( ciri::Window* window ) {
+		_window = window;
+	}
+
+	/**
+	 * Gets the window.
+	 */
+	ciri::Window* window() const {
+		return _window;
 	}
 
 	/**
@@ -39,10 +71,8 @@ public:
 
 	/**
 	 * Called after non-demo resource creation (window, graphics device, and so on).  Initialize the demo here.
-	 * @param[in] window The window used for the demo.
-	 * @param[in] graphicsDevice The IGraphicsDevice used for rendering in the demo.
 	 */
-	virtual void onInitialize( ciri::Window* window, ciri::IGraphicsDevice* graphicsDevice )=0;
+	virtual void onInitialize()=0;
 
 	/**
 	 * Called after onInitialize.  Load resources here.

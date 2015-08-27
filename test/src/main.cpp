@@ -50,8 +50,12 @@ int main() {
 		return -1;
 	}
 
+	// set the demo's window and graphics device
+	demo->setWindow(&window);
+	demo->setGraphicsDevice(graphicsDevice);
+
 	// initialize the demo and load its content
-	demo->onInitialize(&window, graphicsDevice);
+	demo->onInitialize();
 	demo->onLoadContent();
 
 	// timer for delta and elapsed time measurement

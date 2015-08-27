@@ -3,7 +3,7 @@
 #include <cc/MatrixFunc.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
-	: IDemo(), _graphicsDevice(nullptr), _window(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr),
+	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr),
 		_clothRunning(true) {
 }
 
@@ -19,16 +19,13 @@ DemoConfig DynamicVertexBufferDemo::getConfig() {
 	return cfg;
 }
 
-void DynamicVertexBufferDemo::onInitialize( ciri::Window* window, ciri::IGraphicsDevice* graphicsDevice ) {
-	_window = window;
-	_graphicsDevice = graphicsDevice;
-
+void DynamicVertexBufferDemo::onInitialize() {
 	// print driver information
-	printf("Device: %s\n", graphicsDevice->getGpuName());
-	printf("API: %s\n", graphicsDevice->getApiInfo());
+	printf("Device: %s\n", graphicsDevice()->getGpuName());
+	printf("API: %s\n", graphicsDevice()->getApiInfo());
 
 	// window size
-	const cc::Vec2ui windowSize = window->getSize();
+	const cc::Vec2ui windowSize = window()->getSize();
 
 	// configure the camera
 	_camera.setAspect((float)windowSize.x / (float)windowSize.y);
@@ -43,8 +40,10 @@ void DynamicVertexBufferDemo::onInitialize( ciri::Window* window, ciri::IGraphic
 }
 
 void DynamicVertexBufferDemo::onLoadContent() {
+	ciri::IGraphicsDevice* device = graphicsDevice();
+
 	ciri::DepthStencilDesc depthDesc;
-	_depthStencilState = _graphicsDevice->createDepthStencilState(depthDesc);
+	_depthStencilState = device->createDepthStencilState(depthDesc);
 	if( nullptr == _depthStencilState ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create depth stencil state.");
 	}
@@ -52,25 +51,25 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;//Clockwise;
 	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
-	_rasterizerState = _graphicsDevice->createRasterizerState(rasterDesc);
+	_rasterizerState = device->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create rasterizer state.");
 	}
 
-	if( !_grid.create(_graphicsDevice) ) {
+	if( !_grid.create(device) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create grid.");
 	}
 
-	if( !_axis.create(5.0f, _graphicsDevice) ) {
+	if( !_axis.create(5.0f, device) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create axis.");
 	}
 
-	if( !_simpleShader.create(_graphicsDevice) ) {
+	if( !_simpleShader.create(device) ) {
 		ciri::Logs::get(ciri::Logs::Debug).printError("Failed to create simple shader.");
 	}
 
 	if( _flagpole.addFromObj("dynvb/flag-pole.obj") ) {
-		if( !_flagpole.build(_graphicsDevice) ) {
+		if( !_flagpole.build(device) ) {
 			ciri::Logs::get(ciri::Logs::Debug).printError("Failed to build flagpole model.obj.");
 		}
 	} else {
@@ -83,13 +82,13 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	_cloth.setMass(1.0f);
 	_cloth.setDamping(-0.0125f);
 	_cloth.setGravity(cc::Vec3f(0.0f, -9.81f, 0.0f));
-	_cloth.build(_graphicsDevice);
+	_cloth.build(device);
 }
 
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
-			if( _graphicsDevice->resizeDefaultRenderTargets() != ciri::err::CIRI_OK ) {
+			if( graphicsDevice()->resizeDefaultRenderTargets() != ciri::err::CIRI_OK ) {
 				printf("Failed to resize default render targets.\n");
 			}
 			break;
@@ -102,7 +101,7 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	ciri::KeyboardState currKeyState;
 	ciri::MouseState currMouseState;
 	ciri::Input::getKeyboardState(&currKeyState);
-	ciri::Input::getMouseState(&currMouseState, _window);
+	ciri::Input::getMouseState(&currMouseState, window());
 
 	// check for close w/ escape
 	if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
@@ -159,9 +158,11 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 }
 
 void DynamicVertexBufferDemo::onDraw() {
-	_graphicsDevice->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
-	_graphicsDevice->setDepthStencilState(_depthStencilState);
-	_graphicsDevice->setRasterizerState(_rasterizerState);
+	ciri::IGraphicsDevice* device = graphicsDevice();
+
+	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
+	device->setDepthStencilState(_depthStencilState);
+	device->setRasterizerState(_rasterizerState);
 
 	// camera's viewproj matrix
 	const cc::Mat4f cameraViewProj = _camera.getProj() * _camera.getView();
@@ -170,9 +171,9 @@ void DynamicVertexBufferDemo::onDraw() {
 	if( _grid.isValid() ) {
 		const cc::Mat4f gridXform = cameraViewProj * cc::Mat4f(1.0f);
 		if( _grid.updateConstants(gridXform) ) {
-			_graphicsDevice->applyShader(_grid.getShader());
-			_graphicsDevice->setVertexBuffer(_grid.getVertexBuffer());
-			_graphicsDevice->drawArrays(ciri::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
+			device->applyShader(_grid.getShader());
+			device->setVertexBuffer(_grid.getVertexBuffer());
+			device->drawArrays(ciri::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
@@ -180,9 +181,9 @@ void DynamicVertexBufferDemo::onDraw() {
 	if( _axis.isValid() ) {
 		const cc::Mat4f axisXform = cameraViewProj * cc::Mat4f(1.0f);
 		if( _axis.updateConstants(axisXform) ) {
-			_graphicsDevice->applyShader(_axis.getShader());
-			_graphicsDevice->setVertexBuffer(_axis.getVertexBuffer());
-			_graphicsDevice->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
+			device->applyShader(_axis.getShader());
+			device->setVertexBuffer(_axis.getVertexBuffer());
+			device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
@@ -197,31 +198,31 @@ void DynamicVertexBufferDemo::onDraw() {
 			ciri::Logs::get(ciri::Logs::Debug).printError("Failed to update simple constant buffer data.");
 		}
 		// apply shader
-		_graphicsDevice->applyShader(_flagpole.getShader());
+		device->applyShader(_flagpole.getShader());
 		// set vertex buffer and index buffer
-		_graphicsDevice->setVertexBuffer(_flagpole.getVertexBuffer());
+		device->setVertexBuffer(_flagpole.getVertexBuffer());
 		if( _flagpole.getIndexBuffer() != nullptr ) {
-			_graphicsDevice->setIndexBuffer(_flagpole.getIndexBuffer());
-			_graphicsDevice->drawIndexed(ciri::PrimitiveTopology::TriangleList, _flagpole.getIndexBuffer()->getIndexCount());
+			device->setIndexBuffer(_flagpole.getIndexBuffer());
+			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _flagpole.getIndexBuffer()->getIndexCount());
 		} else {
-			_graphicsDevice->drawArrays(ciri::PrimitiveTopology::TriangleList, _flagpole.getVertexBuffer()->getVertexCount(), 0);
+			device->drawArrays(ciri::PrimitiveTopology::TriangleList, _flagpole.getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
 	// render the cloth
 	if( _cloth.isBuilt() ) {
-		_graphicsDevice->applyShader(_cloth.getShader());
+		device->applyShader(_cloth.getShader());
 		_cloth.getConstants().world = cc::math::translate(cc::Vec3f(0, 18.25f, 4)) * cc::math::rotate(90.0f, cc::Vec3f::up());
 		_cloth.getConstants().xform = cameraViewProj * _cloth.getConstants().world;
 		_cloth.getConstants().camdir = _camera.getPosition();
 		_cloth.updateConstants();
 
-		_graphicsDevice->setVertexBuffer(_cloth.getVertexBuffer());
-		_graphicsDevice->setIndexBuffer(_cloth.getIndexBuffer());
-		_graphicsDevice->drawIndexed(ciri::PrimitiveTopology::TriangleList, _cloth.getIndexBuffer()->getIndexCount());
+		device->setVertexBuffer(_cloth.getVertexBuffer());
+		device->setIndexBuffer(_cloth.getIndexBuffer());
+		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _cloth.getIndexBuffer()->getIndexCount());
 	}
 
-	_graphicsDevice->present();
+	device->present();
 }
 
 void DynamicVertexBufferDemo::onUnloadContent() {

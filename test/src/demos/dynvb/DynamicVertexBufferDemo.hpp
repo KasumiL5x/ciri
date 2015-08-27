@@ -22,7 +22,7 @@ public:
 	virtual ~DynamicVertexBufferDemo();
 
 	virtual DemoConfig getConfig();
-	virtual void onInitialize( ciri::Window* window, ciri::IGraphicsDevice* graphicsDevice );
+	virtual void onInitialize();
 	virtual void onLoadContent();
 	virtual void onEvent( ciri::WindowEvent evt );
 	virtual void onUpdate( double deltaTime, double elapsedTime );
@@ -30,9 +30,6 @@ public:
 	virtual void onUnloadContent();
 
 private:
-	ciri::IGraphicsDevice* _graphicsDevice;
-	ciri::Window* _window;
-	//
 	ciri::MayaCamera _camera;
 	//
 	ciri::KeyboardState _prevKeyState;
