@@ -27,7 +27,7 @@ namespace ciri {
 			minLod = -1000.0f;
 			maxLod = 1000.0f;
 			lodBias = 0.0f;
-			comparisonFunc = CompareFunction::Always;
+			comparisonFunc = CompareFunction::Never;
 			useMipmaps = false;
 		}
 	};
