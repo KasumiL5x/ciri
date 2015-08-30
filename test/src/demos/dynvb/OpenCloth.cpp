@@ -257,6 +257,7 @@ bool OpenCloth::createGpuResources() {
 	_shader = _device->createShader();
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	const std::string shaderExt = _device->getShaderExt();
 	const std::string vsFile = ("dynvb/fabric_plaid_vs" + shaderExt);

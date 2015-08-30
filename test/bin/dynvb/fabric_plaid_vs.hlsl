@@ -12,7 +12,7 @@ struct Output {
 	float3 CamPos : TEXCOORD2;
 };
 
-Output main( float3 Pos : POSITION, float3 Nrm : NORMAL, float2 Tex : TEXCOORD ) {
+Output main( float3 Pos : POSITION, float3 Nrm : NORMAL, float4 Tan : TANGENT, float2 Tex : TEXCOORD ) {
 	Output OUT;
 	OUT.Pos = mul(xform, float4(Pos, 1.0f));
 	OUT.position = mul(world, float4(Pos, 1.0f)).xyz;

@@ -20,6 +20,7 @@ bool SimpleShader::create( ciri::IGraphicsDevice* device ) {
 	_shader = device->createShader();
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("common/shaders/simple_vs" + shaderExt);

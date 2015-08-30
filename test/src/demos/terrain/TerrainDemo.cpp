@@ -3,7 +3,7 @@
 #include <ciri/util/TGA.hpp>
 
 TerrainDemo::TerrainDemo()
-	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr) {
+	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr) {
 }
 
 TerrainDemo::~TerrainDemo() {
@@ -66,9 +66,36 @@ void TerrainDemo::onLoadContent() {
 		printf("Failed to generate heightmap terrain.\n");
 	}
 
+	// configure, load, etc, the water shader and its constants
+	{
+		_waterShader = graphicsDevice()->createShader();
+		_waterShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+		_waterShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+		_waterShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
+		_waterShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+		const std::string shaderExt = graphicsDevice()->getShaderExt();
+		const std::string vsFile = ("terrain/water_vs" + shaderExt);
+		const std::string psFile = ("terrain/water_ps" + shaderExt);
+		if( ciri::err::failed(_waterShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+			printf("Failed to load water shader:\n");
+			for( auto err : _waterShader->getErrors() ) {
+				printf("%s\n", err.msg.c_str());
+			}
+		} else {
+			_waterConstantsBuffer = graphicsDevice()->createConstantBuffer();
+			if( ciri::err::failed(_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants)) ) {
+				printf("Failed to create water constants.\n");
+			} else {
+				if( ciri::err::failed(_waterShader->addConstants(_waterConstantsBuffer, "WaterConstants", ciri::ShaderStage::Vertex)) ) {
+					printf("Failed to assign constants to water shader.\n");
+				}
+			}
+		}
+	}
+
 	// create water plane to match the heightmap size
 	_waterPlane = modelgen::createPlane(float(heightmap.getWidth()), float(heightmap.getHeight()), 0, 0, graphicsDevice(), false, false);
-	_waterPlane->setShader(_simpleShader.getShader());
+	_waterPlane->setShader(_waterShader);//_simpleShader.getShader());
 	// position the water up a little
 	const float WATER_HEIGHT = 10.0f;
 	_waterPlane->getXform().setPosition(cc::Vec3f(0.0f, WATER_HEIGHT, 0.0f));
@@ -182,13 +209,17 @@ void TerrainDemo::onDraw() {
 	}
 
 	// render water plane
-	if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->isValid() ) {
+	if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->getShader()->isValid() && _waterPlane->isValid() ) {
 		// update constant buffers
-		_simpleShader.getConstants().world = _waterPlane->getXform().getWorld();
-		_simpleShader.getConstants().xform = viewProj * _simpleShader.getConstants().world;
-		_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
-		_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(0.0f, 0.0f, 1.0f);
-		_simpleShader.updateConstants();
+		_waterConstants.world = _waterPlane->getXform().getWorld();
+		_waterConstants.xform = viewProj * _waterConstants.world;
+		_waterConstants.campos = _camera.getPosition();
+		_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants);
+		//_simpleShader.getConstants().world = _waterPlane->getXform().getWorld();
+		//_simpleShader.getConstants().xform = viewProj * _simpleShader.getConstants().world;
+		//_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
+		//_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(0.0f, 0.0f, 1.0f);
+		//_simpleShader.updateConstants();
 
 		// apply shader
 		device->applyShader(_waterPlane->getShader());
@@ -203,6 +234,8 @@ void TerrainDemo::onDraw() {
 }
 
 void TerrainDemo::onUnloadContent() {
+	_terrain.clean();
+
 	if( _waterPlane != nullptr ) {
 		delete _waterPlane;
 		_waterPlane = nullptr;

@@ -10,6 +10,13 @@
 #include "../../common/HeightmapTerrain.hpp"
 
 class TerrainDemo : public IDemo {
+private:
+	struct WaterConstants {
+		cc::Mat4f world;
+		cc::Mat4f xform;
+		cc::Vec3f campos;
+	};
+
 public:
 	TerrainDemo();
 	virtual ~TerrainDemo();
@@ -35,6 +42,9 @@ private:
 	SimpleShader _simpleShader;
 	HeightmapTerrain _terrain;
 	Model* _waterPlane;
+	ciri::IShader* _waterShader;
+	ciri::IConstantBuffer* _waterConstantsBuffer;
+	WaterConstants _waterConstants;
 };
 
 #endif /* __reflections_demo__ */

@@ -12,6 +12,7 @@ private:
 	struct TerrainVertex {
 		cc::Vec3f position;
 		cc::Vec3f normal;
+		cc::Vec4f tangent;
 		cc::Vec2f texcoord;
 	};
 
