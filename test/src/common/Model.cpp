@@ -62,7 +62,7 @@ bool Model::computeTangents() {
 
 	std::vector<cc::Vec3f> tan1(_vertices.size());
 	std::vector<cc::Vec3f> tan2(_vertices.size());
-	const int triangleCount = _indices.size() / 3;
+	const int triangleCount = _indices.size();
 
 	for( int i = 0; i < triangleCount; i += 3 ) {
 		// indices
@@ -75,6 +75,7 @@ bool Model::computeTangents() {
 		const cc::Vec3f& v2 = _vertices[i2].position;
 		const cc::Vec3f& v3 = _vertices[i3].position;
 		// texcoords of triangle
+
 		const cc::Vec2f& w1 = _vertices[i1].texcoord;
 		const cc::Vec2f& w2 = _vertices[i2].texcoord;
 		const cc::Vec2f& w3 = _vertices[i3].texcoord;
