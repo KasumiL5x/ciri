@@ -14,6 +14,7 @@ public:
 	void addVertex( const Vertex& vertex );
 	void addIndex( int index );
 	bool addFromObj( const char* file );
+	bool computeTangents();
 	bool build( ciri::IGraphicsDevice* device );
 	bool updateBuffers( bool vertex, bool index );
 
