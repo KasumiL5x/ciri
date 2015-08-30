@@ -26,6 +26,9 @@
     <ClCompile Include="..\src\demos\refl\ReflectionsDemo.cpp">
       <Filter>demos\refl</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\HeightmapTerrain.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\demos\dynvb\DynamicVertexBufferDemo.hpp">
@@ -60,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="..\src\demos\refl\ReflectionsDemo.hpp">
       <Filter>demos\refl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HeightmapTerrain.hpp">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

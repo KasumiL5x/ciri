@@ -38,7 +38,7 @@ int main() {
 #endif
 
 	// create the demo and get its configuration settings
-	IDemo* demo = createDemo(DynamicVertexBuffer);
+	IDemo* demo = createDemo(Reflections);
 	const DemoConfig config = demo->getConfig();
 
 	// create the window

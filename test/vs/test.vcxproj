@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\common\Axis.cpp" />
     <ClCompile Include="..\src\common\Grid.cpp" />
+    <ClCompile Include="..\src\common\HeightmapTerrain.cpp" />
     <ClCompile Include="..\src\common\Model.cpp" />
     <ClCompile Include="..\src\common\ShaderPresets.cpp" />
     <ClCompile Include="..\src\common\Transform.cpp" />
@@ -24,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\common\Axis.hpp" />
     <ClInclude Include="..\src\common\Grid.hpp" />
+    <ClInclude Include="..\src\common\HeightmapTerrain.hpp" />
     <ClInclude Include="..\src\common\Model.hpp" />
     <ClInclude Include="..\src\common\ModelGen.hpp" />
     <ClInclude Include="..\src\common\ShaderPresets.hpp" />
