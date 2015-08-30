@@ -1,14 +1,16 @@
 #include "HeightmapTerrain.hpp"
 
 HeightmapTerrain::HeightmapTerrain()
-	: _heightData(nullptr), _vertices(nullptr), _indices(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr) {
+	: _generated(false), _heightData(nullptr), _vertices(nullptr), _indices(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr) {
 }
 
 HeightmapTerrain::~HeightmapTerrain() {
 }
 
 bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevice* device ) {
-	// todo: if valid, don't recreate
+	if( _generated ) {
+		return false;
+	}
 
 	// get pixels from heightmap
 	const unsigned char* pixels = heightmap.getPixels();
@@ -39,6 +41,7 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevi
 	}
 	// normalize heights
 	const float SCALE = 200.0f;
+	const float INV_SCALE = 1.0f / SCALE;
 	for( int x = 0; x < width; ++x ) {
 		for( int y = 0; y < height; ++y ) {
 			_heightData[y * width + x] = (_heightData[y * width + x] - minHeight) / (maxHeight - minHeight) * SCALE;
@@ -49,13 +52,28 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevi
 	boxFilterHeightData(width, height, _heightData, true);
 
 	// create vertices
+	const float halfWidth = static_cast<float>(width) * 0.5f;
+	const float invWidth = 1.0f / static_cast<float>(width);
+	const float halfHeight = static_cast<float>(-height) * 0.5f;
+	const float invHeight =  1.0f / static_cast<float>(-height);
 	const int vertexCount = width * height;
 	_vertices = new TerrainVertex[vertexCount];
 	for( int x = 0; x < width; ++x ) {
 		for( int y = 0; y < height; ++y ) {
-			_vertices[y * width + x].position = cc::Vec3f(static_cast<float>(x), _heightData[y * width + x], static_cast<float>(-y));
-			_vertices[y * width + x].texcoord.x = static_cast<float>(x) / SCALE;
-			_vertices[y * width + x].texcoord.y = static_cast<float>(y) / SCALE;
+			const float fx = static_cast<float>(x);
+			const float fy = static_cast<float>(-y);
+
+			// position of vertex w/ the center of the terrain as the origin
+			const float xpos = ((fx * invWidth) * 2.0f - 1.0f) * halfWidth;
+			const float ypos = _heightData[y * width + x];
+			const float zpos = ((fy * invHeight) * 2.0f - 1.0f) * halfHeight;
+			_vertices[y * width + x].position = cc::Vec3f(xpos, ypos, zpos);
+
+			_vertices[y * width + x].texcoord.x = fx * INV_SCALE;
+			_vertices[y * width + x].texcoord.y = fy * INV_SCALE;
+
+			// for a corner as the origin, use:
+			//_vertices[y * width + x].position = cc::Vec3f(static_cast<float>(x), _heightData[y * width + x], static_cast<float>(-y));
 
 			// todo: weights for multitexture
 		}
@@ -122,10 +140,16 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevi
 	_indexBuffer = device->createIndexBuffer();
 	_indexBuffer->set(_indices, indexCount, false);
 
+	_generated = true;
+
 	return true;
 }
 
 void HeightmapTerrain::clean() {
+	if( !_generated ) {
+		return;
+	}
+
 	if( _indices != nullptr ) {
 		delete[] _indices;
 		_indices = nullptr;
@@ -140,6 +164,8 @@ void HeightmapTerrain::clean() {
 		delete[] _heightData;
 		_heightData = nullptr;
 	}
+
+	_generated = false;
 }
 
 ciri::IVertexBuffer* HeightmapTerrain::getVertexBuffer() const {

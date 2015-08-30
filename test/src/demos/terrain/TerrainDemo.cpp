@@ -33,10 +33,10 @@ void TerrainDemo::onInitialize() {
 	_camera.setTarget(cc::Vec3f(0.0f, 0.0f, 0.0f));
 	_camera.resetPosition();
 	// debug
-	_camera.setYaw(105.0f);
-	_camera.setPitch(29.4f);
-	_camera.setOffset(422.5f);
-	_camera.setTarget(cc::Vec3f(318.17f, -104.05f, -449.94f));
+	_camera.setYaw(82.0f);
+	_camera.setPitch(20.4f);
+	_camera.setOffset(939.5f);
+	_camera.setTarget(cc::Vec3f(327.54f, -261.33f, -100.93f));
 	_camera.resetPosition();
 
 	
@@ -67,11 +67,11 @@ void TerrainDemo::onLoadContent() {
 	}
 
 	// create water plane to match the heightmap size
-	_waterPlane = modelgen::createPlane(heightmap.getWidth(), heightmap.getHeight(), 0, 0, graphicsDevice(), false, false);
+	_waterPlane = modelgen::createPlane(float(heightmap.getWidth()), float(heightmap.getHeight()), 0, 0, graphicsDevice(), false, false);
 	_waterPlane->setShader(_simpleShader.getShader());
-	// position in the center of the heightmap
+	// position the water up a little
 	const float WATER_HEIGHT = 10.0f;
-	_waterPlane->getXform().setPosition(cc::Vec3f(heightmap.getWidth()*0.5f, WATER_HEIGHT, -heightmap.getHeight()*0.5f));
+	_waterPlane->getXform().setPosition(cc::Vec3f(0.0f, WATER_HEIGHT, 0.0f));
 }
 
 void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
@@ -129,7 +129,7 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			_camera.pan(dx, -dy);
 		}
 	}
-	_camera.update(deltaTime);
+	_camera.update(static_cast<float>(deltaTime));
 
 	//// todo: update simulation things here
 	//std::vector<Vertex>& planeVertices = _plane->getVertices();
@@ -199,34 +199,12 @@ void TerrainDemo::onDraw() {
 		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _waterPlane->getIndexBuffer()->getIndexCount());
 	}
 
-	//// render plane
-	//if( _plane && _plane->getShader() != nullptr && _plane->getVertexBuffer() != nullptr ) {
-	//	// update constant buffers
-	//	_simpleShader.getConstants().world = _plane->getXform().getWorld();
-	//	_simpleShader.getConstants().xform = viewProj * _simpleShader.getConstants().world;
-	//	_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
-	//	_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(1.0f, 1.0f, 1.0f);
-	//	_simpleShader.updateConstants();
-	//	// apply shader
-	//	device->applyShader(_plane->getShader());
-	//	// set buffers and draw
-	//	device->setVertexBuffer(_plane->getVertexBuffer());
-	//	if( _plane->getIndexBuffer() != nullptr ) {
-	//		device->setIndexBuffer(_plane->getIndexBuffer());
-	//		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _plane->getIndexBuffer()->getIndexCount());
-	//	} else {
-	//		device->drawArrays(ciri::PrimitiveTopology::TriangleList, _plane->getVertexBuffer()->getVertexCount(), 0);
-	//	}
-	//}
-
-	// todo: render stuff here
-
 	device->present();
 }
 
 void TerrainDemo::onUnloadContent() {
-	//if( _plane != nullptr ) {
-	//	delete _plane;
-	//	_plane = nullptr;
-	//}
+	if( _waterPlane != nullptr ) {
+		delete _waterPlane;
+		_waterPlane = nullptr;
+	}
 }

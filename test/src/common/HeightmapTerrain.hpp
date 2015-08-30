@@ -29,6 +29,7 @@ private:
 	void boxFilterHeightData( unsigned long width, unsigned long height, float*& heightMap, bool smoothEdges );
 
 private:
+	bool _generated;
 	float* _heightData;
 	TerrainVertex* _vertices;
 	int* _indices;
