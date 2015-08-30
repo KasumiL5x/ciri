@@ -2,14 +2,14 @@
 #include <ciri/gfx/GraphicsDeviceFactory.hpp>
 #include <ciri/util/Timer.hpp>
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
-#include "demos/refl/ReflectionsDemo.hpp"
+#include "demos/terrain/TerrainDemo.hpp"
 #if defined(_DEBUG)
 #include <crtdbg.h>
 #endif
 
 enum DemoType {
 	DynamicVertexBuffer,
-	Reflections
+	Terrain
 };
 
 IDemo* createDemo( DemoType demo ) {
@@ -18,8 +18,8 @@ IDemo* createDemo( DemoType demo ) {
 			return new DynamicVertexBufferDemo();
 		}
 
-		case Reflections: {
-			return new ReflectionsDemo();
+		case Terrain: {
+			return new TerrainDemo();
 		}
 
 		default: {
@@ -38,7 +38,7 @@ int main() {
 #endif
 
 	// create the demo and get its configuration settings
-	IDemo* demo = createDemo(Reflections);
+	IDemo* demo = createDemo(Terrain);
 	const DemoConfig config = demo->getConfig();
 
 	// create the window

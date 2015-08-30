@@ -9,10 +9,10 @@
 #include "../../common/ShaderPresets.hpp"
 #include "../../common/HeightmapTerrain.hpp"
 
-class ReflectionsDemo : public IDemo {
+class TerrainDemo : public IDemo {
 public:
-	ReflectionsDemo();
-	virtual ~ReflectionsDemo();
+	TerrainDemo();
+	virtual ~TerrainDemo();
 
 	virtual DemoConfig getConfig();
 	virtual void onInitialize();

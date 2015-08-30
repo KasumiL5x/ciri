@@ -1,24 +1,24 @@
-#include "ReflectionsDemo.hpp"
+#include "TerrainDemo.hpp"
 #include "../../common/ModelGen.hpp"
 #include <ciri/util/TGA.hpp>
 
-ReflectionsDemo::ReflectionsDemo()
+TerrainDemo::TerrainDemo()
 	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr) {
 }
 
-ReflectionsDemo::~ReflectionsDemo() {
+TerrainDemo::~TerrainDemo() {
 }
 
-DemoConfig ReflectionsDemo::getConfig() {
+DemoConfig TerrainDemo::getConfig() {
 	DemoConfig cfg;
-	cfg.windowTitle = "ciri : Reflections Demo";
+	cfg.windowTitle = "ciri : Terrain Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
 	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 
-void ReflectionsDemo::onInitialize() {
+void TerrainDemo::onInitialize() {
 	// window size
 	const cc::Vec2ui windowSize = window()->getSize();
 
@@ -42,7 +42,7 @@ void ReflectionsDemo::onInitialize() {
 	
 }
 
-void ReflectionsDemo::onLoadContent() {
+void TerrainDemo::onLoadContent() {
 	// create depth stencil state
 	ciri::DepthStencilDesc depthDesc;
 	_depthStencilState = graphicsDevice()->createDepthStencilState(depthDesc);
@@ -61,7 +61,7 @@ void ReflectionsDemo::onLoadContent() {
 
 	// create heightmap terrain
 	ciri::TGA heightmap;
-	heightmap.loadFromFile("refl/heightmap.tga", false);
+	heightmap.loadFromFile("terrain/heightmap.tga", false);
 	if( !_terrain.generate(heightmap, graphicsDevice()) ) {
 		printf("Failed to generate heightmap terrain.\n");
 	}
@@ -74,7 +74,7 @@ void ReflectionsDemo::onLoadContent() {
 	_waterPlane->getXform().setPosition(cc::Vec3f(heightmap.getWidth()*0.5f, WATER_HEIGHT, -heightmap.getHeight()*0.5f));
 }
 
-void ReflectionsDemo::onEvent( ciri::WindowEvent evt ) {
+void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
 			graphicsDevice()->resize();
@@ -83,7 +83,7 @@ void ReflectionsDemo::onEvent( ciri::WindowEvent evt ) {
 	}
 }
 
-void ReflectionsDemo::onUpdate( double deltaTime, double elapsedTime ) {
+void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	// get current input states
 	ciri::KeyboardState currKeyState;
 	ciri::MouseState currMouseState;
@@ -145,7 +145,7 @@ void ReflectionsDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	_prevMouseState = currMouseState;
 }
 
-void ReflectionsDemo::onDraw() {
+void TerrainDemo::onDraw() {
 	ciri::IGraphicsDevice* device = graphicsDevice();
 	
 	device->setDepthStencilState(_depthStencilState);
@@ -224,7 +224,7 @@ void ReflectionsDemo::onDraw() {
 	device->present();
 }
 
-void ReflectionsDemo::onUnloadContent() {
+void TerrainDemo::onUnloadContent() {
 	//if( _plane != nullptr ) {
 	//	delete _plane;
 	//	_plane = nullptr;
