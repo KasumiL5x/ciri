@@ -15,12 +15,19 @@ public:
 	void addIndex( int index );
 	bool addFromObj( const char* file );
 	bool build( ciri::IGraphicsDevice* device );
+	bool updateBuffers( bool vertex, bool index );
 
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
 	Transform& getXform();
 	ciri::IShader* getShader() const;
 	void setShader( ciri::IShader* val );
+	void setDynamicity( bool vertex, bool index ); // only call before build
+
+	bool isValid() const;
+
+	std::vector<Vertex>& getVertices();
+	std::vector<int>& getIndices();
 
 private:
 	std::vector<Vertex> _vertices;
@@ -29,6 +36,8 @@ private:
 	ciri::IIndexBuffer* _indexBuffer;
 	Transform _xform;
 	ciri::IShader* _shader;
+	bool _dynamicVertex;
+	bool _dynamicIndex;
 };
 
 #endif /* __test_model__ */

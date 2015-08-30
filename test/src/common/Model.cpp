@@ -4,7 +4,7 @@
 #include <ciri/gfx/ObjModel.hpp>
 
 Model::Model()
-	: _vertexBuffer(nullptr), _indexBuffer(nullptr), _shader(nullptr) {
+	: _vertexBuffer(nullptr), _indexBuffer(nullptr), _shader(nullptr), _dynamicVertex(false), _dynamicIndex(false) {
 }
 
 Model::~Model() {
@@ -57,7 +57,7 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 	}
 
 	_vertexBuffer = device->createVertexBuffer();
-	if( ciri::err::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), false)) ) {
+	if( ciri::err::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), _dynamicVertex)) ) {
 		_vertexBuffer->destroy();
 		delete _vertexBuffer;
 		_vertexBuffer = nullptr;
@@ -66,7 +66,7 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 
 	if( _indices.size() > 0 ) {
 		_indexBuffer = device->createIndexBuffer();
-		if( ciri::err::failed(_indexBuffer->set(_indices.data(), _indices.size(), false)) ) {
+		if( ciri::err::failed(_indexBuffer->set(_indices.data(), _indices.size(), _dynamicIndex)) ) {
 			_vertexBuffer->destroy();
 			delete _vertexBuffer;
 			_vertexBuffer = nullptr;
@@ -74,6 +74,38 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 			delete _indexBuffer;
 			_indexBuffer = nullptr;
 			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Model::updateBuffers( bool vertex, bool index ) {
+	if( !isValid() ) {
+		return false;
+	}
+
+	bool success = true;
+
+	if( vertex ) {
+		// cannot update non-dynamic buffer
+		if( !_dynamicVertex ) {
+			success = false;
+		} else {
+			if( ciri::err::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), true)) ) {
+				success = false;
+			}
+		}
+	}
+
+	if( index ) {
+		// cannot update non-dynamic buffer
+		if( !_dynamicIndex ) {
+			success = false;
+		} else {
+			if( ciri::err::failed(_indexBuffer->set(_indices.data(), _indices.size(), true)) ) {
+				success = false;
+			}
 		}
 	}
 
@@ -98,4 +130,25 @@ ciri::IShader* Model::getShader() const {
 
 void Model::setShader( ciri::IShader* val ) {
 	_shader = val;
+}
+
+void Model::setDynamicity( bool vertex, bool index ) {
+	if( isValid() ) {
+		return;
+	}
+
+	_dynamicVertex = vertex;
+	_dynamicIndex = index;
+}
+
+bool Model::isValid() const {
+	return _vertexBuffer != nullptr && _indexBuffer != nullptr;
+}
+
+std::vector<Vertex>& Model::getVertices() {
+	return _vertices;
+}
+
+std::vector<int>& Model::getIndices() {
+	return _indices;
 }
