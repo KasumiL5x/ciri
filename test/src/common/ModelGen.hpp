@@ -1,6 +1,7 @@
 #ifndef __test_modelgen__
 #define __test_modelgen__
 
+#include <vector>
 #include <ciri/gfx/IGraphicsDevice.hpp>
 #include "Model.hpp"
 
@@ -39,6 +40,61 @@ namespace modelgen {
 		model->addIndex(12); model->addIndex(13); model->addIndex(14); model->addIndex(12); model->addIndex(14); model->addIndex(15); // -y (bottom)
 		model->addIndex(16); model->addIndex(17); model->addIndex(18); model->addIndex(16); model->addIndex(18); model->addIndex(19); // +z (front)
 		model->addIndex(20); model->addIndex(21); model->addIndex(22); model->addIndex(20); model->addIndex(22); model->addIndex(23); // -z (back)
+
+		if( !model->build(device) ) {
+			delete model; model = nullptr;
+			return nullptr;
+		}
+		return model;
+	}
+
+	static Model* createPlane( float w, float h, int divsX, int divsY, ciri::IGraphicsDevice* device, bool dynamicVertex=false, bool dynamicIndex=false ) {
+		// add 1 such that asking for 1 division will add a split in the middle; asking for 0 returns just a quad
+		divsX += 1;
+		divsY += 1;
+
+		if( w <= 0.0f || h <= 0.0f || divsX < 1 || divsY < 1 ) {
+			return nullptr;
+		}
+
+		Model* model = new Model();
+		model->setDynamicity(dynamicVertex, dynamicIndex);
+
+		// create and set vertices
+		const int u = divsX+1;
+		const int v = divsY+1;
+		for( int j = 0; j <= divsY; ++j ) {
+			for( int i = 0; i <= divsX; ++i ) {
+				const float x = ((float(i) / (u-1)) * 2.0f - 1.0f) * w * 0.5f;
+				const float y = 0.0f;
+				const float z = ((float(j) / (v-1)) * 2.0f - 1.0f) * h * 0.5f;
+				model->addVertex(Vertex(cc::Vec3f(x, y, z), cc::Vec3f::up(), cc::Vec2f::zero()));
+			}
+		}
+
+		// create and set indices
+		const int indexCount = divsX * divsY * 2 * 3;
+		std::vector<int> indices(indexCount);
+		int* id = &indices[0];
+		for( int i = 0; i < divsY; ++i ) {
+			for( int j = 0; j < divsX; ++j ) {
+				const int i0 = i * (divsX+1) + j;
+				const int i1 = i0 + 1;
+				const int i2 = i0 + (divsX+1);
+				const int i3 = i2 + 1;
+				if( (j+2) % 2 ) {
+					*id++= i0; *id++= i2; *id++= i1;
+					*id++= i1; *id++= i2; *id++= i3;
+				} else {
+					*id++= i0; *id++= i2; *id++= i3;
+					*id++= i0; *id++= i3; *id++= i1;
+				}
+			}
+		}
+
+		for( int i = 0; i < indexCount; ++i ) {
+			model->addIndex(indices[i]);
+		}
 
 		if( !model->build(device) ) {
 			delete model; model = nullptr;
