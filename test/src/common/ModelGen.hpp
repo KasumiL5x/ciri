@@ -68,7 +68,11 @@ namespace modelgen {
 				const float x = ((float(i) / (u-1)) * 2.0f - 1.0f) * w * 0.5f;
 				const float y = 0.0f;
 				const float z = ((float(j) / (v-1)) * 2.0f - 1.0f) * h * 0.5f;
-				model->addVertex(Vertex(cc::Vec3f(x, y, z), cc::Vec3f::up(), cc::Vec2f::zero()));
+
+				const float tx = static_cast<float>(i) / static_cast<float>(divsX);
+				const float ty = static_cast<float>(j) / static_cast<float>(divsY);
+
+				model->addVertex(Vertex(cc::Vec3f(x, y, z), cc::Vec3f::up(), cc::Vec2f(tx, ty)));
 			}
 		}
 
@@ -95,6 +99,8 @@ namespace modelgen {
 		for( int i = 0; i < indexCount; ++i ) {
 			model->addIndex(indices[i]);
 		}
+
+		model->computeTangents();
 
 		if( !model->build(device) ) {
 			delete model; model = nullptr;
