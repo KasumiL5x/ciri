@@ -11,7 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\inc\ciri\gfx\dx\DXBlendState.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.cpp" />
+    <ClCompile Include="..\inc\ciri\gfx\gl\GLBlendState.cpp" />
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXConstantBuffer.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXDepthStencilState.cpp" />
@@ -50,11 +52,15 @@
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\Common.hpp" />
     <ClInclude Include="..\inc\ciri\ErrorCodes.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\BlendColorMask.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\BlendFunction.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\BlendMode.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ClearFlags.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\CompareFunction.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\CullMode.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\CiriToDx.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXBlendState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXDepthStencilState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp" />
@@ -70,6 +76,7 @@
     <ClInclude Include="..\inc\ciri\gfx\FillMode.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CheckGLError.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CiriToGl.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLBlendState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLDepthStencilState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLGraphicsDevice.hpp" />
@@ -82,6 +89,7 @@
     <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\GraphicsDeviceFactory.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\IBlendState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IConstantBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IDepthStencilState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\IGraphicsDevice.hpp" />

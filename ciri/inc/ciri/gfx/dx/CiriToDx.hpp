@@ -9,6 +9,9 @@
 #include "../TextureFormat.hpp"
 #include "../VertexFormat.hpp"
 #include "../PrimitiveTopology.hpp"
+#include "../BlendMode.hpp"
+#include "../BlendFunction.hpp"
+#include "../BlendColorMask.hpp"
 
 namespace ciri {
 	static D3D11_COMPARISON_FUNC ciriToDxComparisonFunc( CompareFunction::Function func ) {
@@ -230,6 +233,115 @@ namespace ciri {
 				return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 			}
 		}
+	}
+
+	static D3D11_BLEND ciriToDxBlendMode( BlendMode mode, bool alpha ) {
+		switch( mode ) {
+			case BlendMode::One: {
+				return D3D11_BLEND_ONE;
+			}
+
+			case BlendMode::Zero: {
+				return D3D11_BLEND_ZERO;
+			}
+
+			case BlendMode::SourceColor: {
+				return alpha ? D3D11_BLEND_SRC_ALPHA : D3D11_BLEND_SRC_COLOR;
+			}
+
+			case BlendMode::InverseSourceColor: {
+					return alpha ? D3D11_BLEND_INV_SRC_ALPHA : D3D11_BLEND_INV_SRC_COLOR;
+			}
+
+			case BlendMode::SourceAlpha: {
+				return D3D11_BLEND_SRC_ALPHA;
+			}
+
+			case BlendMode::InverseSourceAlpha: {
+				return D3D11_BLEND_INV_SRC_ALPHA;
+			}
+
+			case BlendMode::DestinationColor: {
+				return alpha ? D3D11_BLEND_DEST_ALPHA : D3D11_BLEND_DEST_COLOR;
+			}
+
+			case BlendMode::InverseDestinationColor: {
+				return alpha ? D3D11_BLEND_INV_DEST_ALPHA : D3D11_BLEND_INV_DEST_COLOR;
+			}
+
+			case BlendMode::DestinationAlpha: {
+				return D3D11_BLEND_DEST_ALPHA;
+			}
+
+			case BlendMode::InverseDestinationAlpha: {
+				return D3D11_BLEND_INV_DEST_ALPHA;
+			}
+
+			case BlendMode::BlendFactor: {
+				return D3D11_BLEND_BLEND_FACTOR;
+			}
+
+			case BlendMode::InverseBlendFactor: {
+				return D3D11_BLEND_INV_BLEND_FACTOR;
+			}
+
+			case BlendMode::SourceAlphaSaturation: {
+				return D3D11_BLEND_SRC_ALPHA_SAT;
+			}
+
+			default: {
+				throw;
+			}
+		}
+	}
+
+	static D3D11_BLEND_OP ciriToDxBlendFunction( BlendFunction func ) {
+		switch( func ) {
+			case BlendFunction::Add: {
+				return D3D11_BLEND_OP_ADD;
+			}
+
+			case BlendFunction::Subtract: {
+				return D3D11_BLEND_OP_SUBTRACT;
+			}
+
+			case BlendFunction::ReverseSubtract: {
+				return D3D11_BLEND_OP_REV_SUBTRACT;
+			}
+
+			case BlendFunction::Min: {
+				return D3D11_BLEND_OP_MIN;
+			}
+
+			case BlendFunction::Max: {
+				return D3D11_BLEND_OP_MAX;
+			}
+			default: {
+				throw;
+			}
+		}
+	}
+
+	static UINT8 ciriToDxBlendColorMask( int mask ) {
+		UINT8 val = 0;
+
+		if( mask & static_cast<int>(BlendColorMask::Red) ) {
+			val |= D3D11_COLOR_WRITE_ENABLE_RED;
+		}
+
+		if( mask & static_cast<int>(BlendColorMask::Green) ) {
+			val |= D3D11_COLOR_WRITE_ENABLE_GREEN;
+		}
+
+		if( mask & static_cast<int>(BlendColorMask::Blue) ) {
+			val |= D3D11_COLOR_WRITE_ENABLE_BLUE;
+		}
+
+		if( mask & static_cast<int>(BlendColorMask::Alpha) ) {
+			val |= D3D11_COLOR_WRITE_ENABLE_ALPHA;
+		}
+
+		return val;
 	}
 } // ciri
 

@@ -129,6 +129,12 @@
     <ClCompile Include="..\src\ciri\util\Log.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="..\inc\ciri\gfx\gl\GLBlendState.cpp">
+      <Filter>gfx\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inc\ciri\gfx\dx\DXBlendState.cpp">
+      <Filter>gfx\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -320,6 +326,24 @@
       <Filter>gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\SamplerFilter.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\BlendFunction.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\IBlendState.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\BlendMode.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLBlendState.hpp">
+      <Filter>gfx\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXBlendState.hpp">
+      <Filter>gfx\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\BlendColorMask.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
