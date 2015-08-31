@@ -60,6 +60,7 @@ namespace ciri {
 				_depthStencilStates[i] = nullptr;
 			}
 		}
+		_depthStencilStates.clear();
 
 		// clean rasterizer states
 		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
