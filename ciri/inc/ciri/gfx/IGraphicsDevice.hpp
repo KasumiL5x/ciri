@@ -15,6 +15,7 @@
 #include "IRenderTarget2D.hpp"
 #include "IRasterizerState.hpp"
 #include "IDepthStencilState.hpp"
+#include "IBlendState.hpp"
 
 namespace ciri {
 	class Window;
@@ -110,6 +111,13 @@ namespace ciri {
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc )=0;
 
 		/**
+		 * Creates a new blend state.
+		 * @param desc Descriptor used to configure the state.
+		 * @returns A pointer to a new IBlendState, or nullptr upon error.
+		 */
+		virtual IBlendState* createBlendState( const BlendDesc& desc )=0;
+
+		/**
 		 * Makes the given shader active.
 		 * @param shader Shader to make active.
 		 */
@@ -142,6 +150,13 @@ namespace ciri {
 		 * @param shaderStage Stage at which to bind.
 		 */
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage )=0;
+
+		/**
+		 * Sets the current blend state.
+		 * If the provided state is null, the default state will be applied.
+		 * @param state Blend state to apply.
+		 */
+		virtual void setBlendState( IBlendState* state )=0;
 
 		/**
 		 * Draws primitives from the currently bound vertex buffer.

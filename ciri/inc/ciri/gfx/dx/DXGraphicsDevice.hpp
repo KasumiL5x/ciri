@@ -19,6 +19,7 @@
 #include "DXRenderTarget2D.hpp"
 #include "DXRasterizerState.hpp"
 #include "DXDepthStencilState.hpp"
+#include "DXBlendState.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -39,11 +40,13 @@ namespace ciri {
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc );
+		virtual IBlendState* createBlendState( const BlendDesc& desc ) override;
 		virtual void applyShader( IShader* shader );
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
+		virtual void setBlendState( IBlendState* state ) override;
 		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex );
 		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount );
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
@@ -109,6 +112,8 @@ namespace ciri {
 		//
 		std::string _gpuName;
 		std::string _apiInfo;
+		//
+		std::vector<DXBlendState*> _blendStates;
 	};
 } // ciri
 

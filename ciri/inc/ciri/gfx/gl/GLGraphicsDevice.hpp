@@ -22,6 +22,7 @@
 #include "GLRenderTarget2D.hpp"
 #include "GLRasterizerState.hpp"
 #include "GLDepthStencilState.hpp"
+#include "GLBlendState.hpp"
 
 namespace ciri {
 	class GLGraphicsDevice : public IGraphicsDevice {
@@ -42,11 +43,13 @@ namespace ciri {
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc );
+		virtual IBlendState* createBlendState( const BlendDesc& desc ) override;
 		virtual void applyShader( IShader* shader );
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
+		virtual void setBlendState( IBlendState* state ) override;
 		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex );
 		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount );
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets );
@@ -68,6 +71,8 @@ namespace ciri {
 		// opengl debug messages
 		static void APIENTRY debugContextCb( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam );
 		static void APIENTRY debugContextAmdCb( GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, void* userParam );
+		// restore states
+		void restoreDefaultBlendState();
 
 	private:
 		bool _isValid;
@@ -108,6 +113,8 @@ namespace ciri {
 		//
 		std::string _gpuName;
 		std::string _apiInfo;
+		//
+		std::vector<GLBlendState*> _blendStates;
 	};
 } // ciri
 

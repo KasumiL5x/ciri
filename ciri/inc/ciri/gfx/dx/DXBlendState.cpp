@@ -35,6 +35,8 @@ namespace ciri {
 			return false;
 		}
 
+		_desc = desc;
+
 		return true;
 	}
 
@@ -43,6 +45,10 @@ namespace ciri {
 			_blendState->Release();
 			_blendState = nullptr;
 		}
+	}
+
+	const BlendDesc& DXBlendState::getDesc() const {
+		return _desc;
 	}
 
 	ID3D11BlendState* DXBlendState::getBlendState() const {

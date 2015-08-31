@@ -52,6 +52,16 @@ namespace ciri {
 			return;
 		}
 
+		// clean blend states
+		for( auto state : _blendStates ) {
+			if( state != nullptr ) {
+				state->destroy();
+				delete state;
+				state = nullptr;
+			}
+		}
+		_blendStates.clear();
+
 		// clean depth stencil states
 		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
 			if( _depthStencilStates[i] != nullptr ) {
@@ -287,6 +297,21 @@ namespace ciri {
 		return dxState;
 	}
 
+	IBlendState* DXGraphicsDevice::createBlendState( const BlendDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
+		DXBlendState* dxState = new DXBlendState(this);
+		if( !dxState->create(desc) ) {
+			delete dxState;
+			dxState = nullptr;
+			return nullptr;
+		}
+		_blendStates.push_back(dxState);
+		return dxState;
+	}
+
 	void DXGraphicsDevice::applyShader( IShader* shader ) {
 		if( !_isValid ) {
 			return;
@@ -410,6 +435,20 @@ namespace ciri {
 		}
 		if( all || (shaderStage & ShaderStage::Pixel) ) {
 			_context->PSSetSamplers(index, 1, sampler);
+		}
+	}
+
+	void DXGraphicsDevice::setBlendState( IBlendState* state ) {
+		if( !_isValid ) {
+			return;
+		}
+
+		if( nullptr == state ) {
+			_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+		} else {
+			DXBlendState* dxState = reinterpret_cast<DXBlendState*>(state);
+			ID3D11BlendState* bs = dxState->getBlendState();
+			_context->OMSetBlendState(bs, dxState->getDesc().blendFactor, 0xffffffff); // todo: sample mask support?
 		}
 	}
 

@@ -8,6 +8,8 @@
 #include "../SamplerFilter.hpp"
 #include "../TextureFormat.hpp"
 #include "../PrimitiveTopology.hpp"
+#include "../BlendMode.hpp"
+#include "../BlendFunction.hpp"
 
 namespace ciri {
 	static GLenum ciriToGlComparisonFunc( CompareFunction::Function func ) {
@@ -211,6 +213,93 @@ namespace ciri {
 
 			default: {
 				return GL_INVALID_ENUM; // lol
+			}
+		}
+	}
+
+	static GLenum ciriToGlBlendMode( BlendMode mode, bool alpha ) {
+		switch( mode ) {
+			case BlendMode::One: {
+				return GL_ONE;
+			}
+
+			case BlendMode::Zero: {
+				return GL_ZERO;
+			}
+
+			case BlendMode::SourceColor: {
+				return alpha ? GL_SRC_ALPHA : GL_SRC_COLOR;
+			}
+
+			case BlendMode::InverseSourceColor: {
+					return alpha ? GL_ONE_MINUS_SRC_ALPHA : GL_ONE_MINUS_SRC_COLOR;
+			}
+
+			case BlendMode::SourceAlpha: {
+				return GL_SRC_ALPHA;
+			}
+
+			case BlendMode::InverseSourceAlpha: {
+				return GL_ONE_MINUS_SRC_ALPHA;
+			}
+
+			case BlendMode::DestinationColor: {
+				return alpha ? GL_DST_ALPHA : GL_DST_COLOR;
+			}
+
+			case BlendMode::InverseDestinationColor: {
+				return alpha ? GL_ONE_MINUS_DST_ALPHA : GL_ONE_MINUS_DST_COLOR;
+			}
+
+			case BlendMode::DestinationAlpha: {
+				return GL_DST_ALPHA;
+			}
+
+			case BlendMode::InverseDestinationAlpha: {
+				return GL_ONE_MINUS_DST_ALPHA;
+			}
+
+			case BlendMode::BlendFactor: {
+				return GL_CONSTANT_COLOR; // todo: right, i think?
+			}
+
+			case BlendMode::InverseBlendFactor: {
+				return GL_ONE_MINUS_CONSTANT_COLOR; // todo: right, i think?
+			}
+
+			case BlendMode::SourceAlphaSaturation: {
+				return GL_SRC_ALPHA_SATURATE;
+			}
+
+			default: {
+				throw;
+			}
+		}
+	}
+
+	static GLenum ciriToGlBlendFunction( BlendFunction func ) {
+		switch( func ) {
+			case BlendFunction::Add: {
+				return GL_FUNC_ADD;
+			}
+
+			case BlendFunction::Subtract: {
+				return GL_FUNC_SUBTRACT;
+			}
+
+			case BlendFunction::ReverseSubtract: {
+				return GL_FUNC_REVERSE_SUBTRACT;
+			}
+
+			case BlendFunction::Min: {
+				return GL_MIN;
+			}
+
+			case BlendFunction::Max: {
+				return GL_MAX;
+			}
+			default: {
+				throw;
 			}
 		}
 	}

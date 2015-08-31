@@ -3,7 +3,8 @@
 #include <ciri/util/TGA.hpp>
 
 TerrainDemo::TerrainDemo()
-	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr) {
+	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
+		_alphaBlendState(nullptr) {
 }
 
 TerrainDemo::~TerrainDemo() {
@@ -99,6 +100,23 @@ void TerrainDemo::onLoadContent() {
 	// position the water up a little
 	const float WATER_HEIGHT = 10.0f;
 	_waterPlane->getXform().setPosition(cc::Vec3f(0.0f, WATER_HEIGHT, 0.0f));
+
+	// create water sampler and load water normal texture
+	ciri::SamplerDesc samplerDesc;
+	_waterSampler = graphicsDevice()->createSamplerState(samplerDesc);
+	ciri::TGA waterNormals;
+	waterNormals.loadFromFile("terrain/water_normals.tga", true);
+	_waterNormalMap = graphicsDevice()->createTexture2D(waterNormals.getWidth(), waterNormals.getHeight(), ciri::TextureFormat::Color, 0, waterNormals.getPixels());
+
+	// create alpha blend state
+	ciri::BlendDesc alphaBlendDesc;
+	alphaBlendDesc.colorFunc = ciri::BlendFunction::Add;
+	alphaBlendDesc.alphaFunc = ciri::BlendFunction::Add;
+	alphaBlendDesc.srcColorBlend = ciri::BlendMode::SourceAlpha;
+	alphaBlendDesc.dstColorBlend = ciri::BlendMode::InverseSourceAlpha;
+	alphaBlendDesc.srcAlphaBlend = ciri::BlendMode::One;
+	alphaBlendDesc.dstAlphaBlend = ciri::BlendMode::Zero;
+	_alphaBlendState = graphicsDevice()->createBlendState(alphaBlendDesc);
 }
 
 void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
@@ -212,9 +230,18 @@ void TerrainDemo::onDraw() {
 	if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->getShader()->isValid() && _waterPlane->isValid() ) {
 		// update constant buffers
 		_waterConstants.world = _waterPlane->getXform().getWorld();
+		_waterConstants.worldview = _camera.getView() * _waterConstants.world;
 		_waterConstants.xform = viewProj * _waterConstants.world;
 		_waterConstants.campos = _camera.getPosition();
 		_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants);
+
+		// set water sampler and normal texture
+		device->setSamplerState(0, _waterSampler, ciri::ShaderStage::Pixel);
+		device->setTexture2D(0, _waterNormalMap, ciri::ShaderStage::Pixel);
+
+		// enable alpha blending
+		device->setBlendState(_alphaBlendState);
+
 		//_simpleShader.getConstants().world = _waterPlane->getXform().getWorld();
 		//_simpleShader.getConstants().xform = viewProj * _simpleShader.getConstants().world;
 		//_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
@@ -228,6 +255,9 @@ void TerrainDemo::onDraw() {
 		device->setVertexBuffer(_waterPlane->getVertexBuffer());
 		device->setIndexBuffer(_waterPlane->getIndexBuffer());
 		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _waterPlane->getIndexBuffer()->getIndexCount());
+
+		// restore default blend state
+		device->setBlendState(nullptr);
 	}
 
 	device->present();

@@ -78,6 +78,16 @@ namespace ciri {
 			return;
 		}
 
+		// clean blend states
+		for( auto state : _blendStates ) {
+			if( state != nullptr ) {
+				state->destroy();
+				delete state;
+				state = nullptr;
+			}
+		}
+		_blendStates.clear();
+
 		// clean depth stencil states
 		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
 			if( _depthStencilStates[i] != nullptr ) {
@@ -315,6 +325,21 @@ namespace ciri {
 		return glState;
 	}
 
+	IBlendState* GLGraphicsDevice::createBlendState( const BlendDesc& desc ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
+		GLBlendState* glState = new GLBlendState();
+		if( !glState->create(desc) ) {
+			delete glState;
+			glState = nullptr;
+			return nullptr;
+		}
+		_blendStates.push_back(glState);
+		return glState;
+	}
+
 	void GLGraphicsDevice::applyShader( IShader* shader ) {
 		if( !_isValid ) {
 			return;
@@ -402,6 +427,42 @@ namespace ciri {
 
 		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
+	}
+
+	void GLGraphicsDevice::setBlendState( IBlendState* state ) {
+		if( !_isValid ) {
+			return;
+		}
+
+		if( nullptr == state ) {
+			restoreDefaultBlendState();
+		} else {
+			GLBlendState* glState = reinterpret_cast<GLBlendState*>(state);
+			const BlendDesc desc = glState->getDesc();
+
+			// enable blending
+			if( desc.blendingEnabled() ) {
+				glEnable(GL_BLEND);
+			} else {
+				glDisable(GL_BLEND);
+			}
+
+			// blend color
+			glBlendColor(desc.blendFactor[0], desc.blendFactor[1], desc.blendFactor[2], desc.blendFactor[3]);
+
+			// blend equations
+			glBlendEquationSeparate(ciriToGlBlendFunction(desc.colorFunc), ciriToGlBlendFunction(desc.alphaFunc));
+
+			// blend functions
+			glBlendFuncSeparate(ciriToGlBlendMode(desc.srcColorBlend, false), ciriToGlBlendMode(desc.dstColorBlend, false), ciriToGlBlendMode(desc.srcAlphaBlend, true), ciriToGlBlendMode(desc.dstAlphaBlend, true));
+
+			// color write mask
+			const GLboolean redMask   = (desc.colorMask & static_cast<int>(BlendColorMask::Red)) != 0;
+			const GLboolean greenMask = (desc.colorMask & static_cast<int>(BlendColorMask::Green)) != 0;
+			const GLboolean blueMask  = (desc.colorMask & static_cast<int>(BlendColorMask::Blue)) != 0;
+			const GLboolean alphaMask = (desc.colorMask & static_cast<int>(BlendColorMask::Alpha)) != 0;
+			glColorMask(redMask, greenMask, blueMask, alphaMask);
+		}
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) {
@@ -891,5 +952,22 @@ namespace ciri {
 		ss << message << "\n";
 		OutputDebugString(ss.str().c_str());
 		printf(ss.str().c_str());
+	}
+
+	void GLGraphicsDevice::restoreDefaultBlendState() {
+		if( !_isValid ) {
+			return;
+		}
+
+		// disable blending
+		glDisable(GL_BLEND);
+		// blend color (http://docs.gl/gl4/glBlendColor)
+		glBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+		// blend equations (http://docs.gl/gl4/glBlendEquationSeparate)
+		glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+		// blend functions (http://docs.gl/gl4/glBlendFuncSeparate)
+		glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+		// color write mask (http://docs.gl/gl4/glColorMask)
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 } // ciri

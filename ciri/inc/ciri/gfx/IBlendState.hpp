@@ -28,7 +28,7 @@ namespace ciri {
 			dstColorBlend = BlendMode::Zero;
 			srcAlphaBlend = BlendMode::One;
 			dstAlphaBlend = BlendMode::Zero;
-			blendFactor[0] = blendFactor[1] = blendFactor[2] = blendFactor[3] = 0.0f;
+			blendFactor[0] = blendFactor[1] = blendFactor[2] = blendFactor[3] = 1.0f; // dx defaults to 1, gl defaults to 0, wat do?
 			colorFunc = BlendFunction::Add;
 			alphaFunc = BlendFunction::Add;
 			colorMask = static_cast<int>(BlendColorMask::All);

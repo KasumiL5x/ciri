@@ -13,6 +13,7 @@ class TerrainDemo : public IDemo {
 private:
 	struct WaterConstants {
 		cc::Mat4f world;
+		cc::Mat4f worldview;
 		cc::Mat4f xform;
 		cc::Vec3f campos;
 	};
@@ -45,6 +46,9 @@ private:
 	ciri::IShader* _waterShader;
 	ciri::IConstantBuffer* _waterConstantsBuffer;
 	WaterConstants _waterConstants;
+	ciri::ITexture2D* _waterNormalMap;
+	ciri::ISamplerState* _waterSampler;
+	ciri::IBlendState* _alphaBlendState;
 };
 
 #endif /* __reflections_demo__ */
