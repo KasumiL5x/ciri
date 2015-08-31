@@ -7,7 +7,7 @@
 
 namespace modelgen {
 	// width; height; depth; u-scale; v-scale
-	static Model* createCube( float w, float h, float d, float us, float vs, ciri::IGraphicsDevice* device ) {
+	static Model* createCube( ciri::IGraphicsDevice* device, float w, float h, float d, float us, float vs ) {
 		Model* model = new Model();
 		model->addVertex(Vertex(cc::Vec3f(-0.5f*w, -0.5f*h,  0.5f*d), cc::Vec3f( 1.0f,  0.0f,  0.0f), cc::Vec2f(0.0f * us,  0.0f * vs)));
 		model->addVertex(Vertex(cc::Vec3f( 0.5f*w, -0.5f*h,  0.5f*d), cc::Vec3f( 1.0f,  0.0f,  0.0f), cc::Vec2f(1.0f * us,  0.0f * vs)));
@@ -48,12 +48,12 @@ namespace modelgen {
 		return model;
 	}
 
-	static Model* createPlane( float w, float h, int divsX, int divsY, ciri::IGraphicsDevice* device, bool dynamicVertex=false, bool dynamicIndex=false ) {
+	static Model* createPlane( ciri::IGraphicsDevice* device, float width, float height, int divsX=0, int divsY=0, float uScale=1.0f, float vScale=1.0f, bool dynamicVertex=false, bool dynamicIndex=false ) {
 		// add 1 such that asking for 1 division will add a split in the middle; asking for 0 returns just a quad
 		divsX += 1;
 		divsY += 1;
 
-		if( w <= 0.0f || h <= 0.0f || divsX < 1 || divsY < 1 ) {
+		if( width <= 0.0f || height <= 0.0f || divsX < 1 || divsY < 1 ) {
 			return nullptr;
 		}
 
@@ -65,12 +65,12 @@ namespace modelgen {
 		const int v = divsY+1;
 		for( int j = 0; j <= divsY; ++j ) {
 			for( int i = 0; i <= divsX; ++i ) {
-				const float x = ((float(i) / (u-1)) * 2.0f - 1.0f) * w * 0.5f;
+				const float x = ((float(i) / (u-1)) * 2.0f - 1.0f) * width * 0.5f;
 				const float y = 0.0f;
-				const float z = ((float(j) / (v-1)) * 2.0f - 1.0f) * h * 0.5f;
+				const float z = ((float(j) / (v-1)) * 2.0f - 1.0f) * height * 0.5f;
 
-				const float tx = static_cast<float>(i) / static_cast<float>(divsX);
-				const float ty = static_cast<float>(j) / static_cast<float>(divsY);
+				const float tx = (static_cast<float>(i) / static_cast<float>(divsX)) * uScale;
+				const float ty = (static_cast<float>(j) / static_cast<float>(divsY)) * vScale;
 
 				model->addVertex(Vertex(cc::Vec3f(x, y, z), cc::Vec3f::up(), cc::Vec2f(tx, ty)));
 			}

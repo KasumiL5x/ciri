@@ -94,7 +94,7 @@ void TerrainDemo::onLoadContent() {
 	}
 
 	// create water plane to match the heightmap size
-	_waterPlane = modelgen::createPlane(float(heightmap.getWidth()), float(heightmap.getHeight()), 0, 0, graphicsDevice(), false, false);
+	_waterPlane = modelgen::createPlane(graphicsDevice(), float(heightmap.getWidth()), float(heightmap.getHeight()), 0, 0, 10.0f, 10.0f, false, false);
 	_waterPlane->setShader(_waterShader);//_simpleShader.getShader());
 	// position the water up a little
 	const float WATER_HEIGHT = 10.0f;
