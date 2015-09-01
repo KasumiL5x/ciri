@@ -2,7 +2,7 @@
 #define __reflections_demo__
 
 #include "../IDemo.hpp"
-#include <ciri/gfx/MayaCamera.hpp>
+#include <ciri/gfx/FPSCamera.hpp>
 #include <ciri/input/Input.hpp>
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"
@@ -31,7 +31,10 @@ public:
 	virtual void onUnloadContent();
 
 private:
-	ciri::MayaCamera _camera;
+	void drawTerrain( const cc::Mat4f& viewProj );
+
+private:
+	ciri::FPSCamera _camera;
 	//
 	ciri::KeyboardState _prevKeyState;
 	ciri::MouseState _prevMouseState;
@@ -42,13 +45,16 @@ private:
 	Axis _axis;
 	SimpleShader _simpleShader;
 	HeightmapTerrain _terrain;
-	Model* _waterPlane;
-	ciri::IShader* _waterShader;
-	ciri::IConstantBuffer* _waterConstantsBuffer;
-	WaterConstants _waterConstants;
-	ciri::ITexture2D* _waterNormalMap;
-	ciri::ISamplerState* _waterSampler;
-	ciri::IBlendState* _alphaBlendState;
+
+	// water stuff
+	Model* _waterPlane; /**< Plane model for water. */
+	ciri::IShader* _waterShader; /**< Shader to render the water. */
+	ciri::IConstantBuffer* _waterConstantsBuffer; /**< Constant buffer for water shader. */
+	WaterConstants _waterConstants; /**< Acutual constants for above buffer. */
+	ciri::ITexture2D* _waterNormalMap; /**< Normal map for water surface. */
+	ciri::ISamplerState* _waterSampler; /**< Sampler for water normal texture. */
+	ciri::IBlendState* _alphaBlendState; /**< Alpha blend state for water transparency. */
+	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
 };
 
 #endif /* __reflections_demo__ */
