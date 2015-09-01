@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\inc\ciri\gfx\dx\DXBlendState.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.cpp" />
+    <ClCompile Include="..\inc\ciri\gfx\FPSCamera.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\gl\GLBlendState.cpp" />
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXConstantBuffer.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h" />
     <ClInclude Include="..\inc\ciri\gfx\FillMode.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\FPSCamera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CheckGLError.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\CiriToGl.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLBlendState.hpp" />

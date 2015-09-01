@@ -135,6 +135,9 @@
     <ClCompile Include="..\inc\ciri\gfx\dx\DXBlendState.cpp">
       <Filter>gfx\dx</Filter>
     </ClCompile>
+    <ClCompile Include="..\inc\ciri\gfx\FPSCamera.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -344,6 +347,9 @@
       <Filter>gfx\dx</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\BlendColorMask.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\FPSCamera.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
