@@ -700,6 +700,10 @@ namespace ciri {
 		return _apiInfo.c_str();
 	}
 
+	GraphicsApiType::Type DXGraphicsDevice::getApiType() const {
+		return GraphicsApiType::DirectX11;
+	}
+
 	ID3D11Device* DXGraphicsDevice::getDevice() const {
 		return _device;
 	}

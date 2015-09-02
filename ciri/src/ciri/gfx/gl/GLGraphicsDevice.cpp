@@ -730,6 +730,10 @@ namespace ciri {
 		return _apiInfo.c_str();
 	}
 
+	GraphicsApiType::Type GLGraphicsDevice::getApiType() const {
+		return GraphicsApiType::OpenGL;
+	}
+
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 		// get the window's device context
 		_hdc = GetDC(hwnd);

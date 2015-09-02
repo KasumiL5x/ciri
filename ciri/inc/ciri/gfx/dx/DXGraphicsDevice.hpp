@@ -61,6 +61,7 @@ namespace ciri {
 		virtual Window* getWindow() const;
 		virtual const char* getGpuName() const;
 		virtual const char* getApiInfo() const;
+		virtual GraphicsApiType::Type getApiType() const override;
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;

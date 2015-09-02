@@ -64,6 +64,7 @@ namespace ciri {
 		virtual Window* getWindow() const;
 		virtual const char* getGpuName() const;
 		virtual const char* getApiInfo() const;
+		virtual GraphicsApiType::Type getApiType() const override;
 
 	private:
 		bool configureGl( HWND hwnd );
