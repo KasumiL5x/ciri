@@ -31,9 +31,6 @@ public:
 	virtual void onUnloadContent();
 
 private:
-	void drawTerrain( const cc::Mat4f& viewProj );
-
-private:
 	ciri::FPSCamera _camera;
 	//
 	ciri::KeyboardState _prevKeyState;

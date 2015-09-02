@@ -56,6 +56,17 @@ void TerrainDemo::onLoadContent() {
 		printf("Failed to generate heightmap terrain.\n");
 	}
 
+	// load a bunch of terrain textures and set them
+	ciri::TGA grassTga; grassTga.loadFromFile("terrain/grass.tga", true);
+	ciri::TGA rockTga; rockTga.loadFromFile("terrain/rock.tga", true);
+	ciri::TGA sandTga; sandTga.loadFromFile("terrain/sand.tga", true);
+	ciri::TGA snowTga; snowTga.loadFromFile("terrain/snow.tga", true);
+	ciri::ITexture2D* grassTex = graphicsDevice()->createTexture2D(grassTga.getWidth(), grassTga.getHeight(), ciri::TextureFormat::Color, 0, grassTga.getPixels());
+	ciri::ITexture2D* rockTex = graphicsDevice()->createTexture2D(rockTga.getWidth(), rockTga.getHeight(), ciri::TextureFormat::Color, 0, rockTga.getPixels());
+	ciri::ITexture2D* sandTex = graphicsDevice()->createTexture2D(sandTga.getWidth(), sandTga.getHeight(), ciri::TextureFormat::Color, 0, sandTga.getPixels());
+	ciri::ITexture2D* snowTex = graphicsDevice()->createTexture2D(snowTga.getWidth(), snowTga.getHeight(), ciri::TextureFormat::Color, 0, snowTga.getPixels());
+	_terrain.setTextures(grassTex, rockTex, sandTex, snowTex);
+
 	// configure, load, etc, the water shader and its constants
 	{
 		_waterShader = graphicsDevice()->createShader();
@@ -85,7 +96,7 @@ void TerrainDemo::onLoadContent() {
 
 	// create water plane to match the heightmap size
 	_waterPlane = modelgen::createPlane(graphicsDevice(), float(heightmap.getWidth()), float(heightmap.getHeight()), 0, 0, 10.0f, 10.0f, false, false);
-	_waterPlane->setShader(_waterShader);//_simpleShader.getShader());
+	_waterPlane->setShader(_waterShader);
 	// position the water up a little
 	_waterPlane->getXform().setPosition(cc::Vec3f(0.0f, WATER_HEIGHT, 0.0f));
 
@@ -197,7 +208,7 @@ void TerrainDemo::onDraw() {
 		device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
 	}
 
-	drawTerrain(viewProj);
+	_terrain.draw(viewProj, graphicsDevice());
 
 	// render water plane
 	if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->getShader()->isValid() && _waterPlane->isValid() ) {
@@ -214,12 +225,6 @@ void TerrainDemo::onDraw() {
 
 		// enable alpha blending
 		device->setBlendState(_alphaBlendState);
-
-		//_simpleShader.getConstants().world = _waterPlane->getXform().getWorld();
-		//_simpleShader.getConstants().xform = viewProj * _simpleShader.getConstants().world;
-		//_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
-		//_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(0.0f, 0.0f, 1.0f);
-		//_simpleShader.updateConstants();
 
 		// apply shader
 		device->applyShader(_waterPlane->getShader());
@@ -243,28 +248,4 @@ void TerrainDemo::onUnloadContent() {
 		delete _waterPlane;
 		_waterPlane = nullptr;
 	}
-}
-
-void TerrainDemo::drawTerrain( const cc::Mat4f& viewProj ) {
-	// todo: change shader to real shader at some point
-	if( !_simpleShader.getShader()->isValid() || nullptr == _terrain.getVertexBuffer() || nullptr == _terrain.getIndexBuffer() ) {
-		return;
-	}
-
-	ciri::IGraphicsDevice* device = graphicsDevice();
-
-	// update shader constants
-	_simpleShader.getConstants().world = cc::Mat4f(1.0f);
-	_simpleShader.getConstants().xform = viewProj * _simpleShader.getConstants().world;
-	_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
-	_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(1.0f, 1.0f, 1.0f);
-	_simpleShader.updateConstants();
-
-	// apply shader
-	device->applyShader(_simpleShader.getShader());
-
-	// set buffers and draw
-	device->setVertexBuffer(_terrain.getVertexBuffer());
-	device->setIndexBuffer(_terrain.getIndexBuffer());
-	device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _terrain.getIndexBuffer()->getIndexCount());
 }
