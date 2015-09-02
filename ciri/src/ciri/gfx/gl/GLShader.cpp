@@ -57,7 +57,7 @@ namespace ciri {
 		}
 
 		// load vs file
-		File vsFile(vs, File::ReadOnly);
+		File vsFile(vs, File::Flags::ReadOnly);
 		if( !vsFile.isOpen() ) {
 			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
@@ -67,7 +67,7 @@ namespace ciri {
 		// load gs file
 		std::string gsStr = ""; // optional shader, so create empty string for it now
 		if( gs != nullptr ) {
-			File gsFile(gs, File::ReadOnly);
+			File gsFile(gs, File::Flags::ReadOnly);
 			if( !gsFile.isOpen() ) {
 				addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + gs + std::string(")"));
 				return err::CIRI_FILE_NOT_FOUND;
@@ -76,7 +76,7 @@ namespace ciri {
 		}
 
 		// load ps file
-		File psFile(ps, File::ReadOnly);
+		File psFile(ps, File::Flags::ReadOnly);
 		if( !psFile.isOpen() ) {
 			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;

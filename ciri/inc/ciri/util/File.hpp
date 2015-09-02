@@ -7,27 +7,29 @@
 namespace ciri {
 	class File {
 	public:
-		enum Access {
-			ReadOnly,
-			ReadWrite
+		struct Flags {
+			enum FileFlags {
+				None     = 0,
+				ReadOnly = (1 << 0),
+				Append   = (1 << 1)
+			};
 		};
 
 	public:
 		File();
-		File( const char* file, Access access=ReadWrite );
+		File( const char* file, int flags=Flags::None );
 		~File();
 
 		/**
 		 * Opens or creates a file for writing.
 		 * If an existing file is not present, but access is set to ReadOnly, a new file will not be created.  Otherwise, a new file will be created.
 		 * 
-		 * @param file   File to open or create.
-		 * @param append If true, the file will be appended rather than replaced.
-		 * @param access Read write access of the file.
+		 * @param file  File to open or create.
+		 * @param flags Flags for handling of the file.
 		 * 
 		 * @return True if the requested file was opened or created correctly.
 		 */
-		bool open( const char* file, bool append=true, Access access=ReadWrite );
+		bool open( const char* file, int flags=Flags::None );
 
 		/**
 		 * Writes a string to the file.
@@ -56,7 +58,7 @@ namespace ciri {
 
 	private:
 		std::fstream _stream;
-		Access _access;
+		int _flags;
 	};
 } // ciri
 
