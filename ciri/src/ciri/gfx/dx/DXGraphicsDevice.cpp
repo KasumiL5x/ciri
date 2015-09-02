@@ -230,6 +230,10 @@ namespace ciri {
 		return dxTexture;
 	}
 
+	ITextureCube* DXGraphicsDevice::createTextureCube( ciri::ITexture2D* right, ciri::ITexture2D* left, ciri::ITexture2D* top, ciri::ITexture2D* bottom, ciri::ITexture2D* back, ciri::ITexture2D* front ) {
+		throw;
+	}
+
 	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;

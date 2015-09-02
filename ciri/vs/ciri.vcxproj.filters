@@ -355,5 +355,8 @@
     <ClInclude Include="..\inc\ciri\gfx\GraphicsApiType.hpp">
       <Filter>gfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\ITextureCube.hpp">
+      <Filter>gfx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

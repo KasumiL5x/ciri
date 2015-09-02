@@ -17,6 +17,7 @@
 #include "IDepthStencilState.hpp"
 #include "IBlendState.hpp"
 #include "GraphicsApiType.hpp"
+#include "ITextureCube.hpp"
 
 namespace ciri {
 	class Window;
@@ -80,6 +81,18 @@ namespace ciri {
 		 * @returns A pointer to a new ITexture2D of the given parameters, or nullptr upon error.
 		 */
 		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr )=0;
+
+		/**
+		 * Creates a cubemap texture made up of six 2d textures.
+		 * @param right  Texture facing positive X.
+		 * @param left   Texture facing negative X.
+		 * @param top    Texture facing positive Y.
+		 * @param bottom Texture facing negative Y.
+		 * @param back   Texture facing positive Z.
+		 * @param front  Texture facing negative Z.
+		 * @returns A pointer to a new ITextureCube, or nullptr upon error.
+		 */
+		virtual ITextureCube* createTextureCube( ciri::ITexture2D* right, ciri::ITexture2D* left, ciri::ITexture2D* top, ciri::ITexture2D* bottom, ciri::ITexture2D* back, ciri::ITexture2D* front )=0;
 
 		/**
 		 * Creates a new sampler state.
