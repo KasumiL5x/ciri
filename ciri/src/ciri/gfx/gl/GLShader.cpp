@@ -154,6 +154,9 @@ namespace ciri {
 			addError(err::CIRI_SHADER_LINK_FAILED, err::getString(err::CIRI_SHADER_LINK_FAILED) + std::string(": ") + std::string(log));
 		}
 
+		// process uniforms
+		processUniforms();
+
 		// if any errors have occurred, clean up and return the first error code
 		if( !_errors.empty() ) {
 			destroy();
@@ -219,5 +222,42 @@ namespace ciri {
 
 	void GLShader::clearErrors() {
 		_errors.clear();
+	}
+
+	void GLShader::processUniforms() {
+		// note: assumes program is linked correctly
+
+		glUseProgram(_program);
+
+		// get the number of uniforms
+		GLint numUniforms = 0;
+		glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &numUniforms);
+
+		// get max length of uniform
+		GLint maxUniformLength = 0;
+		glGetProgramiv(_program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLength);
+
+		// will store the name of uniforms
+		GLchar* name = new GLchar[maxUniformLength];
+
+		// total number of samplers
+		int samplerCount = 0;
+
+		for( int i = 0; i < numUniforms; ++i ) {
+			GLsizei actualLength; GLint size; GLenum type;
+			glGetActiveUniform(_program, i, maxUniformLength, &actualLength, &size, &type, name);
+
+			// process all samplers
+			if( type >= GL_SAMPLER_1D && type <= GL_UNSIGNED_INT_SAMPLER_2D_RECT ) {
+				glUniform1i(glGetUniformLocation(_program, name), samplerCount);
+				samplerCount += 1;
+				continue;
+			}
+		}
+
+		delete[] name;
+		name = nullptr;
+
+		glUseProgram(0);
 	}
 } // ciri

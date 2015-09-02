@@ -32,6 +32,7 @@ namespace ciri {
 	private:
 		void addError( err::ErrorCode code, const std::string& msg );
 		void clearErrors();
+		void processUniforms();
 
 	private:
 		GLuint _vertexShader;
