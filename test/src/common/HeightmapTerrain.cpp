@@ -416,7 +416,29 @@ std::string HeightmapTerrain::getVertexShaderGl() const {
 }
 
 std::string HeightmapTerrain::getVertexShaderDx() const {
-	throw;
+	return
+		"cbuffer PerFrameConstants : register(b0) {\n"
+		"	float4x4 world;\n"
+		"	float4x4 xform;\n"
+		"};\n"
+		""
+		"struct Output {\n"
+		"	float4 hpos : SV_POSITION;\n"
+		"	float3 wpos : TEXCOORD2;\n"
+		"	float3 nrm : NORMAL0;\n"
+		"	float2 tex : TEXCOORD0;\n"
+		"	float4 weights : TEXCOORD1;\n"
+		"};\n"
+		""
+		"Output main( float3 pos : POSITION, float3 nrm : NORMAL, float4 tan : TANGENT, float2 tex : TEXCOORD0, float4 weights : TEXCOORD1 ) {\n"
+		"	Output OUT;\n"
+		"	OUT.hpos = mul(xform, float4(pos, 1.0f));\n"
+		"	OUT.wpos = mul(world, float4(pos, 1.0f)).xyz;\n"
+		"	OUT.nrm = mul(world, float4(nrm, 0.0f)).xyz;\n"
+		"	OUT.tex = tex;\n"
+		"	OUT.weights = weights;\n"
+		"	return OUT;\n"
+		"}";
 }
 
 std::string HeightmapTerrain::getPixelShaderGl() const {
@@ -466,5 +488,43 @@ std::string HeightmapTerrain::getPixelShaderGl() const {
 }
 
 std::string HeightmapTerrain::getPixelShaderDx() const {
-	throw;
+	return
+		"Texture2D Texture0 : register(t0);\n"
+		"Texture2D Texture1 : register(t1);\n"
+		"Texture2D Texture2 : register(t2);\n"
+		"Texture2D Texture3 : register(t3);\n"
+		"SamplerState Sampler0 : register(s0);\n"
+		"SamplerState Sampler1 : register(s1);\n"
+		"SamplerState Sampler2 : register(s2);\n"
+		"SamplerState Sampler3 : register(s3);\n"
+		""
+		"struct Input {\n"
+		"	float4 hpos : SV_POSITION;\n"
+		"	float3 wpos : TEXCOORD2;\n"
+		"	float3 nrm : NORMAL0;\n"
+		"	float2 tex : TEXCOORD0;\n"
+		"	float4 weights : TEXCOORD1;\n"
+		"};\n"
+		""
+		"static float3 AmbientLightColor = float3(0.05333332f, 0.09882354f, 0.1819608f);\n"
+		"static float3 LightDirection = float3(-0.5265408f, -0.5735765f,-0.6275069f);\n"
+		"static float3 LightColor = float3(1.0f, 0.9607844f, 0.8078432f);\n"
+		""
+		"float3 lambert( float3 L, float3 N, float3 lightColor, float lightIntensity ) {\n"
+		"	return (max(dot(L, N), 0.0f) * lightColor) * lightIntensity;\n"
+		"}\n"
+		""
+		"float4 main( Input input ) : SV_Target {\n"
+		"	float3 L = -LightDirection;\n"
+		"	float3 N = normalize(input.nrm);\n"
+		"	float3 lighting = AmbientLightColor + lambert(L, N, LightColor, 1.0f);\n"
+		""
+		"	// sample weighted textures\n"
+		"	float4 color = Texture0.Sample(Sampler0, input.tex) * input.weights.x;\n"
+		"	color += Texture1.Sample(Sampler1, input.tex) * input.weights.y;\n"
+		"	color += Texture2.Sample(Sampler2, input.tex) * input.weights.z;\n"
+		"	color += Texture3.Sample(Sampler3, input.tex) * input.weights.w;\n"
+		""
+		"	return float4(color.xyz * lighting, 1.0f);\n"
+		"}";
 }

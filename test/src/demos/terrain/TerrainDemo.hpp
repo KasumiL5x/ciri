@@ -11,6 +11,7 @@
 
 class TerrainDemo : public IDemo {
 private:
+	_declspec(align(16))
 	struct WaterConstants {
 		cc::Mat4f world;
 		cc::Mat4f worldview;

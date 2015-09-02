@@ -3,20 +3,37 @@
 #include <ciri/ErrorCodes.hpp>
 
 namespace ciri {
-	File::File() {
+	File::File()
+		: _access(ReadWrite) {
 	}
 
-	File::File( const char* file ) {
-		open(file);
+	File::File( const char* file, Access access ) {
+		open(file, false, access); // todo: just use bit flags for access instead...
 	}
 
 	File::~File() {
 		close();
 	}
 
-	bool File::open( const char* file, bool append ) {
-		_stream.open(file, std::fstream::in | std::fstream::out | (append ? (std::fstream::app) : std::fstream::trunc)); // try opening an existing file r/w
-		if( !_stream.is_open() ) {
+	bool File::open( const char* file, bool append, Access access ) {
+		_access = access;
+
+		unsigned int mode = 0;
+		if( ReadOnly == access ) {
+			mode |= std::fstream::in;
+		} else if( ReadWrite == access ) {
+			mode |= std::fstream::in | std::fstream::out;
+		}
+		if( access != ReadOnly ) {
+			if( append ) {
+				mode |= std::fstream::app;
+			} else {
+				mode |= std::fstream::trunc;
+			}
+		}
+
+		_stream.open(file, mode);
+		if( !_stream.is_open() && (_access != ReadOnly) ) {
 			// create and re-open the file otherwise
 			_stream.open(file, std::fstream::in | std::fstream::out | std::fstream::trunc);
 			_stream.open(file, std::fstream::in | std::fstream::out);
@@ -26,7 +43,7 @@ namespace ciri {
 	}
 
 	bool File::write( const std::string& msg ) {
-		if( !isOpen() ) {
+		if( !isOpen() || (_access != ReadWrite) ) {
 			return false;
 		}
 		_stream.write(msg.c_str(), msg.length());

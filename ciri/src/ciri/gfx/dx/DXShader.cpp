@@ -89,7 +89,7 @@ namespace ciri {
 		}
 
 		// load vs file
-		File vsFile(vs);
+		File vsFile(vs, File::ReadOnly);
 		if( !vsFile.isOpen() ) {
 			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
@@ -99,7 +99,7 @@ namespace ciri {
 		// load gs file
 		std::string gsStr = ""; // optional shader, so create empty string for it now
 		if( gs != nullptr ) {
-			File gsFile(gs);
+			File gsFile(gs, File::ReadOnly);
 			if( !gsFile.isOpen() ) {
 				addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + gs + std::string(")"));
 				return err::CIRI_FILE_NOT_FOUND;
@@ -108,7 +108,7 @@ namespace ciri {
 		}
 
 		// load ps file
-		File psFile(ps);
+		File psFile(ps, File::ReadOnly);
 		if( !psFile.isOpen() ) {
 			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")"));
 			return err::CIRI_FILE_NOT_FOUND;
@@ -157,7 +157,7 @@ namespace ciri {
 					D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[elements.size()];
 					for( unsigned int i = 0; i < elements.size(); ++i ) {
 						layout[i].SemanticName = _dxUsageStrings[elements[i].getUsage()].c_str();
-						layout[i].SemanticIndex = 0;
+						layout[i].SemanticIndex = elements[i].getUsageIndex();
 						layout[i].Format = ciriToDxVertexFormat(elements[i].getFormat());
 						layout[i].InputSlot = 0;
 						layout[i].AlignedByteOffset = offset;
@@ -189,8 +189,7 @@ namespace ciri {
 			} // D3DCompile success
 
 			// release shader and error blobs
-			shaderBlob->Release();
-			shaderBlob = nullptr;
+			if( shaderBlob != nullptr ) { shaderBlob->Release(); shaderBlob = nullptr; }
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
@@ -221,8 +220,7 @@ namespace ciri {
 			} // D3DCompile success
 
 			// release shader and error blobs
-			shaderBlob->Release();
-			shaderBlob = nullptr;
+			if( shaderBlob != nullptr ) { shaderBlob->Release(); shaderBlob = nullptr; }
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
@@ -253,8 +251,7 @@ namespace ciri {
 			} // D3DCompile success
 
 			// release shader and error blobs
-			shaderBlob->Release();
-			shaderBlob = nullptr;
+			if( shaderBlob != nullptr ) { shaderBlob->Release(); shaderBlob = nullptr; }
 			if( errorBlob != nullptr ) { errorBlob->Release(); errorBlob = nullptr; }
 		}
 
@@ -298,7 +295,7 @@ namespace ciri {
 	}
 
 	const std::vector<IShader::ShaderError>& DXShader::getErrors() const {
-		throw;
+		return _errors;
 	}
 
 	bool DXShader::isValid() const {
