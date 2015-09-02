@@ -16,6 +16,7 @@
 #include "IRasterizerState.hpp"
 #include "IDepthStencilState.hpp"
 #include "IBlendState.hpp"
+#include "GraphicsApiType.hpp"
 
 namespace ciri {
 	class Window;
@@ -247,6 +248,11 @@ namespace ciri {
 		 * Gets a string representing the underlying api version.
 		 */
 		virtual const char* getApiInfo() const=0;
+
+		/**
+		 * Gets the underlying
+		 */
+		virtual GraphicsApiType::Type getApiType() const=0;
 	};
 } // ciri
 
