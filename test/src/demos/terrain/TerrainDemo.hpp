@@ -53,6 +53,9 @@ private:
 	ciri::ISamplerState* _waterSampler; /**< Sampler for water normal texture. */
 	ciri::IBlendState* _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
+	
+	// cubemap test
+	ciri::ITextureCube* _cubemap;
 };
 
 #endif /* __reflections_demo__ */

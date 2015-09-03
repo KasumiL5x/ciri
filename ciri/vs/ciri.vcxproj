@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\inc\ciri\gfx\dx\DXBlendState.cpp" />
+    <ClCompile Include="..\inc\ciri\gfx\dx\DXTextureCube.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\FPSCamera.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\gl\GLBlendState.cpp" />
+    <ClCompile Include="..\inc\ciri\gfx\gl\GLTextureCube.cpp" />
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXConstantBuffer.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXDepthStencilState.cpp" />
@@ -71,6 +73,7 @@
     <ClInclude Include="..\inc\ciri\gfx\dx\DXSamplerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXShader.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXTexture2D.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\dx\DXTextureCube.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\dx\msft\ScreenGrab.h" />
@@ -88,6 +91,7 @@
     <ClInclude Include="..\inc\ciri\gfx\gl\GLSamplerState.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLShader.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLTexture2D.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\gl\GLTextureCube.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\gl\GLVertexDeclaration.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\GraphicsApiType.hpp" />

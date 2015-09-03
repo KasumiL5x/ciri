@@ -4,7 +4,7 @@
 
 TerrainDemo::TerrainDemo()
 	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
-		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f) {
+		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _cubemap(nullptr) {
 }
 
 TerrainDemo::~TerrainDemo() {
@@ -116,6 +116,18 @@ void TerrainDemo::onLoadContent() {
 	alphaBlendDesc.srcAlphaBlend = ciri::BlendMode::One;
 	alphaBlendDesc.dstAlphaBlend = ciri::BlendMode::Zero;
 	_alphaBlendState = graphicsDevice()->createBlendState(alphaBlendDesc);
+
+	/// commented out for now, because setting simply throws.
+	/// p.s. at some point i need to make all constructors private so users can't just create their own instances
+	/// and are instead forces to use the device to initially create the resource.  eventually...
+	// load the cubemap
+	//ciri::TGA cubeRight; cubeRight.loadFromFile("terrain/skybox/posx.tga", true);
+	//ciri::TGA cubeLeft; cubeLeft.loadFromFile("terrain/skybox/negx.tga", true);
+	//ciri::TGA cubeTop; cubeTop.loadFromFile("terrain/skybox/posy.tga", true);
+	//ciri::TGA cubeBottom; cubeBottom.loadFromFile("terrain/skybox/negy.tga", true);
+	//ciri::TGA cubeBack; cubeBack.loadFromFile("terrain/skybox/posz.tga", true);
+	//ciri::TGA cubeFront; cubeFront.loadFromFile("terrain/skybox/negz.tga", true);
+	//_cubemap = graphicsDevice()->createTextureCube(1024, 1024, cubeRight.getPixels(), cubeLeft.getPixels(), cubeTop.getPixels(), cubeBottom.getPixels(), cubeBack.getPixels(), cubeFront.getPixels());
 }
 
 void TerrainDemo::onEvent( ciri::WindowEvent evt ) {

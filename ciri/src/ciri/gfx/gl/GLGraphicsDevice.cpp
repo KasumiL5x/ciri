@@ -78,6 +78,15 @@ namespace ciri {
 			return;
 		}
 
+		// clean texture cubes
+		for( auto cube : _textureCubes ) {
+			if( cube != nullptr ) {
+				cube->destroy();
+				delete cube;
+				cube = nullptr;
+			}
+		}
+
 		// clean blend states
 		for( auto state : _blendStates ) {
 			if( state != nullptr ) {
@@ -266,8 +275,24 @@ namespace ciri {
 		return glTexture;
 	}
 
-	ITextureCube* GLGraphicsDevice::createTextureCube( ciri::ITexture2D* right, ciri::ITexture2D* left, ciri::ITexture2D* top, ciri::ITexture2D* bottom, ciri::ITexture2D* back, ciri::ITexture2D* front ) {
-		throw;
+	ITextureCube* GLGraphicsDevice::createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front ) {
+		if( width <= 0 || height <= 0 ) {
+			return nullptr;
+		}
+
+		if( nullptr==right || nullptr==left || nullptr==top || nullptr==bottom || nullptr==back || nullptr==front ) {
+			return nullptr;
+		}
+
+		GLTextureCube* glCube = new GLTextureCube();
+		if( err::failed(glCube->set(width, height, right, left, top, bottom, back, front)) ) {
+			delete glCube;
+			glCube = nullptr;
+			return nullptr;
+		}
+
+		_textureCubes.push_back(glCube);
+		return glCube;
 	}
 
 	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {

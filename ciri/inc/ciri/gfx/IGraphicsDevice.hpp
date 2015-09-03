@@ -84,15 +84,17 @@ namespace ciri {
 
 		/**
 		 * Creates a cubemap texture made up of six 2d textures.
-		 * @param right  Texture facing positive X.
-		 * @param left   Texture facing negative X.
-		 * @param top    Texture facing positive Y.
-		 * @param bottom Texture facing negative Y.
-		 * @param back   Texture facing positive Z.
-		 * @param front  Texture facing negative Z.
+		 * @param width  Width in pixels of each texture (must all be the same).
+		 * @param height Height in pixels of each texture (must all be the same).
+		 * @param right  Data for texture facing positive X.
+		 * @param left   Data for texture facing negative X.
+		 * @param top    Data for texture facing positive Y.
+		 * @param bottom Data for texture facing negative Y.
+		 * @param back   Data for texture facing positive Z.
+		 * @param front  Data for texture facing negative Z.
 		 * @returns A pointer to a new ITextureCube, or nullptr upon error.
 		 */
-		virtual ITextureCube* createTextureCube( ciri::ITexture2D* right, ciri::ITexture2D* left, ciri::ITexture2D* top, ciri::ITexture2D* bottom, ciri::ITexture2D* back, ciri::ITexture2D* front )=0;
+		virtual ITextureCube* createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front )=0;
 
 		/**
 		 * Creates a new sampler state.

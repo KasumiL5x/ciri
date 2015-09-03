@@ -20,6 +20,7 @@
 #include "DXRasterizerState.hpp"
 #include "DXDepthStencilState.hpp"
 #include "DXBlendState.hpp"
+#include "DXTextureCube.hpp"
 
 namespace ciri {
 	class DXGraphicsDevice : public IGraphicsDevice {
@@ -36,7 +37,7 @@ namespace ciri {
 		virtual IIndexBuffer* createIndexBuffer();
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr );
-		virtual ITextureCube* createTextureCube( ciri::ITexture2D* right, ciri::ITexture2D* left, ciri::ITexture2D* top, ciri::ITexture2D* bottom, ciri::ITexture2D* back, ciri::ITexture2D* front ) override;
+		virtual ITextureCube* createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front ) override;
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
@@ -116,6 +117,8 @@ namespace ciri {
 		std::string _apiInfo;
 		//
 		std::vector<DXBlendState*> _blendStates;
+		//
+		std::vector<DXTextureCube*> _textureCubes;
 	};
 } // ciri
 
