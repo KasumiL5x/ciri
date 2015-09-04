@@ -11,7 +11,7 @@ namespace ciri {
 		virtual ~ITextureCube() {
 		}
 
-		virtual err::ErrorCode set( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front )=0;
+		virtual err::ErrorCode set( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz )=0;
 
 		virtual void destroy()=0;
 	};
