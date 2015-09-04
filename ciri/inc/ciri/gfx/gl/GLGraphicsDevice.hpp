@@ -1,9 +1,9 @@
 #ifndef __ciri_glgraphicsdevice__
 #define __ciri_glgraphicsdevice__
 
-#pragma comment(lib, "OpenGL32.lib")
-#pragma comment(lib, "glu32.lib")
-#pragma comment(lib, "glew32s.lib")
+//#pragma comment(lib, "OpenGL32.lib")
+//#pragma comment(lib, "glu32.lib")
+//#pragma comment(lib, "glew32s.lib")
 
 #include <vector>
 #include <string>

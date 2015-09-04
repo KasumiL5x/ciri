@@ -1,8 +1,8 @@
 #ifndef __ciri_png__
 #define __ciri_png__
 
-#pragma comment(lib, "zlib.lib")
-#pragma comment(lib, "libpng16.lib")
+//#pragma comment(lib, "zlib.lib")
+//#pragma comment(lib, "libpng16.lib")
 
 namespace ciri {
 	class PNG {
