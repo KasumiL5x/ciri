@@ -182,6 +182,23 @@ bool Model::updateBuffers( bool vertex, bool index ) {
 	return true;
 }
 
+bool Model::flipNormals( bool shouldUpdateBuffers ) {
+	// check for request to update buffers with no valid bfufers
+	if( shouldUpdateBuffers && !isValid() ) {
+		return false;
+	}
+
+	for( auto vert : _vertices ) {
+		vert.normal = -vert.normal;
+	}
+
+	if( shouldUpdateBuffers ) {
+		return updateBuffers(true, false);
+	}
+	
+	return true;
+}
+
 ciri::IVertexBuffer* Model::getVertexBuffer() const {
 	return _vertexBuffer;
 }
@@ -212,7 +229,7 @@ void Model::setDynamicity( bool vertex, bool index ) {
 }
 
 bool Model::isValid() const {
-	return _vertexBuffer != nullptr && _indexBuffer != nullptr;
+	return _vertexBuffer != nullptr;
 }
 
 std::vector<Vertex>& Model::getVertices() {

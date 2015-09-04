@@ -18,6 +18,8 @@ public:
 	bool build( ciri::IGraphicsDevice* device );
 	bool updateBuffers( bool vertex, bool index );
 
+	bool flipNormals( bool shouldUpdateBuffers );
+
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
 	Transform& getXform();
