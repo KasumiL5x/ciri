@@ -144,6 +144,9 @@
     <ClCompile Include="..\inc\ciri\gfx\dx\DXTextureCube.cpp">
       <Filter>gfx\dx</Filter>
     </ClCompile>
+    <ClCompile Include="..\inc\ciri\util\PNG.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -369,6 +372,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\gfx\dx\DXTextureCube.hpp">
       <Filter>gfx\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\util\PNG.hpp">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

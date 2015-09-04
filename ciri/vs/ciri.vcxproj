@@ -17,6 +17,7 @@
     <ClCompile Include="..\inc\ciri\gfx\FPSCamera.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\gl\GLBlendState.cpp" />
     <ClCompile Include="..\inc\ciri\gfx\gl\GLTextureCube.cpp" />
+    <ClCompile Include="..\inc\ciri\util\PNG.cpp" />
     <ClCompile Include="..\src\ciri\gfx\Camera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXConstantBuffer.cpp" />
     <ClCompile Include="..\src\ciri\gfx\dx\DXDepthStencilState.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="..\inc\ciri\input\Input.hpp" />
     <ClInclude Include="..\inc\ciri\util\File.hpp" />
     <ClInclude Include="..\inc\ciri\util\Log.hpp" />
+    <ClInclude Include="..\inc\ciri\util\PNG.hpp" />
     <ClInclude Include="..\inc\ciri\util\StrUtil.hpp" />
     <ClInclude Include="..\inc\ciri\util\TGA.hpp" />
     <ClInclude Include="..\inc\ciri\util\Timer.hpp" />
@@ -159,15 +161,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../inc/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
-    <LibraryPath>../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../inc/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;../thirdparty/zlib-1.2.8/inc/;../thirdparty/lpng1618/inc/;$(IncludePath)</IncludePath>
+    <LibraryPath>../thirdparty/glew-1.11.0/lib/;../thirdparty/lpng1618/lib/;../thirdparty/zlib-1.2.8/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../lib/</OutDir>
     <TargetName>$(ProjectName)-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../inc/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
-    <LibraryPath>../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../inc/;../thirdparty/ccmath/;../thirdparty/glew-1.11.0/inc/;../thirdparty/zlib-1.2.8/inc/;../thirdparty/lpng1618/inc/;$(IncludePath)</IncludePath>
+    <LibraryPath>../thirdparty/glew-1.11.0/lib/;../thirdparty/lpng1618/lib/;../thirdparty/zlib-1.2.8/lib/;$(LibraryPath)</LibraryPath>
     <IntDir>../tmp/$(Configuration)/</IntDir>
     <OutDir>../lib/</OutDir>
   </PropertyGroup>
