@@ -1,6 +1,7 @@
 #ifndef __ciri_gltexturecube__
 #define __ciri_gltexturecube__
 
+#include <gl/glew.h>
 #include "../ITextureCube.hpp"
 
 namespace ciri {
@@ -9,8 +10,13 @@ namespace ciri {
 		GLTextureCube();
 		virtual ~GLTextureCube();
 
-		virtual err::ErrorCode set( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front ) override;
+		virtual err::ErrorCode set( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 		virtual void destroy() override;
+
+		GLuint getTextureId() const;
+
+	private:
+		GLuint _textureId;
 	};
 } // ciri
 

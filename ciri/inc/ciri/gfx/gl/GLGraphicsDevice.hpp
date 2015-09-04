@@ -40,7 +40,7 @@ namespace ciri {
 		virtual IIndexBuffer* createIndexBuffer();
 		virtual IConstantBuffer* createConstantBuffer();
 		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr );
-		virtual ITextureCube* createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front ) override;
+		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc );
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format );
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc );
@@ -50,6 +50,7 @@ namespace ciri {
 		virtual void setVertexBuffer( IVertexBuffer* buffer );
 		virtual void setIndexBuffer( IIndexBuffer* buffer );
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage );
+		virtual void setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage );
 		virtual void setBlendState( IBlendState* state ) override;
 		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex );

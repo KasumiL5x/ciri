@@ -239,17 +239,17 @@ namespace ciri {
 		return dxTexture;
 	}
 
-	ITextureCube* DXGraphicsDevice::createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front ) {
+	ITextureCube* DXGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
 
-		if( nullptr==right || nullptr==left || nullptr==top || nullptr==bottom || nullptr==back || nullptr==front ) {
+		if( nullptr==posx || nullptr==negx || nullptr==posy || nullptr==negy || nullptr==posz || nullptr==negz ) {
 			return nullptr;
 		}
 
 		DXTextureCube* dxCube = new DXTextureCube(this);
-		if( err::failed(dxCube->set(width, height, right, left, top, bottom, back, front)) ) {
+		if( err::failed(dxCube->set(width, height, posx, negx, posy, negy, posz, negz)) ) {
 			delete dxCube;
 			dxCube = nullptr;
 			return nullptr;
@@ -431,6 +431,27 @@ namespace ciri {
 		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture);
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
+		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
+
+		const bool all = (shaderStage & ShaderStage::All) != 0;
+		if( all || (shaderStage & ShaderStage::Vertex) ) {
+			_context->VSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Geometry) ) {
+			_context->GSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Pixel) ) {
+			_context->PSSetShaderResources(index, 1, srv);
+		}
+	}
+
+	void DXGraphicsDevice::setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
+		DXTextureCube* dxTexture = reinterpret_cast<DXTextureCube*>(texture);
+
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
 
 		const bool all = (shaderStage & ShaderStage::All) != 0;

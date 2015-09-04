@@ -84,6 +84,7 @@ namespace ciri {
 
 		/**
 		 * Creates a cubemap texture made up of six 2d textures.
+		 * Pixel format is expected to be RGBA with unsigned byte as the data type.
 		 * @param width  Width in pixels of each texture (must all be the same).
 		 * @param height Height in pixels of each texture (must all be the same).
 		 * @param right  Data for texture facing positive X.
@@ -94,7 +95,7 @@ namespace ciri {
 		 * @param front  Data for texture facing negative Z.
 		 * @returns A pointer to a new ITextureCube, or nullptr upon error.
 		 */
-		virtual ITextureCube* createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front )=0;
+		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz )=0;
 
 		/**
 		 * Creates a new sampler state.
@@ -158,6 +159,14 @@ namespace ciri {
 		 * @param shaderStage Stage at which to bind.
 		 */
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage )=0;
+
+		/**
+		 * Binds a cube texture to a slot at a given shader stage.
+		 * @param index       Texture slot to bind to.
+		 * @param texture     Texture to bind.
+		 * @param shaderStage Stage at which to bind.
+		 */
+		virtual void setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage )=0;
 
 		/**
 		 * Binds a sampler state to a given slot at a given shader stage.

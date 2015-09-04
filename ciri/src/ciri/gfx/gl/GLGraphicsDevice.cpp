@@ -275,17 +275,17 @@ namespace ciri {
 		return glTexture;
 	}
 
-	ITextureCube* GLGraphicsDevice::createTextureCube( int width, int height, void* right, void* left, void* top, void* bottom, void* back, void* front ) {
+	ITextureCube* GLGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
 
-		if( nullptr==right || nullptr==left || nullptr==top || nullptr==bottom || nullptr==back || nullptr==front ) {
+		if( nullptr==posx || nullptr==negx || nullptr==posy || nullptr==negy || nullptr==posz || nullptr==negz ) {
 			return nullptr;
 		}
 
 		GLTextureCube* glCube = new GLTextureCube();
-		if( err::failed(glCube->set(width, height, right, left, top, bottom, back, front)) ) {
+		if( err::failed(glCube->set(width, height, posx, negx, posy, negy, posz, negz)) ) {
 			delete glCube;
 			glCube = nullptr;
 			return nullptr;
@@ -447,6 +447,16 @@ namespace ciri {
 		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
+	}
+
+	void GLGraphicsDevice::setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
+		GLTextureCube* glTexture = reinterpret_cast<GLTextureCube*>(texture);
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, (glTexture != nullptr) ? glTexture->getTextureId() : 0);
 	}
 
 	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
