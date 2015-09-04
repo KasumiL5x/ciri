@@ -1,10 +1,11 @@
 #include "TerrainDemo.hpp"
 #include "../../common/ModelGen.hpp"
 #include <ciri/util/TGA.hpp>
+#include <ciri/util/PNG.hpp>
 
 TerrainDemo::TerrainDemo()
 	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
-		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _cubemap(nullptr) {
+		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr) {
 }
 
 TerrainDemo::~TerrainDemo() {
@@ -15,7 +16,7 @@ DemoConfig TerrainDemo::getConfig() {
 	cfg.windowTitle = "ciri : Terrain Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 
@@ -26,14 +27,14 @@ void TerrainDemo::onInitialize() {
 	// configure camera
 	_camera.setAspect(static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y));
 	_camera.setPlanes(0.1f, 10000.0f);
-	_camera.setYaw(246.0f);
-	_camera.setPitch(21.4f);
+	_camera.setYaw(137.0f);
+	_camera.setPitch(-12.6f);
 	_camera.setSensitivity(100.0f, 1.0f);
 	_camera.setPosition(cc::Vec3f(451.15f, 83.26f, -316.42f));
 }
 
 void TerrainDemo::onLoadContent() {
-	// create depth stencil state
+	//// create depth stencil state
 	ciri::DepthStencilDesc depthDesc;
 	_depthStencilState = graphicsDevice()->createDepthStencilState(depthDesc);
 
@@ -42,9 +43,6 @@ void TerrainDemo::onLoadContent() {
 	rasterDesc.cullMode = ciri::CullMode::Clockwise;
 	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
-
-	// load the simple shader
-	_simpleShader.create(graphicsDevice());
 
 	// create axis
 	_axis.create(5.0f, graphicsDevice());
@@ -55,7 +53,6 @@ void TerrainDemo::onLoadContent() {
 	if( !_terrain.generate(heightmap, graphicsDevice()) ) {
 		printf("Failed to generate heightmap terrain.\n");
 	}
-
 	// load a bunch of terrain textures and set them
 	ciri::TGA grassTga; grassTga.loadFromFile("terrain/grass.tga", true);
 	ciri::TGA rockTga; rockTga.loadFromFile("terrain/rock.tga", true);
@@ -99,7 +96,6 @@ void TerrainDemo::onLoadContent() {
 	_waterPlane->setShader(_waterShader);
 	// position the water up a little
 	_waterPlane->getXform().setPosition(cc::Vec3f(0.0f, WATER_HEIGHT, 0.0f));
-
 	// create water sampler and load water normal texture
 	ciri::SamplerDesc samplerDesc;
 	_waterSampler = graphicsDevice()->createSamplerState(samplerDesc);
@@ -117,17 +113,53 @@ void TerrainDemo::onLoadContent() {
 	alphaBlendDesc.dstAlphaBlend = ciri::BlendMode::Zero;
 	_alphaBlendState = graphicsDevice()->createBlendState(alphaBlendDesc);
 
-	/// commented out for now, because setting simply throws.
-	/// p.s. at some point i need to make all constructors private so users can't just create their own instances
-	/// and are instead forces to use the device to initially create the resource.  eventually...
 	// load the cubemap
-	//ciri::TGA cubeRight; cubeRight.loadFromFile("terrain/skybox/posx.tga", true);
-	//ciri::TGA cubeLeft; cubeLeft.loadFromFile("terrain/skybox/negx.tga", true);
-	//ciri::TGA cubeTop; cubeTop.loadFromFile("terrain/skybox/posy.tga", true);
-	//ciri::TGA cubeBottom; cubeBottom.loadFromFile("terrain/skybox/negy.tga", true);
-	//ciri::TGA cubeBack; cubeBack.loadFromFile("terrain/skybox/posz.tga", true);
-	//ciri::TGA cubeFront; cubeFront.loadFromFile("terrain/skybox/negz.tga", true);
-	//_cubemap = graphicsDevice()->createTextureCube(1024, 1024, cubeRight.getPixels(), cubeLeft.getPixels(), cubeTop.getPixels(), cubeBottom.getPixels(), cubeBack.getPixels(), cubeFront.getPixels());
+	ciri::PNG cubeRight; cubeRight.loadFromFile("terrain/skybox/posx.png");
+	ciri::PNG cubeLeft; cubeLeft.loadFromFile("terrain/skybox/negx.png");
+	ciri::PNG cubeTop; cubeTop.loadFromFile("terrain/skybox/negy.png");
+	ciri::PNG cubeBottom; cubeBottom.loadFromFile("terrain/skybox/posy.png");
+	ciri::PNG cubeBack; cubeBack.loadFromFile("terrain/skybox/posz.png");
+	ciri::PNG cubeFront; cubeFront.loadFromFile("terrain/skybox/negz.png");
+	_cubemap = graphicsDevice()->createTextureCube(cubeRight.getWidth(), cubeRight.getHeight(), cubeRight.getPixels(), cubeLeft.getPixels(), cubeTop.getPixels(), cubeBottom.getPixels(), cubeBack.getPixels(), cubeFront.getPixels());
+	// create the skybox model
+	_skybox = modelgen::createFullscreenQuad(graphicsDevice());
+	// load skybox shader
+	{
+		_skyboxShader = graphicsDevice()->createShader();
+		_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+		_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+		_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
+		_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+		const std::string shaderExt = graphicsDevice()->getShaderExt();
+		const std::string vsFile = ("common/shaders/skybox_vs" + shaderExt);
+		const std::string psFile = ("common/shaders/skybox_ps" + shaderExt);
+		if( ciri::err::failed(_skyboxShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+			printf("Failed to load skybox shader:\n");
+			for( auto err : _skyboxShader->getErrors() ) {
+				printf("%s\n", err.msg.c_str());
+			}
+		} else {
+			_skyboxConstantsBuffer = graphicsDevice()->createConstantBuffer();
+			if( ciri::err::failed(_skyboxConstantsBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants)) ) {
+				printf("Failed to create skybox constants.\n");
+			} else {
+				if( ciri::err::failed(_skyboxShader->addConstants(_skyboxConstantsBuffer, "SkyboxConstants", ciri::ShaderStage::Vertex)) ) {
+					printf("Failed to assign constants to skybox shader.\n");
+				}
+			}
+		}
+	}
+	// skybox sampler
+	ciri::SamplerDesc skySamplerDesc;
+	skySamplerDesc.filter = ciri::SamplerFilter::Linear;
+	skySamplerDesc.wrapU = ciri::SamplerWrap::Clamp;
+	skySamplerDesc.wrapV = ciri::SamplerWrap::Clamp;
+	skySamplerDesc.wrapW = ciri::SamplerWrap::Clamp;
+	_skyboxSampler = graphicsDevice()->createSamplerState(skySamplerDesc);
+	// skybox depth state
+	ciri::DepthStencilDesc skyboxDepthDesc;
+	skyboxDepthDesc.depthWriteMask = false;
+	_skyboxDepthState = graphicsDevice()->createDepthStencilState(skyboxDepthDesc);
 }
 
 void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
@@ -165,28 +197,25 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
 			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
 			_camera.rotateYaw(dx);
-			_camera.rotatePitch(-dy);
+			_camera.rotatePitch(dy);
 	}
 
 	// real shitty camera speed modifier
 	_camera.setMoveSpeed(currKeyState.isKeyDown(ciri::Keyboard::LShift) ? 500.0f : 100.0f);
 
 	// camera movement
-	cc::Vec3f cameraMovement;
 	if( currKeyState.isKeyDown(ciri::Keyboard::W) ) {
-		cameraMovement.z -= 1.0f;
+		_camera.move(ciri::FPSCamera::Direction::Forward, deltaTime);
 	}
 	if( currKeyState.isKeyDown(ciri::Keyboard::S) ) {
-		cameraMovement.z += 1.0f;
+		_camera.move(ciri::FPSCamera::Direction::Backward, deltaTime);
 	}
 	if( currKeyState.isKeyDown(ciri::Keyboard::A) ) {
-		cameraMovement.x -= 1.0f;
+		_camera.move(ciri::FPSCamera::Direction::Left, deltaTime);
 	}
 	if( currKeyState.isKeyDown(ciri::Keyboard::D) ) {
-		cameraMovement.x += 1.0f;
+		_camera.move(ciri::FPSCamera::Direction::Right, deltaTime);
 	}
-	cameraMovement.normalize();
-	_camera.move(cameraMovement * (float)deltaTime);
 
 	//// todo: update simulation things here
 	//std::vector<Vertex>& planeVertices = _plane->getVertices();
@@ -205,12 +234,37 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 void TerrainDemo::onDraw() {
 	ciri::IGraphicsDevice* device = graphicsDevice();
 	
-	device->setDepthStencilState(_depthStencilState);
+	// set standard raster state
 	device->setRasterizerState(_rasterizerState);
 
+	// clear window
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	const cc::Mat4f viewProj = _camera.getProj() * _camera.getView();
+
+	// render skybox
+	if( _skybox->isValid() ) {
+		// disable depth write
+		device->setDepthStencilState(_skyboxDepthState);
+		// apply skybox shader
+		device->applyShader(_skyboxShader);
+		// set skybox constants
+		cc::Mat4f proj = _camera.getProj();
+		proj.invert();
+		_skyboxConstants.view = _camera.getView();
+		_skyboxConstants.proj = proj;
+		_skyboxConstantsBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants);
+		// set skybox texture and sampler
+		device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
+		device->setSamplerState(0, _skyboxSampler, ciri::ShaderStage::Pixel);
+		// set buffers and draw
+		device->setVertexBuffer(_skybox->getVertexBuffer());
+		device->setIndexBuffer(_skybox->getIndexBuffer());
+		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _skybox->getIndexBuffer()->getIndexCount());
+	}
+
+	// enable standard depth state
+	device->setDepthStencilState(_depthStencilState);
 
 	// render axis
 	if( _axis.isValid() ) {
@@ -255,6 +309,11 @@ void TerrainDemo::onDraw() {
 
 void TerrainDemo::onUnloadContent() {
 	_terrain.clean();
+
+	if( _skybox != nullptr ) {
+		delete _skybox;
+		_skybox = nullptr;
+	}
 
 	if( _waterPlane != nullptr ) {
 		delete _waterPlane;

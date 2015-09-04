@@ -9,11 +9,27 @@ namespace ciri {
 	FPSCamera::~FPSCamera() {
 	}
 
-	void FPSCamera::move( const cc::Vec3f& direction ) {
-		const cc::Mat4f rotation = cc::math::rotate(_pitch, cc::Vec3f(1.0f, 0.0f, 0.0f)) *
-															 cc::math::rotate(_yaw, cc::Vec3f(0.0f, 1.0f, 0.0f));
-		const cc::Vec3f transDir = (cc::Vec4f(direction, 1.0f) * rotation).truncated(); // 0.0f ?
-		_position += transDir * _moveSpeed;
+	void FPSCamera::move( Direction direction, float deltaTime ) {
+		const float velocity = _moveSpeed * deltaTime;
+
+		switch( direction ) {
+			case Direction::Forward: {
+				_position += _front * velocity;
+				break;
+			}
+			case Direction::Backward: {
+					_position -= _front * velocity;
+					break;
+			}
+			case Direction::Left: {
+				_position -= _right * velocity;
+				break;
+			}
+			case Direction::Right: {
+				_position += _right * velocity;
+				break;
+			}
+		}
 		_viewDirty = true;
 	}
 
@@ -21,12 +37,14 @@ namespace ciri {
 		_yaw += val * _rotateSensitivity;
 		_yaw = cc::math::wrapAngle(_yaw, 0.0f, 360.0f);
 		_viewDirty = true;
+		updateVectors();
 	}
 
 	void FPSCamera::rotatePitch( float val ) {
 		_pitch += val * _rotateSensitivity;
 		_pitch = cc::math::clamp(_pitch, -89.9f, 89.9f);
 		_viewDirty = true;
+		updateVectors();
 	}
 
 	void FPSCamera::setSensitivity( float move, float rotate ) {
@@ -42,12 +60,14 @@ namespace ciri {
 		_yaw = val;
 		_yaw = cc::math::wrapAngle(_yaw, 0.0f, 360.0f);
 		_viewDirty = true;
+		updateVectors();
 	}
 
 	void FPSCamera::setPitch( float val ) {
 		_pitch = val;
 		_pitch = cc::math::clamp(_pitch, -89.9f, 89.9f);
 		_viewDirty = true;
+		updateVectors();
 	}
 
 	float FPSCamera::getYaw() const {
@@ -60,10 +80,17 @@ namespace ciri {
 
 
 	void FPSCamera::rebuildView() {
-		const cc::Mat4f rotation = cc::math::rotate(_pitch, cc::Vec3f(1.0f, 0.0f, 0.0f)) *
-															 cc::math::rotate(_yaw, cc::Vec3f(0.0f, 1.0f, 0.0f));
-		const cc::Vec3f transDir = (cc::Vec4f(0.0f, 0.0f, -1.0f, 0.0f) * rotation).truncated();
-		const cc::Vec3f transUp = (cc::Vec4f(_up, 1.0f) * rotation).truncated();
-		_view = cc::math::lookAt(_position, _position + transDir, transUp);
+		_view = cc::math::lookAt(_position, _position + _front, _up);
+	}
+
+	void FPSCamera::updateVectors() {
+		_front.x = cosf(cc::math::degreesToRadians(_yaw)) * cosf(cc::math::degreesToRadians(_pitch));
+		_front.y = sinf(cc::math::degreesToRadians(_pitch));
+		_front.z = sinf(cc::math::degreesToRadians(_yaw)) * cosf(cc::math::degreesToRadians(_pitch));
+		_front.normalize();
+
+		_right = _front.cross(cc::Vec3f::up()).normalized();
+
+		_up = _right.cross(_front).normalized();
 	}
 } // ciri

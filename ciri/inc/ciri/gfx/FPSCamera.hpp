@@ -7,10 +7,18 @@
 namespace ciri {
 	class FPSCamera : public Camera {
 	public:
+		enum class Direction {
+			Forward,
+			Backward,
+			Left,
+			Right
+		};
+
+	public:
 		FPSCamera();
 		virtual ~FPSCamera();
 
-		void move( const cc::Vec3f& direction );
+		void move( Direction direction, float deltaTime );
 		void rotateYaw( float val );
 		void rotatePitch( float val );
 		void setSensitivity( float move, float rotate );
@@ -23,11 +31,15 @@ namespace ciri {
 
 		virtual void rebuildView() override;
 
+		void updateVectors();
+
 	private:
 		float _yaw;
 		float _pitch;
 		float _moveSpeed;
 		float _rotateSensitivity;
+		cc::Vec3f _front;
+		cc::Vec3f _right;
 	};
 } // ciri
 

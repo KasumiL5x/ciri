@@ -19,9 +19,22 @@ private:
 		cc::Vec3f campos;
 	};
 
+	_declspec(align(16))
+	struct SkyboxConstants {
+		cc::Mat4f view;
+		cc::Mat4f proj;
+	};
+
 public:
 	TerrainDemo();
 	virtual ~TerrainDemo();
+
+	void* operator new( size_t i ) {
+		return _mm_malloc(i, 16);
+	}
+	void operator delete( void* p ) {
+		_mm_free(p);
+	}
 
 	virtual DemoConfig getConfig();
 	virtual void onInitialize();
@@ -41,7 +54,6 @@ private:
 	ciri::IRasterizerState* _rasterizerState;
 	//
 	Axis _axis;
-	SimpleShader _simpleShader;
 	HeightmapTerrain _terrain;
 
 	// water stuff
@@ -56,6 +68,12 @@ private:
 	
 	// cubemap test
 	ciri::ITextureCube* _cubemap;
+	Model* _skybox;
+	ciri::IShader* _skyboxShader;
+	ciri::IConstantBuffer* _skyboxConstantsBuffer;
+	SkyboxConstants _skyboxConstants;
+	ciri::ISamplerState* _skyboxSampler;
+	ciri::IDepthStencilState* _skyboxDepthState;
 };
 
 #endif /* __reflections_demo__ */
