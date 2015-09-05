@@ -43,8 +43,6 @@ namespace ciri {
 		std::vector<ShaderError> _errors;
 		//
 		VertexDeclaration _vertexDeclaration;
-		//
-		std::vector<IConstantBuffer*> _constantBuffers;
 	};
 } // ciri
 

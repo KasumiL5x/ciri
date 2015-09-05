@@ -38,8 +38,6 @@ namespace ciri {
 		// http://www.geeks3d.com/20140704/gpu-buffers-introduction-to-opengl-3-1-uniform-buffers-objects/
 		// http://wlog.flatlib.jp/item/1634
 
-		_constantBuffers.push_back(glBuffer);
-
 		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer->getUbo());
 		glUniformBlockBinding(_program, blockIndex, glBuffer->getIndex());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
