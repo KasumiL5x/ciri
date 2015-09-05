@@ -62,6 +62,10 @@ namespace ciri {
 		return _hwnd;
 	}
 
+	bool Window::hasFocus() const {
+		return GetActiveWindow() == _hwnd;
+	}
+
 	bool Window::createWindow( int width, int height ) {
 		// register class
 		WNDCLASSEX wc;

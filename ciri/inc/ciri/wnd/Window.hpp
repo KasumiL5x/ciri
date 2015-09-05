@@ -21,6 +21,7 @@ namespace ciri {
 
 		cc::Vec2ui getSize() const;
 		HWND getHandle() const;
+		bool hasFocus() const;
 
 	private:
 		bool createWindow( int width, int height );
