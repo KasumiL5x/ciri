@@ -7,26 +7,49 @@ layout (location = 3) in vec2 in_texcoord;
 
 layout (std140) uniform WaterConstants {
 	mat4 world;
-	mat4 worldview;
 	mat4 xform;
 	vec3 campos;
+	float time;
 };
 
 out vec3 vo_position;
 out vec3 vo_normal;
-out vec2 vo_texcoord;
 out vec3 vo_campos;
-out mat3 vo_tbn;
+out vec2 vo_bumpTexcoords;
+out vec3 vo_cubeTexcoords;
+out float vo_waveHeight;
+
+// -*- water variables -*-
+float waveLength = 0.5f;
+float waveHeight = 0.3f;
+float windForce = 0.008f;
+vec3 windDirection = normalize(vec3(0, 0, 1));
 
 void main() {
 	gl_Position = xform * vec4(in_position, 1.0f);
+
+	// world position
 	vo_position = (world * vec4(in_position, 1.0f)).xyz;
+
+	// world normal
 	vo_normal = (world * vec4(in_normal, 0.0f)).xyz;
-	vo_texcoord = in_texcoord;
+
+	// camera position
 	vo_campos = campos;
 
-	vec3 n = normalize((world * vec4(in_normal, 0.0f)).xyz);
-	vec3 t = normalize((world * vec4(in_tangent.xyz, 0.0f)).xyz);
-	vec3 b = normalize((world * vec4((cross(in_normal, in_tangent.xyz) * in_tangent.w), 0.0f)).xyz);
-	vo_tbn = mat3(t, b, n);
+	// bumpmap perturbed texcoords
+	vec3 perpDir = cross(windDirection, vec3(0, 1, 0));
+	float ydot = dot(in_texcoord, windDirection.xz);
+	float xdot = dot(in_texcoord, perpDir.xz);
+	vec2 moveVector = vec2(xdot, ydot);
+	moveVector += time * windForce;
+	vo_bumpTexcoords = moveVector / waveLength;
+
+	// cubemap texcoords
+	vec3 V = normalize(vo_position - campos);
+	vec3 RV = normalize(reflect(V, vo_normal));
+	vo_cubeTexcoords = vec3(RV.x, -RV.y, RV.z);
+
+	// water variables
+	vo_waveHeight = waveHeight;
 }

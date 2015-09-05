@@ -1,13 +1,16 @@
 Texture2D NormalMapTex : register(t0);
 SamplerState NormalMapSampler : register(s0);
+TextureCube SkyboxTex : register(t1);
+SamplerState SkyboxSampler : register(s1);
 
 struct Input {
-	float4 hpos : SV_POSITION;
-	float3 wpos : TEXCOORD1;
-	float3 nrm : NORMAL0;
-	float2 tex : TEXCOORD0;
-	float3 campos : TEXCOORD2;
-	float3x3 tbn : TEXCOORD3;
+	float4 hpos          : SV_POSITION;
+	float3 position      : TEXCOORD1;
+	float3 normal        : NORMAL0;
+	float3 camPos        : TEXCOORD2;
+	float2 bumpTexcoords : TEXCOORD3;
+	float3 cubeTexcoords : TEXCOORD4;
+	float waveHeight     : TEXCOORD5;
 };
 
 // -*- Light properties -*-
@@ -24,24 +27,30 @@ float3 calcSunlight( float3 RV, float3 L ) {
 }
 
 float4 main( Input input ) : SV_Target {
-	float3 L = -LightDirection;
-	float3 N = mul(input.tbn, normalize(NormalMapTex.Sample(NormalMapSampler, input.tex).xyz * 2.0f - 1.0f));
-	float3 V = normalize(input.wpos - input.campos);
+	// sunlight
+	float3 L = normalize(-LightDirection);
+	float3 N = NormalMapTex.Sample(NormalMapSampler, input.bumpTexcoords).xyz;
+	float3 V = normalize(input.position - input.camPos);
 	float3 RV = normalize(reflect(V, N));
-
 	float3 sunlight = calcSunlight(RV, L);
 
-	float3 water_color = float3(0.25f, 0.64f, 0.87f);
+	// skybox reflection
+	float4 bumpColor = NormalMapTex.Sample(NormalMapSampler, input.bumpTexcoords);
+	float3 perturb = input.waveHeight * (bumpColor.xyz - 0.5f) * 2.0f;
+	float3 perturbCubeCoords = input.cubeTexcoords + perturb;
+	float3 cubemap = SkyboxTex.Sample(SkyboxSampler, perturbCubeCoords).xyz;
 
-	float light = max(dot(L, N), 0.0f);
+	// fresnel factor
+	float3 eyeVector = normalize(input.camPos - input.position);
+	float3 normalVector = input.normal;
+	float fresnelTerm = max(0.0f, dot(eyeVector, normalVector));
+	float4 combinedColor = lerp(float4(cubemap, 1.0f), float4(sunlight, 1.0f), fresnelTerm);
 
-	float4 out_color = float4((water_color + sunlight), 1.0f);
-	out_color.x = min(1.0f, out_color.x);
-	out_color.y = min(1.0f, out_color.y);
-	out_color.z = min(1.0f, out_color.z);
-	out_color.w = min(1.0f, out_color.w);
+	// coloration
+	// float4 dullColor = float4(0.77f, 0.90f, 0.92f, 1.0f);
+	float4 dullColor = float4(0.3f, 0.3f, 0.5f, 1.0f);
 
-	out_color.w = 0.5f;
-
+	float4 out_color = lerp(combinedColor, dullColor, 0.2f);
+	out_color.w = 0.75f;
 	return out_color;
 }

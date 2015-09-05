@@ -5,7 +5,7 @@
 
 TerrainDemo::TerrainDemo()
 	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
-		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr) {
+		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr), _elapsedTime(0.0f) {
 }
 
 TerrainDemo::~TerrainDemo() {
@@ -16,11 +16,15 @@ DemoConfig TerrainDemo::getConfig() {
 	cfg.windowTitle = "ciri : Terrain Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
 	return cfg;
 }
 
 void TerrainDemo::onInitialize() {
+	// print info
+	printf("Device: %s\n", graphicsDevice()->getGpuName());
+	printf("API: %s\n", graphicsDevice()->getApiInfo());
+
 	// window size
 	const cc::Vec2ui windowSize = window()->getSize();
 
@@ -92,7 +96,7 @@ void TerrainDemo::onLoadContent() {
 	}
 
 	// create water plane to match the heightmap size
-	_waterPlane = modelgen::createPlane(graphicsDevice(), float(heightmap.getWidth()), float(heightmap.getHeight()), 0, 0, 10.0f, 10.0f, false, false);
+	_waterPlane = modelgen::createPlane(graphicsDevice(), float(heightmap.getWidth()), float(heightmap.getHeight()), 100, 100, 10.0f, 10.0f, false, false);
 	_waterPlane->setShader(_waterShader);
 	// position the water up a little
 	_waterPlane->getXform().setPosition(cc::Vec3f(0.0f, WATER_HEIGHT, 0.0f));
@@ -172,49 +176,69 @@ void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
 }
 
 void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
+	_elapsedTime = elapsedTime;
+
 	// get current input states
 	ciri::KeyboardState currKeyState;
 	ciri::MouseState currMouseState;
 	ciri::Input::getKeyboardState(&currKeyState);
 	ciri::Input::getMouseState(&currMouseState, window());
 
-	// close w/ escape
-	if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
-		this->gtfo();
-		return;
-	}
+	if( window()->hasFocus() ) {
+		// close w/ escape
+		if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
+			this->gtfo();
+			return;
+		}
 
-	// debug camera info
-	if( currKeyState.isKeyDown(ciri::Keyboard::F9) && _prevKeyState.isKeyUp(ciri::Keyboard::F9) ) {
-		const cc::Vec3f& pos = _camera.getPosition();
-		const float yaw = _camera.getYaw();
-		const float pitch = _camera.getPitch();
-		printf("Camera Information\n\tpos(%f/%f/%f)\n\tyaw(%f);\n\tpitch(%f)\n", pos.x, pos.y, pos.z, yaw, pitch);
-	}
+		// debug camera info
+		if( currKeyState.isKeyDown(ciri::Keyboard::F9) && _prevKeyState.isKeyUp(ciri::Keyboard::F9) ) {
+			const cc::Vec3f& pos = _camera.getPosition();
+			const float yaw = _camera.getYaw();
+			const float pitch = _camera.getPitch();
+			printf("Camera Information\n\tpos(%f/%f/%f)\n\tyaw(%f);\n\tpitch(%f)\n", pos.x, pos.y, pos.z, yaw, pitch);
+		}
 
-	// camera rotation
-	if( currMouseState.isButtonDown(ciri::MouseButton::Right) ) {
-			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
-			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
-			_camera.rotateYaw(dx);
-			_camera.rotatePitch(dy);
-	}
+		// camera rotation
+		if( currMouseState.isButtonDown(ciri::MouseButton::Right) ) {
+				const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
+				const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
+				_camera.rotateYaw(dx);
+				_camera.rotatePitch(dy);
+		}
 
-	// real shitty camera speed modifier
-	_camera.setMoveSpeed(currKeyState.isKeyDown(ciri::Keyboard::LShift) ? 500.0f : 100.0f);
+		// real shitty camera speed modifier
+		_camera.setMoveSpeed(currKeyState.isKeyDown(ciri::Keyboard::LShift) ? 500.0f : 100.0f);
 
-	// camera movement
-	if( currKeyState.isKeyDown(ciri::Keyboard::W) ) {
-		_camera.move(ciri::FPSCamera::Direction::Forward, deltaTime);
-	}
-	if( currKeyState.isKeyDown(ciri::Keyboard::S) ) {
-		_camera.move(ciri::FPSCamera::Direction::Backward, deltaTime);
-	}
-	if( currKeyState.isKeyDown(ciri::Keyboard::A) ) {
-		_camera.move(ciri::FPSCamera::Direction::Left, deltaTime);
-	}
-	if( currKeyState.isKeyDown(ciri::Keyboard::D) ) {
-		_camera.move(ciri::FPSCamera::Direction::Right, deltaTime);
+		// camera movement
+		if( currKeyState.isKeyDown(ciri::Keyboard::W) ) {
+			_camera.move(ciri::FPSCamera::Direction::Forward, deltaTime);
+		}
+		if( currKeyState.isKeyDown(ciri::Keyboard::S) ) {
+			_camera.move(ciri::FPSCamera::Direction::Backward, deltaTime);
+		}
+		if( currKeyState.isKeyDown(ciri::Keyboard::A) ) {
+			_camera.move(ciri::FPSCamera::Direction::Left, deltaTime);
+		}
+		if( currKeyState.isKeyDown(ciri::Keyboard::D) ) {
+			_camera.move(ciri::FPSCamera::Direction::Right, deltaTime);
+		}
+
+		// shader reloading
+		if( currKeyState.isKeyDown(ciri::Keyboard::F5) && _prevKeyState.isKeyUp(ciri::Keyboard::F5) ) {
+			_waterShader->destroy();
+			const std::string shaderExt = graphicsDevice()->getShaderExt();
+			const std::string vsFile = ("terrain/water_vs" + shaderExt);
+			const std::string psFile = ("terrain/water_ps" + shaderExt);
+			if( ciri::err::failed(_waterShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+				printf("Failed to load water shader:\n");
+				for( auto err : _waterShader->getErrors() ) {
+					printf("%s\n", err.msg.c_str());
+				}
+			} else {
+				_waterShader->addConstants(_waterConstantsBuffer, "WaterConstants", ciri::ShaderStage::Vertex);
+			}
+		}
 	}
 
 	//// todo: update simulation things here
@@ -280,14 +304,18 @@ void TerrainDemo::onDraw() {
 	if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->getShader()->isValid() && _waterPlane->isValid() ) {
 		// update constant buffers
 		_waterConstants.world = _waterPlane->getXform().getWorld();
-		_waterConstants.worldview = _camera.getView() * _waterConstants.world;
 		_waterConstants.xform = viewProj * _waterConstants.world;
 		_waterConstants.campos = _camera.getPosition();
+		_waterConstants.time = _elapsedTime;
 		_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants);
 
 		// set water sampler and normal texture
 		device->setSamplerState(0, _waterSampler, ciri::ShaderStage::Pixel);
 		device->setTexture2D(0, _waterNormalMap, ciri::ShaderStage::Pixel);
+
+		// set skybox sampler and cubemap
+		device->setSamplerState(1, _skyboxSampler, ciri::ShaderStage::Pixel);
+		device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
 
 		// enable alpha blending
 		device->setBlendState(_alphaBlendState);

@@ -14,9 +14,9 @@ private:
 	_declspec(align(16))
 	struct WaterConstants {
 		cc::Mat4f world;
-		cc::Mat4f worldview;
 		cc::Mat4f xform;
 		cc::Vec3f campos;
+		float time;
 	};
 
 	_declspec(align(16))
@@ -74,6 +74,8 @@ private:
 	SkyboxConstants _skyboxConstants;
 	ciri::ISamplerState* _skyboxSampler;
 	ciri::IDepthStencilState* _skyboxDepthState;
+	//
+	float _elapsedTime;
 };
 
 #endif /* __reflections_demo__ */
