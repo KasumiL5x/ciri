@@ -3,9 +3,14 @@
 #include <ciri/util/TGA.hpp>
 #include <ciri/util/PNG.hpp>
 
+// fuck you microsoft
+#undef far
+#undef near
+#include <cc/MatrixFunc.hpp>
+
 TerrainDemo::TerrainDemo()
 	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
-		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr), _elapsedTime(0.0f) {
+		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _waterReflectionTarget(nullptr), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr), _elapsedTime(0.0f) {
 }
 
 TerrainDemo::~TerrainDemo() {
@@ -16,7 +21,7 @@ DemoConfig TerrainDemo::getConfig() {
 	cfg.windowTitle = "ciri : Terrain Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 
@@ -117,6 +122,9 @@ void TerrainDemo::onLoadContent() {
 	alphaBlendDesc.dstAlphaBlend = ciri::BlendMode::Zero;
 	_alphaBlendState = graphicsDevice()->createBlendState(alphaBlendDesc);
 
+	// create render target for water reflections
+	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(window()->getSize().x, window()->getSize().y, ciri::TextureFormat::RGBA32_Float);
+
 	// load the cubemap
 	ciri::PNG cubeRight; cubeRight.loadFromFile("terrain/skybox/posx.png");
 	ciri::PNG cubeLeft; cubeLeft.loadFromFile("terrain/skybox/negx.png");
@@ -170,6 +178,7 @@ void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
 			graphicsDevice()->resize();
+			// todo: resize _waterReflectionTarget
 			break;
 		}
 	}
@@ -239,6 +248,13 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 				_waterShader->addConstants(_waterConstantsBuffer, "WaterConstants", ciri::ShaderStage::Vertex);
 			}
 		}
+
+		// debug key
+		if( currKeyState.isKeyDown(ciri::Keyboard::F11) && _prevKeyState.isKeyUp(ciri::Keyboard::F11) ) {
+			printf("debug...");
+			_waterReflectionTarget->getTexture2D()->writeToTGA("C:/Users/kasum/Desktop/refl.tga");
+			printf("done\n");
+		}
 	}
 
 	//// todo: update simulation things here
@@ -257,80 +273,97 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 void TerrainDemo::onDraw() {
 	ciri::IGraphicsDevice* device = graphicsDevice();
-	
-	// set standard raster state
-	device->setRasterizerState(_rasterizerState);
 
-	// clear window
+	// frame defaults
+	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	device->setRasterizerState(_rasterizerState);
+	device->setDepthStencilState(_depthStencilState);
+
+	// -*- render reflection to texture -*-
+	{
+		// compute camera's reflection view matrix
+		const cc::Vec3f up = cc::Vec3f(0.0f, 1.0f, 0.0f);
+		const cc::Vec3f pos = cc::Vec3f(_camera.getPosition().x, -_camera.getPosition().y + (WATER_HEIGHT * 2.0f), _camera.getPosition().z);
+		const float radians = cc::math::degreesToRadians(_camera.getYaw());
+		const cc::Vec3f look = cc::Vec3f(cosf(radians) + _camera.getPosition().x, pos.y, sinf(radians) + _camera.getPosition().z);
+		const cc::Mat4f reflectedView = cc::math::lookAtRH(pos, look, up);
+		const cc::Mat4f reflectedViewProj = _camera.getProj() * reflectedView;
+		// set and clear water render target
+		device->setRenderTargets(&_waterReflectionTarget, 1);
+		device->clear(ciri::ClearFlags::Color);
+		// draw the terrain using the reflected viewproj
+		_terrain.setClippingPlaneActive(false);
+		_terrain.draw(reflectedViewProj, device);
+	}
+
+	// set and clear default render target
+	device->restoreDefaultRenderTargets();
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	const cc::Mat4f viewProj = _camera.getProj() * _camera.getView();
 
-	// render skybox
-	if( _skybox->isValid() ) {
-		// disable depth write
-		device->setDepthStencilState(_skyboxDepthState);
-		// apply skybox shader
-		device->applyShader(_skyboxShader);
-		// set skybox constants
-		cc::Mat4f proj = _camera.getProj();
-		proj.invert();
-		_skyboxConstants.view = _camera.getView();
-		_skyboxConstants.proj = proj;
-		_skyboxConstantsBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants);
-		// set skybox texture and sampler
-		device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
-		device->setSamplerState(0, _skyboxSampler, ciri::ShaderStage::Pixel);
-		// set buffers and draw
-		device->setVertexBuffer(_skybox->getVertexBuffer());
-		device->setIndexBuffer(_skybox->getIndexBuffer());
-		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _skybox->getIndexBuffer()->getIndexCount());
-	}
+	//// render skybox
+	//if( _skybox->isValid() ) {
+	//	// disable depth write
+	//	device->setDepthStencilState(_skyboxDepthState);
+	//	// apply skybox shader
+	//	device->applyShader(_skyboxShader);
+	//	// set skybox constants
+	//	cc::Mat4f proj = _camera.getProj();
+	//	proj.invert();
+	//	_skyboxConstants.view = _camera.getView();
+	//	_skyboxConstants.proj = proj;
+	//	_skyboxConstantsBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants);
+	//	// set skybox texture and sampler
+	//	device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
+	//	device->setSamplerState(0, _skyboxSampler, ciri::ShaderStage::Pixel);
+	//	// set buffers and draw
+	//	device->setVertexBuffer(_skybox->getVertexBuffer());
+	//	device->setIndexBuffer(_skybox->getIndexBuffer());
+	//	device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _skybox->getIndexBuffer()->getIndexCount());
+	//}
 
-	// enable standard depth state
-	device->setDepthStencilState(_depthStencilState);
+	//// render axis
+	//if( _axis.isValid() ) {
+	//	_axis.updateConstants(viewProj);
+	//	device->applyShader(_axis.getShader());
+	//	device->setVertexBuffer(_axis.getVertexBuffer());
+	//	device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
+	//}
 
-	// render axis
-	if( _axis.isValid() ) {
-		_axis.updateConstants(viewProj);
-		device->applyShader(_axis.getShader());
-		device->setVertexBuffer(_axis.getVertexBuffer());
-		device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
-	}
+	//_terrain.draw(viewProj, graphicsDevice());
 
-	_terrain.draw(viewProj, graphicsDevice());
+	//// render water plane
+	//if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->getShader()->isValid() && _waterPlane->isValid() ) {
+	//	// update constant buffers
+	//	_waterConstants.world = _waterPlane->getXform().getWorld();
+	//	_waterConstants.xform = viewProj * _waterConstants.world;
+	//	_waterConstants.campos = _camera.getPosition();
+	//	_waterConstants.time = _elapsedTime;
+	//	_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants);
 
-	// render water plane
-	if( _waterPlane && _waterPlane->getShader() != nullptr && _waterPlane->getShader()->isValid() && _waterPlane->isValid() ) {
-		// update constant buffers
-		_waterConstants.world = _waterPlane->getXform().getWorld();
-		_waterConstants.xform = viewProj * _waterConstants.world;
-		_waterConstants.campos = _camera.getPosition();
-		_waterConstants.time = _elapsedTime;
-		_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants);
+	//	// set water sampler and normal texture
+	//	device->setSamplerState(0, _waterSampler, ciri::ShaderStage::Pixel);
+	//	device->setTexture2D(0, _waterNormalMap, ciri::ShaderStage::Pixel);
 
-		// set water sampler and normal texture
-		device->setSamplerState(0, _waterSampler, ciri::ShaderStage::Pixel);
-		device->setTexture2D(0, _waterNormalMap, ciri::ShaderStage::Pixel);
+	//	// set skybox sampler and cubemap
+	//	device->setSamplerState(1, _skyboxSampler, ciri::ShaderStage::Pixel);
+	//	device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
 
-		// set skybox sampler and cubemap
-		device->setSamplerState(1, _skyboxSampler, ciri::ShaderStage::Pixel);
-		device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
+	//	// enable alpha blending
+	//	device->setBlendState(_alphaBlendState);
 
-		// enable alpha blending
-		device->setBlendState(_alphaBlendState);
+	//	// apply shader
+	//	device->applyShader(_waterPlane->getShader());
 
-		// apply shader
-		device->applyShader(_waterPlane->getShader());
+	//	// set buffers and draw
+	//	device->setVertexBuffer(_waterPlane->getVertexBuffer());
+	//	device->setIndexBuffer(_waterPlane->getIndexBuffer());
+	//	device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _waterPlane->getIndexBuffer()->getIndexCount());
 
-		// set buffers and draw
-		device->setVertexBuffer(_waterPlane->getVertexBuffer());
-		device->setIndexBuffer(_waterPlane->getIndexBuffer());
-		device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _waterPlane->getIndexBuffer()->getIndexCount());
-
-		// restore default blend state
-		device->setBlendState(nullptr);
-	}
+	//	// restore default blend state
+	//	device->setBlendState(nullptr);
+	//}
 
 	device->present();
 }

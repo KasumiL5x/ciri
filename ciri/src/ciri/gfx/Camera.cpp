@@ -125,10 +125,10 @@ namespace ciri {
 	}
 
 	void Camera::rebuildView() {
-		_view = cc::math::lookAt(_position, _target, _up);
+		_view = cc::math::lookAtRH(_position, _target, _up);
 	}
 
 	void Camera::rebuildProj() {
-		_proj = cc::math::perspective(_fov, _aspect, _nearPlane, _farPlane);
+		_proj = cc::math::perspectiveRH(_fov, _aspect, _nearPlane, _farPlane);
 	}
 } // ciri

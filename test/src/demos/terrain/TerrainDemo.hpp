@@ -65,7 +65,8 @@ private:
 	ciri::ISamplerState* _waterSampler; /**< Sampler for water normal texture. */
 	ciri::IBlendState* _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
-	
+	ciri::IRenderTarget2D* _waterReflectionTarget;
+
 	// cubemap test
 	ciri::ITextureCube* _cubemap;
 	Model* _skybox;
@@ -76,6 +77,7 @@ private:
 	ciri::IDepthStencilState* _skyboxDepthState;
 	//
 	float _elapsedTime;
+
 };
 
 #endif /* __reflections_demo__ */

@@ -99,25 +99,46 @@ namespace cc {
     inline Mat4<T> frustum( const T& left, const T& right, const T& bottom, const T& top, const T& near, const T& far );
 
     /**
-     * Creates a perspective projection matrix.
+     * Creates a left-handed perspective projection matrix.
      * @param[in] fovY   Field of view vertically.
      * @param[in] aspect Aspect ratio.
      * @param[in] near   Distance to the near plane.
      * @param[in] far    Distance to the far plane.
-     * @return Perspective matrix.
+     * @return Left-handed perspective matrix.
      */
     template<typename T>
-    inline Mat4<T> perspective( const T& fovY, const T& aspect, const T& near, const T& far );
+    inline Mat4<T> perspectiveLH( const T& fovY, const T& aspect, const T& near, const T& far );
 
     /**
-     * Creates a lookat matrix.
+     * Creates a right-handed perspective projection matrix.
+     * @param[in] fovY   Field of view vertically.
+     * @param[in] aspect Aspect ratio.
+     * @param[in] near   Distance to the near plane.
+     * @param[in] far    Distance to the far plane.
+     * @return Right-handed perspective matrix.
+     */
+    template<typename T>
+    inline Mat4<T> perspectiveRH( const T& fovY, const T& aspect, const T& near, const T& far );
+
+    /**
+     * Creates a left-handed lookat matrix.
      * @param[in] eye    Position of the eye.
      * @param[in] target Target to look at.
      * @param[in] up     Local up vector.
-     * @return Lookat matrix.
+     * @return Left-handed lookat matrix.
      */
     template<typename T>
-    inline Mat4<T> lookAt( const Vec3<T>& eye, const Vec3<T>& target, const Vec3<T>& up );
+    inline Mat4<T> lookAtLH( const Vec3<T>& eye, const Vec3<T>& target, const Vec3<T>& up );
+
+    /**
+     * Creates a right-handed lookat matrix.
+     * @param[in] eye    Position of the eye.
+     * @param[in] target Target to look at.
+     * @param[in] up     Local up vector.
+     * @return Right-handed lookat matrix.
+     */
+    template<typename T>
+    inline Mat4<T> lookAtRH( const Vec3<T>& eye, const Vec3<T>& target, const Vec3<T>& up );
 
     /**
      * Inverses a matrix.

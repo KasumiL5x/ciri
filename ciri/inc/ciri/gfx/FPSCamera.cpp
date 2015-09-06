@@ -80,7 +80,7 @@ namespace ciri {
 
 
 	void FPSCamera::rebuildView() {
-		_view = cc::math::lookAt(_position, _position + _front, _up);
+		_view = cc::math::lookAtRH(_position, _position + _front, _up);
 	}
 
 	void FPSCamera::updateVectors() {

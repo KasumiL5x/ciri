@@ -97,124 +97,69 @@ namespace cc {
     }
 
     template<typename T>
-    inline Mat4<T> perspective( const T& fovY, const T& aspect, const T& near, const T& far ) {
-
+    inline Mat4<T> perspectiveLH( const T& fovY, const T& aspect, const T& near, const T& far ) {
       const T tanHalfFovY = tan(degreesToRadians<T>(fovY) / static_cast<T>(2));
-
-      // maybe this needs to be RH instead of LH?
-
-			// RH
-			Mat4<T> persp(static_cast<T>(0));
-			persp[0][0] = static_cast<T>(1) / (aspect * tanHalfFovY);
-			persp[1][1] = static_cast<T>(1) / (tanHalfFovY);
-			persp[2][2] = - (far + near) / (far - near);
-			persp[2][3] = - static_cast<T>(1);
-			persp[3][2] = - (static_cast<T>(2) * far * near) / (far - near);
-			return persp;
-
-			//// LH
-   //   Mat4<T> persp(static_cast<T>(0));
-   //   persp[0][0] = static_cast<T>(1) / (aspect * tanHalfFovY);
-   //   persp[1][1] = static_cast<T>(1) / (tanHalfFovY);
-   //   persp[2][2] = -(far + near) / (far - near);
-   //   persp[2][3] = -static_cast<T>(1);
-   //   persp[3][2] = -(static_cast<T>(2) * far * near) / (far - near);
-   //   return persp;
-
-      // const T range  = tan(degreesToRadians<T>(fovY / static_cast<T>(2))) * near;
-      // const T left   = -range * aspect;
-      // const T right  = range * aspect;
-      // const T bottom = -range;
-      // const T top    = range;
-
-      // Mat4<T> persp(static_cast<T>(0));
-      // persp[0][0] = (static_cast<T>(2) * near) / (right - left);
-      // persp[1][1] = (static_cast<T>(2) * near) / (top - bottom);
-      // persp[2][2] = -(far + near) / (far - near);
-      // persp[2][3] = -static_cast<T>(1);
-      // persp[3][2] = -(static_cast<T>(2) * far * near) / (far - near);
-      // return persp;
+     Mat4<T> persp(static_cast<T>(0));
+     persp[0][0] = static_cast<T>(1) / (aspect * tanHalfFovY);
+     persp[1][1] = static_cast<T>(1) / (tanHalfFovY);
+     persp[2][2] = -(far + near) / (far - near);
+     persp[2][3] = -static_cast<T>(1);
+     persp[3][2] = -(static_cast<T>(2) * far * near) / (far - near);
+     return persp;
     }
 
     template<typename T>
-    inline Mat4<T> lookAt( const Vec3<T>& eye, const Vec3<T>& target, const Vec3<T>& up ) {
-			//// LH
-			//const Vec3<T> f = (target - eye).normalized();
-			//const Vec3<T> s = up.cross(f).normalized();
-			//const Vec3<T> u = f.cross(s);
-			//Mat4<T> result(static_cast<T>(1));
-			//result[0][0] = s.x;
-			//result[1][0] = s.y;
-			//result[2][0] = s.z;
-			//result[0][1] = u.x;
-			//result[1][1] = u.y;
-			//result[2][1] = u.z;
-			//result[0][2] = f.x;
-			//result[1][2] = f.y;
-			//result[2][2] = f.z;
-			//result[3][0] = -s.dot(eye);
-			//result[3][1] = -u.dot(eye);
-			//result[3][2] = -f.dot(eye);
-			//return result;
+    inline Mat4<T> perspectiveRH( const T& fovY, const T& aspect, const T& near, const T& far ) {
+      const T tanHalfFovY = tan(degreesToRadians<T>(fovY) / static_cast<T>(2));
+      Mat4<T> persp(static_cast<T>(0));
+      persp[0][0] = static_cast<T>(1) / (aspect * tanHalfFovY);
+      persp[1][1] = static_cast<T>(1) / (tanHalfFovY);
+      persp[2][2] = - (far + near) / (far - near);
+      persp[2][3] = - static_cast<T>(1);
+      persp[3][2] = - (static_cast<T>(2) * far * near) / (far - near);
+      return persp;
+    }
 
-			// RH
-			const Vec3<T> f = (target - eye).normalized();
-			const Vec3<T> s = f.cross(up).normalized();
-			const Vec3<T> u = s.cross(f);
-			Mat4<T> result(static_cast<T>(1));
-			result[0][0] = s.x;
-			result[1][0] = s.y;
-			result[2][0] = s.z;
-			result[0][1] = u.x;
-			result[1][1] = u.y;
-			result[2][1] = u.z;
-			result[0][2] =-f.x;
-			result[1][2] =-f.y;
-			result[2][2] =-f.z;
-			result[3][0] =-s.dot(eye);
-			result[3][1] =-u.dot(eye);
-			result[3][2] = f.dot(eye);
-			return result;
+    template<typename T>
+    inline Mat4<T> lookAtLH( const Vec3<T>& eye, const Vec3<T>& target, const Vec3<T>& up ) {
+      const Vec3<T> f = (target - eye).normalized();
+      const Vec3<T> s = up.cross(f).normalized();
+      const Vec3<T> u = f.cross(s);
+      Mat4<T> result(static_cast<T>(1));
+      result[0][0] = s.x;
+      result[1][0] = s.y;
+      result[2][0] = s.z;
+      result[0][1] = u.x;
+      result[1][1] = u.y;
+      result[2][1] = u.z;
+      result[0][2] = f.x;
+      result[1][2] = f.y;
+      result[2][2] = f.z;
+      result[3][0] = -s.dot(eye);
+      result[3][1] = -u.dot(eye);
+      result[3][2] = -f.dot(eye);
+      return result;
+    }
 
-
-      //const Vec3<T> f = (target - eye).normalized();
-      //const Vec3<T> s = f.cross(up).normalized();
-      //const Vec3<T> u = s.cross(f);
-      //Mat4<T> result(static_cast<T>(1));
-      //result[0][0] = s.x;
-      //result[1][0] = s.y;
-      //result[2][0] = s.z;
-      //result[0][1] = u.x;
-      //result[1][1] = u.y;
-      //result[2][1] = u.z;
-      //result[0][2] = -f.x;
-      //result[1][2] = -f.y;
-      //result[2][2] = -f.z;
-      //result[3][0] = -s.dot(eye);
-      //result[3][1] = -u.dot(eye);
-      //result[3][2] = f.dot(eye);
-      //return result;
-
-
-      // const Vec3<T> f = (target- eye).normalized();
-      // Vec3<T> u       = up.normalized();
-      // const Vec3<T> s = (f.cross(u)).normalized();
-      // u = s.cross(f);
-
-      // Mat4<T> look(static_cast<T>(1));
-      // look[0][0] = s.x;
-      // look[1][0] = s.y;
-      // look[2][0] = s.z;
-      // look[0][1] = u.x;
-      // look[1][1] = u.y;
-      // look[2][1] = u.z;
-      // look[0][2] = -f.x;
-      // look[1][2] = -f.y;
-      // look[2][2] = -f.z;
-      // look[3][0] = -s.dot(eye);
-      // look[3][1] = -u.dot(eye);
-      // look[3][2] = f.dot(eye);
-      // return look;
+    template<typename T>
+    inline Mat4<T> lookAtRH( const Vec3<T>& eye, const Vec3<T>& target, const Vec3<T>& up ) {
+      const Vec3<T> f = (target - eye).normalized();
+      const Vec3<T> s = f.cross(up).normalized();
+      const Vec3<T> u = s.cross(f);
+      Mat4<T> result(static_cast<T>(1));
+      result[0][0] = s.x;
+      result[1][0] = s.y;
+      result[2][0] = s.z;
+      result[0][1] = u.x;
+      result[1][1] = u.y;
+      result[2][1] = u.z;
+      result[0][2] =-f.x;
+      result[1][2] =-f.y;
+      result[2][2] =-f.z;
+      result[3][0] =-s.dot(eye);
+      result[3][1] =-u.dot(eye);
+      result[3][2] = f.dot(eye);
+      return result;
     }
 
     template<typename T>
