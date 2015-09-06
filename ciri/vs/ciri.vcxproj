@@ -44,6 +44,7 @@
     <ClCompile Include="..\src\ciri\gfx\GraphicsDeviceFactory.cpp" />
     <ClCompile Include="..\src\ciri\gfx\MayaCamera.cpp" />
     <ClCompile Include="..\src\ciri\gfx\ObjModel.cpp" />
+    <ClCompile Include="..\src\ciri\gfx\Plane.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexDeclaration.cpp" />
     <ClCompile Include="..\src\ciri\gfx\VertexElement.cpp" />
     <ClCompile Include="..\src\ciri\input\Input.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="..\inc\ciri\gfx\IVertexBuffer.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\MayaCamera.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\ObjModel.hpp" />
+    <ClInclude Include="..\inc\ciri\gfx\Plane.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\PrimitiveTopology.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\SamplerFilter.hpp" />
     <ClInclude Include="..\inc\ciri\gfx\SamplerWrap.hpp" />

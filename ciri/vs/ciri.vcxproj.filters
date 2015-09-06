@@ -147,6 +147,9 @@
     <ClCompile Include="..\inc\ciri\util\PNG.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ciri\gfx\Plane.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\ciri\gfx\Camera.hpp">
@@ -375,6 +378,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\ciri\util\PNG.hpp">
       <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ciri\gfx\Plane.hpp">
+      <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
