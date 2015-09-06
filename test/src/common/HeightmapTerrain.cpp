@@ -168,6 +168,9 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevi
 	const std::string vsStr = (ciri::GraphicsApiType::OpenGL==device->getApiType()) ? getVertexShaderGl() : getVertexShaderDx();
 	const std::string psStr = (ciri::GraphicsApiType::OpenGL==device->getApiType()) ? getPixelShaderGl() : getPixelShaderDx();
 	if( ciri::err::failed(_shader->loadFromMemory(vsStr.c_str(), nullptr, psStr.c_str())) ) {
+		for( auto err : _shader->getErrors() ) {
+			printf("%s\n", err.msg.c_str());
+		}
 		clean();
 		return false;
 	}
@@ -194,6 +197,15 @@ void HeightmapTerrain::setTextures( ciri::ITexture2D* tex0, ciri::ITexture2D* te
 	_textures[1] = tex1;
 	_textures[2] = tex2;
 	_textures[3] = tex3;
+}
+
+void HeightmapTerrain::setClippingPlaneActive( bool active ) {
+	_perFrameConstants.shouldClip = (active) ? 1 : 0;
+}
+
+void HeightmapTerrain::setClippingPlaneParams( float height, const cc::Mat4f& viewProj, bool flip ) {
+	ciri::Plane plane = createClippingPlane(height, cc::Vec3f(0, -1, 0), viewProj, flip);
+	_perFrameConstants.clippingPlane = cc::Vec4f(plane.getNormal(), plane.getD());
 }
 
 void HeightmapTerrain::draw( const cc::Mat4f& viewProj, ciri::IGraphicsDevice* device ) {
@@ -271,7 +283,6 @@ void HeightmapTerrain::clean() {
 void HeightmapTerrain::updateConstants( const cc::Mat4f& world, const cc::Mat4f& viewProj ) {
 	_perFrameConstants.world = world;
 	_perFrameConstants.xform = viewProj * _perFrameConstants.world;
-
 	_perFrameConstantBuffer->setData(sizeof(PerFrameConstants), &_perFrameConstants);
 }
 
@@ -399,19 +410,25 @@ std::string HeightmapTerrain::getVertexShaderGl() const {
 		"layout (std140) uniform PerFrameConstants {\n"
 		"	mat4 world;\n"
 		"	mat4 xform;\n"
+		"	vec4 clippingPlane;\n"
+		"	int shouldClip;\n"
 		"};\n"
 		""
 		"out vec3 vo_position;\n"
 		"out vec3 vo_normal;\n"
 		"out vec2 vo_texcoord;\n"
 		"out vec4 vo_texweights;\n"
+		"out float vo_clippingPlane;\n"
+		"flat out int vo_shouldClip;\n"
 		""
 		"void main() {\n"
 		"	gl_Position = xform * vec4(in_position, 1.0f);\n"
 		"	vo_position = (world * vec4(in_position, 1.0f)).xyz;\n"
 		"	vo_normal = (world * vec4(in_normal, 0.0f)).xyz;\n"
 		"	vo_texcoord = in_texcoord;\n"
-		"vo_texweights = in_texweights;\n"
+		"	vo_texweights = in_texweights;\n"
+		"	vo_clippingPlane = dot(gl_Position, clippingPlane);\n"
+		"	vo_shouldClip = shouldClip;\n"
 		"}";
 }
 
@@ -420,6 +437,8 @@ std::string HeightmapTerrain::getVertexShaderDx() const {
 		"cbuffer PerFrameConstants : register(b0) {\n"
 		"	float4x4 world;\n"
 		"	float4x4 xform;\n"
+		"	float4 clippingPlane;\n"
+		"	int shouldClip;\n"
 		"};\n"
 		""
 		"struct Output {\n"
@@ -428,6 +447,8 @@ std::string HeightmapTerrain::getVertexShaderDx() const {
 		"	float3 nrm : NORMAL0;\n"
 		"	float2 tex : TEXCOORD0;\n"
 		"	float4 weights : TEXCOORD1;\n"
+		"	float clipping : TEXCOORD3;\n"
+		"	int shouldClip : TEXCOORD4;\n"
 		"};\n"
 		""
 		"Output main( float3 pos : POSITION, float3 nrm : NORMAL, float4 tan : TANGENT, float2 tex : TEXCOORD0, float4 weights : TEXCOORD1 ) {\n"
@@ -437,6 +458,8 @@ std::string HeightmapTerrain::getVertexShaderDx() const {
 		"	OUT.nrm = mul(world, float4(nrm, 0.0f)).xyz;\n"
 		"	OUT.tex = tex;\n"
 		"	OUT.weights = weights;\n"
+		"	OUT.clipping = dot(OUT.hpos, clippingPlane);\n"
+		"	OUT.shouldClip = shouldClip;\n"
 		"	return OUT;\n"
 		"}";
 }
@@ -449,6 +472,8 @@ std::string HeightmapTerrain::getPixelShaderGl() const {
 		"in vec3 vo_normal;\n"
 		"in vec2 vo_texcoord;\n"
 		"in vec4 vo_texweights;\n"
+		"in float vo_clippingPlane;\n"
+		"flat in int vo_shouldClip;\n"
 		""
 		"out vec4 out_color;\n"
 		""
@@ -466,6 +491,10 @@ std::string HeightmapTerrain::getPixelShaderGl() const {
 		"}\n"
 		""
 		"void main() {\n"
+		" if( (vo_shouldClip != 0) && (vo_clippingPlane < 0.0f) ) {\n"
+		"		discard;\n"
+		"	}\n"
+		""
 		"	vec3 L = -LightDirection;\n"
 		"	vec3 N = normalize(vo_normal);\n"
 		"	vec3 lighting = AmbientLightColor + lambert(L, N, LightColor, 1.0f);\n"
@@ -504,6 +533,8 @@ std::string HeightmapTerrain::getPixelShaderDx() const {
 		"	float3 nrm : NORMAL0;\n"
 		"	float2 tex : TEXCOORD0;\n"
 		"	float4 weights : TEXCOORD1;\n"
+		"	float clipping : TEXCOORD3;\n"
+		"	int shouldClip : TEXCOORD4;\n"
 		"};\n"
 		""
 		"static float3 AmbientLightColor = float3(0.05333332f, 0.09882354f, 0.1819608f);\n"
@@ -515,6 +546,10 @@ std::string HeightmapTerrain::getPixelShaderDx() const {
 		"}\n"
 		""
 		"float4 main( Input input ) : SV_Target {\n"
+		"	if( input.shouldClip != 0 ) {\n"
+		"		clip(input.clipping);\n"
+		"	}\n"
+		""
 		"	float3 L = -LightDirection;\n"
 		"	float3 N = normalize(input.nrm);\n"
 		"	float3 lighting = AmbientLightColor + lambert(L, N, LightColor, 1.0f);\n"
@@ -527,4 +562,12 @@ std::string HeightmapTerrain::getPixelShaderDx() const {
 		""
 		"	return float4(color.xyz * lighting, 1.0f);\n"
 		"}";
+}
+
+ciri::Plane HeightmapTerrain::createClippingPlane( float height, const cc::Vec3f& normal, const cc::Mat4f& viewProj, bool flip ) const {
+	cc::Vec4f coeffs = cc::Vec4f(normal, height) * (flip ? -1.0f : 1.0f);
+	cc::Mat4f myViewProj = viewProj;
+	myViewProj.invert();
+	coeffs = (coeffs * myViewProj);
+	return ciri::Plane(coeffs);
 }

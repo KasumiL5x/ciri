@@ -7,6 +7,7 @@
 #include <cc/Mat4.hpp>
 #include <ciri/gfx/IGraphicsDevice.hpp>
 #include <ciri/util/TGA.hpp>
+#include <ciri/gfx/Plane.hpp>
 
 class HeightmapTerrain {
 private:
@@ -22,6 +23,15 @@ private:
 	struct PerFrameConstants {
 		cc::Mat4f world;
 		cc::Mat4f xform;
+		cc::Vec4f clippingPlane;
+		int shouldClip;
+
+		PerFrameConstants() {
+			world = cc::Mat4f(1.0f);
+			xform = cc::Mat4f(1.0f);
+			clippingPlane = cc::Vec4f();
+			shouldClip = 0;
+		}
 	};
 
 public:
@@ -30,6 +40,8 @@ public:
 
 	bool generate( const ciri::TGA& heightmap, ciri::IGraphicsDevice* device );
 	void setTextures( ciri::ITexture2D* tex0, ciri::ITexture2D* tex1, ciri::ITexture2D* tex2, ciri::ITexture2D* tex3 );
+	void setClippingPlaneActive( bool active );
+	void setClippingPlaneParams( float height, const cc::Mat4f& viewProj, bool flip );
 	void draw( const cc::Mat4f& viewProj, ciri::IGraphicsDevice* device );
 	void clean();
 	
@@ -40,6 +52,7 @@ private:
 	std::string getVertexShaderDx() const;
 	std::string getPixelShaderGl() const;
 	std::string getPixelShaderDx() const;
+	ciri::Plane createClippingPlane( float height, const cc::Vec3f& normal, const cc::Mat4f& viewProj, bool flip ) const;
 
 private:
 	bool _generated;
