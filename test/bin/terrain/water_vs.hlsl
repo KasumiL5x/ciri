@@ -1,6 +1,7 @@
 cbuffer WaterConstants : register(b0) {
 	float4x4 world;
 	float4x4 xform;
+	float4x4 reflectedViewProj;
 	float3 campos;
 	float time;
 };
@@ -13,6 +14,8 @@ struct Output {
 	float2 bumpTexcoords : TEXCOORD3;
 	float3 cubeTexcoords : TEXCOORD4;
 	float waveHeight     : TEXCOORD5;
+	float4 reflectionTexcoords : TEXCOORD6;
+	float4 refractionTexcoords : TEXCOORD7;
 };
 
 // -*- water variables -*-
@@ -47,6 +50,14 @@ Output main( float3 in_position : POSITION, float3 in_normal : NORMAL, float4 in
 	float3 V = normalize(OUT.position - campos);
 	float3 RV = normalize(reflect(V, OUT.normal));
 	OUT.cubeTexcoords = float3(RV.x, -RV.y, RV.z);
+
+	// calculate reflection texcoords
+	float4x4 reflectionMatrix = mul(reflectedViewProj, world);
+	OUT.reflectionTexcoords = mul(reflectionMatrix, float4(in_position, 1.0f));
+
+	// calculate refraction texcoords
+	OUT.refractionTexcoords = mul(xform, float4(in_position, 1.0f));
+
 
 	// water variables
 	OUT.waveHeight = waveHeight;

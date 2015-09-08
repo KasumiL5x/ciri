@@ -15,6 +15,7 @@ private:
 	struct WaterConstants {
 		cc::Mat4f world;
 		cc::Mat4f xform;
+		cc::Mat4f reflectedViewProj;
 		cc::Vec3f campos;
 		float time;
 	};
@@ -45,6 +46,9 @@ public:
 	virtual void onUnloadContent();
 
 private:
+	void drawSkybox( const cc::Mat4f& view, const cc::Mat4f& proj );
+
+private:
 	ciri::FPSCamera _camera;
 	//
 	ciri::KeyboardState _prevKeyState;
@@ -66,6 +70,8 @@ private:
 	ciri::IBlendState* _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
 	ciri::IRenderTarget2D* _waterReflectionTarget;
+	ciri::ISamplerState* _waterReflectionSampler;
+	ciri::IRenderTarget2D* _waterRefractionTarget;
 
 	// cubemap test
 	ciri::ITextureCube* _cubemap;

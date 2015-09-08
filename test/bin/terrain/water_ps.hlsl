@@ -2,6 +2,10 @@ Texture2D NormalMapTex : register(t0);
 SamplerState NormalMapSampler : register(s0);
 TextureCube SkyboxTex : register(t1);
 SamplerState SkyboxSampler : register(s1);
+Texture2D ReflectionTexture : register(t2);
+SamplerState ReflectionSampler : register(s2);
+Texture2D RefractionTexture : register(t3);
+SamplerState RefractionSampler : register(s3);
 
 struct Input {
 	float4 hpos          : SV_POSITION;
@@ -11,6 +15,8 @@ struct Input {
 	float2 bumpTexcoords : TEXCOORD3;
 	float3 cubeTexcoords : TEXCOORD4;
 	float waveHeight     : TEXCOORD5;
+	float4 reflectionTexcoords : TEXCOORD6;
+	float4 refractionTexcoords : TEXCOORD7;
 };
 
 // -*- Light properties -*-
@@ -40,14 +46,28 @@ float4 main( Input input ) : SV_Target {
 	float3 perturbCubeCoords = input.cubeTexcoords + perturb;
 	float3 cubemap = SkyboxTex.Sample(SkyboxSampler, perturbCubeCoords).xyz;
 
+	// scene reflection
+	float2 reflectionCoords;
+	reflectionCoords.x =  input.reflectionTexcoords.x / input.reflectionTexcoords.w / 2.0f + 0.5f;// * 0.5f + 0.5f;
+	reflectionCoords.y = -input.reflectionTexcoords.y / input.reflectionTexcoords.w / 2.0f + 0.5f;// * 0.5f + 0.5f;
+	reflectionCoords += perturb;
+	float4 reflectionColor = ReflectionTexture.Sample(ReflectionSampler, reflectionCoords);
+
+	// scene refraction
+	float2 refractionCoords;
+	refractionCoords.x =  input.refractionTexcoords.x / input.refractionTexcoords.w / 2.0f + 0.5f;
+	refractionCoords.y = -input.refractionTexcoords.y / input.refractionTexcoords.w / 2.0f + 0.5f;
+	refractionCoords += perturb;
+	float4 refractionColor = RefractionTexture.Sample(ReflectionSampler, refractionCoords);
+
 	// fresnel factor
 	float3 eyeVector = normalize(input.camPos - input.position);
 	float3 normalVector = input.normal;
 	float fresnelTerm = max(0.0f, dot(eyeVector, normalVector));
-	float4 combinedColor = lerp(float4(cubemap, 1.0f), float4(sunlight, 1.0f), fresnelTerm);
+	float4 combinedReflRefr = lerp(reflectionColor, refractionColor, fresnelTerm);
+	float4 combinedColor = lerp(float4(cubemap + sunlight, 1.0f), float4(combinedReflRefr.xyz, 1.0f), 0.85f);
 
 	// coloration
-	// float4 dullColor = float4(0.77f, 0.90f, 0.92f, 1.0f);
 	float4 dullColor = float4(0.3f, 0.3f, 0.5f, 1.0f);
 
 	float4 out_color = lerp(combinedColor, dullColor, 0.2f);
