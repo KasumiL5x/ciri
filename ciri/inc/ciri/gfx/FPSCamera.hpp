@@ -33,6 +33,11 @@ namespace ciri {
 
 		void updateVectors();
 
+		const cc::Vec3f& getFpsFront() {
+			updateVectors();
+			return _front;
+		}
+
 	private:
 		float _yaw;
 		float _pitch;
