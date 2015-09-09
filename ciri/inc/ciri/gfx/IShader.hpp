@@ -2,7 +2,7 @@
 #define __ciri_ishader__
 
 #include "VertexElement.hpp"
-#include "../ErrorCodes.hpp"
+#include "../core/ErrorCodes.hpp"
 
 namespace ciri {
 	class IConstantBuffer;

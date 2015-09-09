@@ -17,12 +17,12 @@ namespace ciri {
 		
 		// must have positive dimensions
 		if( width <= 0 || height <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// must have valid images
 		if( nullptr==posx || nullptr==negx || nullptr==posy || nullptr==negy || nullptr==posz || nullptr==negz ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// todo: update if already valid
@@ -62,15 +62,15 @@ namespace ciri {
 
 		if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, &data[0], &_cubeTexture)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_cubeTexture, &srvDesc, &_shaderResourceView)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void DXTextureCube::destroy() {

@@ -1,5 +1,5 @@
 #include <ciri/gfx/gl/GLGraphicsDevice.hpp>
-#include <ciri/wnd/Window.hpp>
+#include <ciri/core/Window.hpp>
 #include <sstream>
 #include <ciri/gfx/gl/CiriToGl.hpp>
 
@@ -588,7 +588,7 @@ namespace ciri {
 
 	err::ErrorCode GLGraphicsDevice::resize() {
 		if( !_isValid ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
 		// todo: check for erroneous sizes
@@ -599,7 +599,7 @@ namespace ciri {
 
 		// don't resize if the same size
 		if( width == _defaultWidth && height == _defaultHeight ) {
-			return err::CIRI_OK; // not incorrect; just ignore it
+			return err::ErrorCode::CIRI_OK; // not incorrect; just ignore it
 		}
 
 		// update default width and height
@@ -610,7 +610,7 @@ namespace ciri {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
@@ -1012,5 +1012,9 @@ namespace ciri {
 		glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 		// color write mask (http://docs.gl/gl4/glColorMask)
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	}
+
+	IGraphicsDevice* createGraphicsDevice() {
+		return new GLGraphicsDevice();
 	}
 } // ciri

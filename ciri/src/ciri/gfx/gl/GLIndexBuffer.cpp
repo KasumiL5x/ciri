@@ -11,12 +11,12 @@ namespace ciri {
 
 	err::ErrorCode GLIndexBuffer::set( int* indices, int indexCount, bool dynamic ) {
 		if( nullptr == indices || indexCount <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// todo: add remapping (updating) support
 		if( _evbo != 0 ) {
-			return err::CIRI_NOT_IMPLEMENTED;
+			return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 		}
 
 		_indexCount = indexCount;
@@ -28,7 +28,7 @@ namespace ciri {
 
 		// todo: check for fail
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void GLIndexBuffer::destroy() {

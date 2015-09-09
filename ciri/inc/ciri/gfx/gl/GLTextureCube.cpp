@@ -16,17 +16,17 @@ namespace ciri {
 
 		// must have positive dimensions
 		if( width <= 0 || height <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// must have valid images
 		if( nullptr==posx || nullptr==negx || nullptr==posy || nullptr==negy || nullptr==posz || nullptr==negz ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// todo: update if already valid
 		if( _textureId != 0 ) {
-			return err::CIRI_NOT_IMPLEMENTED;
+			return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 		}
 
 		// generate and bind texture
@@ -44,7 +44,7 @@ namespace ciri {
 		// unbind texture
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void GLTextureCube::destroy() {

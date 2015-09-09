@@ -1,7 +1,7 @@
 #include "TerrainDemo.hpp"
 #include "../../common/ModelGen.hpp"
-#include <ciri/util/TGA.hpp>
-#include <ciri/util/PNG.hpp>
+#include <ciri/core/TGA.hpp>
+#include <ciri/core/PNG.hpp>
 
 // fuck you microsoft
 #undef far
@@ -21,7 +21,6 @@ DemoConfig TerrainDemo::getConfig() {
 	cfg.windowTitle = "ciri : Terrain Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 

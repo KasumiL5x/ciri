@@ -2,21 +2,17 @@
 #define __idemo__
 
 #include <string>
-#include <ciri/wnd/Window.hpp>
+#include <ciri/core/Window.hpp>
 #include <ciri/gfx/IGraphicsDevice.hpp>
-#include <ciri/gfx/GraphicsDeviceFactory.hpp>
 
 struct DemoConfig {
 	std::string windowTitle;
 	unsigned int windowWidth;
 	unsigned int windowHeight;
-	ciri::GraphicsDeviceFactory::DeviceType deviceType;
-
 	DemoConfig() {
 		windowTitle = "ciri";
 		windowWidth = 1280;
 		windowHeight = 720;
-		deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	}
 };
 

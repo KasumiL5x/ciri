@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{798f86c4-f284-479d-87b4-3ff09e47ce4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{d7852628-d2c9-4edf-9c2e-bdf61011b466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\msft">
+      <UniqueIdentifier>{efd507eb-78c0-40b6-b9f5-118fa8176838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\msft">
+      <UniqueIdentifier>{0efa3439-a9f6-4e27-b6eb-5fce015714e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\gfx_dx_dummy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\msft\ScreenGrab.cpp">
+      <Filter>src\msft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\inc\ciri\gfx\dx\DXBlendState.cpp">
+      <Filter>inc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\inc\ciri\gfx\dx\DXTextureCube.cpp">
+      <Filter>inc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXConstantBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXDepthStencilState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXGraphicsDevice.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXIndexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXRasterizerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXRenderTarget2D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXSamplerState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXTexture2D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXVertexBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXVertexDeclaration.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\msft\ScreenGrab.h">
+      <Filter>inc\msft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\CiriToDx.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXBlendState.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXConstantBuffer.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXDepthStencilState.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXIndexBuffer.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXRasterizerState.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXRenderTarget2D.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXSamplerState.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXShader.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXTexture2D.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXTextureCube.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXVertexBuffer.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

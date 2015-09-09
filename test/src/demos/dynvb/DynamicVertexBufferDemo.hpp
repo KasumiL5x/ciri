@@ -4,7 +4,7 @@
 #include <string>
 #include "../IDemo.hpp"
 #include <ciri/gfx/MayaCamera.hpp>
-#include <ciri/input/Input.hpp>
+#include <ciri/core/Input.hpp>
 #include "../../common/Grid.hpp"
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"

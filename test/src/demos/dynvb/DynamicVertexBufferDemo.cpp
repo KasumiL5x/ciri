@@ -1,5 +1,5 @@
 #include "DynamicVertexBufferDemo.hpp"
-#include <ciri/util/Log.hpp>
+#include <ciri/core/Log.hpp>
 #include <cc/MatrixFunc.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
@@ -15,7 +15,6 @@ DemoConfig DynamicVertexBufferDemo::getConfig() {
 	cfg.windowTitle = "ciri : Dynamic Vertex Buffer Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 
@@ -88,7 +87,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
-			if( graphicsDevice()->resize() != ciri::err::CIRI_OK ) {
+			if( graphicsDevice()->resize() != ciri::err::ErrorCode::CIRI_OK ) {
 				printf("Failed to resize default render targets.\n");
 			}
 			break;

@@ -3,7 +3,7 @@
 
 #include "TextureFlags.hpp"
 #include "TextureFormat.hpp"
-#include "../ErrorCodes.hpp"
+#include "../core/ErrorCodes.hpp"
 
 namespace ciri {
 	class ITexture2D {

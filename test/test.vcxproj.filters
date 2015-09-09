@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{4ed4587a-1f30-46f8-b330-88e53441a38d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos">
+      <UniqueIdentifier>{e522d8c1-20ae-448e-8a0b-8be2fd97785f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\dynvb">
+      <UniqueIdentifier>{186ba5a5-decc-4ef7-bce2-2ec7032ecd8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\terrain">
+      <UniqueIdentifier>{28f7fbfc-a07a-4a75-8633-716f52620a91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\common\Axis.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Grid.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\HeightmapTerrain.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Model.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\ShaderPresets.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Transform.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp">
+      <Filter>demos\dynvb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\dynvb\OpenCloth.cpp">
+      <Filter>demos\dynvb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\terrain\TerrainDemo.cpp">
+      <Filter>demos\terrain</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\common\Axis.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Grid.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\HeightmapTerrain.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Model.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\ModelGen.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\ShaderPresets.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Transform.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Vertex.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\IDemo.hpp">
+      <Filter>demos</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp">
+      <Filter>demos\dynvb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\dynvb\OpenCloth.hpp">
+      <Filter>demos\dynvb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\terrain\TerrainDemo.hpp">
+      <Filter>demos\terrain</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

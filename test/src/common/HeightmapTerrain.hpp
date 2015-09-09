@@ -6,7 +6,7 @@
 #include <cc/Vec4.hpp>
 #include <cc/Mat4.hpp>
 #include <ciri/gfx/IGraphicsDevice.hpp>
-#include <ciri/util/TGA.hpp>
+#include <ciri/core/TGA.hpp>
 #include <ciri/gfx/Plane.hpp>
 
 class HeightmapTerrain {

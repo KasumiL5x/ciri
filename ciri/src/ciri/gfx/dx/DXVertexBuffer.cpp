@@ -19,33 +19,33 @@ namespace ciri {
 
 	err::ErrorCode DXVertexBuffer::set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
 		if( nullptr == vertices || vertexStride <= 0 || vertexCount <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// update if already valid
 		if( _vertexBuffer != nullptr ) {
 			// cannot update a static vertex buffer
 			if( !_isDynamic ) {
-				return err::CIRI_STATIC_BUFFER_AS_DYNAMIC;
+				return err::ErrorCode::CIRI_STATIC_BUFFER_AS_DYNAMIC;
 			}
 
 			// for now, size must be the same as the original data
 			if( vertexStride != _vertexStride || vertexCount != _vertexCount ) {
-				return err::CIRI_NOT_IMPLEMENTED;
+				return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 			}
 
 			// map buffer to get pointer
 			D3D11_MAPPED_SUBRESOURCE map;
 			ZeroMemory(&map, sizeof(map));
 			if( FAILED(_device->getContext()->Map(_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map)) ) {
-				return err::CIRI_BUFFER_MAP_FAILED;
+				return err::ErrorCode::CIRI_BUFFER_MAP_FAILED;
 			}
 
 			// copy data and unmap
 			memcpy(map.pData, vertices, (vertexStride * vertexCount));
 			_device->getContext()->Unmap(_vertexBuffer, 0);
 
-			return err::CIRI_OK;
+			return err::ErrorCode::CIRI_OK;
 		}
 
 		_vertexStride = vertexStride;
@@ -72,10 +72,10 @@ namespace ciri {
 		// create actual vertex buffer with initial data
 		if( FAILED(_device->getDevice()->CreateBuffer(&desc, &data, &_vertexBuffer)) ) {
 			destroy();
-			return err::CIRI_BUFFER_CREATION_FAILED;
+			return err::ErrorCode::CIRI_BUFFER_CREATION_FAILED;
 		}
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	int DXVertexBuffer::getStride() const {

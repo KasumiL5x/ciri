@@ -12,12 +12,12 @@ namespace ciri {
 
 	err::ErrorCode DXIndexBuffer::set( int* indices, int indexCount, bool dynamic ) {
 		if( nullptr == indices || indexCount <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// todo: add remapping (updating) support
 		if( _indexBuffer != nullptr ) {
-			return err::CIRI_NOT_IMPLEMENTED;
+			return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 		}
 
 		_indexCount = indexCount;
@@ -39,10 +39,10 @@ namespace ciri {
 
 		if( FAILED(_device->getDevice()->CreateBuffer(&desc, &data, &_indexBuffer)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void DXIndexBuffer::destroy() {

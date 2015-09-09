@@ -1,7 +1,7 @@
 #include <ciri/gfx/ObjModel.hpp>
 #include <fstream>
 #include <cmath> // not ccmath ;)
-#include <ciri/util/StrUtil.hpp>
+#include <ciri/core/StrUtil.hpp>
 
 namespace ciri {
 	ObjModel::ObjModel() {

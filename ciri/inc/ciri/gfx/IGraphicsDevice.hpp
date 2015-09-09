@@ -278,6 +278,11 @@ namespace ciri {
 		 */
 		virtual GraphicsApiType::Type getApiType() const=0;
 	};
+
+	/// todo
+	/// this is defined in the libs for dx and gl etc.
+	IGraphicsDevice* createGraphicsDevice();
+
 } // ciri
 
 #endif /* __ciri_igraphicsdevice__ */

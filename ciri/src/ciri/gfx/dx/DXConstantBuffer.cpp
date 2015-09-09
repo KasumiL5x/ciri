@@ -32,12 +32,12 @@ namespace ciri {
 				destroy();
 
 				if( E_INVALIDARG == hr ) {
-					return err::CIRI_UNKNOWN_ERROR;
+					return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 				}
 
-				return err::CIRI_UNKNOWN_ERROR;
+				return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 			}
-			return err::CIRI_OK;
+			return err::ErrorCode::CIRI_OK;
 		}
 
 		D3D11_MAPPED_SUBRESOURCE map;
@@ -45,7 +45,7 @@ namespace ciri {
 		memcpy(map.pData, data, dataSize);
 		_device->getContext()->Unmap(_buffer, 0);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void DXConstantBuffer::destroy() {

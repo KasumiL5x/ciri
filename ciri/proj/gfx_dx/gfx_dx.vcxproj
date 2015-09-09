@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{21489825-31EF-4DEB-A51D-641293DAAE48}</ProjectGuid>
+    <RootNamespace>gfx_dx</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)-d</TargetName>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>dxgi.lib;d3d11.lib;D3DCompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>dxgi.lib;d3d11.lib;D3DCompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\inc\ciri\gfx\dx\DXBlendState.cpp" />
+    <ClCompile Include="..\..\inc\ciri\gfx\dx\DXTextureCube.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXConstantBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXDepthStencilState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXGraphicsDevice.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXIndexBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXRasterizerState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXRenderTarget2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXSamplerState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXShader.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXTexture2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXVertexBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\DXVertexDeclaration.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\gfx_dx_dummy.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\dx\msft\ScreenGrab.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\CiriToDx.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXBlendState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXConstantBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXDepthStencilState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXGraphicsDevice.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXIndexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXRasterizerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXRenderTarget2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXSamplerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXShader.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXTexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXTextureCube.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXVertexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\DXVertexDeclaration.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\dx\msft\ScreenGrab.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

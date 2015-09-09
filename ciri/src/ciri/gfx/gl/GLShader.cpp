@@ -1,6 +1,6 @@
 #include <ciri/gfx/gl/GLShader.hpp>
 #include <ciri/gfx/gl/GLConstantBuffer.hpp>
-#include <ciri/util/File.hpp>
+#include <ciri/core/File.hpp>
 
 namespace ciri {
 	GLShader::GLShader()
@@ -16,18 +16,18 @@ namespace ciri {
 
 	err::ErrorCode GLShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
 		if( nullptr == buffer || nullptr == name ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		if( !isValid() ) {
-			return err::CIRI_SHADER_INVALID;
+			return err::ErrorCode::CIRI_SHADER_INVALID;
 		}
 
 		GLConstantBuffer* glBuffer = reinterpret_cast<GLConstantBuffer*>(buffer);
 
 		const GLuint blockIndex = glGetUniformBlockIndex(_program, name);
 		if( GL_INVALID_INDEX == blockIndex ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
 		// note: I found out that uniform buffer objects work like texture units in that there's allocated space for them and then
@@ -42,7 +42,7 @@ namespace ciri {
 		glUniformBlockBinding(_program, blockIndex, glBuffer->getIndex());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	err::ErrorCode GLShader::loadFromFile( const char* vs, const char* gs, const char* ps ) {
@@ -50,15 +50,15 @@ namespace ciri {
 
 		// must have at least VS and PS
 		if( nullptr == vs || nullptr == ps ) {
-			addError(err::CIRI_SHADER_INCOMPLETE, err::getString(err::CIRI_SHADER_INCOMPLETE));
-			return err::CIRI_SHADER_INCOMPLETE;
+			addError(err::ErrorCode::CIRI_SHADER_INCOMPLETE, err::getErrorString(err::ErrorCode::CIRI_SHADER_INCOMPLETE));
+			return err::ErrorCode::CIRI_SHADER_INCOMPLETE;
 		}
 
 		// load vs file
 		File vsFile(vs, File::Flags::ReadOnly);
 		if( !vsFile.isOpen() ) {
-			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")"));
-			return err::CIRI_FILE_NOT_FOUND;
+			addError(err::ErrorCode::CIRI_FILE_NOT_FOUND, err::getErrorString(err::ErrorCode::CIRI_FILE_NOT_FOUND) + std::string(" (") + vs + std::string(")"));
+			return err::ErrorCode::CIRI_FILE_NOT_FOUND;
 		}
 		const std::string vsStr = vsFile.toString();
 
@@ -67,8 +67,8 @@ namespace ciri {
 		if( gs != nullptr ) {
 			File gsFile(gs, File::Flags::ReadOnly);
 			if( !gsFile.isOpen() ) {
-				addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + gs + std::string(")"));
-				return err::CIRI_FILE_NOT_FOUND;
+				addError(err::ErrorCode::CIRI_FILE_NOT_FOUND, err::getErrorString(err::ErrorCode::CIRI_FILE_NOT_FOUND) + std::string(" (") + gs + std::string(")"));
+				return err::ErrorCode::CIRI_FILE_NOT_FOUND;
 			}
 			gsStr = gsFile.toString();
 		}
@@ -76,8 +76,8 @@ namespace ciri {
 		// load ps file
 		File psFile(ps, File::Flags::ReadOnly);
 		if( !psFile.isOpen() ) {
-			addError(err::CIRI_FILE_NOT_FOUND, err::getString(err::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")"));
-			return err::CIRI_FILE_NOT_FOUND;
+			addError(err::ErrorCode::CIRI_FILE_NOT_FOUND, err::getErrorString(err::ErrorCode::CIRI_FILE_NOT_FOUND) + std::string(" (") + ps + std::string(")"));
+			return err::ErrorCode::CIRI_FILE_NOT_FOUND;
 		}
 		const std::string psStr = psFile.toString();
 
@@ -91,8 +91,8 @@ namespace ciri {
 
 		// must have at least VS and PS
 		if( nullptr == vs || nullptr == ps ) {
-			addError(err::CIRI_SHADER_INCOMPLETE, err::getString(err::CIRI_SHADER_INCOMPLETE));
-			return err::CIRI_SHADER_INCOMPLETE;
+			addError(err::ErrorCode::CIRI_SHADER_INCOMPLETE, err::getErrorString(err::ErrorCode::CIRI_SHADER_INCOMPLETE));
+			return err::ErrorCode::CIRI_SHADER_INCOMPLETE;
 		}
 
 		const int ERROR_LOG_SIZE = 1024;
@@ -107,7 +107,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_vertexShader, ERROR_LOG_SIZE, 0, log);
-				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
+				addError(err::ErrorCode::CIRI_SHADER_COMPILE_FAILED, err::getErrorString(err::ErrorCode::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_geometryShader, ERROR_LOG_SIZE, 0, log);
-				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
+				addError(err::ErrorCode::CIRI_SHADER_COMPILE_FAILED, err::getErrorString(err::ErrorCode::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace ciri {
 			if( status != GL_TRUE ) {
 				GLchar log[ERROR_LOG_SIZE] = "";
 				glGetShaderInfoLog(_pixelShader, ERROR_LOG_SIZE, 0, log);
-				addError(err::CIRI_SHADER_COMPILE_FAILED, err::getString(err::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
+				addError(err::ErrorCode::CIRI_SHADER_COMPILE_FAILED, err::getErrorString(err::ErrorCode::CIRI_SHADER_COMPILE_FAILED) + std::string(": ") + std::string(log));
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace ciri {
 		if( status != GL_TRUE ) {
 			GLchar log[ERROR_LOG_SIZE] = "";
 			glGetProgramInfoLog(_program, ERROR_LOG_SIZE, 0, log);
-			addError(err::CIRI_SHADER_LINK_FAILED, err::getString(err::CIRI_SHADER_LINK_FAILED) + std::string(": ") + std::string(log));
+			addError(err::ErrorCode::CIRI_SHADER_LINK_FAILED, err::getErrorString(err::ErrorCode::CIRI_SHADER_LINK_FAILED) + std::string(": ") + std::string(log));
 		}
 
 		// process uniforms
@@ -161,7 +161,7 @@ namespace ciri {
 			return _errors[0].code;
 		}
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void GLShader::destroy() {

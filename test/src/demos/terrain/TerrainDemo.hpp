@@ -3,7 +3,7 @@
 
 #include "../IDemo.hpp"
 #include <ciri/gfx/FPSCamera.hpp>
-#include <ciri/input/Input.hpp>
+#include <ciri/core/Input.hpp>
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"

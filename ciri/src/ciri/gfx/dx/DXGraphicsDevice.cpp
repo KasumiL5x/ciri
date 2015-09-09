@@ -1,7 +1,7 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <ciri/gfx/dx/CiriToDx.hpp>
-#include <ciri/wnd/Window.hpp>
-#include <ciri/util/StrUtil.hpp>
+#include <ciri/core/Window.hpp>
+#include <ciri/core/StrUtil.hpp>
 #include <DirectXColors.h>
 
 namespace ciri {
@@ -587,7 +587,7 @@ namespace ciri {
 
 	err::ErrorCode DXGraphicsDevice::resize() {
 		if( !_isValid ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
 		// todo: check for erroneous sizes
@@ -598,7 +598,7 @@ namespace ciri {
 
 		// don't resize if the same size
 		if( width == _defaultWidth && height == _defaultHeight ) {
-			return err::CIRI_OK; // not incorrect; just ignore it
+			return err::ErrorCode::CIRI_OK; // not incorrect; just ignore it
 		}
 
 		// update default width and height
@@ -611,11 +611,11 @@ namespace ciri {
 		_backbuffer->Release();
 		// resize buffers
 		if( FAILED(_swapchain->ResizeBuffers(0, _defaultWidth, _defaultHeight, DXGI_FORMAT_UNKNOWN, 0)) ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 		// recreate RTV for backbuffer
 		if( !createBackbufferRtv() ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
 		// release depth stencil and its texture
@@ -623,7 +623,7 @@ namespace ciri {
 		_depthStencil->Release();
 		// recreate depth stencil and its texture
 		if( !createDepthStencilView() ) {
-			return err::CIRI_UNKNOWN_ERROR;
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR;
 		}
 
 		// set render target back to backbuffer
@@ -638,7 +638,7 @@ namespace ciri {
 		vp.TopLeftY = 0;
 		_context->RSSetViewports(1, &vp);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void DXGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
@@ -954,5 +954,9 @@ namespace ciri {
 		}
 
 		return true;
+	}
+
+	IGraphicsDevice* createGraphicsDevice() {
+		return new DXGraphicsDevice();
 	}
 } // ciri

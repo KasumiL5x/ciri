@@ -1,7 +1,7 @@
 #ifndef __ciri_iconstantbuffer__
 #define __ciri_iconstantbuffer__
 
-#include <ciri/ErrorCodes.hpp>
+#include <ciri/core/ErrorCodes.hpp>
 
 namespace ciri {
 	class IConstantBuffer {

@@ -1,7 +1,7 @@
 #ifndef __ciri_itexturecube__
 #define __ciri_itexturecube__
 
-#include "../ErrorCodes.hpp"
+#include "../core/ErrorCodes.hpp"
 
 namespace ciri {
 	class ITextureCube {

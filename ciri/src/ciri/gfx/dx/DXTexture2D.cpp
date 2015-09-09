@@ -2,7 +2,7 @@
 #include <ciri/gfx/dx/DXGraphicsDevice.hpp>
 #include <ciri/gfx/dx/CiriToDx.hpp>
 #include <ciri/gfx/dx/msft/ScreenGrab.h>
-#include <ciri/util/StrUtil.hpp>
+#include <ciri/core/StrUtil.hpp>
 
 namespace ciri {
 	DXTexture2D::DXTexture2D( int flags, DXGraphicsDevice* device )
@@ -30,26 +30,26 @@ namespace ciri {
 		if( _shaderResourceView != nullptr ) {
 			// format must be the same
 			if( format != _format ) {
-				return err::CIRI_INVALID_ARGUMENT;
+				return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 			}
 
 			// for now, the enture texture must be updated, and it must therefore be of the same size
 			if( width != _width || height != _height || xOffset != 0 || yOffset != 0 ) {
-				return err::CIRI_NOT_IMPLEMENTED;
+				return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 			}
 
 			// todo: support editing (also change below to dynamic)
-			return err::CIRI_NOT_IMPLEMENTED;
+			return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 		}
 
 		// offsets must be zero when initializing the texture
 		if( xOffset != 0 || yOffset != 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// width and height must be positive
 		if( width <= 0 || height <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		_width = width;
@@ -73,7 +73,7 @@ namespace ciri {
 		// multisampled textures require initialization with nullptr first, so just do it this way for everything for simplicity
 		if( FAILED(_device->getDevice()->CreateTexture2D(&texDesc, nullptr, &_texture2D)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR; // todo: texture create failure
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR; // todo: texture create failure
 		}
 
 		// update the subresource (a.k.a set pixel data) if there is any
@@ -85,7 +85,7 @@ namespace ciri {
 		// create actual shader resource view
 		if( FAILED(_device->getDevice()->CreateShaderResourceView(_texture2D, nullptr, &_shaderResourceView)) ) {
 			destroy();
-			return err::CIRI_UNKNOWN_ERROR; // todo: texture create failure
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR; // todo: texture create failure
 		}
 
 		// generate mipmaps
@@ -93,7 +93,7 @@ namespace ciri {
 			_device->getContext()->GenerateMips(_shaderResourceView);
 		}
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	int DXTexture2D::getWidth() const {
@@ -113,18 +113,18 @@ namespace ciri {
 		// 3. map to get pixels (d3d11_mapped_subresource; context->map(stage, 0, read, 0, map)...)
 		// 4. somehow convert this into TGA
 		// 5. save as TGA
-		return err::CIRI_NOT_IMPLEMENTED;
+		return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 	}
 
 	err::ErrorCode DXTexture2D::writeToDDS( const char* file ) {
 		// todo: return ciri error codes instead of a boolean
 		if( nullptr == file || nullptr == _texture2D ) {
-			return err::CIRI_UNKNOWN_ERROR; // todo
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR; // todo
 		}
 		if( FAILED(DirectX::SaveDDSTextureToFile(_device->getContext(), _texture2D, strutil::str2wstr(file).c_str())) ) {
-			return err::CIRI_UNKNOWN_ERROR; // todo
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR; // todo
 		}
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	ID3D11Texture2D* DXTexture2D::getTexture() const {

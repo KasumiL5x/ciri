@@ -1,7 +1,7 @@
 #ifndef __ciri_iindexbuffer__
 #define __ciri_iindexbuffer__
 
-#include "../ErrorCodes.hpp"
+#include "../core/ErrorCodes.hpp"
 
 namespace ciri {
 	class IIndexBuffer {

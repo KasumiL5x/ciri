@@ -1,6 +1,6 @@
 #include <ciri/gfx/gl/GLTexture2D.hpp>
 #include <ciri/gfx/gl/CiriToGl.hpp>
-#include <ciri/util/TGA.hpp>
+#include <ciri/core/TGA.hpp>
 
 namespace ciri {
 	GLTexture2D::GLTexture2D( int flags )
@@ -23,12 +23,12 @@ namespace ciri {
 		if( _textureId != 0 ) {
 			// format must be the same
 			if( format != _format ) {
-				return err::CIRI_INVALID_ARGUMENT;
+				return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 			}
 
 			// for now, the enture texture must be updated, and it must therefore be of the same size
 			if( width != _width || height != _height || xOffset != 0 || yOffset != 0 ) {
-				return err::CIRI_NOT_IMPLEMENTED;
+				return err::ErrorCode::CIRI_NOT_IMPLEMENTED;
 			}
 
 			//
@@ -42,17 +42,17 @@ namespace ciri {
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
-			return err::CIRI_OK;
+			return err::ErrorCode::CIRI_OK;
 		}
 
 		// offsets must be zero when initializing the texture
 		if( xOffset != 0 || yOffset != 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 		// width and height must be positive
 		if( width <= 0 || height <= 0 ) {
-			return err::CIRI_INVALID_ARGUMENT;
+			return err::ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
 
@@ -82,7 +82,7 @@ namespace ciri {
 		// unbind texture
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	int GLTexture2D::getWidth() const {
@@ -96,7 +96,7 @@ namespace ciri {
 	err::ErrorCode GLTexture2D::writeToTGA( const char* file ) {
 		// todo: return ciri error codes instead of a boolean
 		if( nullptr == file || 0 == _textureId ) {
-			return err::CIRI_UNKNOWN_ERROR; // todo
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR; // todo
 		}
 
 		GLuint tmpFbo;
@@ -112,18 +112,18 @@ namespace ciri {
 		if( !TGA::writeToFile(file, _width, _height, pixels, TextureFormat::hasAlpha(_format) ? TGA::RGBA : TGA::RGB, true) ) {
 			delete[] pixels;
 			pixels = nullptr;
-			return err::CIRI_UNKNOWN_ERROR; // todo
+			return err::ErrorCode::CIRI_UNKNOWN_ERROR; // todo
 		}
 
 		delete[] pixels;
 		pixels = nullptr;
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	err::ErrorCode GLTexture2D::writeToDDS( const char* file ) {
 		// not supported
-		return err::CIRI_NOT_IMPLEMENTED;;
+		return err::ErrorCode::CIRI_NOT_IMPLEMENTED;;
 	}
 
 	GLuint GLTexture2D::getTextureId() const {

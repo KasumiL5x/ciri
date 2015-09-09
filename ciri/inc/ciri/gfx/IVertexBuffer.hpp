@@ -1,7 +1,7 @@
 #ifndef __ciri_vertexbuffer__
 #define __ciri_vertexbuffer__
 
-#include "../ErrorCodes.hpp"
+#include "../core/ErrorCodes.hpp"
 
 namespace ciri {
 	class IVertexBuffer {

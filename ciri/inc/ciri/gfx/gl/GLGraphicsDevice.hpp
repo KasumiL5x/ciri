@@ -122,6 +122,8 @@ namespace ciri {
 		//
 		std::vector<GLTextureCube*> _textureCubes;
 	};
+
+	IGraphicsDevice* createGraphicsDevice();
 } // ciri
 
 #endif /* __ciri_glgraphicsdevice__ */

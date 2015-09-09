@@ -2,13 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "ciri"
-		},
-		{
-			"path": "test"
-		},
-		{
-			"path": "ciri\\src"
+			"path": "."
 		}
 	]
 }

@@ -17,14 +17,14 @@ namespace ciri {
 			glBufferData(GL_UNIFORM_BUFFER, dataSize, data, GL_DYNAMIC_DRAW);
 			glBindBufferBase(GL_UNIFORM_BUFFER, _index, _ubo); // _index is set by the graphics device in the constructor
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
-			return err::CIRI_OK;
+			return err::ErrorCode::CIRI_OK;
 		}
 
 		glBindBuffer(GL_UNIFORM_BUFFER, _ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, dataSize, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		return err::CIRI_OK;
+		return err::ErrorCode::CIRI_OK;
 	}
 
 	void GLConstantBuffer::destroy() {
