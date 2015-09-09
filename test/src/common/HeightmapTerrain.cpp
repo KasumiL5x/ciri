@@ -399,7 +399,7 @@ void HeightmapTerrain::boxFilterHeightData( unsigned long width, unsigned long h
 
 std::string HeightmapTerrain::getVertexShaderGl() const {
 	return
-		"#version 330\n"
+		"#version 420\n"
 		""
 		"layout (location = 0) in vec3 in_position;\n"
 		"layout (location = 1) in vec3 in_normal;\n"
@@ -466,7 +466,7 @@ std::string HeightmapTerrain::getVertexShaderDx() const {
 
 std::string HeightmapTerrain::getPixelShaderGl() const {
 	return
-		"#version 330\n"
+		"#version 420\n"
 		""
 		"in vec3 vo_position;\n"
 		"in vec3 vo_normal;\n"
@@ -477,10 +477,10 @@ std::string HeightmapTerrain::getPixelShaderGl() const {
 		""
 		"out vec4 out_color;\n"
 		""
-		"uniform sampler2D Texture0;\n"
-		"uniform sampler2D Texture1;\n"
-		"uniform sampler2D Texture2;\n"
-		"uniform sampler2D Texture3;\n"
+		"layout(binding=0) uniform sampler2D Texture0;\n"
+		"layout(binding=1) uniform sampler2D Texture1;\n"
+		"layout(binding=2) uniform sampler2D Texture2;\n"
+		"layout(binding=3) uniform sampler2D Texture3;\n"
 		""
 		"vec3 AmbientLightColor = vec3(0.05333332f, 0.09882354f, 0.1819608f);\n"
 		"vec3 LightDirection = vec3(-0.5265408f, -0.5735765f,-0.6275069f);\n"

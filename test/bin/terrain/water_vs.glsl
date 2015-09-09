@@ -1,4 +1,4 @@
-#version 330
+#version 420
 
 layout (location = 0) in vec3 in_position;
 layout (location = 1) in vec3 in_normal;
@@ -8,6 +8,7 @@ layout (location = 3) in vec2 in_texcoord;
 layout (std140) uniform WaterConstants {
 	mat4 world;
 	mat4 xform;
+	mat4 reflectedViewProj;
 	vec3 campos;
 	float time;
 };
@@ -18,6 +19,8 @@ out vec3 vo_campos;
 out vec2 vo_bumpTexcoords;
 out vec3 vo_cubeTexcoords;
 out float vo_waveHeight;
+out vec4 vo_reflectionTexcoords;
+out vec4 vo_refractionTexcoords;
 
 // -*- water variables -*-
 float waveLength = 0.5f;
@@ -49,6 +52,13 @@ void main() {
 	vec3 V = normalize(vo_position - campos);
 	vec3 RV = normalize(reflect(V, vo_normal));
 	vo_cubeTexcoords = vec3(RV.x, -RV.y, RV.z);
+
+	// calculate reflection texcoords
+	mat4 reflectionMatrix = reflectedViewProj * world;
+	vo_reflectionTexcoords = reflectionMatrix * vec4(in_position, 1.0f);
+
+	// calculate refraction texcoords
+	vo_refractionTexcoords = xform * vec4(in_position, 1.0f);
 
 	// water variables
 	vo_waveHeight = waveHeight;

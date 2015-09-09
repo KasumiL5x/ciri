@@ -1,4 +1,4 @@
-#version 330
+#version 420
 
 layout (std140) uniform MaterialConstants {
 	vec3 diffuseColor;

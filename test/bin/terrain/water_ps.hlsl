@@ -50,14 +50,14 @@ float4 main( Input input ) : SV_Target {
 	float2 reflectionCoords;
 	reflectionCoords.x =  input.reflectionTexcoords.x / input.reflectionTexcoords.w / 2.0f + 0.5f;// * 0.5f + 0.5f;
 	reflectionCoords.y = -input.reflectionTexcoords.y / input.reflectionTexcoords.w / 2.0f + 0.5f;// * 0.5f + 0.5f;
-	reflectionCoords += perturb;
+	reflectionCoords += perturb.xy;
 	float4 reflectionColor = ReflectionTexture.Sample(ReflectionSampler, reflectionCoords);
 
 	// scene refraction
 	float2 refractionCoords;
 	refractionCoords.x =  input.refractionTexcoords.x / input.refractionTexcoords.w / 2.0f + 0.5f;
 	refractionCoords.y = -input.refractionTexcoords.y / input.refractionTexcoords.w / 2.0f + 0.5f;
-	refractionCoords += perturb;
+	refractionCoords += perturb.xy;
 	float4 refractionColor = RefractionTexture.Sample(ReflectionSampler, refractionCoords);
 
 	// fresnel factor

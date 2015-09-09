@@ -21,7 +21,7 @@ DemoConfig TerrainDemo::getConfig() {
 	cfg.windowTitle = "ciri : Terrain Demo";
 	cfg.windowWidth = 1280;
 	cfg.windowHeight = 720;
-	cfg.deviceType = ciri::GraphicsDeviceFactory::DirectX;
+	cfg.deviceType = ciri::GraphicsDeviceFactory::OpenGL;
 	return cfg;
 }
 

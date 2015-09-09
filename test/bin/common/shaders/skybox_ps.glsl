@@ -1,6 +1,6 @@
-#version 330
+#version 420
 
-uniform samplerCube SkyboxTexture;
+layout(binding=0) uniform samplerCube SkyboxTexture;
 
 // in vec3 vo_texcoord;
 smooth in vec3 vo_texcoord;

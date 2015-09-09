@@ -223,38 +223,44 @@ namespace ciri {
 	}
 
 	void GLShader::processUniforms() {
+		// NOTE: It turns out that NVIDIA reorder the samplers (e.g. a samplerCube specified in the middle
+		//       of other sampler2Ds will be reordered to the bottom) which completely breaks automatic
+		//       binding using indices, as the shader's index is not the same as the reodered one after
+		//       compilation.  Due to that, it is expected that all shaders now write their binding location
+		//       by hand, akin to DirectX's register(...) command.  Fuck you, NVIDIA.  Fuck you.
+
 		// note: assumes program is linked correctly
 
-		glUseProgram(_program);
+		//glUseProgram(_program);
 
-		// get the number of uniforms
-		GLint numUniforms = 0;
-		glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &numUniforms);
+		//// get the number of uniforms
+		//GLint numUniforms = 0;
+		//glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &numUniforms);
 
-		// get max length of uniform
-		GLint maxUniformLength = 0;
-		glGetProgramiv(_program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLength);
+		//// get max length of uniform
+		//GLint maxUniformLength = 0;
+		//glGetProgramiv(_program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLength);
 
-		// will store the name of uniforms
-		GLchar* name = new GLchar[maxUniformLength];
+		//// will store the name of uniforms
+		//GLchar* name = new GLchar[maxUniformLength];
 
-		// total number of samplers
-		int samplerCount = 0;
+		//// total number of samplers
+		//int samplerCount = 0;
 
-		for( int i = 0; i < numUniforms; ++i ) {
-			GLsizei actualLength; GLint size; GLenum type;
-			glGetActiveUniform(_program, i, maxUniformLength, &actualLength, &size, &type, name);
+		//for( int i = 0; i < numUniforms; ++i ) {
+		//	GLsizei actualLength; GLint size; GLenum type;
+		//	glGetActiveUniform(_program, i, maxUniformLength, &actualLength, &size, &type, name);
 
-			// process all samplers
-			if( type >= GL_SAMPLER_1D && type <= GL_UNSIGNED_INT_SAMPLER_2D_RECT ) {
-				glUniform1i(glGetUniformLocation(_program, name), samplerCount);
-				samplerCount += 1;
-				continue;
-			}
-		}
+		//	// process all samplers
+		//	if( type >= GL_SAMPLER_1D && type <= GL_UNSIGNED_INT_SAMPLER_2D_RECT ) {
+		//		glUniform1i(glGetUniformLocation(_program, name), samplerCount);
+		//		samplerCount += 1;
+		//		continue;
+		//	}
+		//}
 
-		delete[] name;
-		name = nullptr;
+		//delete[] name;
+		//name = nullptr;
 
 		glUseProgram(0);
 	}

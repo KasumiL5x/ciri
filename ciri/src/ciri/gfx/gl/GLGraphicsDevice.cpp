@@ -809,11 +809,11 @@ namespace ciri {
 			contextFlags |= WGL_CONTEXT_DEBUG_BIT_ARB;
 		#endif
 		const int contextAttribs[] = {
-			WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
-			WGL_CONTEXT_MINOR_VERSION_ARB, 3,
+			WGL_CONTEXT_MAJOR_VERSION_ARB, 4, // need 4.2 for shader uniform location binding
+			WGL_CONTEXT_MINOR_VERSION_ARB, 2,
 			WGL_CONTEXT_FLAGS_ARB, contextFlags,
 			//WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, // not using VAOs; core requires?
 			0
 		};
 		_hglrc = wglCreateContextAttribsARB(_hdc, NULL, contextAttribs);
