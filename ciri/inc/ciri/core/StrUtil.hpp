@@ -1,31 +1,22 @@
-#ifndef __ciri_strutil__
-#define __ciri_strutil__
+#ifndef __ciri_core_strutil__
+#define __ciri_core_strutil__
 
 #include <string>
 #include <vector>
-#include <Windows.h>
+#include <codecvt>
 
 namespace ciri {
 	namespace strutil {
-		static std::wstring str2wstr( const std::string& str ) {
-			// http://stackoverflow.com/questions/27220/how-to-convert-stdstring-to-lpcwstr-in-c-unicode
-			const int sLength = (int)str.length() + 1;
-			const int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), sLength, 0, 0);
-			wchar_t* buf = new wchar_t[len];
-			MultiByteToWideChar(CP_ACP, 0, str.c_str(), sLength, buf, len);
-			std::wstring wstr(buf);
-			delete[] buf;
-			return wstr;
+		static std::wstring str2wstr_utf8( const std::string& str ) {
+			typedef std::codecvt_utf8<wchar_t> convert_typeX;
+			std::wstring_convert<convert_typeX, wchar_t> converterX;
+			return converterX.from_bytes(str);
 		}
 
-		static std::string wstr2str( const std::wstring& wstr ) {
-			const int sLength = (int)wstr.length() + 1;
-			const int len = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), sLength, 0, 0, 0, 0);
-			char* buf = new char[len];
-			WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), sLength, buf, len, 0, 0);
-			std::string str(buf);
-			delete[] buf;
-			return str;
+		static std::string wstr2str_utf8( const std::wstring& wstr ) {
+			typedef std::codecvt_utf8<wchar_t> convert_typeX;
+			std::wstring_convert<convert_typeX, wchar_t> converterX;
+			return converterX.to_bytes(wstr);
 		}
 
 		static std::vector<std::string>* split( const char* str, char delim, std::vector<std::string>* outVec ) {
@@ -55,6 +46,6 @@ namespace ciri {
 			return count;
 		}
 	} // strutil
-} // ciri
+} //ciri
 
-#endif /* __ciri_strutil__ */
+#endif /* __ciri_core_strutil__ */

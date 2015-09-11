@@ -1,5 +1,5 @@
-#ifndef __ciri_textureflags__
-#define __ciri_textureflags__
+#ifndef __ciri_gfx_texture_flags__
+#define __ciri_gfx_texture_flags__
 
 namespace ciri {
 	struct TextureFlags {
@@ -13,4 +13,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_textureflags__ */
+#endif /* __ciri_gfx_texture_flags__ */

@@ -15,7 +15,7 @@ void SimpleShader::operator delete( void* p ) {
 	_mm_free(p);
 }
 
-bool SimpleShader::create( ciri::IGraphicsDevice* device ) {
+bool SimpleShader::create( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	// create the shader
 	_shader = device->createShader();
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
@@ -25,25 +25,25 @@ bool SimpleShader::create( ciri::IGraphicsDevice* device ) {
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("common/shaders/simple_vs" + shaderExt);
 	const std::string psFile = ("common/shaders/simple_ps" + shaderExt);
-	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		return false;
 	}
 
 	// create constant buffers
 	_constantBuffer = device->createConstantBuffer();
-	if( ciri::err::failed(_constantBuffer->setData(sizeof(Constants), &_constants)) ) {
+	if( ciri::failed(_constantBuffer->setData(sizeof(Constants), &_constants)) ) {
 		return false;
 	}
 	_materialConstantsBuffer = device->createConstantBuffer();
-	if( ciri::err::failed(_materialConstantsBuffer->setData(sizeof(MaterialConstants), &_materialConstants)) ) {
+	if( ciri::failed(_materialConstantsBuffer->setData(sizeof(MaterialConstants), &_materialConstants)) ) {
 		return false;
 	}
 
 	// assign constant buffers
-	if( ciri::err::failed(_shader->addConstants(_constantBuffer, "SimpleConstants", ciri::ShaderStage::Vertex)) ){
+	if( ciri::failed(_shader->addConstants(_constantBuffer, "SimpleConstants", ciri::ShaderStage::Vertex)) ){
 		return false;
 	}
-	if( ciri::err::failed(_shader->addConstants(_materialConstantsBuffer, "MaterialConstants", ciri::ShaderStage::Pixel)) ) {
+	if( ciri::failed(_shader->addConstants(_materialConstantsBuffer, "MaterialConstants", ciri::ShaderStage::Pixel)) ) {
 		return false;
 	}
 
@@ -64,10 +64,10 @@ SimpleShader::MaterialConstants& SimpleShader::getMaterialConstants() {
 
 bool SimpleShader::updateConstants() {
 	bool success = true;
-	if( ciri::err::failed(_constantBuffer->setData(sizeof(Constants), &_constants)) ) {
+	if( ciri::failed(_constantBuffer->setData(sizeof(Constants), &_constants)) ) {
 		success = false;
 	}
-	if( ciri::err::failed(_materialConstantsBuffer->setData(sizeof(MaterialConstants), &_materialConstants)) ) {
+	if( ciri::failed(_materialConstantsBuffer->setData(sizeof(MaterialConstants), &_materialConstants)) ) {
 		success = false;
 	}
 	return success;

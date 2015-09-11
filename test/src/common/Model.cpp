@@ -117,7 +117,7 @@ bool Model::computeTangents() {
 	return true;
 }
 
-bool Model::build( ciri::IGraphicsDevice* device ) {
+bool Model::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	if( _vertexBuffer != nullptr ) {
 		return false;
 	}
@@ -127,7 +127,7 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 	}
 
 	_vertexBuffer = device->createVertexBuffer();
-	if( ciri::err::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), _dynamicVertex)) ) {
+	if( ciri::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), _dynamicVertex)) ) {
 		_vertexBuffer->destroy();
 		delete _vertexBuffer;
 		_vertexBuffer = nullptr;
@@ -136,7 +136,7 @@ bool Model::build( ciri::IGraphicsDevice* device ) {
 
 	if( _indices.size() > 0 ) {
 		_indexBuffer = device->createIndexBuffer();
-		if( ciri::err::failed(_indexBuffer->set(_indices.data(), _indices.size(), _dynamicIndex)) ) {
+		if( ciri::failed(_indexBuffer->set(_indices.data(), _indices.size(), _dynamicIndex)) ) {
 			_vertexBuffer->destroy();
 			delete _vertexBuffer;
 			_vertexBuffer = nullptr;
@@ -162,7 +162,7 @@ bool Model::updateBuffers( bool vertex, bool index ) {
 		if( !_dynamicVertex ) {
 			success = false;
 		} else {
-			if( ciri::err::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), true)) ) {
+			if( ciri::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), true)) ) {
 				success = false;
 			}
 		}
@@ -173,7 +173,7 @@ bool Model::updateBuffers( bool vertex, bool index ) {
 		if( !_dynamicIndex ) {
 			success = false;
 		} else {
-			if( ciri::err::failed(_indexBuffer->set(_indices.data(), _indices.size(), true)) ) {
+			if( ciri::failed(_indexBuffer->set(_indices.data(), _indices.size(), true)) ) {
 				success = false;
 			}
 		}

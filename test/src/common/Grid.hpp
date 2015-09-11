@@ -21,7 +21,7 @@ public:
 	Grid();
 	~Grid();
 
-	bool create( ciri::IGraphicsDevice* device );
+	bool create( std::shared_ptr<ciri::IGraphicsDevice> device );
 	bool updateConstants( const cc::Mat4f& xform );
 	void clean();
 	bool isValid() const;
@@ -43,7 +43,7 @@ private:
 	bool loadShader();
 
 private:
-	ciri::IGraphicsDevice* _device;
+	std::shared_ptr<ciri::IGraphicsDevice> _device;
 	//
 	bool _initialized;
 	//

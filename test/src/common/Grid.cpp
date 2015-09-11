@@ -8,7 +8,7 @@ Grid::Grid()
 Grid::~Grid() {
 }
 
-bool Grid::create( ciri::IGraphicsDevice* device ) {
+bool Grid::create( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	if( _initialized ) {
 		return false;
 	}
@@ -33,7 +33,7 @@ bool Grid::updateConstants( const cc::Mat4f& xform ) {
 	}
 
 	_constants.xform = xform;
-	return ciri::err::success(_constantBuffer->setData(sizeof(GridConstants), &_constants));
+	return ciri::success(_constantBuffer->setData(sizeof(GridConstants), &_constants));
 }
 
 void Grid::clean() {
@@ -162,7 +162,7 @@ void Grid::createVertices() {
 
 bool Grid::createBuffers() {
 	_vertexBuffer = _device->createVertexBuffer();
-	return ciri::err::success(_vertexBuffer->set(_gridVertices.data(), sizeof(GridVertex), _gridVertices.size(), false));
+	return ciri::success(_vertexBuffer->set(_gridVertices.data(), sizeof(GridVertex), _gridVertices.size(), false));
 }
 
 bool Grid::loadShader() {
@@ -172,7 +172,7 @@ bool Grid::loadShader() {
 		const std::string shaderExt = _device->getShaderExt();
 	const std::string vsFile = ("common/shaders/grid_vs" + shaderExt);
 	const std::string psFile = ("common/shaders/grid_ps" + shaderExt);
-	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to build the Grid shader:\n");
 		for( unsigned int i = 0; i < _shader->getErrors().size(); ++i ) {
 			printf("%s\n", _shader->getErrors()[i].msg.c_str());
@@ -181,11 +181,11 @@ bool Grid::loadShader() {
 	}
 
 	_constantBuffer = _device->createConstantBuffer();
-	if( ciri::err::failed(_constantBuffer->setData(sizeof(GridConstants), &_constants)) ) {
+	if( ciri::failed(_constantBuffer->setData(sizeof(GridConstants), &_constants)) ) {
 		return false;
 	}
 
-	if( ciri::err::failed(_shader->addConstants(_constantBuffer, "GridConstants", ciri::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_shader->addConstants(_constantBuffer, "GridConstants", ciri::ShaderStage::Vertex)) ) {
 		return false;
 	}
 

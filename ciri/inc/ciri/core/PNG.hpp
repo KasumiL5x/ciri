@@ -1,5 +1,5 @@
-#ifndef __ciri_png__
-#define __ciri_png__
+#ifndef __ciri_core_png__
+#define __ciri_core_png__
 
 namespace ciri {
 	class PNG {
@@ -24,6 +24,6 @@ namespace ciri {
 		unsigned int _bytesPerChannel;
 		unsigned int _channelsPerPixel;
 	};
-}
+} // ciri
 
-#endif /* __ciri_png__ */
+#endif /* __ciri_core_png__ */

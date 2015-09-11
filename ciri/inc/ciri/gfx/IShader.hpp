@@ -1,5 +1,5 @@
-#ifndef __ciri_ishader__
-#define __ciri_ishader__
+#ifndef __ciri_gfx_ishader__
+#define __ciri_gfx_ishader__
 
 #include "VertexElement.hpp"
 #include "../core/ErrorCodes.hpp"
@@ -10,12 +10,12 @@ namespace ciri {
 	class IShader {
 	public:
 		struct ShaderError {
-			err::ErrorCode code;
+			ErrorCode code;
 			std::string msg;
 
 			ShaderError() {
 			}
-			ShaderError( err::ErrorCode theCode, const std::string& theMsg )
+			ShaderError( ErrorCode theCode, const std::string& theMsg )
 				: code(theCode), msg(theMsg) {
 			}
 		};
@@ -37,18 +37,18 @@ namespace ciri {
 		 * @param vs Vertex shader file.  This must not be null.
 		 * @param gs Geometry shader file.  This can optionally be null.
 		 * @param ps Pixel shader file.  This must not be null.
-		 * @returns err::ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
+		 * @returns ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
 		 */
-		virtual err::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps )=0;
+		virtual ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps )=0;
 
 		/**
 		 * Builds the shader from memory.  Both the vertex shader and pixel shader must be valid, but the geometry shader is optional.
 		 * @param vs Vertex shader string.  This must not be null.
 		 * @param gs Geometry shader string.  This can optionally be null.
 		 * @param ps Pixel shader string.  This must not be null.
-		 * @returns err::ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
+		 * @returns ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
 		 */
-		virtual err::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps )=0;
+		virtual ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps )=0;
 
 		/**
 		 * Attaches a constant buffer to the shader at a specific stage.
@@ -56,9 +56,9 @@ namespace ciri {
 		 * @param buffer          Pointer to the IConstantBuffer to attach.
 		 * @param name            Name of the constant buffer in the shader.  This must already exist in the shader.
 		 * @param shaderTypeFlags Bitflag of ShaderStage to define which stage(s) the constant buffer is bound to.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags )=0;
+		virtual ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags )=0;
 
 		/**
 		 * Uninitializes the shader.
@@ -80,4 +80,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_ishader__ */
+#endif /* __ciri_gfx_ishader__ */

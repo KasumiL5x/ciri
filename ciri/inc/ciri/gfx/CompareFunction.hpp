@@ -1,5 +1,5 @@
-#ifndef __ciri_comparefunction__
-#define __ciri_comparefunction__
+#ifndef __ciri_gfx_compare_function__
+#define __ciri_gfx_compare_function__
 
 namespace ciri {
 	struct CompareFunction {
@@ -19,4 +19,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_comparefunction__ */
+#endif /* __ciri_gfx_compare_function__ */

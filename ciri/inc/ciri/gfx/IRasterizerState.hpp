@@ -1,5 +1,5 @@
-#ifndef __ciri_irasterizerstate__
-#define __ciri_irasterizerstate__
+#ifndef __ciri_gfx_irasterizerstate__
+#define __ciri_gfx_irasterizerstate__
 
 #include "FillMode.hpp"
 #include "CullMode.hpp"
@@ -34,4 +34,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_irasterizerstate__ */
+#endif /* __ciri_gfx_irasterizerstate__ */

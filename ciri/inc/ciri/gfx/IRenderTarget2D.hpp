@@ -1,5 +1,5 @@
-#ifndef __ciri_irendertarget2d__
-#define __ciri_irendertarget2d__
+#ifndef __ciri_gfx_irendertarget2d__
+#define __ciri_gfx_irendertarget2d__
 
 namespace ciri {
 	class ITexture2D;
@@ -25,4 +25,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_irendertarget2d__ */
+#endif /* __ciri_gfx_irendertarget2d__ */

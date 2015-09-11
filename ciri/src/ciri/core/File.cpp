@@ -61,8 +61,9 @@ namespace ciri {
 		ss << _stream.rdbuf();
 		return ss.str();
 	}
-
+	
 	bool File::isOpen() const {
 		return _stream.is_open();
 	}
+
 } // ciri

@@ -1,0 +1,58 @@
+-*-------------*-
+-*- Structure -*-
+-*-------------*-
+
+The ciri library is a mixture of platform-independent source code and platform-agnostic interfaces, with the latter
+having no formal definition directly within ciri.  What this means is that ciri provides interfaces for platform-specific
+code which is then linked in to ciri externally to provide concrete functionality.  For example, windows are created
+in very different ways on different platforms.  The traditional method is to have a large number of preprocessor checks
+in various files, which quickly gets painful to manage.  Instead, ciri opts for providing an interface for what a window
+should do, and then a library is linked in providing concrete functionality for that interface, as well as a method of
+instantiating the concretion.  ciri's window component on the Windows operating system could be linked in when compiling
+for Windows, and the window component of OS X could be linked in when appropriate; ciri does not care what is linked, as
+long as it implements what it needs to.
+	This separation means that ciri can be easily recompiled per platform.  The downside is that, on Windows, it no longer
+allows for switching between DirectX and OpenGL in the target application; ciri defines that dependent on what is linked.
+However, ciri was not intended to be a switchable library.
+	ciri's platform specific source code is self-contained within ciri's according folders (although this does not have to
+be the case) to simplify projects.  For example, ciri's input contains a 'win' folder of which contains headers or source
+files for the Windows implementation of input.  On platforms other than Windows, this folder can simply be ignored.
+Likewise, an OS X folder could be inserted at the same location for compilation on that platform.
+
+\--inc            -> 
+|  \--ciri        -> 
+|  |  \--core     -> 
+|  |  |  \--win   ->
+|  |  \--gfx      -> 
+|  |  |  \--win   ->
+|  |  |  |  \--dx ->
+|  |  |  |  \--gl ->
+|  |  \--input    ->
+|  |  |  \--win   -> 
+|  |  \--wnd      ->
+|  |  |  \--win   -> 
+\--lib            -> 
+\--proj           -> 
+|  \--ciri        -> 
+
+|  \--core_win    -> 
+|  \--gfx_dx_win  -> 
+|  \--gfx_gl_win  -> 
+|  \--input_win   -> 
+|  \--wnd_win     -> 
+\--src            -> 
+|  \--ciri        -> 
+|  |  \--core     -> 
+|  |  |  \--win   ->
+|  |  \--gfx      -> 
+|  |  |  \--win   ->
+|  |  \--input    -> 
+|  |  |  \--win   ->
+|  |  \--wnd      -> 
+|  |  |  \--win   ->
+\--thirdparty     -> 
+|  \--ccmath      -> 
+|  \--glew-1.11.0 -> 
+|  \--lpng1618    -> 
+|  \--zlib-1.2.8  -> 
+\--tmp            -> 

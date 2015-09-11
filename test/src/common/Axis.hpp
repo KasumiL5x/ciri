@@ -31,7 +31,7 @@ public:
 	ciri::IShader* getShader() const;
 	bool isValid() const;
 
-	bool create( float length, ciri::IGraphicsDevice* device );
+	bool create( float length, std::shared_ptr<ciri::IGraphicsDevice> device );
 	bool updateConstants( const cc::Mat4f& xform );
 
 private:

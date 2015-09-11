@@ -1,5 +1,5 @@
-#ifndef __ciri_camera__
-#define __ciri_camera__
+#ifndef __ciri_gfx_camera__
+#define __ciri_gfx_camera__
 
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
@@ -57,4 +57,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_camera__ */
+#endif /* __ciri_gfx_camera__ */

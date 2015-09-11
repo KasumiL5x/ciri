@@ -1,5 +1,5 @@
-#ifndef __ciri_iconstantbuffer__
-#define __ciri_iconstantbuffer__
+#ifndef __ciri_gfx_iconstantbuffer__
+#define __ciri_gfx_iconstantbuffer__
 
 #include <ciri/core/ErrorCodes.hpp>
 
@@ -16,9 +16,9 @@ namespace ciri {
 		 * Sets or updates the contents of the constant buffer.
 		 * @param dataSize Size in bytes of the data.
 		 * @param data     Pointer to the data to set.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode setData( int dataSize, void* data )=0;
+		virtual ErrorCode setData( int dataSize, void* data )=0;
 
 		/**
 		 * Uninitializes the constant buffer.
@@ -27,4 +27,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_iconstantbuffer__ */
+#endif /* __ciri_gfx_iconstantbuffer__ */

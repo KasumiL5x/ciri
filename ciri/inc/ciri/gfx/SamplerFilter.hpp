@@ -1,5 +1,5 @@
-#ifndef __ciri_samplerfilter__
-#define __ciri_samplerfilter__
+#ifndef __ciri_gfx_sampler_filter__
+#define __ciri_gfx_sampler_filter__
 
 namespace ciri {
 	struct SamplerFilter {
@@ -25,6 +25,6 @@ namespace ciri {
 			MinPointMagLinearMipPoint   /**< min=point; mag=linear; mip=point. */
 		};
 	};
-}
+} // ciri
 
-#endif /* __ciri_samplerfilter__ */
+#endif /* __ciri_gfx_sampler_filter__ */

@@ -1,5 +1,5 @@
-#ifndef __ciri_blendfunction__
-#define __ciri_blendfunction__
+#ifndef __ciri_gfx_blend_function__
+#define __ciri_gfx_blend_function__
 
 namespace ciri {
 	/**
@@ -14,4 +14,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_blendfunction__ */
+#endif /* __ciri_gfx_blend_function__ */

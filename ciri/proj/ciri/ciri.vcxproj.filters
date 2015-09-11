@@ -2,8 +2,217 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\Ciri.hpp" />
+    <ClInclude Include="..\..\inc\ciri\wnd\IWindow.hpp">
+      <Filter>inc\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\wnd\WindowEvent.hpp">
+      <Filter>inc\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\ITimer.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\File.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\TGA.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\PNG.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\Log.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\StrUtil.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\ErrorCodes.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\input\Keyboard.hpp">
+      <Filter>inc\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\input\IInput.hpp">
+      <Filter>inc\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\input\Mouse.hpp">
+      <Filter>inc\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\BlendColorMask.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\BlendFunction.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\BlendMode.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\Camera.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\ClearFlags.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\CompareFunction.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\CullMode.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\FillMode.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\FPSCamera.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\GraphicsApiType.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IBlendState.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IConstantBuffer.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IDepthStencilState.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IGraphicsDevice.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IIndexBuffer.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IRasterizerState.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IRenderTarget2D.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\ISamplerState.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IShader.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\ITexture2D.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\ITextureCube.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\IVertexBuffer.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\MayaCamera.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\ObjModel.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\Plane.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\PrimitiveTopology.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\SamplerFilter.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\SamplerWrap.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\ShaderStage.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\StencilOperation.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\TextureFlags.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\TextureFormat.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexDeclaration.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexElement.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexFormat.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexUsage.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\Ciri.cpp" />
+    <ClCompile Include="..\..\src\ciri\core\File.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\TGA.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\PNG.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\Log.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\Camera.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\FPSCamera.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\MayaCamera.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\ObjModel.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\Plane.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\VertexDeclaration.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\VertexElement.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{9fdc9b71-4e5c-4b97-9f85-540e2142f759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{edc83f62-096b-41a4-834d-45b1bea414c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\wnd">
+      <UniqueIdentifier>{8685d89f-b164-484d-b4c3-a64e2f97070d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\wnd">
+      <UniqueIdentifier>{928afddf-5739-4e2e-880d-0f14b5693938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core">
+      <UniqueIdentifier>{d93e0f43-a51c-4408-9096-dbedb82cd6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{659d3742-497a-4767-857b-857e0407c30a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\input">
+      <UniqueIdentifier>{94bbd987-49ef-4930-ac49-95b189b6bb56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\input">
+      <UniqueIdentifier>{12d60a84-5fe5-4eab-b41c-84ed9fbbbd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\gfx">
+      <UniqueIdentifier>{8c2dcf75-14e9-4623-8ba6-12ad2eef3698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gfx">
+      <UniqueIdentifier>{0423fa3d-6a04-454f-9001-0cd8b70f9c9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

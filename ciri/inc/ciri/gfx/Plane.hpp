@@ -1,5 +1,5 @@
-#ifndef __ciri_plane__
-#define __ciri_plane__
+#ifndef __ciri_gfx_plane__
+#define __ciri_gfx_plane__
 
 #include <cc/Vec3.hpp>
 #include <cc/Vec4.hpp>
@@ -27,4 +27,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_plane__ */
+#endif /* __ciri_gfx_plane__ */

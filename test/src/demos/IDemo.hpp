@@ -1,9 +1,11 @@
 #ifndef __idemo__
 #define __idemo__
 
+#include <memory>
 #include <string>
-#include <ciri/core/Window.hpp>
+#include <ciri/wnd/IWindow.hpp>
 #include <ciri/gfx/IGraphicsDevice.hpp>
+#include <ciri/input/IInput.hpp>
 
 struct DemoConfig {
 	std::string windowTitle;
@@ -19,12 +21,13 @@ struct DemoConfig {
 class IDemo {
 private:
 	bool _shouldGtfo;
-	ciri::IGraphicsDevice* _graphicsDevice;
-	ciri::Window* _window;
+	std::shared_ptr<ciri::IGraphicsDevice> _graphicsDevice;
+	std::shared_ptr<ciri::IWindow> _window;
+	std::shared_ptr<ciri::IInput> _input;
 
 public:
 	IDemo()
-		: _shouldGtfo(false), _graphicsDevice(nullptr), _window(nullptr) {
+		: _shouldGtfo(false), _graphicsDevice(nullptr), _window(nullptr), _input(nullptr) {
 	}
 	virtual ~IDemo() {
 	}
@@ -33,14 +36,14 @@ public:
 	 * Sets the graphics device.  This should never be called by implementing demos.
 	 * @param device Pointer to the graphics device.
 	 */
-	void setGraphicsDevice( ciri::IGraphicsDevice* device ) {
+	void setGraphicsDevice( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 		_graphicsDevice = device;
 	}
 
 	/**
 	 * Gets the graphics device.
 	 */
-	ciri::IGraphicsDevice* graphicsDevice() const {
+	std::shared_ptr<ciri::IGraphicsDevice> graphicsDevice() const {
 		return _graphicsDevice;
 	}
 
@@ -48,15 +51,30 @@ public:
 	 * Sets the window.  This should never be called by implementing demos.
 	 * @param window Pointer to the window.
 	 */
-	void setWindow( ciri::Window* window ) {
+	void setWindow( std::shared_ptr<ciri::IWindow> window ) {
 		_window = window;
 	}
 
 	/**
 	 * Gets the window.
 	 */
-	ciri::Window* window() const {
+	std::shared_ptr<ciri::IWindow> window() const {
 		return _window;
+	}
+
+	/**
+	 * Sets the input.  This should never be called by implementing demos.
+	 * @param input Pointer to the input.
+	 */
+	void setInput( std::shared_ptr<ciri::IInput> input ) {
+		_input = input;
+	}
+
+	/**
+	 * Gets the input.
+	 */
+	std::shared_ptr<ciri::IInput> input() const {
+		return _input;
 	}
 
 	/**

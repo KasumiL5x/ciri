@@ -3,7 +3,6 @@
 
 #include "../IDemo.hpp"
 #include <ciri/gfx/FPSCamera.hpp>
-#include <ciri/core/Input.hpp>
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"
@@ -50,9 +49,6 @@ private:
 
 private:
 	ciri::FPSCamera _camera;
-	//
-	ciri::KeyboardState _prevKeyState;
-	ciri::MouseState _prevMouseState;
 	//
 	ciri::IDepthStencilState* _depthStencilState;
 	ciri::IRasterizerState* _rasterizerState;

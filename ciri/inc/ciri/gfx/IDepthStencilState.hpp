@@ -1,5 +1,5 @@
-#ifndef __ciri_idepthstencilstate__
-#define __ciri_idepthstencilstate__
+#ifndef __ciri_gfx_idepthstencilstate__
+#define __ciri_gfx_idepthstencilstate__
 
 #include "CompareFunction.hpp"
 #include "StencilOperation.hpp"
@@ -65,4 +65,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_idepthstencilstate__ */
+#endif /* __ciri_gfx_idepthstencilstate__ */

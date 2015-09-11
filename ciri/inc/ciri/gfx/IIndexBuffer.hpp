@@ -1,7 +1,7 @@
-#ifndef __ciri_iindexbuffer__
-#define __ciri_iindexbuffer__
+#ifndef __ciri_gfx_iindexbuffer__
+#define __ciri_gfx_iindexbuffer__
 
-#include "../core/ErrorCodes.hpp"
+#include <ciri/core/ErrorCodes.hpp>
 
 namespace ciri {
 	class IIndexBuffer {
@@ -16,9 +16,9 @@ namespace ciri {
 		 * @param indices    Pointer to index array.
 		 * @param indexCount Total number of indices in the array.
 		 * @param dynamic    True if the buffer is dynamic; i.e. will be updated.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode set( int* indices, int indexCount, bool dynamic )=0;
+		virtual ErrorCode set( int* indices, int indexCount, bool dynamic )=0;
 
 		/**
 		 * Uninitializes the index buffer.
@@ -33,4 +33,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_iindexbuffer__ */
+#endif /* __ciri_gfx_iindexbuffer__ */

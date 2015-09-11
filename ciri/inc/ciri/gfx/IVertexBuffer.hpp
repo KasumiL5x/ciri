@@ -1,7 +1,7 @@
-#ifndef __ciri_vertexbuffer__
-#define __ciri_vertexbuffer__
+#ifndef __ciri_gfx_ivertexbuffer__
+#define __ciri_gfx_ivertexbuffer__
 
-#include "../core/ErrorCodes.hpp"
+#include <ciri/core/ErrorCodes.hpp>
 
 namespace ciri {
 	class IVertexBuffer {
@@ -17,9 +17,9 @@ namespace ciri {
 		 * @param vertexStride Size in bytes of a single vertex.
 		 * @param vertexCount  Total number of vertices in the array.
 		 * @param dynamic      True if the buffer is dynamic; i.e. will be updated.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic )=0;
+		virtual ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic )=0;
 
 		/**
 		 * Uninitializes the vertex buffer.
@@ -40,4 +40,4 @@ namespace ciri {
 	};
 } //ciri
 
-#endif /* __ciri_vertexbuffer__ */
+#endif /* __ciri_gfx_ivertexbuffer__ */

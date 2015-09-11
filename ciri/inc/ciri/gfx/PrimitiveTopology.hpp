@@ -1,5 +1,5 @@
-#ifndef __ciri_primitivetopology__
-#define __ciri_primitivetopology__
+#ifndef __ciri_gfx_primitive_topology__
+#define __ciri_gfx_primitive_topology__
 
 namespace ciri {
 	struct PrimitiveTopology {
@@ -16,4 +16,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_primitivetopology__ */
+#endif /* __ciri_gfx_primitive_topology__ */

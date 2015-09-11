@@ -1,5 +1,5 @@
-#ifndef __ciri_fillmode__
-#define __ciri_fillmode__
+#ifndef __ciri_gfx_fill_mode__
+#define __ciri_gfx_fill_mode__
 
 namespace ciri {
 	struct FillMode {
@@ -13,4 +13,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_fillmode__ */
+#endif /* __ciri_gfx_fill_mode__ */

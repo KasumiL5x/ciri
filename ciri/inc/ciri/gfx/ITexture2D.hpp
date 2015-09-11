@@ -1,5 +1,5 @@
-#ifndef __ciri_itexture__
-#define __ciri_itexture__
+#ifndef __ciri_gfx_itexture2d__
+#define __ciri_gfx_itexture2d__
 
 #include "TextureFlags.hpp"
 #include "TextureFormat.hpp"
@@ -26,9 +26,9 @@ namespace ciri {
 		 * @param height  Number of vertical pixels from yOffset to set.
 		 * @param data    Pointer to appropriately typed data forming the region specified by the offsets and dimensions.
 		 * @param format  Format of the data to set; must match the format of the provided data pointer.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format )=0;
+		virtual ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format )=0;
 
 		/**
 		 * Gets the width of the texture
@@ -45,17 +45,17 @@ namespace ciri {
 		/**
 		 * Writes the texture's contents to a TGA file.
 		 * @param file TGA file to write to.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode writeToTGA( const char* file )=0;
+		virtual ErrorCode writeToTGA( const char* file )=0;
 
 		/**
 		 * Writes the texture's contents to a DDS file.
 		 * @param file DDS file to write to.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode writeToDDS( const char* file )=0;
+		virtual ErrorCode writeToDDS( const char* file )=0;
 	};
 } // ciri
 
-#endif /* __ciri_itexture__ */
+#endif /* __ciri_gfx_itexture2d__ */

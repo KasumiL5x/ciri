@@ -1,5 +1,5 @@
-#ifndef __ciri_blendmode__
-#define __ciri_blendmode__
+#ifndef __ciri_gfx_blend_mode__
+#define __ciri_gfx_blend_mode__
 
 namespace ciri {
 	/**
@@ -22,4 +22,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_blendmode__ */
+#endif /* __ciri_gfx_blend_mode__ */

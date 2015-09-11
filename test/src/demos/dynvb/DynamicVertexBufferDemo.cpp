@@ -10,6 +10,14 @@ DynamicVertexBufferDemo::DynamicVertexBufferDemo()
 DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
 }
 
+void* DynamicVertexBufferDemo::operator new( size_t i ) {
+	return _mm_malloc(i, 16); // allocate aligned to 16
+}
+
+void DynamicVertexBufferDemo::operator delete( void* p ) {
+	_mm_free(p);
+}
+
 DemoConfig DynamicVertexBufferDemo::getConfig() {
 	DemoConfig cfg;
 	cfg.windowTitle = "ciri : Dynamic Vertex Buffer Demo";
@@ -23,11 +31,8 @@ void DynamicVertexBufferDemo::onInitialize() {
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
 	printf("API: %s\n", graphicsDevice()->getApiInfo());
 
-	// window size
-	const cc::Vec2ui windowSize = window()->getSize();
-
 	// configure the camera
-	_camera.setAspect((float)windowSize.x / (float)windowSize.y);
+	_camera.setAspect((float)window()->getWidth() / (float)window()->getHeight());
 	_camera.setPlanes(0.1f, 1000.0f);
 	_camera.setYaw(238.9f);
 	_camera.setPitch(16.4f);
@@ -39,7 +44,7 @@ void DynamicVertexBufferDemo::onInitialize() {
 }
 
 void DynamicVertexBufferDemo::onLoadContent() {
-	ciri::IGraphicsDevice* device = graphicsDevice();
+	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	ciri::DepthStencilDesc depthDesc;
 	_depthStencilState = device->createDepthStencilState(depthDesc);
@@ -87,7 +92,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
-			if( graphicsDevice()->resize() != ciri::err::ErrorCode::CIRI_OK ) {
+			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
 				printf("Failed to resize default render targets.\n");
 			}
 			break;
@@ -96,20 +101,14 @@ void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 }
 
 void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
-	// get current input states
-	ciri::KeyboardState currKeyState;
-	ciri::MouseState currMouseState;
-	ciri::Input::getKeyboardState(&currKeyState);
-	ciri::Input::getMouseState(&currMouseState, window());
-
 	// check for close w/ escape
-	if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
+	if( input()->isKeyDown(ciri::Key::Escape) ) {
 		this->gtfo();
 		return;
 	}
 
 	// debug camera info
-	if( currKeyState.isKeyDown(ciri::Keyboard::F9) && _prevKeyState.isKeyUp(ciri::Keyboard::F9) ) {
+	if( input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
 		const cc::Vec3f& pos = _camera.getPosition();
 		const float yaw = _camera.getYaw();
 		const float pitch = _camera.getPitch();
@@ -119,45 +118,41 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	}
 
 	// camera movement
-	if( currKeyState.isKeyDown(ciri::Keyboard::LAlt) ) {
+	if( input()->isKeyDown(ciri::Key::LAlt) ) {
 		// rotation
-		if( currMouseState.isButtonDown(ciri::MouseButton::Left) ) {
-			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
-			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
+		if( input()->isMouseButtonDown(ciri::MouseButton::Left) ) {
+			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
+			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			_camera.rotateYaw(-dx);
 			_camera.rotatePitch(-dy);
 		}
 		// dolly
-		if( currMouseState.isButtonDown(ciri::MouseButton::Right) ) {
-			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
-			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
+		if( input()->isMouseButtonDown(ciri::MouseButton::Right) ) {
+			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
+			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			const float val = (fabsf(dx) > fabsf(dy)) ? dx : dy;
 			_camera.dolly(val);
 		}
 		// pan
-		if( currMouseState.isButtonDown(ciri::MouseButton::Middle) ) {
-			const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
-			const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
+		if( input()->isMouseButtonDown(ciri::MouseButton::Middle) ) {
+			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
+			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			_camera.pan(dx, -dy);
 		}
 	}
-	_camera.update(deltaTime);
+	_camera.update(static_cast<float>(deltaTime));
 
 	// update cloth
-	if( currKeyState.isKeyDown(ciri::Keyboard::P) && _prevKeyState.isKeyUp(ciri::Keyboard::P) ) {
+	if( input()->isKeyDown(ciri::Key::P) && input()->wasKeyUp(ciri::Key::P) ) {
 		_clothRunning = !_clothRunning;
 	}
 	if( _clothRunning ) {
-		_cloth.update(deltaTime);
+		_cloth.update(static_cast<float>(deltaTime));
 	}
-
-	// update previous input states
-	_prevKeyState = currKeyState;
-	_prevMouseState = currMouseState;
 }
 
 void DynamicVertexBufferDemo::onDraw() {
-	ciri::IGraphicsDevice* device = graphicsDevice();
+	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 	device->setDepthStencilState(_depthStencilState);

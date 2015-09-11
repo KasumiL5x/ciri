@@ -35,7 +35,7 @@ public:
 	void setDamping( float damping );
 	void setSpringParams( float structKs, float structKd, float shearKs, float shearKd, float bendKs, float bendKd );
 	void setGravity( const cc::Vec3f& gravity );
-	void build( ciri::IGraphicsDevice* device );
+	void build( std::shared_ptr<ciri::IGraphicsDevice> device );
 	void update( float deltaTime );
 	void clean();
 
@@ -63,7 +63,7 @@ private:
 private:
 	bool _built;
 	//
-	ciri::IGraphicsDevice* _device;
+	std::shared_ptr<ciri::IGraphicsDevice> _device;
 	ciri::IVertexBuffer* _vertexBuffer;
 	ciri::IIndexBuffer* _indexBuffer;
 	Vertex* _vertices;

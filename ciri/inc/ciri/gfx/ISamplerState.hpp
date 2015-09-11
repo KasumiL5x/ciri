@@ -1,5 +1,5 @@
-#ifndef __ciri_isamplerstate__
-#define __ciri_isamplerstate__
+#ifndef __ciri_gfx_isamplerstate__
+#define __ciri_gfx_isamplerstate__
 
 #include "CompareFunction.hpp"
 #include "SamplerWrap.hpp"
@@ -46,4 +46,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_isamplerstate__ */
+#endif /* __ciri_gfx_isamplerstate__ */

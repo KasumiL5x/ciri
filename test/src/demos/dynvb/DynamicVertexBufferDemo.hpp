@@ -4,7 +4,6 @@
 #include <string>
 #include "../IDemo.hpp"
 #include <ciri/gfx/MayaCamera.hpp>
-#include <ciri/core/Input.hpp>
 #include "../../common/Grid.hpp"
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"
@@ -20,6 +19,8 @@ private:
 public:
 	DynamicVertexBufferDemo();
 	virtual ~DynamicVertexBufferDemo();
+	void* operator new( size_t i );
+	void operator delete( void* p );
 
 	virtual DemoConfig getConfig();
 	virtual void onInitialize();
@@ -31,9 +32,6 @@ public:
 
 private:
 	ciri::MayaCamera _camera;
-	//
-	ciri::KeyboardState _prevKeyState;
-	ciri::MouseState _prevMouseState;
 	//
 	ciri::IDepthStencilState* _depthStencilState;
 	ciri::IRasterizerState* _rasterizerState;

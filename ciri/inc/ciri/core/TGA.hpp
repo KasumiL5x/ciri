@@ -1,5 +1,5 @@
-#ifndef __ciri_tga__
-#define __ciri_tga__
+#ifndef __ciri_core_tga__
+#define __ciri_core_tga__
 
 namespace ciri {
 	class TGA {
@@ -92,4 +92,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_tga__ */
+#endif /* __ciri_core_tga__ */

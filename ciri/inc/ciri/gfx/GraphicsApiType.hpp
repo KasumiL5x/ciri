@@ -1,5 +1,5 @@
-#ifndef __ciri_graphicsapitype__
-#define __ciri_graphicsapitype__
+#ifndef __ciri_gfx_graphics_api_type__
+#define __ciri_gfx_graphics_api_type__
 
 namespace ciri {
 	struct GraphicsApiType {
@@ -10,4 +10,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_graphicsapitype__ */
+#endif /* __ciri_gfx_graphics_api_type__ */

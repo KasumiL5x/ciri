@@ -7,7 +7,7 @@
 
 namespace modelgen {
 	// width; height; depth; u-scale; v-scale
-	static Model* createCube( ciri::IGraphicsDevice* device, float w, float h, float d, float us, float vs, bool ccw=true ) {
+	static Model* createCube( std::shared_ptr<ciri::IGraphicsDevice> device, float w, float h, float d, float us, float vs, bool ccw=true ) {
 		Model* model = new Model();
 
 		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
@@ -95,7 +95,7 @@ namespace modelgen {
 		return model;
 	}
 	
-	static Model* createFullscreenQuad( ciri::IGraphicsDevice* device ) {
+	static Model* createFullscreenQuad( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 		Model* model = new Model();
 		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f, 0.0f), cc::Vec3f(), cc::Vec2f()));
 		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, 0.0f), cc::Vec3f(), cc::Vec2f()));
@@ -119,7 +119,7 @@ namespace modelgen {
 		return model;
 	}
 
-	static Model* createPlane( ciri::IGraphicsDevice* device, float width, float height, int divsX=0, int divsY=0, float uScale=1.0f, float vScale=1.0f, bool dynamicVertex=false, bool dynamicIndex=false ) {
+	static Model* createPlane( std::shared_ptr<ciri::IGraphicsDevice> device, float width, float height, int divsX=0, int divsY=0, float uScale=1.0f, float vScale=1.0f, bool dynamicVertex=false, bool dynamicIndex=false ) {
 		// add 1 such that asking for 1 division will add a split in the middle; asking for 0 returns just a quad
 		divsX += 1;
 		divsY += 1;

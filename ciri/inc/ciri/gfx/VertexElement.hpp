@@ -1,5 +1,5 @@
-#ifndef __ciri_vertexelement__
-#define __ciri_vertexelement__
+#ifndef __ciri_gfx_vertex_element__
+#define __ciri_gfx_vertex_element__
 
 #include "VertexFormat.hpp"
 #include "VertexUsage.hpp"
@@ -48,4 +48,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_vertexelement__ */
+#endif /* __ciri_gfx_vertex_element__ */

@@ -1,5 +1,5 @@
-#ifndef __ciri_shaderstage__
-#define __ciri_shaderstage__
+#ifndef __ciri_gfx_shaderstage__
+#define __ciri_gfx_shaderstage__
 
 namespace ciri {
 	struct ShaderStage {
@@ -15,4 +15,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_shaderstage__ */
+#endif /* __ciri_gfx_shaderstage__ */

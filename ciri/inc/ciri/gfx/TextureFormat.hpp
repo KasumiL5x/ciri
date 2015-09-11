@@ -1,5 +1,5 @@
-#ifndef __ciri_textureformat__
-#define __ciri_textureformat__
+#ifndef __ciri_gfx_texture_format__
+#define __ciri_gfx_texture_format__
 
 namespace ciri {
 	struct TextureFormat {
@@ -47,4 +47,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_textureformat__ */
+#endif /* __ciri_gfx_texture_format__ */

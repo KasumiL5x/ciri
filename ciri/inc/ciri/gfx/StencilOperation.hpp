@@ -1,5 +1,5 @@
-#ifndef __ciri_stenciloperation__
-#define __ciri_stenciloperation__
+#ifndef __ciri_gfx_stencil_operation__
+#define __ciri_gfx_stencil_operation__
 
 namespace ciri {
 	struct StencilOperation {
@@ -19,4 +19,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_stenciloperation__ */
+#endif /* __ciri_gfx_stencil_operation__ */

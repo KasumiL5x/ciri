@@ -1,5 +1,5 @@
-#ifndef __ciri_blendcolormask__
-#define __ciri_blendcolormask__
+#ifndef __ciri_gfx_blend_color_mask__
+#define __ciri_gfx_blend_color_mask__
 
 namespace ciri {
 	/**
@@ -15,14 +15,6 @@ namespace ciri {
 			All   = (Red | Green | Blue | Alpha) /**< All channels. */
 		};
 	};
-	//enum class BlendColorMask {
-	//	None  = 0,        /**< No channels. */
-	//	Red   = (1 << 0), /**< Red channel. */
-	//	Green = (1 << 1), /**< Green channel. */
-	//	Blue  = (1 << 2), /**< Blue channel. */
-	//	Alpha = (1 << 3), /**< Alpha channel. */
-	//	All   = (Red | Green | Blue | Alpha) /**< All channels. */
-	//};
 } // ciri
 
-#endif /* __ciri_blendcolormask__ */
+#endif /* __ciri_gfx_blend_color_mask__ */

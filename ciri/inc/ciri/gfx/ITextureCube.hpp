@@ -1,7 +1,7 @@
-#ifndef __ciri_itexturecube__
-#define __ciri_itexturecube__
+#ifndef __ciri_gfx_itexturecube__
+#define __ciri_gfx_itexturecube__
 
-#include "../core/ErrorCodes.hpp"
+#include <ciri/core/ErrorCodes.hpp>
 
 namespace ciri {
 	class ITextureCube {
@@ -11,10 +11,10 @@ namespace ciri {
 		virtual ~ITextureCube() {
 		}
 
-		virtual err::ErrorCode set( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz )=0;
+		virtual ErrorCode set( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz )=0;
 
 		virtual void destroy()=0;
 	};
 } // ciri
 
-#endif/* __ciri_itexturecube__ */
+#endif /* __ciri_gfx_itexturecube__ */

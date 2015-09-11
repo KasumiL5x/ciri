@@ -1,5 +1,5 @@
-#ifndef __ciri_clearflags__
-#define __ciri_clearflags__
+#ifndef __ciri_gfx_clear_flags__
+#define __ciri_gfx_clear_flags__
 
 namespace ciri {
 	struct ClearFlags {
@@ -14,4 +14,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_clearflags__ */
+#endif /* __ciri_gfx_clear_flags__ */

@@ -1,5 +1,5 @@
-#ifndef __ciri_samplerwrap__
-#define __ciri_samplerwrap__
+#ifndef __ciri_gfx_sampler_wrap__
+#define __ciri_gfx_sampler_wrap__
 
 namespace ciri {
 	struct SamplerWrap {
@@ -16,4 +16,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_samplerwrap__ */
+#endif /* __ciri_gfx_sampler_wrap__ */

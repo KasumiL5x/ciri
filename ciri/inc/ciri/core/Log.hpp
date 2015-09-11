@@ -1,5 +1,5 @@
-#ifndef __ciri_log__
-#define __ciri_log__
+#ifndef __ciri_core_log__
+#define __ciri_core_log__
 
 #include <string>
 #include <unordered_map>
@@ -100,4 +100,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_log__ */
+#endif /* __ciri_core_log__ */

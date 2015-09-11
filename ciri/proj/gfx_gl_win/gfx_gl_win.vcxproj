@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B0D8CA3B-3B77-48BA-9B19-5020DE03FAAD}</ProjectGuid>
+    <RootNamespace>gfx_gl_win</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>gfx-d</TargetName>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>gfx</TargetName>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>OpenGL32.lib;glu32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>OpenGL32.lib;glu32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\CheckGLError.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\CiriToGl.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLBlendState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLConstantBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLDepthStencilState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLGraphicsDevice.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLIndexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLRasterizerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLRenderTarget2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLSamplerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLShader.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLTexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLTextureCube.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLVertexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLVertexDeclaration.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLBlendState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLConstantBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLDepthStencilState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLGraphicsDevice.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLIndexBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLRasterizerState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLRenderTarget2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLSamplerState.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLShader.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLTexture2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLTextureCube.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLVertexBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLVertexDeclaration.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

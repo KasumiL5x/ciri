@@ -1,5 +1,5 @@
-#ifndef __ciri_cullmode__
-#define __ciri_cullmode__
+#ifndef __ciri_gfx_cull_mode__
+#define __ciri_gfx_cull_mode__
 
 namespace ciri {
 	struct CullMode {
@@ -14,4 +14,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_cullmode__ */
+#endif /* __ciri_gfx_cull_mode__ */

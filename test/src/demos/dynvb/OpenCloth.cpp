@@ -71,7 +71,7 @@ void OpenCloth::setGravity( const cc::Vec3f& gravity ) {
 	_gravity = gravity;
 }
 
-void OpenCloth::build( ciri::IGraphicsDevice* device ) {
+void OpenCloth::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	if( _built ) {
 		return;
 	}
@@ -246,7 +246,7 @@ bool OpenCloth::updateConstants() {
 	}
 
 	bool success = true;
-	if( ciri::err::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
+	if( ciri::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
 		success = false;
 	}
 	return success;
@@ -262,7 +262,7 @@ bool OpenCloth::createGpuResources() {
 	const std::string shaderExt = _device->getShaderExt();
 	const std::string vsFile = ("dynvb/fabric_plaid_vs" + shaderExt);
 	const std::string psFile = ("dynvb/fabric_plaid_ps" + shaderExt);
-	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to build fabric shader:\n");
 		for( unsigned int i = 0; i < _shader->getErrors().size(); ++i ) {
 			printf("%s\n", _shader->getErrors()[i].msg.c_str());
@@ -272,12 +272,12 @@ bool OpenCloth::createGpuResources() {
 
 	// create constant buffers
 	_constantsBuffer = _device->createConstantBuffer();
-	if( ciri::err::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
+	if( ciri::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
 		return false;
 	}
 
 	// assign constant buffers to shader
-	if( ciri::err::failed(_shader->addConstants(_constantsBuffer, "Constants", ciri::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_shader->addConstants(_constantsBuffer, "Constants", ciri::ShaderStage::Vertex)) ) {
 		return false;
 	}
 

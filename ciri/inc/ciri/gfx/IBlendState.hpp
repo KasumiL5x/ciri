@@ -1,5 +1,5 @@
-#ifndef __ciri_iblendstate__
-#define __ciri_iblendstate__
+#ifndef __ciri_gfx_iblendstate__
+#define __ciri_gfx_iblendstate__
 
 #include "BlendFunction.hpp"
 #include "BlendMode.hpp"
@@ -28,7 +28,7 @@ namespace ciri {
 			dstColorBlend = BlendMode::Zero;
 			srcAlphaBlend = BlendMode::One;
 			dstAlphaBlend = BlendMode::Zero;
-			blendFactor[0] = blendFactor[1] = blendFactor[2] = blendFactor[3] = 1.0f; // dx defaults to 1, gl defaults to 0, wat do?
+			blendFactor[0] = blendFactor[1] = blendFactor[2] = blendFactor[3] = 1.0f; // todo: dx defaults to 1, gl defaults to 0, wat do?
 			colorFunc = BlendFunction::Add;
 			alphaFunc = BlendFunction::Add;
 			colorMask = static_cast<int>(BlendColorMask::All);
@@ -49,4 +49,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_iblendstate__ */
+#endif /* __ciri_gfx_iblendstate__ */

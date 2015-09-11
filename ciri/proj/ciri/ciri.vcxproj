@@ -45,27 +45,27 @@
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)-d</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/zlib-1.2.8/inc/;../../thirdparty/lpng1618/inc/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../lib/;../../thirdparty/zlib-1.2.8/lib/;../../thirdparty/lpng1618/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/zlib-1.2.8/inc/;../../thirdparty/lpng1618/inc/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../lib/;../../thirdparty/zlib-1.2.8/lib/;../../thirdparty/lpng1618/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>core-d.lib;gfx-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zlib.lib;libpng16.lib;wnd-d.lib;core-d.lib;input-d.lib;gfx-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,6 +75,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,14 +83,73 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>core.lib;gfx.lib</AdditionalDependencies>
+      <AdditionalDependencies>zlib.lib;libpng16.lib;wnd.lib;core.lib;input.lib;gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\Ciri.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\ErrorCodes.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\File.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\ITimer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\Log.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\PNG.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\StrUtil.hpp" />
+    <ClInclude Include="..\..\inc\ciri\core\TGA.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\BlendColorMask.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\BlendFunction.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\BlendMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\Camera.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\ClearFlags.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\CompareFunction.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\CullMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\FillMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\FPSCamera.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\GraphicsApiType.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IBlendState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IConstantBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IDepthStencilState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IGraphicsDevice.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IIndexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IRasterizerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IRenderTarget2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\ISamplerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IShader.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\ITexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\ITextureCube.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\IVertexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\MayaCamera.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\ObjModel.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\Plane.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\PrimitiveTopology.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\SamplerFilter.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\SamplerWrap.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\ShaderStage.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\StencilOperation.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\TextureFlags.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\TextureFormat.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexDeclaration.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexElement.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexFormat.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\VertexUsage.hpp" />
+    <ClInclude Include="..\..\inc\ciri\input\IInput.hpp" />
+    <ClInclude Include="..\..\inc\ciri\input\Keyboard.hpp" />
+    <ClInclude Include="..\..\inc\ciri\input\Mouse.hpp" />
+    <ClInclude Include="..\..\inc\ciri\wnd\IWindow.hpp" />
+    <ClInclude Include="..\..\inc\ciri\wnd\WindowEvent.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\Ciri.cpp" />
+    <ClCompile Include="..\..\src\ciri\core\File.cpp" />
+    <ClCompile Include="..\..\src\ciri\core\Log.cpp" />
+    <ClCompile Include="..\..\src\ciri\core\PNG.cpp" />
+    <ClCompile Include="..\..\src\ciri\core\TGA.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\Camera.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\FPSCamera.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\MayaCamera.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\ObjModel.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\Plane.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\VertexDeclaration.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\VertexElement.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

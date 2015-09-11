@@ -1,5 +1,5 @@
-#ifndef __ciri_objmodel__
-#define __ciri_objmodel__
+#ifndef __ciri_gfx_objmodel__
+#define __ciri_gfx_objmodel__
 
 #include <string>
 #include <vector>
@@ -50,4 +50,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_objmodel__ */
+#endif /* __ciri_gfx_objmodel__ */

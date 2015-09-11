@@ -1,5 +1,5 @@
-#ifndef __ciri_vertexformat__
-#define __ciri_vertexformat__
+#ifndef __ciri_gfx_vertex_format__
+#define __ciri_gfx_vertex_format__
 
 namespace ciri {
 	struct VertexFormat {
@@ -15,4 +15,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_vertexformat__ */
+#endif /* __ciri_gfx_vertex_format__ */

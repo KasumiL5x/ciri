@@ -9,7 +9,7 @@ HeightmapTerrain::HeightmapTerrain()
 HeightmapTerrain::~HeightmapTerrain() {
 }
 
-bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevice* device ) {
+bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	if( _generated ) {
 		return false;
 	}
@@ -167,7 +167,7 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, ciri::IGraphicsDevi
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Texcoord, 1)); // wrong ?
 	const std::string vsStr = (ciri::GraphicsApiType::OpenGL==device->getApiType()) ? getVertexShaderGl() : getVertexShaderDx();
 	const std::string psStr = (ciri::GraphicsApiType::OpenGL==device->getApiType()) ? getPixelShaderGl() : getPixelShaderDx();
-	if( ciri::err::failed(_shader->loadFromMemory(vsStr.c_str(), nullptr, psStr.c_str())) ) {
+	if( ciri::failed(_shader->loadFromMemory(vsStr.c_str(), nullptr, psStr.c_str())) ) {
 		for( auto err : _shader->getErrors() ) {
 			printf("%s\n", err.msg.c_str());
 		}
@@ -208,7 +208,7 @@ void HeightmapTerrain::setClippingPlaneParams( float height, const cc::Mat4f& vi
 	_perFrameConstants.clippingPlane = cc::Vec4f(plane.getNormal(), plane.getD());
 }
 
-void HeightmapTerrain::draw( const cc::Mat4f& viewProj, ciri::IGraphicsDevice* device ) {
+void HeightmapTerrain::draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	if( !_generated ) {
 		return;
 	}

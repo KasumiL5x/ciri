@@ -20,7 +20,7 @@ bool Axis::isValid() const {
 	return (_vertexBuffer != nullptr) && (_shader != nullptr) && (_constantsBuffer != nullptr);
 }
 
-bool Axis::create( float length, ciri::IGraphicsDevice* device ) {
+bool Axis::create( float length, std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	std::vector<AxisVertex> vertices;
 	const cc::Vec3f RED = cc::Vec3f(1.0f, 0.0f, 0.0f);
 	const cc::Vec3f GREEN = cc::Vec3f(0.0f, 1.0f, 0.0f);
@@ -39,7 +39,7 @@ bool Axis::create( float length, ciri::IGraphicsDevice* device ) {
 	vertices.push_back(AxisVertex(cc::Vec3f(0.0f, 0.0f, length), BLUE));
 
 	_vertexBuffer = device->createVertexBuffer();
-	if( ciri::err::failed(_vertexBuffer->set(vertices.data(), sizeof(AxisVertex), 6, false)) ) {
+	if( ciri::failed(_vertexBuffer->set(vertices.data(), sizeof(AxisVertex), 6, false)) ) {
 		return false;
 	}
 
@@ -49,16 +49,16 @@ bool Axis::create( float length, ciri::IGraphicsDevice* device ) {
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("common/shaders/axis_vs" + shaderExt);
 	const std::string psFile = ("common/shaders/axis_ps" + shaderExt);
-	if( ciri::err::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		return false;
 	}
 
 	_constantsBuffer = device->createConstantBuffer();
-	if( ciri::err::failed(_constantsBuffer->setData(sizeof(AxisConstants), &_constants)) ) {
+	if( ciri::failed(_constantsBuffer->setData(sizeof(AxisConstants), &_constants)) ) {
 		return false;
 	}
 
-	if( ciri::err::failed(_shader->addConstants(_constantsBuffer, "AxisConstants", ciri::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_shader->addConstants(_constantsBuffer, "AxisConstants", ciri::ShaderStage::Vertex)) ) {
 		return false;
 	}
 
@@ -70,5 +70,5 @@ bool Axis::updateConstants( const cc::Mat4f& xform ) {
 		return false;
 	}
 	_constants.xform = xform;
-	return ciri::err::success(_constantsBuffer->setData(sizeof(AxisConstants), &_constants));
+	return ciri::success(_constantsBuffer->setData(sizeof(AxisConstants), &_constants));
 }

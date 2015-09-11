@@ -1,6 +1,7 @@
-#ifndef __ciri_igraphicsdevice__
-#define __ciri_igraphicsdevice__
+#ifndef __ciri_gfx_igraphicsdevice__
+#define __ciri_gfx_igraphicsdevice__
 
+#include <memory>
 #include "IShader.hpp"
 #include "IVertexBuffer.hpp"
 #include "IIndexBuffer.hpp"
@@ -20,7 +21,7 @@
 #include "ITextureCube.hpp"
 
 namespace ciri {
-	class Window;
+	class IWindow;
 
 	class IGraphicsDevice {
 	public:
@@ -31,11 +32,11 @@ namespace ciri {
 		}
 
 		/**
-		 * Initializes the graphics device which will render to the provided Window.
-		 * @param window Window to render to.
+		 * Initializes the graphics device which will render to the provided IWindow.
+		 * @param window IWindow to render to.
 		 * @returns TODO
 		 */
-		virtual bool create( Window* window )=0;
+		virtual bool create( std::shared_ptr<IWindow> window )=0;
 
 		/**
 		 * Uninitializes the graphics device and all of its managed resources that have not yet been freed.
@@ -211,10 +212,10 @@ namespace ciri {
 		virtual void restoreDefaultRenderTargets()=0;
 
 		/**
-		 * Resizes the backbuffer and depth stencil to the bound window's size.
-		 * @returns err::ErrorCode indicating success or failure.
+		 * Resizes the backbuffer and depth stencil to the bound IWindow's size.
+		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual err::ErrorCode resize()=0;
+		virtual ErrorCode resize()=0;
 
 		/**
 		 * Sets the color that will be applied to the active render targets when the clear function is called.
@@ -258,10 +259,10 @@ namespace ciri {
 		virtual const char* getShaderExt() const=0;
 
 		/**
-		 * Gets the Window this device is rendering to.
+		 * Gets the IWindow this device is rendering to.
 		 * @returns Pointer to the attached window.
 		 */
-		virtual Window* getWindow() const=0;
+		virtual std::shared_ptr<IWindow> getWindow() const=0;
 
 		/**
 		 * Gets the name of the GPU being used.
@@ -274,15 +275,18 @@ namespace ciri {
 		virtual const char* getApiInfo() const=0;
 
 		/**
-		 * Gets the underlying
+		 * Gets the underlying API type.
 		 */
 		virtual GraphicsApiType::Type getApiType() const=0;
 	};
 
-	/// todo
-	/// this is defined in the libs for dx and gl etc.
-	IGraphicsDevice* createGraphicsDevice();
+	/**
+	 * Creates a new graphics device.
+	 * Note that this function is defined in the linked IWindow library, not in ciri itself.
+	 * @returns Pointer to a new graphics device.
+	 */
+	std::shared_ptr<IGraphicsDevice> createGraphicsDevice();
 
 } // ciri
 
-#endif /* __ciri_igraphicsdevice__ */
+#endif /* __ciri_gfx_igraphicsdevice__ */

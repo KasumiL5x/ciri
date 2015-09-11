@@ -1,5 +1,5 @@
-#ifndef __ciri_mayacamera__
-#define __ciri_mayacamera__
+#ifndef __ciri_gfx_mayacamera__
+#define __ciri_gfx_mayacamera__
 
 #include "Camera.hpp"
 #include <cc/Vec3.hpp>
@@ -41,4 +41,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_mayacamera__ */
+#endif /* __ciri_gfx_mayacamera__ */

@@ -1,5 +1,5 @@
-#ifndef __ciri_fpscamera__
-#define __ciri_fpscamera__
+#ifndef __ciri_gfx_fps_camera__
+#define __ciri_gfx_fps_camera__
 
 #include "Camera.hpp"
 #include <cc/Vec3.hpp>
@@ -48,4 +48,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_fpscamera__ */
+#endif /* __ciri_gfx_fps_camera__ */

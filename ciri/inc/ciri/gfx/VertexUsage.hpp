@@ -1,5 +1,5 @@
-#ifndef __ciri_vertexusage__
-#define __ciri_vertexusage__
+#ifndef __ciri_gfx_vertex_usage__
+#define __ciri_gfx_vertex_usage__
 
 namespace ciri {
 	struct VertexUsage {
@@ -17,4 +17,4 @@ namespace ciri {
 	};
 } // ciri
 
-#endif /* __ciri_vertexusage__ */
+#endif /* __ciri_gfx_vertex_usage__ */

@@ -15,7 +15,7 @@ public:
 	void addIndex( int index );
 	bool addFromObj( const char* file );
 	bool computeTangents();
-	bool build( ciri::IGraphicsDevice* device );
+	bool build( std::shared_ptr<ciri::IGraphicsDevice> device );
 	bool updateBuffers( bool vertex, bool index );
 
 	bool flipNormals( bool shouldUpdateBuffers );

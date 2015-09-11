@@ -29,11 +29,8 @@ void TerrainDemo::onInitialize() {
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
 	printf("API: %s\n", graphicsDevice()->getApiInfo());
 
-	// window size
-	const cc::Vec2ui windowSize = window()->getSize();
-
 	// configure camera
-	_camera.setAspect(static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y));
+	_camera.setAspect(static_cast<float>(window()->getWidth()) / static_cast<float>(window()->getHeight()));
 	_camera.setPlanes(0.1f, 10000.0f);
 	_camera.setYaw(137.0f);
 	_camera.setPitch(-12.6f);
@@ -82,17 +79,17 @@ void TerrainDemo::onLoadContent() {
 		const std::string shaderExt = graphicsDevice()->getShaderExt();
 		const std::string vsFile = ("terrain/water_vs" + shaderExt);
 		const std::string psFile = ("terrain/water_ps" + shaderExt);
-		if( ciri::err::failed(_waterShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+		if( ciri::failed(_waterShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 			printf("Failed to load water shader:\n");
 			for( auto err : _waterShader->getErrors() ) {
 				printf("%s\n", err.msg.c_str());
 			}
 		} else {
 			_waterConstantsBuffer = graphicsDevice()->createConstantBuffer();
-			if( ciri::err::failed(_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants)) ) {
+			if( ciri::failed(_waterConstantsBuffer->setData(sizeof(WaterConstants), &_waterConstants)) ) {
 				printf("Failed to create water constants.\n");
 			} else {
-				if( ciri::err::failed(_waterShader->addConstants(_waterConstantsBuffer, "WaterConstants", ciri::ShaderStage::Vertex)) ) {
+				if( ciri::failed(_waterShader->addConstants(_waterConstantsBuffer, "WaterConstants", ciri::ShaderStage::Vertex)) ) {
 					printf("Failed to assign constants to water shader.\n");
 				}
 			}
@@ -122,9 +119,9 @@ void TerrainDemo::onLoadContent() {
 	_alphaBlendState = graphicsDevice()->createBlendState(alphaBlendDesc);
 
 	// create render target for water reflections
-	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(window()->getSize().x, window()->getSize().y, ciri::TextureFormat::RGBA32_Float);
+	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(window()->getWidth(), window()->getHeight(), ciri::TextureFormat::RGBA32_Float);
 // and for refractions
-	_waterRefractionTarget = graphicsDevice()->createRenderTarget2D(window()->getSize().x, window()->getSize().y, ciri::TextureFormat::RGBA32_Float);
+	_waterRefractionTarget = graphicsDevice()->createRenderTarget2D(window()->getWidth(), window()->getHeight(), ciri::TextureFormat::RGBA32_Float);
 	// and the sampler
 	ciri::SamplerDesc reflSamplerDesc;
 	reflSamplerDesc.filter = ciri::SamplerFilter::Linear;
@@ -153,17 +150,17 @@ void TerrainDemo::onLoadContent() {
 		const std::string shaderExt = graphicsDevice()->getShaderExt();
 		const std::string vsFile = ("common/shaders/skybox_vs" + shaderExt);
 		const std::string psFile = ("common/shaders/skybox_ps" + shaderExt);
-		if( ciri::err::failed(_skyboxShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+		if( ciri::failed(_skyboxShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 			printf("Failed to load skybox shader:\n");
 			for( auto err : _skyboxShader->getErrors() ) {
 				printf("%s\n", err.msg.c_str());
 			}
 		} else {
 			_skyboxConstantsBuffer = graphicsDevice()->createConstantBuffer();
-			if( ciri::err::failed(_skyboxConstantsBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants)) ) {
+			if( ciri::failed(_skyboxConstantsBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants)) ) {
 				printf("Failed to create skybox constants.\n");
 			} else {
-				if( ciri::err::failed(_skyboxShader->addConstants(_skyboxConstantsBuffer, "SkyboxConstants", ciri::ShaderStage::Vertex)) ) {
+				if( ciri::failed(_skyboxShader->addConstants(_skyboxConstantsBuffer, "SkyboxConstants", ciri::ShaderStage::Vertex)) ) {
 					printf("Failed to assign constants to skybox shader.\n");
 				}
 			}
@@ -193,23 +190,17 @@ void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
 }
 
 void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
-	_elapsedTime = elapsedTime;
-
-	// get current input states
-	ciri::KeyboardState currKeyState;
-	ciri::MouseState currMouseState;
-	ciri::Input::getKeyboardState(&currKeyState);
-	ciri::Input::getMouseState(&currMouseState, window());
+	_elapsedTime = static_cast<float>(elapsedTime);
 
 	if( window()->hasFocus() ) {
 		// close w/ escape
-		if( currKeyState.isKeyDown(ciri::Keyboard::Escape) ) {
+		if( input()->isKeyDown(ciri::Key::Escape) ) {
 			this->gtfo();
 			return;
 		}
 
 		// debug camera info
-		if( currKeyState.isKeyDown(ciri::Keyboard::F9) && _prevKeyState.isKeyUp(ciri::Keyboard::F9) ) {
+		if( input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
 			const cc::Vec3f& pos = _camera.getPosition();
 			const float yaw = _camera.getYaw();
 			const float pitch = _camera.getPitch();
@@ -217,37 +208,37 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		}
 
 		// camera rotation
-		if( currMouseState.isButtonDown(ciri::MouseButton::Right) || currKeyState.isKeyDown(ciri::Keyboard::LAlt) ) {
-				const float dx = (float)currMouseState.x - (float)_prevMouseState.x;
-				const float dy = (float)currMouseState.y - (float)_prevMouseState.y;
+		if( input()->isMouseButtonDown(ciri::MouseButton::Right) || input()->isKeyDown(ciri::Key::LAlt) ) {
+				const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
+				const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 				_camera.rotateYaw(dx);
 				_camera.rotatePitch(dy);
 		}
 
 		// real shitty camera speed modifier
-		_camera.setMoveSpeed(currKeyState.isKeyDown(ciri::Keyboard::LShift) ? 500.0f : 100.0f);
+		_camera.setMoveSpeed(input()->isKeyDown(ciri::Key::LShift) ? 500.0f : 100.0f);
 
 		// camera movement
-		if( currKeyState.isKeyDown(ciri::Keyboard::W) ) {
-			_camera.move(ciri::FPSCamera::Direction::Forward, deltaTime);
+		if( input()->isKeyDown(ciri::Key::W) ) {
+			_camera.move(ciri::FPSCamera::Direction::Forward, static_cast<float>(deltaTime));
 		}
-		if( currKeyState.isKeyDown(ciri::Keyboard::S) ) {
-			_camera.move(ciri::FPSCamera::Direction::Backward, deltaTime);
+		if( input()->isKeyDown(ciri::Key::S) ) {
+			_camera.move(ciri::FPSCamera::Direction::Backward, static_cast<float>(deltaTime));
 		}
-		if( currKeyState.isKeyDown(ciri::Keyboard::A) ) {
-			_camera.move(ciri::FPSCamera::Direction::Left, deltaTime);
+		if( input()->isKeyDown(ciri::Key::A) ) {
+			_camera.move(ciri::FPSCamera::Direction::Left, static_cast<float>(deltaTime));
 		}
-		if( currKeyState.isKeyDown(ciri::Keyboard::D) ) {
-			_camera.move(ciri::FPSCamera::Direction::Right, deltaTime);
+		if( input()->isKeyDown(ciri::Key::D) ) {
+			_camera.move(ciri::FPSCamera::Direction::Right, static_cast<float>(deltaTime));
 		}
 
 		// shader reloading
-		if( currKeyState.isKeyDown(ciri::Keyboard::F5) && _prevKeyState.isKeyUp(ciri::Keyboard::F5) ) {
+		if( input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
 			_waterShader->destroy();
 			const std::string shaderExt = graphicsDevice()->getShaderExt();
 			const std::string vsFile = ("terrain/water_vs" + shaderExt);
 			const std::string psFile = ("terrain/water_ps" + shaderExt);
-			if( ciri::err::failed(_waterShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+			if( ciri::failed(_waterShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 				printf("Failed to load water shader:\n");
 				for( auto err : _waterShader->getErrors() ) {
 					printf("%s\n", err.msg.c_str());
@@ -258,7 +249,7 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		}
 
 		// debug key
-		if( currKeyState.isKeyDown(ciri::Keyboard::F11) && _prevKeyState.isKeyUp(ciri::Keyboard::F11) ) {
+		if( input()->isKeyDown(ciri::Key::F11) && input()->wasKeyUp(ciri::Key::F11) ) {
 			printf("debug...");
 			_waterReflectionTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/refl.dds");
 			_waterRefractionTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/refr.dds");
@@ -274,14 +265,10 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	//	planeVertices[i].position.y = x * z;
 	//}
 	//_plane->updateBuffers(true, false);
-
-	// update previous input states
-	_prevKeyState = currKeyState;
-	_prevMouseState = currMouseState;
 }
 
 void TerrainDemo::onDraw() {
-	ciri::IGraphicsDevice* device = graphicsDevice();
+	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	// frame defaults
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -347,7 +334,7 @@ void TerrainDemo::onDraw() {
 	}
 
 	static bool enableTerrain = true;
-	enableTerrain = _prevKeyState.isKeyDown(ciri::Keyboard::Space);
+	enableTerrain = input()->isKeyDown(ciri::Key::Space);
 	if( !enableTerrain ) {
 		_terrain.setClippingPlaneActive(false);
 		_terrain.draw(viewProj, graphicsDevice());
