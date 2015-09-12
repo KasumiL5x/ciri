@@ -36,7 +36,7 @@ namespace ciri {
 		 * @param window IWindow to render to.
 		 * @returns TODO
 		 */
-		virtual bool create( std::shared_ptr<IWindow> window )=0;
+		virtual bool create( const std::shared_ptr<IWindow>& window )=0;
 
 		/**
 		 * Uninitializes the graphics device and all of its managed resources that have not yet been freed.
@@ -282,7 +282,7 @@ namespace ciri {
 
 	/**
 	 * Creates a new graphics device.
-	 * Note that this function is defined in the linked IWindow library, not in ciri itself.
+	 * Note that this function is defined in the linked graphics library, not in ciri itself.
 	 * @returns Pointer to a new graphics device.
 	 */
 	std::shared_ptr<IGraphicsDevice> createGraphicsDevice();

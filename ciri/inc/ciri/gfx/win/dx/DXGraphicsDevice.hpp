@@ -23,7 +23,7 @@ namespace ciri {
 		DXGraphicsDevice();
 		virtual ~DXGraphicsDevice();
 
-		virtual bool create( std::shared_ptr<IWindow> window ) override;
+		virtual bool create( const std::shared_ptr<IWindow>& window ) override;
 		virtual void destroy() override;
 		virtual void present() override;
 

@@ -17,7 +17,7 @@ namespace ciri {
 		destroy();
 	}
 
-	bool DXGraphicsDevice::create( std::shared_ptr<IWindow> window ) {
+	bool DXGraphicsDevice::create( const std::shared_ptr<IWindow>& window ) {
 		if( _isValid ) {
 			return false;
 		}

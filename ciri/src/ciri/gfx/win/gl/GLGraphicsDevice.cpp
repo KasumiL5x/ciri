@@ -40,7 +40,7 @@ namespace ciri {
 		destroy();
 	}
 
-	bool GLGraphicsDevice::create( std::shared_ptr<IWindow> window ) {
+	bool GLGraphicsDevice::create( const std::shared_ptr<IWindow>& window ) {
 		if( _isValid ) {
 			return false;
 		}
