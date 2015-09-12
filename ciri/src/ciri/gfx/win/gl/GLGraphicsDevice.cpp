@@ -184,12 +184,8 @@ namespace ciri {
 		_vertexBuffers.clear();
 
 		// destroy shaders
-		for( unsigned int i = 0; i < _shaders.size(); ++i ) {
-			if( _shaders[i] != nullptr ) {
-				_shaders[i]->destroy();
-				delete _shaders[i];
-				_shaders[i] = nullptr;
-			}
+		for( auto curr : _shaders ) {
+			curr->destroy();
 		}
 		_shaders.clear();
 
@@ -213,12 +209,12 @@ namespace ciri {
 		SwapBuffers(_hdc);
 	}
 
-	IShader* GLGraphicsDevice::createShader() {
+	std::shared_ptr<IShader> GLGraphicsDevice::createShader() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		GLShader* shader = new GLShader();
+		std::shared_ptr<GLShader> shader = std::make_shared<GLShader>();
 		_shaders.push_back(shader);
 		return shader;
 	}
@@ -369,7 +365,7 @@ namespace ciri {
 		return glState;
 	}
 
-	void GLGraphicsDevice::applyShader( IShader* shader ) {
+	void GLGraphicsDevice::applyShader( const std::shared_ptr<IShader>& shader ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -379,7 +375,7 @@ namespace ciri {
 			return;
 		}
 
-		GLShader* glShader = reinterpret_cast<GLShader*>(shader);
+		GLShader* glShader = reinterpret_cast<GLShader*>(shader.get());
 		glUseProgram(glShader->getProgram());
 		_activeShader = glShader;
 	}

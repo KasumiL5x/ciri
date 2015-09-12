@@ -28,7 +28,7 @@ public:
 	~Axis();
 
 	ciri::IVertexBuffer* getVertexBuffer() const;
-	ciri::IShader* getShader() const;
+	const std::shared_ptr<ciri::IShader>& getShader() const;
 	bool isValid() const;
 
 	bool create( float length, std::shared_ptr<ciri::IGraphicsDevice> device );
@@ -36,7 +36,7 @@ public:
 
 private:
 	ciri::IVertexBuffer* _vertexBuffer;
-	ciri::IShader* _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 	ciri::IConstantBuffer* _constantsBuffer;;
 	AxisConstants _constants;
 };

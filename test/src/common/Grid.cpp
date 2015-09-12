@@ -112,7 +112,7 @@ ciri::IVertexBuffer* Grid::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-ciri::IShader* Grid::getShader() const {
+const std::shared_ptr<ciri::IShader>& Grid::getShader() const {
 	return _shader;
 }
 

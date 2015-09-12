@@ -43,7 +43,7 @@ public:
 
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
-	ciri::IShader* getShader() const;
+	const std::shared_ptr<ciri::IShader>& getShader() const;
 	Constants& getConstants();
 	bool updateConstants();
 
@@ -93,7 +93,7 @@ private:
 	float _ksBend; // ks term for bend springs
 	float _kdBend; // kd term for bend springs
 	//
-	ciri::IShader* _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 	Constants _constants;
 	ciri::IConstantBuffer* _constantsBuffer;
 };

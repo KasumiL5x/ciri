@@ -23,8 +23,8 @@ public:
 	ciri::IVertexBuffer* getVertexBuffer() const;
 	ciri::IIndexBuffer* getIndexBuffer() const;
 	Transform& getXform();
-	ciri::IShader* getShader() const;
-	void setShader( ciri::IShader* val );
+	const std::shared_ptr<ciri::IShader>& getShader() const;
+	void setShader( const std::shared_ptr<ciri::IShader>& val );
 	void setDynamicity( bool vertex, bool index ); // only call before build
 
 	bool isValid() const;
@@ -38,7 +38,7 @@ private:
 	ciri::IVertexBuffer* _vertexBuffer;
 	ciri::IIndexBuffer* _indexBuffer;
 	Transform _xform;
-	ciri::IShader* _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 	bool _dynamicVertex;
 	bool _dynamicIndex;
 };

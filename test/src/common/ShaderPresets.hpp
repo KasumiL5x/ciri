@@ -32,13 +32,13 @@ public:
 
 	bool create( std::shared_ptr<ciri::IGraphicsDevice> device );
 
-	ciri::IShader* getShader() const;
+	const std::shared_ptr<ciri::IShader>& getShader() const;
 	Constants& getConstants();
 	MaterialConstants& getMaterialConstants();
 	bool updateConstants();
 
 private:
-	ciri::IShader* _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 	ciri::IConstantBuffer* _constantBuffer;
 	Constants _constants;
 	ciri::IConstantBuffer* _materialConstantsBuffer;

@@ -67,7 +67,7 @@ private:
 	ciri::IIndexBuffer* _indexBuffer;
 
 	// shader
-	ciri::IShader* _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 
 	// constant buffers
 	ciri::IConstantBuffer* _perFrameConstantBuffer;

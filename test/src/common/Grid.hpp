@@ -35,7 +35,7 @@ public:
 	void setMajorColor( const cc::Vec3f& val );
 
 	ciri::IVertexBuffer* getVertexBuffer() const;
-	ciri::IShader* getShader() const;
+	const std::shared_ptr<ciri::IShader>& getShader() const;
 
 private:
 	void createVertices();
@@ -48,7 +48,7 @@ private:
 	bool _initialized;
 	//
 	ciri::IVertexBuffer* _vertexBuffer;
-	ciri::IShader* _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 	ciri::IConstantBuffer* _constantBuffer;
 	GridConstants _constants;
 	//

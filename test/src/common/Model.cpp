@@ -211,11 +211,11 @@ Transform& Model::getXform() {
 	return _xform;
 }
 
-ciri::IShader* Model::getShader() const {
+const std::shared_ptr<ciri::IShader>& Model::getShader() const {
 	return _shader;
 }
 
-void Model::setShader( ciri::IShader* val ) {
+void Model::setShader( const std::shared_ptr<ciri::IShader>& val ) {
 	_shader = val;
 }
 

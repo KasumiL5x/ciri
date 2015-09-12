@@ -151,12 +151,8 @@ namespace ciri {
 		_vertexBuffers.clear();
 
 		// destroy all shaders
-		for( unsigned int i = 0; i < _shaders.size(); ++i ) {
-			if( _shaders[i] != nullptr ) {
-				_shaders[i]->destroy();
-				delete _shaders[i];
-				_shaders[i] = nullptr;
-			}
+		for( auto curr : _shaders ) {
+			curr->destroy();
 		}
 		_shaders.clear();
 
@@ -178,12 +174,12 @@ namespace ciri {
 		_swapchain->Present(0, 0);
 	}
 
-	IShader* DXGraphicsDevice::createShader() {
+	std::shared_ptr<IShader> DXGraphicsDevice::createShader() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXShader* shader = new DXShader(this);
+		std::shared_ptr<DXShader> shader = std::make_shared<DXShader>(shared_from_this());
 		_shaders.push_back(shader);
 		return shader;
 	}
@@ -340,7 +336,7 @@ namespace ciri {
 		return dxState;
 	}
 
-	void DXGraphicsDevice::applyShader( IShader* shader ) {
+	void DXGraphicsDevice::applyShader( const std::shared_ptr<IShader>& shader ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -350,7 +346,7 @@ namespace ciri {
 			return;
 		}
 
-		DXShader* dxShader = reinterpret_cast<DXShader*>(shader);
+		DXShader* dxShader = reinterpret_cast<DXShader*>(shader.get());
 
 		ID3D11VertexShader* vs = dxShader->getVertexShader();
 		_context->VSSetShader(vs, nullptr, 0);

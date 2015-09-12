@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxshader__
 #define __ciri_gfx_dxshader__
 
+#include <memory>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -14,7 +15,7 @@ namespace ciri {
 
 	class DXShader : public IShader {
 	public:
-		DXShader( DXGraphicsDevice* device );
+		DXShader( const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXShader();
 
 		virtual void addInputElement( const VertexElement& element ) override;
@@ -39,7 +40,7 @@ namespace ciri {
 		void clearErrors();
 
 	private:
-		DXGraphicsDevice* _device;
+		std::shared_ptr<DXGraphicsDevice> _device;
 		//
 		ID3D11VertexShader* _vertexShader;
 		ID3D11GeometryShader* _geometryShader;

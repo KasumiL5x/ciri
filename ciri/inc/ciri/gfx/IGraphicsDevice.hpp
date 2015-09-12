@@ -52,7 +52,7 @@ namespace ciri {
 		 * Creates a new shader.
 		 * @returns A pointer to a new IShader, or nullptr upon error.
 		 */
-		virtual IShader* createShader()=0;
+		virtual std::shared_ptr<IShader> createShader()=0;
 
 		/**
 		 * Creates a new vertex buffer.
@@ -139,7 +139,7 @@ namespace ciri {
 		 * Makes the given shader active.
 		 * @param shader Shader to make active.
 		 */
-		virtual void applyShader( IShader* shader )=0;
+		virtual void applyShader( const std::shared_ptr<IShader>& shader )=0;
 
 		/**
 		 * Makes the given vertex buffer active.

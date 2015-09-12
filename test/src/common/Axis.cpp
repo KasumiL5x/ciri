@@ -12,7 +12,7 @@ ciri::IVertexBuffer* Axis::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-ciri::IShader* Axis::getShader() const {
+const std::shared_ptr<ciri::IShader>& Axis::getShader() const {
 	return _shader;
 }
 

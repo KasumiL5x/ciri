@@ -5,7 +5,7 @@
 #include <d3dcompiler.h>
 
 namespace ciri {
-	DXShader::DXShader( DXGraphicsDevice* device )
+	DXShader::DXShader( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IShader(), _device(device), _vertexShader(nullptr), _geometryShader(nullptr), _pixelShader(nullptr), _inputLayout(nullptr) {
 		_dxUsageStrings[VertexUsage::Position] = "POSITION";
 		_dxUsageStrings[VertexUsage::Color] = "COLOR";

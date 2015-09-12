@@ -58,7 +58,7 @@ private:
 
 	// water stuff
 	Model* _waterPlane; /**< Plane model for water. */
-	ciri::IShader* _waterShader; /**< Shader to render the water. */
+	std::shared_ptr<ciri::IShader> _waterShader; /**< Shader to render the water. */
 	ciri::IConstantBuffer* _waterConstantsBuffer; /**< Constant buffer for water shader. */
 	WaterConstants _waterConstants; /**< Acutual constants for above buffer. */
 	ciri::ITexture2D* _waterNormalMap; /**< Normal map for water surface. */
@@ -72,7 +72,7 @@ private:
 	// cubemap test
 	ciri::ITextureCube* _cubemap;
 	Model* _skybox;
-	ciri::IShader* _skyboxShader;
+	std::shared_ptr<ciri::IShader> _skyboxShader;
 	ciri::IConstantBuffer* _skyboxConstantsBuffer;
 	SkyboxConstants _skyboxConstants;
 	ciri::ISamplerState* _skyboxSampler;

@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxgraphicsdevice__
 #define __ciri_gfx_dxgraphicsdevice__
 
+#include <memory>
 #include <vector>
 #include <string>
 #include <d3d11.h>
@@ -18,7 +19,7 @@
 #include "DXTextureCube.hpp"
 
 namespace ciri {
-	class DXGraphicsDevice : public IGraphicsDevice {
+	class DXGraphicsDevice : public IGraphicsDevice, public std::enable_shared_from_this<DXGraphicsDevice> {
 	public:
 		DXGraphicsDevice();
 		virtual ~DXGraphicsDevice();
@@ -27,7 +28,7 @@ namespace ciri {
 		virtual void destroy() override;
 		virtual void present() override;
 
-		virtual IShader* createShader() override;
+		virtual std::shared_ptr<IShader> createShader() override;
 		virtual IVertexBuffer* createVertexBuffer() override;
 		virtual IIndexBuffer* createIndexBuffer() override;
 		virtual IConstantBuffer* createConstantBuffer() override;
@@ -38,7 +39,7 @@ namespace ciri {
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc ) override;
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc ) override;
 		virtual IBlendState* createBlendState( const BlendDesc& desc ) override;
-		virtual void applyShader( IShader* shader ) override;
+		virtual void applyShader( const std::shared_ptr<IShader>& shader ) override;
 		virtual void setVertexBuffer( IVertexBuffer* buffer ) override;
 		virtual void setIndexBuffer( IIndexBuffer* buffer ) override;
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) override;
@@ -82,7 +83,7 @@ namespace ciri {
 		//
 		float _clearColor[4];
 		//
-		std::vector<DXShader*> _shaders;
+		std::vector<std::shared_ptr<DXShader>> _shaders;
 		std::vector<DXVertexBuffer*> _vertexBuffers;
 		std::vector<DXIndexBuffer*> _indexBuffers;
 		//

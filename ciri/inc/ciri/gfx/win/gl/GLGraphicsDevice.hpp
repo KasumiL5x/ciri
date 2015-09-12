@@ -31,7 +31,7 @@ namespace ciri {
 		virtual void destroy() override;
 		virtual void present() override;
 
-		virtual IShader* createShader() override;
+		virtual std::shared_ptr<IShader> createShader() override;
 		virtual IVertexBuffer* createVertexBuffer() override;
 		virtual IIndexBuffer* createIndexBuffer() override;
 		virtual IConstantBuffer* createConstantBuffer() override;
@@ -42,7 +42,7 @@ namespace ciri {
 		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc ) override;
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc ) override;
 		virtual IBlendState* createBlendState( const BlendDesc& desc ) override;
-		virtual void applyShader( IShader* shader ) override;
+		virtual void applyShader( const std::shared_ptr<IShader>& shader ) override;
 		virtual void setVertexBuffer( IVertexBuffer* buffer ) override;
 		virtual void setIndexBuffer( IIndexBuffer* buffer ) override;
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) override;
@@ -83,7 +83,7 @@ namespace ciri {
 		int _defaultWidth;
 		int _defaultHeight;
 		//
-		std::vector<GLShader*> _shaders;
+		std::vector<std::shared_ptr<GLShader>> _shaders;
 		std::vector<GLVertexBuffer*> _vertexBuffers;
 		std::vector<GLIndexBuffer*> _indexBuffers;
 		//

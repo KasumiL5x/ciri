@@ -50,7 +50,7 @@ bool SimpleShader::create( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	return true;
 }
 
-ciri::IShader* SimpleShader::getShader() const {
+const std::shared_ptr<ciri::IShader>& SimpleShader::getShader() const {
 	return _shader;
 }
 

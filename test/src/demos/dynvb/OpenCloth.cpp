@@ -232,7 +232,7 @@ ciri::IIndexBuffer* OpenCloth::getIndexBuffer() const {
 	return _indexBuffer;
 }
 
-ciri::IShader* OpenCloth::getShader() const {
+const std::shared_ptr<ciri::IShader>& OpenCloth::getShader() const {
 	return _shader;
 }
 
