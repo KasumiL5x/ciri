@@ -164,22 +164,14 @@ namespace ciri {
 		_constantBuffers.clear();
 
 		// destroy index buffers
-		for( unsigned int i = 0; i < _indexBuffers.size(); ++i ) {
-			if( _indexBuffers[i] != nullptr ) {
-				_indexBuffers[i]->destroy();
-				delete _indexBuffers[i];
-				_indexBuffers[i] = nullptr;
-			}
+		for( auto curr : _indexBuffers ) {
+			curr->destroy();
 		}
 		_indexBuffers.clear();
 
 		// destroy vertex buffers
-		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
-			if( _vertexBuffers[i] != nullptr ) {
-				_vertexBuffers[i]->destroy();
-				delete _vertexBuffers[i];
-				_vertexBuffers[i] = nullptr;
-			}
+		for( auto curr : _vertexBuffers ) {
+			curr->destroy();
 		}
 		_vertexBuffers.clear();
 
@@ -219,22 +211,21 @@ namespace ciri {
 		return shader;
 	}
 
-	IVertexBuffer* GLGraphicsDevice::createVertexBuffer() {
+	std::shared_ptr<IVertexBuffer> GLGraphicsDevice::createVertexBuffer() {
 		if( !_isValid ) {
 			return nullptr;
 		}
-
-		GLVertexBuffer* buffer = new GLVertexBuffer();
+		std::shared_ptr<GLVertexBuffer> buffer = std::make_shared<GLVertexBuffer>();
 		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
-	IIndexBuffer* GLGraphicsDevice::createIndexBuffer() {
+	std::shared_ptr<IIndexBuffer> GLGraphicsDevice::createIndexBuffer() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		GLIndexBuffer* buffer = new GLIndexBuffer();
+		std::shared_ptr<GLIndexBuffer> buffer = std::make_shared<GLIndexBuffer>();
 		_indexBuffers.push_back(buffer);
 		return buffer;
 	}
@@ -380,7 +371,7 @@ namespace ciri {
 		_activeShader = glShader;
 	}
 
-	void GLGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+	void GLGraphicsDevice::setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -390,7 +381,7 @@ namespace ciri {
 			return;
 		}
 
-		GLVertexBuffer* glBuffer = reinterpret_cast<GLVertexBuffer*>(buffer);
+		GLVertexBuffer* glBuffer = reinterpret_cast<GLVertexBuffer*>(buffer.get());
 
 		glBindBuffer(GL_ARRAY_BUFFER, glBuffer->getVbo());
 
@@ -419,12 +410,12 @@ namespace ciri {
 		_activeVertexBuffer = glBuffer;
 	}
 
-	void GLGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
+	void GLGraphicsDevice::setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		GLIndexBuffer* glBuffer = reinterpret_cast<GLIndexBuffer*>(buffer);
+		GLIndexBuffer* glBuffer = reinterpret_cast<GLIndexBuffer*>(buffer.get());
 
 		const GLuint evbo = glBuffer->getEvbo();
 		if( 0 == evbo ) {

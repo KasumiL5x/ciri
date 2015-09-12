@@ -131,22 +131,14 @@ namespace ciri {
 		_constantBuffers.clear();
 
 		// destroy index buffers
-		for( unsigned int i = 0; i < _indexBuffers.size(); ++i ) {
-			if( _indexBuffers[i] != nullptr ) {
-				_indexBuffers[i]->destroy();
-				delete _indexBuffers[i];
-				_indexBuffers[i] = nullptr;
-			}
+		for( auto curr : _indexBuffers ) {
+			curr->destroy();
 		}
 		_indexBuffers.clear();
 
 		// destroy all vertex buffers
-		for( unsigned int i = 0; i < _vertexBuffers.size(); ++i ) {
-			if( _vertexBuffers[i] != nullptr ) {
-				_vertexBuffers[i]->destroy();
-				delete _vertexBuffers[i];
-				_vertexBuffers[i] = nullptr;
-			}
+		for( auto curr : _vertexBuffers ) {
+			curr->destroy();
 		}
 		_vertexBuffers.clear();
 
@@ -184,22 +176,22 @@ namespace ciri {
 		return shader;
 	}
 
-	IVertexBuffer* DXGraphicsDevice::createVertexBuffer() {
+	std::shared_ptr<IVertexBuffer> DXGraphicsDevice::createVertexBuffer() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXVertexBuffer* buffer = new DXVertexBuffer(this);
+		std::shared_ptr<DXVertexBuffer> buffer = std::make_shared<DXVertexBuffer>(shared_from_this());
 		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
-	IIndexBuffer* DXGraphicsDevice::createIndexBuffer() {
+	std::shared_ptr<IIndexBuffer> DXGraphicsDevice::createIndexBuffer() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXIndexBuffer* buffer = new DXIndexBuffer(this);
+		std::shared_ptr<DXIndexBuffer> buffer = std::make_shared<DXIndexBuffer>(shared_from_this());
 		_indexBuffers.push_back(buffer);
 		return buffer;
 	}
@@ -382,7 +374,7 @@ namespace ciri {
 		_activeShader = dxShader;
 	}
 
-	void DXGraphicsDevice::setVertexBuffer( IVertexBuffer* buffer ) {
+	void DXGraphicsDevice::setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -393,7 +385,7 @@ namespace ciri {
 			return;
 		}
 
-		DXVertexBuffer* dxBuffer = reinterpret_cast<DXVertexBuffer*>(buffer);
+		DXVertexBuffer* dxBuffer = reinterpret_cast<DXVertexBuffer*>(buffer.get());
 		UINT stride = buffer->getStride();
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
@@ -402,12 +394,12 @@ namespace ciri {
 		_activeVertexBuffer = dxBuffer;
 	}
 
-	void DXGraphicsDevice::setIndexBuffer( IIndexBuffer* buffer ) {
+	void DXGraphicsDevice::setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		DXIndexBuffer* dxBuffer = reinterpret_cast<DXIndexBuffer*>(buffer);
+		DXIndexBuffer* dxBuffer = reinterpret_cast<DXIndexBuffer*>(buffer.get());
 
 		ID3D11Buffer* ib = dxBuffer->getIndexBuffer();
 		if( nullptr == ib ) {

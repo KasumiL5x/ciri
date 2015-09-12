@@ -32,8 +32,8 @@ namespace ciri {
 		virtual void present() override;
 
 		virtual std::shared_ptr<IShader> createShader() override;
-		virtual IVertexBuffer* createVertexBuffer() override;
-		virtual IIndexBuffer* createIndexBuffer() override;
+		virtual std::shared_ptr<IVertexBuffer> createVertexBuffer() override;
+		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer() override;
 		virtual IConstantBuffer* createConstantBuffer() override;
 		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
 		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
@@ -43,8 +43,8 @@ namespace ciri {
 		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc ) override;
 		virtual IBlendState* createBlendState( const BlendDesc& desc ) override;
 		virtual void applyShader( const std::shared_ptr<IShader>& shader ) override;
-		virtual void setVertexBuffer( IVertexBuffer* buffer ) override;
-		virtual void setIndexBuffer( IIndexBuffer* buffer ) override;
+		virtual void setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer ) override;
+		virtual void setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer ) override;
 		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) override;
@@ -84,8 +84,8 @@ namespace ciri {
 		int _defaultHeight;
 		//
 		std::vector<std::shared_ptr<GLShader>> _shaders;
-		std::vector<GLVertexBuffer*> _vertexBuffers;
-		std::vector<GLIndexBuffer*> _indexBuffers;
+		std::vector<std::shared_ptr<GLVertexBuffer>> _vertexBuffers;
+		std::vector<std::shared_ptr<GLIndexBuffer>> _indexBuffers;
 		//
 		GLShader* _activeShader;
 		GLVertexBuffer* _activeVertexBuffer;

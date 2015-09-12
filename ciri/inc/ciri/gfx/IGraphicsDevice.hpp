@@ -58,13 +58,13 @@ namespace ciri {
 		 * Creates a new vertex buffer.
 		 * @returns A pointer to a new IVertexBuffer, or nullptr upon error.
 		 */
-		virtual IVertexBuffer* createVertexBuffer()=0;
+		virtual std::shared_ptr<IVertexBuffer> createVertexBuffer()=0;
 
 		/**
 		 * Creates a new index buffer.
 		 * @returns A pointer to a new IIndexBuffer, or nullptr upon error.
 		 */
-		virtual IIndexBuffer* createIndexBuffer()=0;
+		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer()=0;
 
 		/**
 		 * Creates a new constant buffer.
@@ -145,13 +145,13 @@ namespace ciri {
 		 * Makes the given vertex buffer active.
 		 * @param buffer Vertex buffer to make active.
 		 */
-		virtual void setVertexBuffer( IVertexBuffer* buffer )=0;
+		virtual void setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer )=0;
 
 		/**
 		 * Makes the given index buffer active.
 		 * @param buffer Index buffer to make active.
 		 */
-		virtual void setIndexBuffer( IIndexBuffer* buffer )=0;
+		virtual void setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer )=0;
 
 		/**
 		 * Binds a 2d texture to a slot at a given shader stage.

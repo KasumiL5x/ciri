@@ -108,7 +108,7 @@ void Grid::setMajorColor( const cc::Vec3f& val ) {
 }
 
 
-ciri::IVertexBuffer* Grid::getVertexBuffer() const {
+const std::shared_ptr<ciri::IVertexBuffer>& Grid::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 

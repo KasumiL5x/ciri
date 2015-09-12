@@ -63,8 +63,8 @@ private:
 	int* _indices;
 
 	// gpu buffers
-	ciri::IVertexBuffer* _vertexBuffer;
-	ciri::IIndexBuffer* _indexBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::IIndexBuffer> _indexBuffer;
 
 	// shader
 	std::shared_ptr<ciri::IShader> _shader;

@@ -27,7 +27,7 @@ public:
 	Axis();
 	~Axis();
 
-	ciri::IVertexBuffer* getVertexBuffer() const;
+	const std::shared_ptr<ciri::IVertexBuffer>& getVertexBuffer() const;
 	const std::shared_ptr<ciri::IShader>& getShader() const;
 	bool isValid() const;
 
@@ -35,7 +35,7 @@ public:
 	bool updateConstants( const cc::Mat4f& xform );
 
 private:
-	ciri::IVertexBuffer* _vertexBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
 	std::shared_ptr<ciri::IShader> _shader;
 	ciri::IConstantBuffer* _constantsBuffer;;
 	AxisConstants _constants;

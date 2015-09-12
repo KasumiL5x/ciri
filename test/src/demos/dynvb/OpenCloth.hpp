@@ -41,8 +41,8 @@ public:
 
 	bool isBuilt() const;
 
-	ciri::IVertexBuffer* getVertexBuffer() const;
-	ciri::IIndexBuffer* getIndexBuffer() const;
+	const std::shared_ptr<ciri::IVertexBuffer>& getVertexBuffer() const;
+	const std::shared_ptr<ciri::IIndexBuffer>& getIndexBuffer() const;
 	const std::shared_ptr<ciri::IShader>& getShader() const;
 	Constants& getConstants();
 	bool updateConstants();
@@ -64,8 +64,8 @@ private:
 	bool _built;
 	//
 	std::shared_ptr<ciri::IGraphicsDevice> _device;
-	ciri::IVertexBuffer* _vertexBuffer;
-	ciri::IIndexBuffer* _indexBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::IIndexBuffer> _indexBuffer;
 	Vertex* _vertices;
 	int _indexCount;
 	int* _indices;

@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXIndexBuffer::DXIndexBuffer( DXGraphicsDevice* device )
+	DXIndexBuffer::DXIndexBuffer( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IIndexBuffer(), _device(device), _indexBuffer(nullptr), _indexCount(0) {
 	}
 

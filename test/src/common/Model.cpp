@@ -129,7 +129,7 @@ bool Model::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	_vertexBuffer = device->createVertexBuffer();
 	if( ciri::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), _dynamicVertex)) ) {
 		_vertexBuffer->destroy();
-		delete _vertexBuffer;
+		_vertexBuffer.reset();
 		_vertexBuffer = nullptr;
 		return false;
 	}
@@ -138,10 +138,10 @@ bool Model::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 		_indexBuffer = device->createIndexBuffer();
 		if( ciri::failed(_indexBuffer->set(_indices.data(), _indices.size(), _dynamicIndex)) ) {
 			_vertexBuffer->destroy();
-			delete _vertexBuffer;
+			_vertexBuffer.reset();
 			_vertexBuffer = nullptr;
 			_indexBuffer->destroy();
-			delete _indexBuffer;
+			_indexBuffer.reset();
 			_indexBuffer = nullptr;
 			return false;
 		}
@@ -199,11 +199,11 @@ bool Model::flipNormals( bool shouldUpdateBuffers ) {
 	return true;
 }
 
-ciri::IVertexBuffer* Model::getVertexBuffer() const {
+const std::shared_ptr<ciri::IVertexBuffer>& Model::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-ciri::IIndexBuffer* Model::getIndexBuffer() const {
+const std::shared_ptr<ciri::IIndexBuffer>& Model::getIndexBuffer() const {
 	return _indexBuffer;
 }
 

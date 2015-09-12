@@ -224,11 +224,11 @@ bool OpenCloth::isBuilt() const {
 	return _built;
 }
 
-ciri::IVertexBuffer* OpenCloth::getVertexBuffer() const {
+const std::shared_ptr<ciri::IVertexBuffer>& OpenCloth::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-ciri::IIndexBuffer* OpenCloth::getIndexBuffer() const {
+const std::shared_ptr<ciri::IIndexBuffer>& OpenCloth::getIndexBuffer() const {
 	return _indexBuffer;
 }
 

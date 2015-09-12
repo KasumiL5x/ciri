@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxvertexbuffer__
 #define __ciri_gfx_dxvertexbuffer__
 
+#include <memory>
 #include <d3d11.h>
 #include <ciri/gfx/IVertexBuffer.hpp>
 
@@ -9,7 +10,7 @@ namespace ciri {
 
 	class DXVertexBuffer : public IVertexBuffer {
 	public:
-		DXVertexBuffer( DXGraphicsDevice* device );
+		DXVertexBuffer( const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXVertexBuffer();
 
 		virtual ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) override;
@@ -20,7 +21,7 @@ namespace ciri {
 		ID3D11Buffer* getVertexBuffer() const;
 
 	private:
-		DXGraphicsDevice* _device;
+		std::shared_ptr<DXGraphicsDevice> _device;
 		ID3D11Buffer* _vertexBuffer;
 		int _vertexStride;
 		int _vertexCount;

@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXVertexBuffer::DXVertexBuffer( DXGraphicsDevice* device )
+	DXVertexBuffer::DXVertexBuffer( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IVertexBuffer(), _device(device), _vertexBuffer(nullptr), _vertexStride(0), _vertexCount(0), _isDynamic(false) {
 	}
 

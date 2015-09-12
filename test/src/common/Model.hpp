@@ -20,8 +20,8 @@ public:
 
 	bool flipNormals( bool shouldUpdateBuffers );
 
-	ciri::IVertexBuffer* getVertexBuffer() const;
-	ciri::IIndexBuffer* getIndexBuffer() const;
+	const std::shared_ptr<ciri::IVertexBuffer>& getVertexBuffer() const;
+	const std::shared_ptr<ciri::IIndexBuffer>& getIndexBuffer() const;
 	Transform& getXform();
 	const std::shared_ptr<ciri::IShader>& getShader() const;
 	void setShader( const std::shared_ptr<ciri::IShader>& val );
@@ -35,8 +35,8 @@ public:
 private:
 	std::vector<Vertex> _vertices;
 	std::vector<int> _indices;
-	ciri::IVertexBuffer* _vertexBuffer;
-	ciri::IIndexBuffer* _indexBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::IIndexBuffer> _indexBuffer;
 	Transform _xform;
 	std::shared_ptr<ciri::IShader> _shader;
 	bool _dynamicVertex;

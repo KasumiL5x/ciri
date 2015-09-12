@@ -8,7 +8,7 @@ Axis::Axis()
 Axis::~Axis() {
 }
 
-ciri::IVertexBuffer* Axis::getVertexBuffer() const {
+const std::shared_ptr<ciri::IVertexBuffer>& Axis::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
