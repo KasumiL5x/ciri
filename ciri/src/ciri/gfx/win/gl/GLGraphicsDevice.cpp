@@ -79,41 +79,26 @@ namespace ciri {
 		}
 
 		// clean texture cubes
-		for( auto cube : _textureCubes ) {
-			if( cube != nullptr ) {
-				cube->destroy();
-				delete cube;
-				cube = nullptr;
-			}
+		for( auto curr : _textureCubes ) {
+			curr->destroy();
 		}
+		_textureCubes.clear();
 
 		// clean blend states
-		for( auto state : _blendStates ) {
-			if( state != nullptr ) {
-				state->destroy();
-				delete state;
-				state = nullptr;
-			}
+		for( auto curr : _blendStates ) {
+			curr->destroy();
 		}
 		_blendStates.clear();
 
 		// clean depth stencil states
-		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
-			if( _depthStencilStates[i] != nullptr ) {
-				_depthStencilStates[i]->destroy();
-				delete _depthStencilStates[i];
-				_depthStencilStates[i] = nullptr;
-			}
+		for( auto curr : _depthStencilStates ) {
+			curr->destroy();
 		}
 		_depthStencilStates.clear();
 
 		// clean rasterizer states
-		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
-			if( _rasterizerStates[i] != nullptr ) {
-				_rasterizerStates[i]->destroy();
-				delete _rasterizerStates[i];
-				_rasterizerStates[i] = nullptr;
-			}
+		for( auto curr : _rasterizerStates ) {
+			curr->destroy();
 		}
 		_rasterizerStates.clear();
 
@@ -134,12 +119,8 @@ namespace ciri {
 		_renderTarget2Ds.clear();
 
 		// destroy samplers
-		for( unsigned int i = 0; i < _samplers.size(); ++i ) {
-			if( _samplers[i] != nullptr ) {
-				_samplers[i]->destroy();
-				delete _samplers[i];
-				_samplers[i] = nullptr;
-			}
+		for( auto curr : _samplers ) {
+			curr->destroy();
 		}
 		_samplers.clear();
 
@@ -254,7 +235,7 @@ namespace ciri {
 		return glTexture;
 	}
 
-	ITextureCube* GLGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
+	std::shared_ptr<ITextureCube> GLGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
@@ -263,9 +244,9 @@ namespace ciri {
 			return nullptr;
 		}
 
-		GLTextureCube* glCube = new GLTextureCube();
+		std::shared_ptr<GLTextureCube> glCube = std::make_shared<GLTextureCube>();
 		if( failed(glCube->set(width, height, posx, negx, posy, negy, posz, negz)) ) {
-			delete glCube;
+			glCube.reset();
 			glCube = nullptr;
 			return nullptr;
 		}
@@ -274,14 +255,14 @@ namespace ciri {
 		return glCube;
 	}
 
-	ISamplerState* GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+	std::shared_ptr<ISamplerState> GLGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		GLSamplerState* glSampler = new GLSamplerState();
+		std::shared_ptr<GLSamplerState> glSampler = std::make_shared<GLSamplerState>();
 		if( !glSampler->create(desc) ) {
-			delete glSampler;
+			glSampler.reset();
 			glSampler = nullptr;
 			return nullptr;
 		}
@@ -303,14 +284,14 @@ namespace ciri {
 		return glTarget;
 	}
 
-	IRasterizerState* GLGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
+	std::shared_ptr<IRasterizerState> GLGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		GLRasterizerState* glRaster = new GLRasterizerState();
+		std::shared_ptr<GLRasterizerState> glRaster = std::make_shared<GLRasterizerState>();
 		if( !glRaster->create(desc) ) {
-			delete glRaster;
+			glRaster.reset();
 			glRaster = nullptr;
 			return nullptr;
 		}
@@ -318,14 +299,14 @@ namespace ciri {
 		return glRaster;
 	}
 
-	IDepthStencilState* GLGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
+	std::shared_ptr<IDepthStencilState> GLGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		GLDepthStencilState* glState = new GLDepthStencilState();
+		std::shared_ptr<GLDepthStencilState> glState = std::make_shared<GLDepthStencilState>();
 		if( !glState->create(desc) ) {
-			delete glState;
+			glState.reset();
 			glState = nullptr;
 			return nullptr;
 		}
@@ -333,14 +314,14 @@ namespace ciri {
 		return glState;
 	}
 
-	IBlendState* GLGraphicsDevice::createBlendState( const BlendDesc& desc ) {
+	std::shared_ptr<IBlendState> GLGraphicsDevice::createBlendState( const BlendDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		GLBlendState* glState = new GLBlendState();
+		std::shared_ptr<GLBlendState> glState = std::make_shared<GLBlendState>();
 		if( !glState->create(desc) ) {
-			delete glState;
+			glState.reset();
 			glState = nullptr;
 			return nullptr;
 		}
@@ -428,26 +409,26 @@ namespace ciri {
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
 	}
 
-	void GLGraphicsDevice::setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) {
+	void GLGraphicsDevice::setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		GLTextureCube* glTexture = reinterpret_cast<GLTextureCube*>(texture);
+		GLTextureCube* glTexture = reinterpret_cast<GLTextureCube*>(texture.get());
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, (glTexture != nullptr) ? glTexture->getTextureId() : 0);
 	}
 
-	void GLGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
+	void GLGraphicsDevice::setSamplerState( int index, const std::shared_ptr<ISamplerState>& state, ShaderStage::Stage shaderStage ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state);
+		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state.get());
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
 	}
 
-	void GLGraphicsDevice::setBlendState( IBlendState* state ) {
+	void GLGraphicsDevice::setBlendState( const std::shared_ptr<IBlendState>& state ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -455,7 +436,7 @@ namespace ciri {
 		if( nullptr == state ) {
 			restoreDefaultBlendState();
 		} else {
-			GLBlendState* glState = reinterpret_cast<GLBlendState*>(state);
+			GLBlendState* glState = reinterpret_cast<GLBlendState*>(state.get());
 			const BlendDesc desc = glState->getDesc();
 
 			// enable blending
@@ -618,7 +599,7 @@ namespace ciri {
 		glClear(clearFlags);
 	}
 
-	void GLGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
+	void GLGraphicsDevice::setRasterizerState( const std::shared_ptr<IRasterizerState>& state ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -627,12 +608,12 @@ namespace ciri {
 		if( nullptr == state ) {
 			throw; // not yet implemented
 		}
-		if( state == _activeRasterizerState ) {
+
+		GLRasterizerState* glRaster = reinterpret_cast<GLRasterizerState*>(state.get());
+		if( glRaster == _activeRasterizerState ) {
 			return;
 		}
-		_activeRasterizerState = state;
-
-		GLRasterizerState* glRaster = reinterpret_cast<GLRasterizerState*>(state);
+		_activeRasterizerState = glRaster;
 		const RasterizerDesc& desc = glRaster->getDesc();
 
 		// cull mode
@@ -676,7 +657,7 @@ namespace ciri {
 		// todo: msaa
 	}
 
-	void GLGraphicsDevice::setDepthStencilState( IDepthStencilState* state ) {
+	void GLGraphicsDevice::setDepthStencilState( const std::shared_ptr<IDepthStencilState>& state ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -685,12 +666,12 @@ namespace ciri {
 		if( nullptr == state ) {
 			throw; // not yet implemented
 		}
-		if( state == _activeDepthStencilState ) {
+
+		GLDepthStencilState* glState = reinterpret_cast<GLDepthStencilState*>(state.get());
+		if( glState == _activeDepthStencilState ) {
 			return;
 		}
-		_activeDepthStencilState = state;
-
-		GLDepthStencilState* glState = reinterpret_cast<GLDepthStencilState*>(state);
+		_activeDepthStencilState = glState;
 		const DepthStencilDesc& desc = glState->getDesc();
 
 		// enable depth

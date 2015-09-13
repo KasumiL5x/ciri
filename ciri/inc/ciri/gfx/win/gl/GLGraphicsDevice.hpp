@@ -36,19 +36,19 @@ namespace ciri {
 		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer() override;
 		virtual std::shared_ptr<IConstantBuffer> createConstantBuffer() override;
 		virtual std::shared_ptr<ITexture2D> createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
-		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
-		virtual ISamplerState* createSamplerState( const SamplerDesc& desc ) override;
+		virtual std::shared_ptr<ITextureCube> createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
+		virtual std::shared_ptr<ISamplerState> createSamplerState( const SamplerDesc& desc ) override;
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format ) override;
-		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc ) override;
-		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc ) override;
-		virtual IBlendState* createBlendState( const BlendDesc& desc ) override;
+		virtual std::shared_ptr<IRasterizerState> createRasterizerState( const RasterizerDesc& desc ) override;
+		virtual std::shared_ptr<IDepthStencilState> createDepthStencilState( const DepthStencilDesc& desc ) override;
+		virtual std::shared_ptr<IBlendState> createBlendState( const BlendDesc& desc ) override;
 		virtual void applyShader( const std::shared_ptr<IShader>& shader ) override;
 		virtual void setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer ) override;
 		virtual void setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer ) override;
 		virtual void setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage ) override;
-		virtual void setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) override;
-		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) override;
-		virtual void setBlendState( IBlendState* state ) override;
+		virtual void setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage ) override;
+		virtual void setSamplerState( int index, const std::shared_ptr<ISamplerState>& state, ShaderStage::Stage shaderStage ) override;
+		virtual void setBlendState( const std::shared_ptr<IBlendState>& state ) override;
 		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) override;
 		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) override;
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) override;
@@ -56,8 +56,8 @@ namespace ciri {
 		virtual ErrorCode resize() override;
 		virtual void setClearColor( float r, float g, float b, float a ) override;
 		virtual void clear( int flags) override;
-		virtual void setRasterizerState( IRasterizerState* state ) override;
-		virtual void setDepthStencilState( IDepthStencilState* state ) override;
+		virtual void setRasterizerState( const std::shared_ptr<IRasterizerState>& state ) override;
+		virtual void setDepthStencilState( const std::shared_ptr<IDepthStencilState>& state ) override;
 		virtual void setShaderExt( const char* ext ) override;
 		virtual const char* getShaderExt() const override;
 		virtual std::shared_ptr<IWindow> getWindow() const override;
@@ -95,7 +95,7 @@ namespace ciri {
 		//
 		std::vector<std::shared_ptr<GLTexture2D>> _texture2Ds;
 		//
-		std::vector<GLSamplerState*> _samplers;
+		std::vector<std::shared_ptr<GLSamplerState>> _samplers;
 		//
 		std::vector<GLRenderTarget2D*> _renderTarget2Ds;
 		//
@@ -103,20 +103,20 @@ namespace ciri {
 		const static int MAX_MRTS{8};
 		GLenum _drawBuffers[MAX_MRTS];
 		//
-		std::vector<GLRasterizerState*> _rasterizerStates;
-		IRasterizerState* _activeRasterizerState;
+		std::vector<std::shared_ptr<GLRasterizerState>> _rasterizerStates;
+		GLRasterizerState* _activeRasterizerState;
 		//
-		std::vector<GLDepthStencilState*> _depthStencilStates;
-		IDepthStencilState* _activeDepthStencilState;
+		std::vector<std::shared_ptr<GLDepthStencilState>> _depthStencilStates;
+		GLDepthStencilState* _activeDepthStencilState;
 		//
 		std::string _shaderExt;
 		//
 		std::string _gpuName;
 		std::string _apiInfo;
 		//
-		std::vector<GLBlendState*> _blendStates;
+		std::vector<std::shared_ptr<GLBlendState>> _blendStates;
 		//
-		std::vector<GLTextureCube*> _textureCubes;
+		std::vector<std::shared_ptr<GLTextureCube>> _textureCubes;
 	};
 } // ciri
 

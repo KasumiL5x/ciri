@@ -33,8 +33,8 @@ public:
 private:
 	ciri::MayaCamera _camera;
 	//
-	ciri::IDepthStencilState* _depthStencilState;
-	ciri::IRasterizerState* _rasterizerState;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 	//
 	Grid _grid;
 	Axis _axis;

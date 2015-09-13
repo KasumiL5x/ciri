@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxsamplerstate__
 #define __ciri_gfx_dxsamplerstate__
 
+#include <memory>
 #include <d3d11.h>
 #include <ciri/gfx/ISamplerState.hpp>
 
@@ -9,7 +10,7 @@ namespace ciri {
 
 	class DXSamplerState : public ISamplerState {
 	public:
-		DXSamplerState( DXGraphicsDevice* device );
+		DXSamplerState( const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXSamplerState();
 
 		bool create(  const SamplerDesc& desc );
@@ -18,7 +19,7 @@ namespace ciri {
 		ID3D11SamplerState* getSamplerState() const;
 
 	private:
-		DXGraphicsDevice* _device;
+		std::shared_ptr<DXGraphicsDevice> _device;
 		ID3D11SamplerState* _samplerState;
 	};
 } // ciri

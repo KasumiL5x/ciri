@@ -4,7 +4,7 @@
 #include <cc/Common.hpp>
 
 namespace ciri {
-	DXSamplerState::DXSamplerState( DXGraphicsDevice* device )
+	DXSamplerState::DXSamplerState( const std::shared_ptr<DXGraphicsDevice>& device )
 		: ISamplerState(), _device(device), _samplerState(nullptr) {
 	}
 

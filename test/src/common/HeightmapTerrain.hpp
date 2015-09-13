@@ -75,7 +75,7 @@ private:
 
 	// textures
 	std::shared_ptr<ciri::ITexture2D> _textures[4];
-	ciri::ISamplerState* _sampler;
+	std::shared_ptr<ciri::ISamplerState> _sampler;
 };
 
 #endif /* __heightmap_terrain__ */

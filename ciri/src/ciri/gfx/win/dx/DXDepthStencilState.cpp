@@ -3,7 +3,7 @@
 #include <ciri/gfx/win/dx/CiriToDx.hpp>
 
 namespace ciri {
-	DXDepthStencilState::DXDepthStencilState( DXGraphicsDevice* device )
+	DXDepthStencilState::DXDepthStencilState( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IDepthStencilState(), _device(device), _state(nullptr) {
 	}
 

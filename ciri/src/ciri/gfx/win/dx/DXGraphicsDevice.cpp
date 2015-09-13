@@ -52,41 +52,26 @@ namespace ciri {
 		}
 
 		// clean texture cubes
-		for( auto cube : _textureCubes ) {
-			if( cube != nullptr ) {
-				cube->destroy();
-				delete cube;
-				cube = nullptr;
-			}
+		for( auto curr : _textureCubes ) {
+			curr->destroy();
 		}
+		_textureCubes.clear();
 
 		// clean blend states
-		for( auto state : _blendStates ) {
-			if( state != nullptr ) {
-				state->destroy();
-				delete state;
-				state = nullptr;
-			}
+		for( auto curr : _blendStates ) {
+			curr->destroy();
 		}
 		_blendStates.clear();
 
 		// clean depth stencil states
-		for( unsigned int i = 0; i < _depthStencilStates.size(); ++i ) {
-			if( _depthStencilStates[i] != nullptr ) {
-				_depthStencilStates[i]->destroy();
-				delete _depthStencilStates[i];
-				_depthStencilStates[i] = nullptr;
-			}
+		for( auto curr : _depthStencilStates ) {
+			curr->destroy();
 		}
 		_depthStencilStates.clear();
 
 		// clean rasterizer states
-		for( unsigned int i = 0; i < _rasterizerStates.size(); ++i ) {
-			if( _rasterizerStates[i] != nullptr ) {
-				_rasterizerStates[i]->destroy();
-				delete _rasterizerStates[i];
-				_rasterizerStates[i] = nullptr;
-			}
+		for( auto curr : _rasterizerStates ) {
+			curr->destroy();
 		}
 		_rasterizerStates.clear();
 
@@ -101,12 +86,8 @@ namespace ciri {
 		_renderTarget2Ds.clear();
 
 		// destroy samplers
-		for( unsigned int i = 0; i < _samplers.size(); ++i ) {
-			if( _samplers[i] != nullptr ) {
-				_samplers[i]->destroy();
-				delete _samplers[i];
-				_samplers[i] = nullptr;
-			}
+		for( auto curr : _samplers ) {
+			curr->destroy();
 		}
 		_samplers.clear();
 
@@ -218,7 +199,7 @@ namespace ciri {
 		return dxTexture;
 	}
 
-	ITextureCube* DXGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
+	std::shared_ptr<ITextureCube> DXGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
 		if( width <= 0 || height <= 0 ) {
 			return nullptr;
 		}
@@ -227,9 +208,9 @@ namespace ciri {
 			return nullptr;
 		}
 
-		DXTextureCube* dxCube = new DXTextureCube(this);
+		std::shared_ptr<DXTextureCube> dxCube = std::make_shared<DXTextureCube>(shared_from_this());
 		if( failed(dxCube->set(width, height, posx, negx, posy, negy, posz, negz)) ) {
-			delete dxCube;
+			dxCube.reset();
 			dxCube = nullptr;
 			return nullptr;
 		}
@@ -238,14 +219,14 @@ namespace ciri {
 		return dxCube;
 	}
 
-	ISamplerState* DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
+	std::shared_ptr<ISamplerState> DXGraphicsDevice::createSamplerState( const SamplerDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXSamplerState* dxSampler = new DXSamplerState(this);
+		std::shared_ptr<DXSamplerState> dxSampler = std::make_shared<DXSamplerState>(shared_from_this());
 		if( !dxSampler->create(desc) ) {
-			delete dxSampler;
+			dxSampler.reset();
 			dxSampler = nullptr;
 			return nullptr;
 		}
@@ -275,14 +256,14 @@ namespace ciri {
 		return dxTarget;
 	}
 
-	IRasterizerState* DXGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
+	std::shared_ptr<IRasterizerState> DXGraphicsDevice::createRasterizerState( const RasterizerDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXRasterizerState* dxRaster = new DXRasterizerState(this);
+		std::shared_ptr<DXRasterizerState> dxRaster = std::make_shared<DXRasterizerState>(shared_from_this());
 		if( !dxRaster->create(desc) ) {
-			delete dxRaster;
+			dxRaster.reset();
 			dxRaster = nullptr;
 			return nullptr;
 		}
@@ -290,14 +271,14 @@ namespace ciri {
 		return dxRaster;
 	}
 
-	IDepthStencilState* DXGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
+	std::shared_ptr<IDepthStencilState> DXGraphicsDevice::createDepthStencilState( const DepthStencilDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXDepthStencilState* dxState = new DXDepthStencilState(this);
+		std::shared_ptr<DXDepthStencilState> dxState = std::make_shared<DXDepthStencilState>(shared_from_this());
 		if( !dxState->create(desc) ) {
-			delete dxState;
+			dxState.reset();
 			dxState = nullptr;
 			return nullptr;
 		}
@@ -305,14 +286,14 @@ namespace ciri {
 		return dxState;
 	}
 
-	IBlendState* DXGraphicsDevice::createBlendState( const BlendDesc& desc ) {
+	std::shared_ptr<IBlendState> DXGraphicsDevice::createBlendState( const BlendDesc& desc ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXBlendState* dxState = new DXBlendState(this);
+		std::shared_ptr<DXBlendState> dxState = std::make_shared<DXBlendState>(shared_from_this());
 		if( !dxState->create(desc) ) {
-			delete dxState;
+			dxState.reset();
 			dxState = nullptr;
 			return nullptr;
 		}
@@ -424,12 +405,12 @@ namespace ciri {
 		}
 	}
 
-	void DXGraphicsDevice::setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) {
+	void DXGraphicsDevice::setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		DXTextureCube* dxTexture = reinterpret_cast<DXTextureCube*>(texture);
+		DXTextureCube* dxTexture = reinterpret_cast<DXTextureCube*>(texture.get());
 
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
 
@@ -445,12 +426,12 @@ namespace ciri {
 		}
 	}
 
-	void DXGraphicsDevice::setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) {
+	void DXGraphicsDevice::setSamplerState( int index, const std::shared_ptr<ISamplerState>& state, ShaderStage::Stage shaderStage ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state);
+		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state.get());
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11SamplerState* sampler[1] = { (state != nullptr) ? dxSampler->getSamplerState() : nullptr };
@@ -467,7 +448,7 @@ namespace ciri {
 		}
 	}
 
-	void DXGraphicsDevice::setBlendState( IBlendState* state ) {
+	void DXGraphicsDevice::setBlendState( const std::shared_ptr<IBlendState>& state ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -475,7 +456,7 @@ namespace ciri {
 		if( nullptr == state ) {
 			_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 		} else {
-			DXBlendState* dxState = reinterpret_cast<DXBlendState*>(state);
+			DXBlendState* dxState = reinterpret_cast<DXBlendState*>(state.get());
 			ID3D11BlendState* bs = dxState->getBlendState();
 			_context->OMSetBlendState(bs, dxState->getDesc().blendFactor, 0xffffffff); // todo: sample mask support?
 		}
@@ -670,7 +651,7 @@ namespace ciri {
 		//}
 	}
 
-	void DXGraphicsDevice::setRasterizerState( IRasterizerState* state ) {
+	void DXGraphicsDevice::setRasterizerState( const std::shared_ptr<IRasterizerState>& state ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -679,17 +660,17 @@ namespace ciri {
 		if( nullptr == state ) {
 			throw; // not yet implemented
 		}
-		if( state == _activeRasterizerState ) {
+
+		DXRasterizerState* dxRaster = reinterpret_cast<DXRasterizerState*>(state.get());
+		if( dxRaster == _activeRasterizerState ) {
 			return;
 		}
-		_activeRasterizerState = state;
-
-		DXRasterizerState* dxRaster = reinterpret_cast<DXRasterizerState*>(state);
+		_activeRasterizerState = dxRaster;
 		ID3D11RasterizerState* dxState = dxRaster->getRasterizerState();
 		_context->RSSetState(dxState);
 	}
 
-	void DXGraphicsDevice::setDepthStencilState( IDepthStencilState* state ) {
+	void DXGraphicsDevice::setDepthStencilState( const std::shared_ptr<IDepthStencilState>& state ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -699,12 +680,11 @@ namespace ciri {
 			throw; // not yet implemented
 		}
 
-		if( state == _activeDepthStencilState ) {
+		DXDepthStencilState* dxState = reinterpret_cast<DXDepthStencilState*>(state.get());
+		if( dxState == _activeDepthStencilState ) {
 			return;
 		}
-		_activeDepthStencilState = state;
-
-		DXDepthStencilState* dxState = reinterpret_cast<DXDepthStencilState*>(state);
+		_activeDepthStencilState = dxState;
 		ID3D11DepthStencilState* dxDepthStencilState = dxState->getState();
 		_context->OMSetDepthStencilState(dxDepthStencilState, dxState->getStencilRef());
 	}

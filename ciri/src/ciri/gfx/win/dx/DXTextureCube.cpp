@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXTextureCube::DXTextureCube( DXGraphicsDevice* device )
+	DXTextureCube::DXTextureCube( const std::shared_ptr<DXGraphicsDevice>& device )
 		: ITextureCube(), _device(device), _cubeTexture(nullptr), _shaderResourceView(nullptr) {
 	}
 

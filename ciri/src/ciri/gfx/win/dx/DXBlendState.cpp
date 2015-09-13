@@ -3,7 +3,7 @@
 #include <ciri/gfx/win/dx/CiriToDx.hpp>
 
 namespace ciri {
-	DXBlendState::DXBlendState( DXGraphicsDevice* device )
+	DXBlendState::DXBlendState( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IBlendState(), _device(device), _blendState(nullptr) {
 	}
 

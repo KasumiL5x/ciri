@@ -96,14 +96,14 @@ namespace ciri {
 		 * @param front  Data for texture facing negative Z.
 		 * @returns A pointer to a new ITextureCube, or nullptr upon error.
 		 */
-		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz )=0;
+		virtual std::shared_ptr<ITextureCube> createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz )=0;
 
 		/**
 		 * Creates a new sampler state.
 		 * @param desc Descriptor used to configure the sampler.
 		 * @returns A pointer to a new ISamplerState, or nullptr upon error.
 		 */
-		virtual ISamplerState* createSamplerState( const SamplerDesc& desc )=0;
+		virtual std::shared_ptr<ISamplerState> createSamplerState( const SamplerDesc& desc )=0;
 
 		/**
 		 * Creates a new 2d render target.
@@ -119,21 +119,21 @@ namespace ciri {
 		 * @param desc Descriptor used to configure the state.
 		 * @returns A pointer to a new IRasterizerState, or nullptr upon error.
 		 */
-		virtual IRasterizerState* createRasterizerState( const RasterizerDesc& desc )=0;
+		virtual std::shared_ptr<IRasterizerState> createRasterizerState( const RasterizerDesc& desc )=0;
 
 		/**
 		 * Creates a new depth stencil state.
 		 * @param desc Descriptor used to configure the state.
 		 * @returns A pointer to a new IDepthStencilState, or nullptr upon error.
 		 */
-		virtual IDepthStencilState* createDepthStencilState( const DepthStencilDesc& desc )=0;
+		virtual std::shared_ptr<IDepthStencilState> createDepthStencilState( const DepthStencilDesc& desc )=0;
 
 		/**
 		 * Creates a new blend state.
 		 * @param desc Descriptor used to configure the state.
 		 * @returns A pointer to a new IBlendState, or nullptr upon error.
 		 */
-		virtual IBlendState* createBlendState( const BlendDesc& desc )=0;
+		virtual std::shared_ptr<IBlendState> createBlendState( const BlendDesc& desc )=0;
 
 		/**
 		 * Makes the given shader active.
@@ -167,7 +167,7 @@ namespace ciri {
 		 * @param texture     Texture to bind.
 		 * @param shaderStage Stage at which to bind.
 		 */
-		virtual void setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage )=0;
+		virtual void setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage )=0;
 
 		/**
 		 * Binds a sampler state to a given slot at a given shader stage.
@@ -175,14 +175,14 @@ namespace ciri {
 		 * @param state       Sampler to bind.
 		 * @param shaderStage Stage at which to bind.
 		 */
-		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage )=0;
+		virtual void setSamplerState( int index, const std::shared_ptr<ISamplerState>& state, ShaderStage::Stage shaderStage )=0;
 
 		/**
 		 * Sets the current blend state.
 		 * If the provided state is null, the default state will be applied.
 		 * @param state Blend state to apply.
 		 */
-		virtual void setBlendState( IBlendState* state )=0;
+		virtual void setBlendState( const std::shared_ptr<IBlendState>& state )=0;
 
 		/**
 		 * Draws primitives from the currently bound vertex buffer.
@@ -236,13 +236,13 @@ namespace ciri {
 		 * Sets the active rasterizer state.
 		 * @param state Rasterizer state to make active.
 		 */
-		virtual void setRasterizerState( IRasterizerState* state )=0;
+		virtual void setRasterizerState( const std::shared_ptr<IRasterizerState>& state )=0;
 
 		/**
 		 * Sets the active depth stencil state.
 		 * @param state Depth stencil state to make active.
 		 */
-		virtual void setDepthStencilState( IDepthStencilState* state )=0;
+		virtual void setDepthStencilState( const std::shared_ptr<IDepthStencilState>& state )=0;
 
 		/**
 		 * Sets the expected shader extension to be returned by getShaderExt.

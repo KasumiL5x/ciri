@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXRasterizerState::DXRasterizerState( DXGraphicsDevice* device )
+	DXRasterizerState::DXRasterizerState( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IRasterizerState(), _device(device), _rasterizerState(nullptr) {
 	}
 

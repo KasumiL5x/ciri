@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxdepthstencilstate__
 #define __ciri_gfx_dxdepthstencilstate__
 
+#include <memory>
 #include <d3d11.h>
 #include <ciri/gfx/IDepthStencilState.hpp>
 
@@ -9,7 +10,7 @@ namespace ciri {
 
 	class DXDepthStencilState : public IDepthStencilState {
 	public:
-		DXDepthStencilState( DXGraphicsDevice* device );
+		DXDepthStencilState( const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXDepthStencilState();
 
 		bool create( const DepthStencilDesc& desc );
@@ -19,7 +20,7 @@ namespace ciri {
 		int getStencilRef() const;		
 
 	private:
-		DXGraphicsDevice* _device;
+		std::shared_ptr<DXGraphicsDevice> _device;
 		ID3D11DepthStencilState* _state;
 		DepthStencilDesc _desc;
 	};

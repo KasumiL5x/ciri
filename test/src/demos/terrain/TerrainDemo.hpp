@@ -50,8 +50,8 @@ private:
 private:
 	ciri::FPSCamera _camera;
 	//
-	ciri::IDepthStencilState* _depthStencilState;
-	ciri::IRasterizerState* _rasterizerState;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 	//
 	Axis _axis;
 	HeightmapTerrain _terrain;
@@ -62,21 +62,21 @@ private:
 	std::shared_ptr<ciri::IConstantBuffer> _waterConstantsBuffer; /**< Constant buffer for water shader. */
 	WaterConstants _waterConstants; /**< Acutual constants for above buffer. */
 	std::shared_ptr<ciri::ITexture2D> _waterNormalMap; /**< Normal map for water surface. */
-	ciri::ISamplerState* _waterSampler; /**< Sampler for water normal texture. */
-	ciri::IBlendState* _alphaBlendState; /**< Alpha blend state for water transparency. */
+	std::shared_ptr<ciri::ISamplerState> _waterSampler; /**< Sampler for water normal texture. */
+	std::shared_ptr<ciri::IBlendState> _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
 	ciri::IRenderTarget2D* _waterReflectionTarget;
-	ciri::ISamplerState* _waterReflectionSampler;
+	std::shared_ptr<ciri::ISamplerState> _waterReflectionSampler;
 	ciri::IRenderTarget2D* _waterRefractionTarget;
 
 	// cubemap test
-	ciri::ITextureCube* _cubemap;
+	std::shared_ptr<ciri::ITextureCube> _cubemap;
 	Model* _skybox;
 	std::shared_ptr<ciri::IShader> _skyboxShader;
 	std::shared_ptr<ciri::IConstantBuffer> _skyboxConstantsBuffer;
 	SkyboxConstants _skyboxConstants;
-	ciri::ISamplerState* _skyboxSampler;
-	ciri::IDepthStencilState* _skyboxDepthState;
+	std::shared_ptr<ciri::ISamplerState> _skyboxSampler;
+	std::shared_ptr<ciri::IDepthStencilState> _skyboxDepthState;
 	//
 	float _elapsedTime;
 
