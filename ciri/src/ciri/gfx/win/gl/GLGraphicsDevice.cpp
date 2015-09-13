@@ -144,12 +144,8 @@ namespace ciri {
 		_samplers.clear();
 
 		// destroy 2d textures
-		for( unsigned int i = 0; i < _texture2Ds.size(); ++i ) {
-			if( _texture2Ds[i] != nullptr ) {
-				_texture2Ds[i]->destroy();
-				delete _texture2Ds[i];
-				_texture2Ds[i] = nullptr;
-			}
+		for( auto curr : _texture2Ds ) {
+			curr->destroy();
 		}
 		_texture2Ds.clear();
 
@@ -238,7 +234,7 @@ namespace ciri {
 		return buffer;
 	}
 
-	ITexture2D* GLGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
+	std::shared_ptr<ITexture2D> GLGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
@@ -247,9 +243,9 @@ namespace ciri {
 			return nullptr;
 		}
 
-		GLTexture2D* glTexture = new GLTexture2D(flags);
+		std::shared_ptr<GLTexture2D> glTexture = std::make_shared<GLTexture2D>(flags);
 		if( failed(glTexture->setData(0, 0, width, height, pixels, format)) ) {
-			delete glTexture;
+			glTexture.reset();
 			glTexture = nullptr;
 			return nullptr;
 		}
@@ -298,7 +294,7 @@ namespace ciri {
 			return nullptr;
 		}
 
-		GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
+		std::shared_ptr<GLTexture2D> texture = std::static_pointer_cast<GLTexture2D>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
 		if( nullptr == texture ) {
 			return nullptr;
 		}
@@ -422,12 +418,12 @@ namespace ciri {
 		_activeIndexBuffer = glBuffer;
 	}
 
-	void GLGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+	void GLGraphicsDevice::setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture);
+		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture.get());
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
 	}
@@ -549,7 +545,7 @@ namespace ciri {
 
 		// attach all render target textures
 		for( int i = 0; i < numRenderTargets; ++i ) {
-			GLTexture2D* texture = reinterpret_cast<GLTexture2D*>(renderTargets[i]->getTexture2D());
+			const std::shared_ptr<GLTexture2D>& texture = std::static_pointer_cast<GLTexture2D>(renderTargets[i]->getTexture2D());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->getTextureId(), 0);
 		}
 

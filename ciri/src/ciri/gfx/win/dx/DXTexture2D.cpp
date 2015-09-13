@@ -5,7 +5,7 @@
 #include <ciri/core/StrUtil.hpp>
 
 namespace ciri {
-	DXTexture2D::DXTexture2D( int flags, DXGraphicsDevice* device )
+	DXTexture2D::DXTexture2D( int flags, const std::shared_ptr<DXGraphicsDevice>& device )
 		: ITexture2D(flags), _device(device), _flags(flags), _format(TextureFormat::Color), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {
 	}
 

@@ -1,6 +1,8 @@
 #ifndef __ciri_gfx_irendertarget2d__
 #define __ciri_gfx_irendertarget2d__
 
+#include <memory>
+
 namespace ciri {
 	class ITexture2D;
 
@@ -21,7 +23,7 @@ namespace ciri {
 		 * Gets the associated underlying 2d texture of the render target.
 		 * @return Pointer to the actual ITexture2D that the render target is representing.
 		 */
-		virtual ITexture2D* getTexture2D() const=0;
+		virtual std::shared_ptr<ITexture2D> getTexture2D() const=0;
 	};
 } // ciri
 

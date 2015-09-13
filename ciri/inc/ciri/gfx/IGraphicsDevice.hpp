@@ -81,7 +81,7 @@ namespace ciri {
 		 * @param pixels Data to initialize the texture with.  If null, no specific data is set.
 		 * @returns A pointer to a new ITexture2D of the given parameters, or nullptr upon error.
 		 */
-		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr )=0;
+		virtual std::shared_ptr<ITexture2D> createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr )=0;
 
 		/**
 		 * Creates a cubemap texture made up of six 2d textures.
@@ -159,7 +159,7 @@ namespace ciri {
 		 * @param texture     Texture to bind.
 		 * @param shaderStage Stage at which to bind.
 		 */
-		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage )=0;
+		virtual void setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage )=0;
 
 		/**
 		 * Binds a cube texture to a slot at a given shader stage.

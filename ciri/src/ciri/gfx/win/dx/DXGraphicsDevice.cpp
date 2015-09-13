@@ -111,12 +111,8 @@ namespace ciri {
 		_samplers.clear();
 
 		// destroy 2d textures
-		for( unsigned int i = 0; i < _texture2Ds.size(); ++i ) {
-			if( _texture2Ds[i] != nullptr ) {
-				_texture2Ds[i]->destroy();
-				delete _texture2Ds[i];
-				_texture2Ds[i] = nullptr;
-			}
+		for( auto curr : _texture2Ds ) {
+			curr->destroy();
 		}
 		_texture2Ds.clear();
 
@@ -202,7 +198,7 @@ namespace ciri {
 		return buffer;
 	}
 
-	ITexture2D* DXGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
+	std::shared_ptr<ITexture2D> DXGraphicsDevice::createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
@@ -211,9 +207,9 @@ namespace ciri {
 			return nullptr;
 		}
 
-		DXTexture2D* dxTexture = new DXTexture2D(flags, this);
+		std::shared_ptr<DXTexture2D> dxTexture = std::make_shared<DXTexture2D>(flags, shared_from_this());
 		if( failed(dxTexture->setData(0, 0, width, height, pixels, format)) ) {
-			delete dxTexture;
+			dxTexture.reset();
 			dxTexture = nullptr;
 			return nullptr;
 		}
@@ -262,14 +258,14 @@ namespace ciri {
 			return nullptr;
 		}
 
-		DXTexture2D* texture = reinterpret_cast<DXTexture2D*>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
+		std::shared_ptr<DXTexture2D> texture = std::static_pointer_cast<DXTexture2D>(this->createTexture2D(width, height, format, TextureFlags::RenderTarget, nullptr));
 		if( nullptr == texture ) {
 			return nullptr;
 		}
-		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(this);
+		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(shared_from_this());
 		if( !dxTarget->create(texture) ) {
 			texture->destroy();
-			delete texture;
+			texture.reset();
 			texture = nullptr;
 			_texture2Ds.pop_back();
 			delete dxTarget;
@@ -406,12 +402,12 @@ namespace ciri {
 		_activeIndexBuffer = dxBuffer;
 	}
 
-	void DXGraphicsDevice::setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) {
+	void DXGraphicsDevice::setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage ) {
 		if( !_isValid ) {
 			return;
 		}
 
-		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture);
+		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture.get());
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };

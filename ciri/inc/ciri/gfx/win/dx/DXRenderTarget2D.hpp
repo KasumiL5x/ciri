@@ -10,19 +10,19 @@ namespace ciri {
 
 	class DXRenderTarget2D : public IRenderTarget2D {
 	public:
-		DXRenderTarget2D( DXGraphicsDevice* device );
+		DXRenderTarget2D( const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXRenderTarget2D();
 
-		bool create( DXTexture2D* texture );
+		bool create( const std::shared_ptr<DXTexture2D>& texture );
 		virtual void destroy() override;
 
-		virtual ITexture2D* getTexture2D() const override;
+		virtual std::shared_ptr<ITexture2D> getTexture2D() const override;
 
 		ID3D11RenderTargetView* getRenderTargetView() const;
 
 	private:
-		DXGraphicsDevice* _device;
-		DXTexture2D* _texture;
+		std::shared_ptr<DXGraphicsDevice> _device;
+		std::shared_ptr<DXTexture2D> _texture;
 		ID3D11RenderTargetView* _renderTargetView;
 	};
 } // ciri

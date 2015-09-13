@@ -39,7 +39,7 @@ public:
 	~HeightmapTerrain();
 
 	bool generate( const ciri::TGA& heightmap, std::shared_ptr<ciri::IGraphicsDevice> device );
-	void setTextures( ciri::ITexture2D* tex0, ciri::ITexture2D* tex1, ciri::ITexture2D* tex2, ciri::ITexture2D* tex3 );
+	void setTextures( const std::shared_ptr<ciri::ITexture2D>& tex0, const std::shared_ptr<ciri::ITexture2D>& tex1, const std::shared_ptr<ciri::ITexture2D>& tex2, const std::shared_ptr<ciri::ITexture2D>& tex3 );
 	void setClippingPlaneActive( bool active );
 	void setClippingPlaneParams( float height, const cc::Mat4f& viewProj, bool flip );
 	void draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::IGraphicsDevice> device );
@@ -74,7 +74,7 @@ private:
 	PerFrameConstants _perFrameConstants;
 
 	// textures
-	ciri::ITexture2D* _textures[4];
+	std::shared_ptr<ciri::ITexture2D> _textures[4];
 	ciri::ISamplerState* _sampler;
 };
 

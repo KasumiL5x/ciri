@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXRenderTarget2D::DXRenderTarget2D( DXGraphicsDevice* device )
+	DXRenderTarget2D::DXRenderTarget2D( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IRenderTarget2D(), _device(device), _texture(nullptr), _renderTargetView(nullptr) {
 	}
 
@@ -10,7 +10,7 @@ namespace ciri {
 		destroy();
 	}
 
-	bool DXRenderTarget2D::create( DXTexture2D* texture ) {
+	bool DXRenderTarget2D::create( const std::shared_ptr<DXTexture2D>& texture ) {
 		if( _renderTargetView != nullptr ) {
 			return false;
 		}
@@ -45,7 +45,7 @@ namespace ciri {
 		}
 	}
 
-	ITexture2D* DXRenderTarget2D::getTexture2D() const {
+	std::shared_ptr<ITexture2D> DXRenderTarget2D::getTexture2D() const {
 		return _texture;
 	}
 

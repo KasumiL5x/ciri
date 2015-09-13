@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/gl/GLTexture2D.hpp>
 
 namespace ciri {
-	GLRenderTarget2D::GLRenderTarget2D( GLTexture2D* texture )
+	GLRenderTarget2D::GLRenderTarget2D( const std::shared_ptr<GLTexture2D>& texture )
 		:IRenderTarget2D(), _texture(texture) {
 	}
 
@@ -13,7 +13,7 @@ namespace ciri {
 	void GLRenderTarget2D::destroy() {
 	}
 
-	ITexture2D* GLRenderTarget2D::getTexture2D() const {
+	std::shared_ptr<ITexture2D> GLRenderTarget2D::getTexture2D() const {
 		return _texture;
 	}
 } // ciri

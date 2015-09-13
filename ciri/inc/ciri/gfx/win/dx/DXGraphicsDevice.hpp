@@ -32,7 +32,7 @@ namespace ciri {
 		virtual std::shared_ptr<IVertexBuffer> createVertexBuffer() override;
 		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer() override;
 		virtual std::shared_ptr<IConstantBuffer> createConstantBuffer() override;
-		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
+		virtual std::shared_ptr<ITexture2D> createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
 		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc ) override;
 		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format ) override;
@@ -42,7 +42,7 @@ namespace ciri {
 		virtual void applyShader( const std::shared_ptr<IShader>& shader ) override;
 		virtual void setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer ) override;
 		virtual void setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer ) override;
-		virtual void setTexture2D( int index, ITexture2D* texture, ShaderStage::Stage shaderStage ) override;
+		virtual void setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setTextureCube( int index, ITextureCube* texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setSamplerState( int index, ISamplerState* state, ShaderStage::Stage shaderStage ) override;
 		virtual void setBlendState( IBlendState* state ) override;
@@ -93,7 +93,7 @@ namespace ciri {
 		//
 		std::vector<std::shared_ptr<DXConstantBuffer>> _constantBuffers;
 		//
-		std::vector<DXTexture2D*> _texture2Ds;
+		std::vector<std::shared_ptr<DXTexture2D>> _texture2Ds;
 		//
 		std::vector<DXSamplerState*> _samplers;
 		//

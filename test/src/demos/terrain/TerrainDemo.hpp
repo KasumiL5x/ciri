@@ -61,7 +61,7 @@ private:
 	std::shared_ptr<ciri::IShader> _waterShader; /**< Shader to render the water. */
 	std::shared_ptr<ciri::IConstantBuffer> _waterConstantsBuffer; /**< Constant buffer for water shader. */
 	WaterConstants _waterConstants; /**< Acutual constants for above buffer. */
-	ciri::ITexture2D* _waterNormalMap; /**< Normal map for water surface. */
+	std::shared_ptr<ciri::ITexture2D> _waterNormalMap; /**< Normal map for water surface. */
 	ciri::ISamplerState* _waterSampler; /**< Sampler for water normal texture. */
 	ciri::IBlendState* _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */

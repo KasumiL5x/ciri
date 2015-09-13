@@ -63,10 +63,10 @@ void TerrainDemo::onLoadContent() {
 	ciri::TGA rockTga; rockTga.loadFromFile("terrain/rock.tga", true);
 	ciri::TGA sandTga; sandTga.loadFromFile("terrain/sand.tga", true);
 	ciri::TGA snowTga; snowTga.loadFromFile("terrain/snow.tga", true);
-	ciri::ITexture2D* grassTex = graphicsDevice()->createTexture2D(grassTga.getWidth(), grassTga.getHeight(), ciri::TextureFormat::Color, 0, grassTga.getPixels());
-	ciri::ITexture2D* rockTex = graphicsDevice()->createTexture2D(rockTga.getWidth(), rockTga.getHeight(), ciri::TextureFormat::Color, 0, rockTga.getPixels());
-	ciri::ITexture2D* sandTex = graphicsDevice()->createTexture2D(sandTga.getWidth(), sandTga.getHeight(), ciri::TextureFormat::Color, 0, sandTga.getPixels());
-	ciri::ITexture2D* snowTex = graphicsDevice()->createTexture2D(snowTga.getWidth(), snowTga.getHeight(), ciri::TextureFormat::Color, 0, snowTga.getPixels());
+	std::shared_ptr<ciri::ITexture2D> grassTex = graphicsDevice()->createTexture2D(grassTga.getWidth(), grassTga.getHeight(), ciri::TextureFormat::Color, 0, grassTga.getPixels());
+	std::shared_ptr<ciri::ITexture2D> rockTex = graphicsDevice()->createTexture2D(rockTga.getWidth(), rockTga.getHeight(), ciri::TextureFormat::Color, 0, rockTga.getPixels());
+	std::shared_ptr<ciri::ITexture2D> sandTex = graphicsDevice()->createTexture2D(sandTga.getWidth(), sandTga.getHeight(), ciri::TextureFormat::Color, 0, sandTga.getPixels());
+	std::shared_ptr<ciri::ITexture2D> snowTex = graphicsDevice()->createTexture2D(snowTga.getWidth(), snowTga.getHeight(), ciri::TextureFormat::Color, 0, snowTga.getPixels());
 	_terrain.setTextures(grassTex, rockTex, sandTex, snowTex);
 
 	// configure, load, etc, the water shader and its constants

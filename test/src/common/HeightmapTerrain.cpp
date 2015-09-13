@@ -192,7 +192,7 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<cir
 	return true;
 }
 
-void HeightmapTerrain::setTextures( ciri::ITexture2D* tex0, ciri::ITexture2D* tex1, ciri::ITexture2D* tex2, ciri::ITexture2D* tex3 ) {
+void HeightmapTerrain::setTextures( const std::shared_ptr<ciri::ITexture2D>& tex0, const std::shared_ptr<ciri::ITexture2D>& tex1, const std::shared_ptr<ciri::ITexture2D>& tex2, const std::shared_ptr<ciri::ITexture2D>& tex3 ) {
 	_textures[0] = tex0;
 	_textures[1] = tex1;
 	_textures[2] = tex2;

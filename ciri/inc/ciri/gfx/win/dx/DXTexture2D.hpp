@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxtexture2d__
 #define __ciri_gfx_dxtexture2d__
 
+#include <memory>
 #include <d3d11.h>
 #include <ciri/gfx/ITexture2D.hpp>
 
@@ -9,7 +10,7 @@ namespace ciri {
 
 	class DXTexture2D : public ITexture2D {
 	public:
-		DXTexture2D( int flags, DXGraphicsDevice* device );
+		DXTexture2D( int flags, const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXTexture2D();
 
 		virtual void destroy() override;
@@ -32,7 +33,7 @@ namespace ciri {
 		UINT getMiscFlags() const;
 
 	private:
-		DXGraphicsDevice* _device;
+		std::shared_ptr<DXGraphicsDevice> _device;
 		int _flags;
 		TextureFormat::Format _format;
 		ID3D11Texture2D* _texture2D;
