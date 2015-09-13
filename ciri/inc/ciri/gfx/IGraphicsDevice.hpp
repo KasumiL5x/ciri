@@ -70,7 +70,7 @@ namespace ciri {
 		 * Creates a new constant buffer.
 		 * @returns A pointer to a new IConstantBuffer, or nullptr upon error.
 		 */
-		virtual IConstantBuffer* createConstantBuffer()=0;
+		virtual std::shared_ptr<IConstantBuffer> createConstantBuffer()=0;
 
 		/**
 		 * Creates a new 2d texture optionally initialized with data.

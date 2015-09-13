@@ -37,7 +37,7 @@ public:
 private:
 	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
 	std::shared_ptr<ciri::IShader> _shader;
-	ciri::IConstantBuffer* _constantsBuffer;;
+	std::shared_ptr<ciri::IConstantBuffer> _constantsBuffer;;
 	AxisConstants _constants;
 };
 

@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_ishader__
 #define __ciri_gfx_ishader__
 
+#include <memory>
 #include "VertexElement.hpp"
 #include "../core/ErrorCodes.hpp"
 
@@ -58,7 +59,7 @@ namespace ciri {
 		 * @param shaderTypeFlags Bitflag of ShaderStage to define which stage(s) the constant buffer is bound to.
 		 * @returns ErrorCode indicating success or failure.
 		 */
-		virtual ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags )=0;
+		virtual ErrorCode addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags )=0;
 
 		/**
 		 * Uninitializes the shader.

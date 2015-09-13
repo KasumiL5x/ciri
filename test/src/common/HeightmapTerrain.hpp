@@ -70,7 +70,7 @@ private:
 	std::shared_ptr<ciri::IShader> _shader;
 
 	// constant buffers
-	ciri::IConstantBuffer* _perFrameConstantBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _perFrameConstantBuffer;
 	PerFrameConstants _perFrameConstants;
 
 	// textures

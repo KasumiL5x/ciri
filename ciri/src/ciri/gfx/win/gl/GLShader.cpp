@@ -14,7 +14,7 @@ namespace ciri {
 		_vertexDeclaration.add(element);
 	}
 
-	ErrorCode GLShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
+	ErrorCode GLShader::addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags ) {
 		if( nullptr == buffer || nullptr == name ) {
 			return ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
@@ -23,7 +23,7 @@ namespace ciri {
 			return ErrorCode::CIRI_SHADER_INVALID;
 		}
 
-		GLConstantBuffer* glBuffer = reinterpret_cast<GLConstantBuffer*>(buffer);
+		std::shared_ptr<GLConstantBuffer> glBuffer = std::static_pointer_cast<GLConstantBuffer>(buffer);
 
 		const GLuint blockIndex = glGetUniformBlockIndex(_program, name);
 		if( GL_INVALID_INDEX == blockIndex ) {

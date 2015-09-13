@@ -31,7 +31,7 @@ namespace ciri {
 		virtual std::shared_ptr<IShader> createShader() override;
 		virtual std::shared_ptr<IVertexBuffer> createVertexBuffer() override;
 		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer() override;
-		virtual IConstantBuffer* createConstantBuffer() override;
+		virtual std::shared_ptr<IConstantBuffer> createConstantBuffer() override;
 		virtual ITexture2D* createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
 		virtual ITextureCube* createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 		virtual ISamplerState* createSamplerState( const SamplerDesc& desc ) override;
@@ -91,7 +91,7 @@ namespace ciri {
 		DXVertexBuffer* _activeVertexBuffer;
 		DXIndexBuffer* _activeIndexBuffer;
 		//
-		std::vector<DXConstantBuffer*> _constantBuffers;
+		std::vector<std::shared_ptr<DXConstantBuffer>> _constantBuffers;
 		//
 		std::vector<DXTexture2D*> _texture2Ds;
 		//

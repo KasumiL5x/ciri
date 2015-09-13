@@ -21,7 +21,7 @@ namespace ciri {
 		virtual void addInputElement( const VertexElement& element ) override;
 		virtual ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps ) override;
 		virtual ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps ) override;
-		virtual ErrorCode addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) override;
+		virtual ErrorCode addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags ) override;
 		virtual void destroy() override;
 		virtual const std::vector<ShaderError>& getErrors() const override;
 		virtual bool isValid() const override;
@@ -31,9 +31,9 @@ namespace ciri {
 		ID3D11PixelShader* getPixelShader() const;
 		ID3D11InputLayout* getInputLayout() const;
 
-		const std::vector<DXConstantBuffer*>& getVertexConstants() const;
-		const std::vector<DXConstantBuffer*>& getGeometryConstants() const;
-		const std::vector<DXConstantBuffer*>& getPixelConstants() const;
+		const std::vector<std::shared_ptr<DXConstantBuffer>>& getVertexConstants() const;
+		const std::vector<std::shared_ptr<DXConstantBuffer>>& getGeometryConstants() const;
+		const std::vector<std::shared_ptr<DXConstantBuffer>>& getPixelConstants() const;
 
 	private:
 		void addError( ErrorCode code, const std::string& msg );
@@ -56,9 +56,9 @@ namespace ciri {
 		std::unordered_map<std::string, int> _vertexConstantBufferIndices;
 		std::unordered_map<std::string, int> _geometryConstantBufferIndices;
 		std::unordered_map<std::string, int> _pixelConstantBufferIndices;
-		std::vector<DXConstantBuffer*> _vertexConstantBuffers;
-		std::vector<DXConstantBuffer*> _geometryConstantBuffers;
-		std::vector<DXConstantBuffer*> _pixelConstantBuffers;
+		std::vector<std::shared_ptr<DXConstantBuffer>> _vertexConstantBuffers;
+		std::vector<std::shared_ptr<DXConstantBuffer>> _geometryConstantBuffers;
+		std::vector<std::shared_ptr<DXConstantBuffer>> _pixelConstantBuffers;
 	};
 } // ciri
 

@@ -154,12 +154,8 @@ namespace ciri {
 		_texture2Ds.clear();
 
 		// destroy constant buffers
-		for( unsigned int i = 0; i < _constantBuffers.size(); ++i ) {
-			if( _constantBuffers[i] != nullptr ) {
-				_constantBuffers[i]->destroy();
-				delete _constantBuffers[i];
-				_constantBuffers[i] = nullptr;
-			}
+		for( auto curr : _constantBuffers ) {
+			curr->destroy();
 		}
 		_constantBuffers.clear();
 
@@ -230,14 +226,14 @@ namespace ciri {
 		return buffer;
 	}
 
-	IConstantBuffer* GLGraphicsDevice::createConstantBuffer() {
+	std::shared_ptr<IConstantBuffer> GLGraphicsDevice::createConstantBuffer() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
 		// note: using the size of a vector as the index means they can't be removed.
 		// todo: update the index to a smarter system that allows for reuse of deleted buffer indices
-		GLConstantBuffer* buffer = new GLConstantBuffer(_constantBuffers.size());
+		std::shared_ptr<GLConstantBuffer> buffer = std::make_shared<GLConstantBuffer>(_constantBuffers.size());
 		_constantBuffers.push_back(buffer);
 		return buffer;
 	}

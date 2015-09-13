@@ -95,7 +95,7 @@ private:
 	//
 	std::shared_ptr<ciri::IShader> _shader;
 	Constants _constants;
-	ciri::IConstantBuffer* _constantsBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _constantsBuffer;
 };
 
 #endif /* __opencloth__ */

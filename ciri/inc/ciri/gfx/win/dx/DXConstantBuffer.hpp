@@ -1,6 +1,7 @@
 #ifndef __ciri_gfx_dxconstantbuffer__
 #define __ciri_gfx_dxconstantbuffer__
 
+#include <memory>
 #include <d3d11.h>
 #include <ciri/gfx/IConstantBuffer.hpp>
 
@@ -9,7 +10,7 @@ namespace ciri {
 
 	class DXConstantBuffer : public IConstantBuffer {
 	public:
-		DXConstantBuffer( DXGraphicsDevice* device );
+		DXConstantBuffer( const std::shared_ptr<DXGraphicsDevice>& device );
 		virtual ~DXConstantBuffer();
 
 		virtual ErrorCode setData( int dataSize, void* data ) override;
@@ -21,7 +22,7 @@ namespace ciri {
 		int getIndex() const;
 
 	private:
-		DXGraphicsDevice* _device;
+		std::shared_ptr<DXGraphicsDevice> _device;
 		ID3D11Buffer* _buffer;
 		int _index;
 	};

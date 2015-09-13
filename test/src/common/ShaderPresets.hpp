@@ -39,9 +39,9 @@ public:
 
 private:
 	std::shared_ptr<ciri::IShader> _shader;
-	ciri::IConstantBuffer* _constantBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _constantBuffer;
 	Constants _constants;
-	ciri::IConstantBuffer* _materialConstantsBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _materialConstantsBuffer;
 	MaterialConstants _materialConstants;
 };
 

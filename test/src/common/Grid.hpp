@@ -49,7 +49,7 @@ private:
 	//
 	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
 	std::shared_ptr<ciri::IShader> _shader;
-	ciri::IConstantBuffer* _constantBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _constantBuffer;
 	GridConstants _constants;
 	//
 	float _gridSpacing;

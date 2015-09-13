@@ -22,7 +22,7 @@ namespace ciri {
 		_vertexDeclaration.add(element);
 	}
 
-	ErrorCode DXShader::addConstants( IConstantBuffer* buffer, const char* name, int shaderTypeFlags ) {
+	ErrorCode DXShader::addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags ) {
 		if( nullptr == buffer || nullptr == name ) {
 			return ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
@@ -31,7 +31,7 @@ namespace ciri {
 			return ErrorCode::CIRI_SHADER_INVALID;
 		}
 
-		DXConstantBuffer* dxBuffer = reinterpret_cast<DXConstantBuffer*>(buffer);
+		std::shared_ptr<DXConstantBuffer> dxBuffer = std::static_pointer_cast<DXConstantBuffer>(buffer);
 
 		bool wasBufferSet = false;
 
@@ -317,15 +317,15 @@ namespace ciri {
 		return _inputLayout;
 	}
 
-	const std::vector<DXConstantBuffer*>& DXShader::getVertexConstants() const {
+	const std::vector<std::shared_ptr<DXConstantBuffer>>& DXShader::getVertexConstants() const {
 		return _vertexConstantBuffers;
 	}
 
-	const std::vector<DXConstantBuffer*>& DXShader::getGeometryConstants() const {
+	const std::vector<std::shared_ptr<DXConstantBuffer>>& DXShader::getGeometryConstants() const {
 		return _geometryConstantBuffers;
 	}
 
-	const std::vector<DXConstantBuffer*>& DXShader::getPixelConstants() const {
+	const std::vector<std::shared_ptr<DXConstantBuffer>>& DXShader::getPixelConstants() const {
 		return _pixelConstantBuffers;
 	}
 

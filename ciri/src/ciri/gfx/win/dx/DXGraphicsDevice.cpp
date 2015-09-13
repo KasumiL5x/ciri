@@ -121,12 +121,8 @@ namespace ciri {
 		_texture2Ds.clear();
 
 		// destroy constant buffers
-		for( unsigned int i = 0; i < _constantBuffers.size(); ++i ) {
-			if( _constantBuffers[i] != nullptr ) {
-				_constantBuffers[i]->destroy();
-				delete _constantBuffers[i];
-				_constantBuffers[i] = nullptr;
-			}
+		for( auto curr : _constantBuffers ) {
+			curr->destroy();
 		}
 		_constantBuffers.clear();
 
@@ -196,12 +192,12 @@ namespace ciri {
 		return buffer;
 	}
 
-	IConstantBuffer* DXGraphicsDevice::createConstantBuffer() {
+	std::shared_ptr<IConstantBuffer> DXGraphicsDevice::createConstantBuffer() {
 		if( !_isValid ) {
 			return nullptr;
 		}
 
-		DXConstantBuffer* buffer = new DXConstantBuffer(this);
+		std::shared_ptr<DXConstantBuffer> buffer = std::make_shared<DXConstantBuffer>(shared_from_this());
 		_constantBuffers.push_back(buffer);
 		return buffer;
 	}
@@ -342,7 +338,7 @@ namespace ciri {
 
 		ID3D11VertexShader* vs = dxShader->getVertexShader();
 		_context->VSSetShader(vs, nullptr, 0);
-		const std::vector<DXConstantBuffer*>& vertexConstants = dxShader->getVertexConstants();
+		const std::vector<std::shared_ptr<DXConstantBuffer>>& vertexConstants = dxShader->getVertexConstants();
 		for( unsigned int i = 0; i < vertexConstants.size(); ++i ) {
 			ID3D11Buffer* buffer = vertexConstants[i]->getBuffer();
 			const int index = vertexConstants[i]->getIndex();
@@ -354,7 +350,7 @@ namespace ciri {
 		ID3D11GeometryShader* gs = dxShader->getGeometryShader();
 		if( gs != nullptr ) {
 			_context->GSSetShader(gs, nullptr, 0);
-			const std::vector<DXConstantBuffer*>& geometryConstants = dxShader->getGeometryConstants();
+			const std::vector<std::shared_ptr<DXConstantBuffer>>& geometryConstants = dxShader->getGeometryConstants();
 			for( unsigned int i = 0; i < geometryConstants.size(); ++i ) {
 				ID3D11Buffer* buffer = geometryConstants[i]->getBuffer();
 				const int index = geometryConstants[i]->getIndex();
@@ -364,7 +360,7 @@ namespace ciri {
 
 		ID3D11PixelShader* ps = dxShader->getPixelShader();
 		_context->PSSetShader(ps, nullptr, 0);
-		const std::vector<DXConstantBuffer*>& pixelConstants = dxShader->getPixelConstants();
+		const std::vector<std::shared_ptr<DXConstantBuffer>>& pixelConstants = dxShader->getPixelConstants();
 		for( unsigned int i = 0; i < pixelConstants.size(); ++i ) {
 			ID3D11Buffer* buffer = pixelConstants[i]->getBuffer();
 			const int index = pixelConstants[i]->getIndex();

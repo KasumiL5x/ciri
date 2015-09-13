@@ -2,7 +2,7 @@
 #include <ciri/gfx/win/dx/DXGraphicsDevice.hpp>
 
 namespace ciri {
-	DXConstantBuffer::DXConstantBuffer( DXGraphicsDevice* device )
+	DXConstantBuffer::DXConstantBuffer( const std::shared_ptr<DXGraphicsDevice>& device )
 		: IConstantBuffer(), _device(device), _buffer(nullptr), _index(0) {
 	}
 
