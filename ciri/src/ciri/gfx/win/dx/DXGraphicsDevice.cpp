@@ -76,12 +76,8 @@ namespace ciri {
 		_rasterizerStates.clear();
 
 		// destroy 2d render targets
-		for( unsigned int i = 0; i < _renderTarget2Ds.size(); ++i ) {
-			if( _renderTarget2Ds[i] != nullptr ) {
-				_renderTarget2Ds[i]->destroy();
-				delete _renderTarget2Ds[i];
-				_renderTarget2Ds[i] = nullptr;
-			}
+		for( auto curr : _renderTarget2Ds ) {
+			curr->destroy();
 		}
 		_renderTarget2Ds.clear();
 
@@ -234,7 +230,7 @@ namespace ciri {
 		return dxSampler;
 	}
 
-	IRenderTarget2D* DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
+	std::shared_ptr<IRenderTarget2D> DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
@@ -243,13 +239,13 @@ namespace ciri {
 		if( nullptr == texture ) {
 			return nullptr;
 		}
-		DXRenderTarget2D* dxTarget = new DXRenderTarget2D(shared_from_this());
+		std::shared_ptr<DXRenderTarget2D> dxTarget = std::make_shared<DXRenderTarget2D>(shared_from_this());
 		if( !dxTarget->create(texture) ) {
 			texture->destroy();
 			texture.reset();
 			texture = nullptr;
 			_texture2Ds.pop_back();
-			delete dxTarget;
+			dxTarget.reset();
 			dxTarget = nullptr;
 		}
 		_renderTarget2Ds.push_back(dxTarget);

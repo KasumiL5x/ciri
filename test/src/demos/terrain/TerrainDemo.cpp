@@ -299,7 +299,8 @@ void TerrainDemo::onDraw() {
 		const cc::Mat4f viewProjMatrix = projMatrix * viewMatrix;
 
 		// reflections
-		device->setRenderTargets(&_waterReflectionTarget, 1);
+		ciri::IRenderTarget2D* renderTarget = _waterReflectionTarget.get();
+		device->setRenderTargets(&renderTarget, 1);
 		device->clear(ciri::ClearFlags::Color);
 		drawSkybox(viewMatrix, projMatrix);
 		_terrain.setClippingPlaneActive(true);
@@ -309,7 +310,8 @@ void TerrainDemo::onDraw() {
 
 		// refractions
 		const cc::Mat4f standardViewProj = _camera.getProj() * _camera.getView();
-		device->setRenderTargets(&_waterRefractionTarget, 1);
+		renderTarget = _waterRefractionTarget.get();
+		device->setRenderTargets(&renderTarget, 1);
 		device->clear(ciri::ClearFlags::Color);
 		_terrain.setClippingPlaneActive(true);
 		_terrain.setClippingPlaneParams(WATER_HEIGHT + 1.5f, standardViewProj, false);

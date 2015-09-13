@@ -112,7 +112,7 @@ namespace ciri {
 		 * @param format Format of the render target.
 		 * @returns A pointer to a new IRenderTarget2D, or nullptr upon error.
 		 */
-		virtual IRenderTarget2D* createRenderTarget2D( int width, int height, TextureFormat::Format format )=0;
+		virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format )=0;
 
 		/**
 		 * Creates a new rasterizer state.

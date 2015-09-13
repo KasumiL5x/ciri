@@ -65,9 +65,9 @@ private:
 	std::shared_ptr<ciri::ISamplerState> _waterSampler; /**< Sampler for water normal texture. */
 	std::shared_ptr<ciri::IBlendState> _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
-	ciri::IRenderTarget2D* _waterReflectionTarget;
+	std::shared_ptr<ciri::IRenderTarget2D> _waterReflectionTarget;
 	std::shared_ptr<ciri::ISamplerState> _waterReflectionSampler;
-	ciri::IRenderTarget2D* _waterRefractionTarget;
+	std::shared_ptr<ciri::IRenderTarget2D> _waterRefractionTarget;
 
 	// cubemap test
 	std::shared_ptr<ciri::ITextureCube> _cubemap;

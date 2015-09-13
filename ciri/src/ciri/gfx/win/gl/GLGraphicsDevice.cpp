@@ -109,12 +109,8 @@ namespace ciri {
 		}
 
 		// destroy 2d render targets
-		for( unsigned int i = 0; i < _renderTarget2Ds.size(); ++i ) {
-			if( _renderTarget2Ds[i] != nullptr ) {
-				_renderTarget2Ds[i]->destroy();
-				delete _renderTarget2Ds[i];
-				_renderTarget2Ds[i] = nullptr;
-			}
+		for( auto curr : _renderTarget2Ds ) {
+			curr->destroy();
 		}
 		_renderTarget2Ds.clear();
 
@@ -270,7 +266,7 @@ namespace ciri {
 		return glSampler;
 	}
 
-	IRenderTarget2D* GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
+	std::shared_ptr<IRenderTarget2D> GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
 		if( !_isValid ) {
 			return nullptr;
 		}
@@ -279,7 +275,7 @@ namespace ciri {
 		if( nullptr == texture ) {
 			return nullptr;
 		}
-		GLRenderTarget2D* glTarget = new GLRenderTarget2D(texture);
+		std::shared_ptr<GLRenderTarget2D> glTarget = std::make_shared<GLRenderTarget2D>(texture);
 		_renderTarget2Ds.push_back(glTarget);
 		return glTarget;
 	}
