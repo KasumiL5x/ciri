@@ -191,14 +191,14 @@ namespace ciri {
 		 * @param vertexCount Number of vertices to draw.
 		 * @param startIndex  Offset into the bound vertex buffer of which to start.
 		 */
-		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex )=0;
+		virtual void drawArrays( PrimitiveTopology topology, int vertexCount, int startIndex )=0;
 
 		/**
 		 * Draws indexed primitives from the currently bound vertex and index buffer.
 		 * @param topology   Topology to draw with.
 		 * @param indexCount Number of indices to draw.
 		 */
-		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount )=0;
+		virtual void drawIndexed( PrimitiveTopology topology, int indexCount )=0;
 
 		/**
 		 * Sets active render targets.
@@ -278,7 +278,7 @@ namespace ciri {
 		/**
 		 * Gets the underlying API type.
 		 */
-		virtual GraphicsApiType::Type getApiType() const=0;
+		virtual GraphicsApiType getApiType() const=0;
 	};
 
 	/**

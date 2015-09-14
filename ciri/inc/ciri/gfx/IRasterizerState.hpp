@@ -6,9 +6,9 @@
 
 namespace ciri {
 	struct RasterizerDesc {
-		CullMode::Mode cullMode;   /**< Culls certain a vertex winding order. */
+		CullMode cullMode;   /**< Culls certain a vertex winding order. */
 		float depthBias;           /**< Depth value added to a given pixel. */
-		FillMode::Mode fillMode;   /**< Fill mode to use when rendering. */
+		FillMode fillMode;   /**< Fill mode to use when rendering. */
 		bool msaa;                 /**< Enable or disable multisample antialiasing. */
 		bool scissorTestEnable;    /**< Enable or disable scissor-rectangle culling.  All pixels outside an active scissor rectangle are culled. */
 		float slopeScaleDepthBias; /**< Scalar on a given pixel's slope. */

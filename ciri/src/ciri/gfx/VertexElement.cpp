@@ -5,18 +5,18 @@ namespace ciri {
 		: _format(VertexFormat::Float3), _usage(VertexUsage::Position), _usageIndex(0) {
 	}
 
-	VertexElement::VertexElement( VertexFormat::Format format, VertexUsage::Usage usage, int usageIndex )
+	VertexElement::VertexElement( VertexFormat format, VertexUsage usage, int usageIndex )
 		: _format(format), _usage(usage), _usageIndex(usageIndex) {
 	}
 
 	VertexElement::~VertexElement() {
 	}
 
-	VertexFormat::Format VertexElement::getFormat() const {
+	VertexFormat VertexElement::getFormat() const {
 		return _format;
 	}
 
-	VertexUsage::Usage VertexElement::getUsage() const {
+	VertexUsage VertexElement::getUsage() const {
 		return _usage;
 	}
 

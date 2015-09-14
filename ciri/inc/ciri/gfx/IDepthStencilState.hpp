@@ -8,21 +8,21 @@ namespace ciri {
 	struct DepthStencilDesc {
 		bool depthEnable;                    /**< Enable or disable depth testing. */
 		bool depthWriteMask;                 /**< Enable or disable writing to the depth buffer. */
-		CompareFunction::Function depthFunc; /**< Function for comparing depth data against existing depth data. */
+		CompareFunction depthFunc; /**< Function for comparing depth data against existing depth data. */
 		//
 		bool stencilEnable;   /**< Enable or disable stencil testing. */
 		int stencilReadMask;  /**< Mask value for reading stencil data. */
 		int stencilWriteMask; /**< Mask value for writing stencil data. */
 		//
-		StencilOperation::Operation frontStencilFailOp;      /**< Operation when stencil testing fails. */
-		StencilOperation::Operation frontStencilDepthFailOp; /**< Operation when stencil testing passes but depth testing fails. */
-		StencilOperation::Operation frontStencilPassOp;      /**< Operation when stencil testing and depth testing both pass. */
-		CompareFunction::Function frontStencilFunc;          /**< Function for comparing stencil data against existing stencil data. */
+		StencilOperation frontStencilFailOp;      /**< Operation when stencil testing fails. */
+		StencilOperation frontStencilDepthFailOp; /**< Operation when stencil testing passes but depth testing fails. */
+		StencilOperation frontStencilPassOp;      /**< Operation when stencil testing and depth testing both pass. */
+		CompareFunction frontStencilFunc;          /**< Function for comparing stencil data against existing stencil data. */
 		//
-		StencilOperation::Operation backStencilFailOp;      /**< Operation when stencil testing fails. */
-		StencilOperation::Operation backStencilDepthFailOp; /**< Operation when stencil testing passes but depth testing fails. */
-		StencilOperation::Operation backStencilPassOp;      /**< Operation when stencil testing and depth testing both pass. */
-		CompareFunction::Function backStencilFunc;          /**< Function for comparing stencil data against existing stencil data. */
+		StencilOperation backStencilFailOp;      /**< Operation when stencil testing fails. */
+		StencilOperation backStencilDepthFailOp; /**< Operation when stencil testing passes but depth testing fails. */
+		StencilOperation backStencilPassOp;      /**< Operation when stencil testing and depth testing both pass. */
+		CompareFunction backStencilFunc;          /**< Function for comparing stencil data against existing stencil data. */
 		//
 		bool twoSidedStencil; /**< If two sided, front and back stenciling are separated; otherwise, both are set to front. */
 		int stencilRef;       /**< Reference value for comparison with stenciling. */

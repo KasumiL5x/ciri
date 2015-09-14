@@ -8,20 +8,20 @@ namespace ciri {
 	class VertexElement {
 	public:
 		VertexElement();
-		VertexElement( VertexFormat::Format format, VertexUsage::Usage usage, int usageIndex );
+		VertexElement( VertexFormat format, VertexUsage usage, int usageIndex );
 		~VertexElement();
 
 		/**
 		 * Gets the format of the vertex.
 		 * @return Format of the vertex as a VertexFormat.
 		 */
-		VertexFormat::Format getFormat() const;
+		VertexFormat getFormat() const;
 
 		/**
 		 * Gets the usage of the vertex.
 		 * @return Usage of the vertex as a VertexUsage.
 		 */
-		VertexUsage::Usage getUsage() const;
+		VertexUsage getUsage() const;
 
 		/**
 		 * Gets the usage index.  For instance, Texture coordinates can have multiple indices (TEXCOORD0, TEXCOORD1, and so on).
@@ -42,8 +42,8 @@ namespace ciri {
 		int getMultiplicity() const;
 
 	private:
-		VertexFormat::Format _format;
-		VertexUsage::Usage _usage;
+		VertexFormat _format;
+		VertexUsage _usage;
 		int _usageIndex;
 	};
 } // ciri

@@ -7,16 +7,16 @@
 
 namespace ciri {
 	struct SamplerDesc {
-		SamplerWrap::Mode wrapU;                  /**< Wrapping method for U texture coordinates that are out of the 0..1 range. */
-		SamplerWrap::Mode wrapV;                  /**< Wrapping method for V texture coordinates that are out of the 0..1 range. */
-		SamplerWrap::Mode wrapW;                  /**< Wrapping method for W texture coordinates that are out of the 0..1 range. */
-		SamplerFilter::Filter filter;             /**< Filtering method used when sampling a texture. */
+		SamplerWrap wrapU;                  /**< Wrapping method for U texture coordinates that are out of the 0..1 range. */
+		SamplerWrap wrapV;                  /**< Wrapping method for V texture coordinates that are out of the 0..1 range. */
+		SamplerWrap wrapW;                  /**< Wrapping method for W texture coordinates that are out of the 0..1 range. */
+		SamplerFilter filter;             /**< Filtering method used when sampling a texture. */
 		int maxAnisotropy;                        /**< Clamping value for anisotropic filtering, if used. */
 		float borderColor[4];                     /**< Border color (RGBA) used if wrap modes are set to border. */
 		float minLod;                             /**< Sets the minimum LOD, which limits the selection of the highest resolution mipmap (lowest mipmap level). */
 		float maxLod;                             /**< Sets the maximum LOD, which limits the selection of the lowest resolution mipmap (highest mipmap level). */
 		float lodBias;                            /**< An offset applied to the LOD parameter before texture sampling. */
-		CompareFunction::Function comparisonFunc; /**< Function for comparing samples data against existing data. */
+		CompareFunction comparisonFunc; /**< Function for comparing samples data against existing data. */
 		bool useMipmaps;                          /**< Enable or disable the use of mipmaps. */
 
 		SamplerDesc() {

@@ -2,11 +2,9 @@
 #define __ciri_gfx_graphics_api_type__
 
 namespace ciri {
-	struct GraphicsApiType {
-		enum Type {
-			OpenGL,
-			DirectX11
-		};
+	enum class GraphicsApiType {
+		OpenGL,
+		DirectX11
 	};
 } // ciri
 

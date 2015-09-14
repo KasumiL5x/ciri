@@ -51,7 +51,7 @@ namespace ciri {
 		//
 		VertexDeclaration _vertexDeclaration;
 		//
-		std::unordered_map<VertexUsage::Usage, std::string> _dxUsageStrings;
+		std::unordered_map<VertexUsage, std::string> _dxUsageStrings;
 		//
 		std::unordered_map<std::string, int> _vertexConstantBufferIndices;
 		std::unordered_map<std::string, int> _geometryConstantBufferIndices;

@@ -12,7 +12,7 @@
 #include <ciri/gfx/BlendFunction.hpp>
 
 namespace ciri {
-	static GLenum ciriToGlComparisonFunc( CompareFunction::Function func ) {
+	static GLenum ciriToGlComparisonFunc( CompareFunction func ) {
 		switch( func ) {
 			case CompareFunction::Always: {
 				return GL_ALWAYS;
@@ -44,7 +44,7 @@ namespace ciri {
 		}
 	}
 
-	static GLenum ciriToGlStencilOp( const StencilOperation::Operation op ) {
+	static GLenum ciriToGlStencilOp( const StencilOperation op ) {
 		switch( op ) {
 			case StencilOperation::Keep: {
 				return GL_KEEP;
@@ -76,7 +76,7 @@ namespace ciri {
 		}
 	}
 
-	static GLint ciriToGlSamplerWrap( SamplerWrap::Mode mode ) {
+	static GLint ciriToGlSamplerWrap( SamplerWrap mode ) {
 		switch( mode ) {
 			case SamplerWrap::Wrap: {
 				return GL_REPEAT;
@@ -104,7 +104,7 @@ namespace ciri {
 		}
 	}
 
-	static void ciriToGlSamplerFilter( SamplerFilter::Filter mode, GLint* outMin, GLint* outMag, bool mipmaps ) {
+	static void ciriToGlSamplerFilter( SamplerFilter mode, GLint* outMin, GLint* outMag, bool mipmaps ) {
 		// from monogame
 		switch( mode ) {
 			case SamplerFilter::Point: {
@@ -189,7 +189,7 @@ namespace ciri {
 		}
 	}
 
-	static GLenum ciriToGlTopology( PrimitiveTopology::Topology topology ) {
+	static GLenum ciriToGlTopology( PrimitiveTopology topology ) {
 		switch( topology ) {
 			case PrimitiveTopology::PointList: {
 				return GL_POINTS;

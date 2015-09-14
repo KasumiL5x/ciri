@@ -457,7 +457,7 @@ namespace ciri {
 		}
 	}
 
-	void DXGraphicsDevice::drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) {
+	void DXGraphicsDevice::drawArrays( PrimitiveTopology topology, int vertexCount, int startIndex ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -486,7 +486,7 @@ namespace ciri {
 		_context->Draw(vertexCount, startIndex);
 	}
 
-	void DXGraphicsDevice::drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) {
+	void DXGraphicsDevice::drawIndexed( PrimitiveTopology topology, int indexCount ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -704,7 +704,7 @@ namespace ciri {
 		return _apiInfo.c_str();
 	}
 
-	GraphicsApiType::Type DXGraphicsDevice::getApiType() const {
+	GraphicsApiType DXGraphicsDevice::getApiType() const {
 		return GraphicsApiType::DirectX11;
 	}
 

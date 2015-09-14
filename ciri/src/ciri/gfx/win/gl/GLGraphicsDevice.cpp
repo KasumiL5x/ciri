@@ -462,7 +462,7 @@ namespace ciri {
 		}
 	}
 
-	void GLGraphicsDevice::drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) {
+	void GLGraphicsDevice::drawArrays( PrimitiveTopology topology, int vertexCount, int startIndex ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -490,7 +490,7 @@ namespace ciri {
 		glDrawArrays(ciriToGlTopology(topology), startIndex, vertexCount);
 	}
 
-	void GLGraphicsDevice::drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) {
+	void GLGraphicsDevice::drawIndexed( PrimitiveTopology topology, int indexCount ) {
 		if( !_isValid ) {
 			return;
 		}
@@ -727,7 +727,7 @@ namespace ciri {
 		return _apiInfo.c_str();
 	}
 
-	GraphicsApiType::Type GLGraphicsDevice::getApiType() const {
+	GraphicsApiType GLGraphicsDevice::getApiType() const {
 		return GraphicsApiType::OpenGL;
 	}
 

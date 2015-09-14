@@ -14,7 +14,7 @@
 #include <ciri/gfx/BlendColorMask.hpp>
 
 namespace ciri {
-	static D3D11_COMPARISON_FUNC ciriToDxComparisonFunc( CompareFunction::Function func ) {
+	static D3D11_COMPARISON_FUNC ciriToDxComparisonFunc( CompareFunction func ) {
 		switch( func ) {
 			case CompareFunction::Never: {
 				return D3D11_COMPARISON_NEVER;
@@ -54,7 +54,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D11_STENCIL_OP ciriToDxStencilOp( StencilOperation::Operation op ) {
+	static D3D11_STENCIL_OP ciriToDxStencilOp( StencilOperation op ) {
 		switch( op ) {
 			case StencilOperation::Keep: {
 				return D3D11_STENCIL_OP_KEEP;
@@ -86,7 +86,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D11_TEXTURE_ADDRESS_MODE ciriToDxSamplerWrap( SamplerWrap::Mode mode ) {
+	static D3D11_TEXTURE_ADDRESS_MODE ciriToDxSamplerWrap( SamplerWrap mode ) {
 		switch( mode ) {
 			case SamplerWrap::Wrap: {
 				return D3D11_TEXTURE_ADDRESS_WRAP;
@@ -114,7 +114,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D11_FILTER ciriToDxSamplerFilter( SamplerFilter::Filter mode, bool comparison ) {
+	static D3D11_FILTER ciriToDxSamplerFilter( SamplerFilter mode, bool comparison ) {
 		int filter = 0;
 		switch( mode ) {
 			case SamplerFilter::Point: {
@@ -183,7 +183,7 @@ namespace ciri {
 		}
 	}
 
-	static DXGI_FORMAT ciriToDxVertexFormat( VertexFormat::Format format ) {
+	static DXGI_FORMAT ciriToDxVertexFormat( VertexFormat format ) {
 		switch( format ) {
 			case VertexFormat::Float: {
 				return DXGI_FORMAT_R32_FLOAT;
@@ -207,7 +207,7 @@ namespace ciri {
 		}
 	}
 
-	static D3D_PRIMITIVE_TOPOLOGY ciriToDxTopology( PrimitiveTopology::Topology topology ) {
+	static D3D_PRIMITIVE_TOPOLOGY ciriToDxTopology( PrimitiveTopology topology ) {
 		switch( topology ) {
 			case PrimitiveTopology::PointList: {
 				return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;

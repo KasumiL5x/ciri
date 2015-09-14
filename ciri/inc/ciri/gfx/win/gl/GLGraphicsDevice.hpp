@@ -49,8 +49,8 @@ namespace ciri {
 		virtual void setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setSamplerState( int index, const std::shared_ptr<ISamplerState>& state, ShaderStage::Stage shaderStage ) override;
 		virtual void setBlendState( const std::shared_ptr<IBlendState>& state ) override;
-		virtual void drawArrays( PrimitiveTopology::Topology topology, int vertexCount, int startIndex ) override;
-		virtual void drawIndexed( PrimitiveTopology::Topology topology, int indexCount ) override;
+		virtual void drawArrays( PrimitiveTopology topology, int vertexCount, int startIndex ) override;
+		virtual void drawIndexed( PrimitiveTopology topology, int indexCount ) override;
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) override;
 		virtual void restoreDefaultRenderTargets() override;
 		virtual ErrorCode resize() override;
@@ -63,7 +63,7 @@ namespace ciri {
 		virtual std::shared_ptr<IWindow> getWindow() const override;
 		virtual const char* getGpuName() const override;
 		virtual const char* getApiInfo() const override;
-		virtual GraphicsApiType::Type getApiType() const override;
+		virtual GraphicsApiType getApiType() const override;
 
 	private:
 		bool configureGl( HWND hwnd );
