@@ -12,9 +12,8 @@ in vec4 vo_refractionTexcoords;
 out vec4 out_color;
 
 layout(binding=0) uniform sampler2D NormalMap;
-layout(binding=1) uniform samplerCube SkyboxTexture;
-layout(binding=2) uniform sampler2D ReflectionTexture;
-layout(binding=3) uniform sampler2D RefractionTexture;
+layout(binding=1) uniform sampler2D ReflectionTexture;
+layout(binding=2) uniform sampler2D RefractionTexture;
 
 // -*- Light properties -*-
 vec3 LightDirection = vec3(-0.5265408f, -0.5735765f,-0.6275069f);
@@ -37,11 +36,9 @@ void main() {
 	vec3 RV = normalize(reflect(V, N));
 	vec3 sunlight = calcSunlight(RV, L);
 
-	// skybox reflection
+	// perturbed texcoords
 	vec4 bumpColor = texture(NormalMap, vo_bumpTexcoords);
 	vec3 perturb = vo_waveHeight * (bumpColor.xyz - 0.5f) * 2.0f;
-	vec3 perturbCubeCoords = vo_cubeTexcoords + perturb;
-	vec3 cubemap = texture(SkyboxTexture, perturbCubeCoords).xyz;
 
 	// scene reflection
 	vec2 reflectionCoords;
@@ -62,7 +59,7 @@ void main() {
 	vec3 normalVector = vo_normal;
 	float fresnelTerm = max(0.0f, dot(eyeVector, normalVector));
 	vec4 combinedReflRefr = mix(reflectionColor, refractionColor, fresnelTerm);
-	vec4 combinedColor = mix(vec4(cubemap + sunlight, 1.0f), vec4(combinedReflRefr.xyz, 1.0f), 0.85f);
+	vec4 combinedColor = mix(vec4(sunlight, 1.0f), vec4(combinedReflRefr.xyz, 1.0f), 0.85f);
 
 	// coloration
 	vec4 dullColor = vec4(0.3f, 0.3f, 0.5f, 1.0f);

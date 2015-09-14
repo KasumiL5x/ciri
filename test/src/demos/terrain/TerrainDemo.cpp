@@ -355,17 +355,13 @@ void TerrainDemo::onDraw() {
 		device->setSamplerState(0, _waterSampler, ciri::ShaderStage::Pixel);
 		device->setTexture2D(0, _waterNormalMap, ciri::ShaderStage::Pixel);
 
-		// set skybox sampler and cubemap
-		device->setSamplerState(1, _skyboxSampler, ciri::ShaderStage::Pixel);
-		device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
-
 		// set reflection texture and sampler
-		device->setSamplerState(2, _waterReflectionSampler, ciri::ShaderStage::Pixel);
-		device->setTexture2D(2, _waterReflectionTarget->getTexture2D(), ciri::ShaderStage::Pixel);
+		device->setSamplerState(1, _waterReflectionSampler, ciri::ShaderStage::Pixel);
+		device->setTexture2D(1, _waterReflectionTarget->getTexture2D(), ciri::ShaderStage::Pixel);
 
 		// set refraction texture and sampler
-		device->setSamplerState(3, _waterReflectionSampler, ciri::ShaderStage::Pixel);
-		device->setTexture2D(3, _waterRefractionTarget->getTexture2D(), ciri::ShaderStage::Pixel);
+		device->setSamplerState(2, _waterReflectionSampler, ciri::ShaderStage::Pixel);
+		device->setTexture2D(2, _waterRefractionTarget->getTexture2D(), ciri::ShaderStage::Pixel);
 
 		// enable alpha blending
 		device->setBlendState(_alphaBlendState);

@@ -1,11 +1,9 @@
 Texture2D NormalMapTex : register(t0);
 SamplerState NormalMapSampler : register(s0);
-TextureCube SkyboxTex : register(t1);
-SamplerState SkyboxSampler : register(s1);
-Texture2D ReflectionTexture : register(t2);
-SamplerState ReflectionSampler : register(s2);
-Texture2D RefractionTexture : register(t3);
-SamplerState RefractionSampler : register(s3);
+Texture2D ReflectionTexture : register(t1);
+SamplerState ReflectionSampler : register(s1);
+Texture2D RefractionTexture : register(t2);
+SamplerState RefractionSampler : register(s2);
 
 struct Input {
 	float4 hpos          : SV_POSITION;
@@ -40,11 +38,9 @@ float4 main( Input input ) : SV_Target {
 	float3 RV = normalize(reflect(V, N));
 	float3 sunlight = calcSunlight(RV, L);
 
-	// skybox reflection
+	// perturbed texcoords
 	float4 bumpColor = NormalMapTex.Sample(NormalMapSampler, input.bumpTexcoords);
 	float3 perturb = input.waveHeight * (bumpColor.xyz - 0.5f) * 2.0f;
-	float3 perturbCubeCoords = input.cubeTexcoords + perturb;
-	float3 cubemap = SkyboxTex.Sample(SkyboxSampler, perturbCubeCoords).xyz;
 
 	// scene reflection
 	float2 reflectionCoords;
@@ -65,7 +61,7 @@ float4 main( Input input ) : SV_Target {
 	float3 normalVector = input.normal;
 	float fresnelTerm = max(0.0f, dot(eyeVector, normalVector));
 	float4 combinedReflRefr = lerp(reflectionColor, refractionColor, fresnelTerm);
-	float4 combinedColor = lerp(float4(cubemap + sunlight, 1.0f), float4(combinedReflRefr.xyz, 1.0f), 0.85f);
+	float4 combinedColor = lerp(float4(sunlight, 1.0f), float4(combinedReflRefr.xyz, 1.0f), 0.85f);
 
 	// coloration
 	float4 dullColor = float4(0.3f, 0.3f, 0.5f, 1.0f);
