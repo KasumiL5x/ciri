@@ -315,8 +315,6 @@ namespace ciri {
 			const int index = vertexConstants[i]->getIndex();
 			_context->VSSetConstantBuffers(index, 1, &buffer);
 		}
-		ID3D11InputLayout* il = dxShader->getInputLayout();
-		_context->IASetInputLayout(il);
 
 		ID3D11GeometryShader* gs = dxShader->getGeometryShader();
 		if( gs != nullptr ) {
@@ -346,9 +344,8 @@ namespace ciri {
 			return;
 		}
 
-		// gl cannot set parameters with no active shader; dx can, but let's stay consistent
+		// make dx match it although IASetInputLayout could really be called at any other time...(see below)
 		if( _activeShader.expired() ) {
-			_activeVertexBuffer.reset();
 			return;
 		}
 
@@ -357,6 +354,10 @@ namespace ciri {
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
 		_context->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+
+		// set input layout here as current GL solution requires vertex array to be bound when setting vertex attributes (hence cannot set in applyShader)
+		ID3D11InputLayout* il = _activeShader.lock()->getInputLayout();
+		_context->IASetInputLayout(il);
 
 		_activeVertexBuffer = dxBuffer;
 	}

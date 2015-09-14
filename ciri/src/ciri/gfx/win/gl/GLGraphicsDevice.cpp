@@ -344,16 +344,17 @@ namespace ciri {
 			return;
 		}
 
-		// cannot set parameters with no active shader
+		// todo: see if there's a way to have the vertex attribute values stores separately from the buffers themselves akin
+		//       to directx's input layouts.  maybe through an extension or something core to 4.2+ ?
+
+		// gl needs a bound vertex buffer in order to set vertex attrib pointers, therefore we need a valid shader bound.
+		// i want to change this because it means you can't set a vertex buffer before setting a shader, which is odd...
 		if( _activeShader.expired() ) {
 			return;
 		}
 
 		const std::shared_ptr<GLVertexBuffer> glBuffer = std::static_pointer_cast<GLVertexBuffer>(buffer);
-
 		glBindBuffer(GL_ARRAY_BUFFER, glBuffer->getVbo());
-
-		// todo: either move application of shader in DX to this location or move this shader application to applyShader
 
 		// apply vertex attribute pointers based on the shader's vertex declaration
 		int offset = 0;
