@@ -5,10 +5,11 @@
 
 namespace ciri {
 	class IConstantBuffer {
-	public:
+	protected:
 		IConstantBuffer() {
 		}
 
+	public:
 		virtual ~IConstantBuffer() {
 		}
 

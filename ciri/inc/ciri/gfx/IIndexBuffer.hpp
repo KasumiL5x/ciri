@@ -5,9 +5,11 @@
 
 namespace ciri {
 	class IIndexBuffer {
-	public:
+	protected:
 		IIndexBuffer() {
 		}
+
+	public:
 		virtual ~IIndexBuffer() {
 		}
 

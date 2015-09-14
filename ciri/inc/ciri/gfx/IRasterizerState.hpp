@@ -21,9 +21,11 @@ namespace ciri {
 	};
 
 	class IRasterizerState {
-	public:
+	protected:
 		IRasterizerState() {
 		}
+
+	public:
 		virtual ~IRasterizerState() {
 		}
 

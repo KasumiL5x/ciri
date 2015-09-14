@@ -7,10 +7,11 @@ namespace ciri {
 	class ITexture2D;
 
 	class IRenderTarget2D {
-	public:
+	protected:
 		IRenderTarget2D() {
 		}
 
+	public:
 		virtual ~IRenderTarget2D() {
 		}
 

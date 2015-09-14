@@ -24,10 +24,11 @@ namespace ciri {
 	class IWindow;
 
 	class IGraphicsDevice {
-	public:
+	protected:
 		IGraphicsDevice() {
 		}
 
+	public:
 		virtual ~IGraphicsDevice() {
 		}
 

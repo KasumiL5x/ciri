@@ -5,9 +5,11 @@
 
 namespace ciri {
 	class IVertexBuffer {
-	public:
+	protected:
 		IVertexBuffer() {
 		}
+
+	public:
 		virtual ~IVertexBuffer() {
 		}
 

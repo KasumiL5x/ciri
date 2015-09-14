@@ -5,9 +5,11 @@
 
 namespace ciri {
 	class ITextureCube {
-	public:
+	protected:
 		ITextureCube() {
 		}
+
+	public:
 		virtual ~ITextureCube() {
 		}
 

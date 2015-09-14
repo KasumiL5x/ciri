@@ -33,9 +33,11 @@ namespace ciri {
 	};
 
 	class ISamplerState {
-	public:
+	protected:
 		ISamplerState() {
 		}
+
+	public:
 		virtual ~ISamplerState() {
 		}
 

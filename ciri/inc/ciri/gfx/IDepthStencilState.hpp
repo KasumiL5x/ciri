@@ -52,9 +52,11 @@ namespace ciri {
 	};
 
 	class IDepthStencilState {
-	public:
+	protected:
 		IDepthStencilState() {
 		}
+
+	public:
 		virtual ~IDepthStencilState() {
 		}
 

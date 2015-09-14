@@ -36,9 +36,11 @@ namespace ciri {
 	};
 
 	class IBlendState {
-	public:
+	protected:
 		IBlendState() {
 		}
+
+	public:
 		virtual ~IBlendState() {
 		}
 

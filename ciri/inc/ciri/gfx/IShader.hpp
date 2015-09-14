@@ -21,9 +21,11 @@ namespace ciri {
 			}
 		};
 
-	public:
+	protected:
 		IShader() {
 		}
+
+	public:
 		virtual ~IShader() {
 		}
 

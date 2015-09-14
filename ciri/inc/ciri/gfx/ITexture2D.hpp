@@ -7,9 +7,11 @@
 
 namespace ciri {
 	class ITexture2D {
-	public:
+	protected:
 		ITexture2D( int flags ) {
 		}
+
+	public:
 		virtual ~ITexture2D() {
 		}
 
