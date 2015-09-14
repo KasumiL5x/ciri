@@ -87,9 +87,9 @@ namespace ciri {
 		std::vector<std::shared_ptr<GLVertexBuffer>> _vertexBuffers;
 		std::vector<std::shared_ptr<GLIndexBuffer>> _indexBuffers;
 		//
-		GLShader* _activeShader;
-		GLVertexBuffer* _activeVertexBuffer;
-		GLIndexBuffer* _activeIndexBuffer;
+		std::weak_ptr<GLShader> _activeShader;
+		std::weak_ptr<GLVertexBuffer> _activeVertexBuffer;
+		std::weak_ptr<GLIndexBuffer> _activeIndexBuffer;
 		//
 		std::vector<std::shared_ptr<GLConstantBuffer>> _constantBuffers;
 		//
@@ -104,10 +104,10 @@ namespace ciri {
 		GLenum _drawBuffers[MAX_MRTS];
 		//
 		std::vector<std::shared_ptr<GLRasterizerState>> _rasterizerStates;
-		GLRasterizerState* _activeRasterizerState;
+		std::weak_ptr<GLRasterizerState> _activeRasterizerState;
 		//
 		std::vector<std::shared_ptr<GLDepthStencilState>> _depthStencilStates;
-		GLDepthStencilState* _activeDepthStencilState;
+		std::weak_ptr<GLDepthStencilState> _activeDepthStencilState;
 		//
 		std::string _shaderExt;
 		//

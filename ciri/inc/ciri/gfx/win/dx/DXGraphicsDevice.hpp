@@ -87,9 +87,9 @@ namespace ciri {
 		std::vector<std::shared_ptr<DXVertexBuffer>> _vertexBuffers;
 		std::vector<std::shared_ptr<DXIndexBuffer>> _indexBuffers;
 		//
-		DXShader* _activeShader;
-		DXVertexBuffer* _activeVertexBuffer;
-		DXIndexBuffer* _activeIndexBuffer;
+		std::weak_ptr<DXShader> _activeShader;
+		std::weak_ptr<DXVertexBuffer> _activeVertexBuffer;
+		std::weak_ptr<DXIndexBuffer> _activeIndexBuffer;
 		//
 		std::vector<std::shared_ptr<DXConstantBuffer>> _constantBuffers;
 		//
@@ -100,10 +100,10 @@ namespace ciri {
 		std::vector<std::shared_ptr<DXRenderTarget2D>> _renderTarget2Ds;
 		//
 		std::vector<std::shared_ptr<DXRasterizerState>> _rasterizerStates;
-		DXRasterizerState* _activeRasterizerState;
+		std::weak_ptr<DXRasterizerState> _activeRasterizerState;
 		//
 		std::vector<std::shared_ptr<DXDepthStencilState>> _depthStencilStates;
-		DXDepthStencilState* _activeDepthStencilState;
+		std::weak_ptr<DXDepthStencilState> _activeDepthStencilState;
 		ID3D11Texture2D* _depthStencil;
 		ID3D11DepthStencilView* _depthStencilView;
 		ID3D11RenderTargetView* _activeRenderTargets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];

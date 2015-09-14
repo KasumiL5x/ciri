@@ -27,9 +27,8 @@
 
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
-		: IGraphicsDevice(), _isValid(false), _window(nullptr), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0), _activeShader(nullptr),
-			_activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr), _currentFbo(0), _activeRasterizerState(nullptr),
-			_activeDepthStencilState(nullptr), _shaderExt(".glsl") {
+		: IGraphicsDevice(), _isValid(false), _window(nullptr), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0),
+			_currentFbo(0), _shaderExt(".glsl") {
 		// configure mrt draw buffers
 		for( int i = 0; i < MAX_MRTS; ++i ) {
 			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
@@ -331,11 +330,11 @@ namespace ciri {
 		}
 
 		if( !shader->isValid() ) {
-			_activeShader = nullptr;
+			_activeShader.reset();
 			return;
 		}
 
-		GLShader* glShader = reinterpret_cast<GLShader*>(shader.get());
+		const std::shared_ptr<GLShader> glShader = std::static_pointer_cast<GLShader>(shader);
 		glUseProgram(glShader->getProgram());
 		_activeShader = glShader;
 	}
@@ -346,17 +345,19 @@ namespace ciri {
 		}
 
 		// cannot set parameters with no active shader
-		if( nullptr == _activeShader ) {
+		if( _activeShader.expired() ) {
 			return;
 		}
 
-		GLVertexBuffer* glBuffer = reinterpret_cast<GLVertexBuffer*>(buffer.get());
+		const std::shared_ptr<GLVertexBuffer> glBuffer = std::static_pointer_cast<GLVertexBuffer>(buffer);
 
 		glBindBuffer(GL_ARRAY_BUFFER, glBuffer->getVbo());
 
+		// todo: either move application of shader in DX to this location or move this shader application to applyShader
+
 		// apply vertex attribute pointers based on the shader's vertex declaration
 		int offset = 0;
-		const std::vector<VertexElement>& elements = _activeShader->getVertexDeclaration().getElements();
+		const std::vector<VertexElement>& elements = _activeShader.lock()->getVertexDeclaration().getElements();
 		for( unsigned int i = 0; i < elements.size(); ++i ) {
 			const VertexElement& currElement = elements[i];
 
@@ -371,7 +372,7 @@ namespace ciri {
 			}
 
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, currElement.getMultiplicity(), type, GL_FALSE, _activeShader->getVertexDeclaration().getStride(), (const void*)offset);
+			glVertexAttribPointer(i, currElement.getMultiplicity(), type, GL_FALSE, _activeShader.lock()->getVertexDeclaration().getStride(), (const void*)offset);
 			
 			offset += currElement.getSize(); // sizeof(datatype) * numberOfThem;
 		}
@@ -384,10 +385,11 @@ namespace ciri {
 			return;
 		}
 
-		GLIndexBuffer* glBuffer = reinterpret_cast<GLIndexBuffer*>(buffer.get());
+		const std::shared_ptr<GLIndexBuffer> glBuffer = std::static_pointer_cast<GLIndexBuffer>(buffer);
 
 		const GLuint evbo = glBuffer->getEvbo();
 		if( 0 == evbo ) {
+			_activeIndexBuffer.reset();
 			return; // todo: error
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, evbo);
@@ -400,7 +402,7 @@ namespace ciri {
 			return;
 		}
 
-		GLTexture2D* glTexture = reinterpret_cast<GLTexture2D*>(texture.get());
+		const std::shared_ptr<GLTexture2D> glTexture = std::static_pointer_cast<GLTexture2D>(texture);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
 	}
@@ -410,7 +412,7 @@ namespace ciri {
 			return;
 		}
 
-		GLTextureCube* glTexture = reinterpret_cast<GLTextureCube*>(texture.get());
+		const std::shared_ptr<GLTextureCube> glTexture = std::static_pointer_cast<GLTextureCube>(texture);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, (glTexture != nullptr) ? glTexture->getTextureId() : 0);
 	}
@@ -420,7 +422,7 @@ namespace ciri {
 			return;
 		}
 
-		GLSamplerState* glSampler = reinterpret_cast<GLSamplerState*>(state.get());
+		const std::shared_ptr<GLSamplerState> glSampler = std::static_pointer_cast<GLSamplerState>(state);
 		glBindSampler(index, (state != nullptr) ? glSampler->getSamplerId() : 0);
 	}
 
@@ -432,7 +434,7 @@ namespace ciri {
 		if( nullptr == state ) {
 			restoreDefaultBlendState();
 		} else {
-			GLBlendState* glState = reinterpret_cast<GLBlendState*>(state.get());
+			const std::shared_ptr<GLBlendState> glState = std::static_pointer_cast<GLBlendState>(state);
 			const BlendDesc desc = glState->getDesc();
 
 			// enable blending
@@ -466,12 +468,12 @@ namespace ciri {
 		}
 
 		// cannot draw with no active shader
-		if( nullptr == _activeShader ) {
+		if( _activeShader .expired() ) {
 			return;
 		}
 
 		// cannot draw with no active vertex buffer
-		if( nullptr == _activeVertexBuffer ) {
+		if( _activeVertexBuffer.expired() ) {
 			return;
 		}
 
@@ -494,12 +496,12 @@ namespace ciri {
 		}
 
 		// cannot draw with no active shader
-		if( nullptr == _activeShader ) {
+		if( _activeShader.expired() ) {
 			return;
 		}
 
 		// cannot draw without a valid vertex and index buffer
-		if( nullptr == _activeVertexBuffer || nullptr == _activeIndexBuffer ) {
+		if( _activeVertexBuffer.expired() || _activeIndexBuffer.expired() ) {
 			return;
 		}
 
@@ -605,8 +607,8 @@ namespace ciri {
 			throw; // not yet implemented
 		}
 
-		GLRasterizerState* glRaster = reinterpret_cast<GLRasterizerState*>(state.get());
-		if( glRaster == _activeRasterizerState ) {
+		const std::shared_ptr<GLRasterizerState> glRaster = std::static_pointer_cast<GLRasterizerState>(state);
+		if( !_activeRasterizerState.expired() && (glRaster == _activeRasterizerState.lock()) ) {
 			return;
 		}
 		_activeRasterizerState = glRaster;
@@ -663,8 +665,8 @@ namespace ciri {
 			throw; // not yet implemented
 		}
 
-		GLDepthStencilState* glState = reinterpret_cast<GLDepthStencilState*>(state.get());
-		if( glState == _activeDepthStencilState ) {
+		const std::shared_ptr<GLDepthStencilState> glState = std::static_pointer_cast<GLDepthStencilState>(state);
+		if( !_activeDepthStencilState.expired() && (glState == _activeDepthStencilState.lock()) ) {
 			return;
 		}
 		_activeDepthStencilState = glState;

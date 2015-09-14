@@ -8,9 +8,7 @@ namespace ciri {
 	DXGraphicsDevice::DXGraphicsDevice()
 		: IGraphicsDevice(), _isValid(false), _window(nullptr), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
 			_defaultWidth(0), _defaultHeight(0),
-			_activeShader(nullptr), _activeVertexBuffer(nullptr), _activeIndexBuffer(nullptr),
-			_activeRasterizerState(nullptr), _activeDepthStencilState(nullptr), _depthStencil(nullptr),
-			_depthStencilView(nullptr), _shaderExt(".hlsl") {
+			_depthStencil(nullptr), _depthStencilView(nullptr), _shaderExt(".hlsl") {
 	}
 
 	DXGraphicsDevice::~DXGraphicsDevice() {
@@ -303,11 +301,11 @@ namespace ciri {
 		}
 
 		if( !shader->isValid() ) {
-			_activeShader = nullptr;
+			_activeShader.reset();
 			return;
 		}
 
-		DXShader* dxShader = reinterpret_cast<DXShader*>(shader.get());
+		const std::shared_ptr<DXShader> dxShader = std::static_pointer_cast<DXShader>(shader);
 
 		ID3D11VertexShader* vs = dxShader->getVertexShader();
 		_context->VSSetShader(vs, nullptr, 0);
@@ -349,12 +347,12 @@ namespace ciri {
 		}
 
 		// gl cannot set parameters with no active shader; dx can, but let's stay consistent
-		if( nullptr == _activeShader ) {
-			_activeVertexBuffer = nullptr;
+		if( _activeShader.expired() ) {
+			_activeVertexBuffer.reset();
 			return;
 		}
 
-		DXVertexBuffer* dxBuffer = reinterpret_cast<DXVertexBuffer*>(buffer.get());
+		const std::shared_ptr<DXVertexBuffer> dxBuffer = std::static_pointer_cast<DXVertexBuffer>(buffer);
 		UINT stride = buffer->getStride();
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
@@ -368,10 +366,11 @@ namespace ciri {
 			return;
 		}
 
-		DXIndexBuffer* dxBuffer = reinterpret_cast<DXIndexBuffer*>(buffer.get());
+		const std::shared_ptr<DXIndexBuffer> dxBuffer = std::static_pointer_cast<DXIndexBuffer>(buffer);
 
 		ID3D11Buffer* ib = dxBuffer->getIndexBuffer();
 		if( nullptr == ib ) {
+			_activeIndexBuffer.reset();
 			return; // todo: error
 		}
 		_context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
@@ -384,7 +383,7 @@ namespace ciri {
 			return;
 		}
 
-		DXTexture2D* dxTexture = reinterpret_cast<DXTexture2D*>(texture.get());
+		const std::shared_ptr<DXTexture2D> dxTexture = std::static_pointer_cast<DXTexture2D>(texture);
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
@@ -406,7 +405,7 @@ namespace ciri {
 			return;
 		}
 
-		DXTextureCube* dxTexture = reinterpret_cast<DXTextureCube*>(texture.get());
+		const std::shared_ptr<DXTextureCube> dxTexture = std::static_pointer_cast<DXTextureCube>(texture);
 
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
 
@@ -427,7 +426,7 @@ namespace ciri {
 			return;
 		}
 
-		DXSamplerState* dxSampler = reinterpret_cast<DXSamplerState*>(state.get());
+		const std::shared_ptr<DXSamplerState> dxSampler = std::static_pointer_cast<DXSamplerState>(state);
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11SamplerState* sampler[1] = { (state != nullptr) ? dxSampler->getSamplerState() : nullptr };
@@ -452,7 +451,7 @@ namespace ciri {
 		if( nullptr == state ) {
 			_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 		} else {
-			DXBlendState* dxState = reinterpret_cast<DXBlendState*>(state.get());
+			const std::shared_ptr<DXBlendState> dxState = std::static_pointer_cast<DXBlendState>(state);
 			ID3D11BlendState* bs = dxState->getBlendState();
 			_context->OMSetBlendState(bs, dxState->getDesc().blendFactor, 0xffffffff); // todo: sample mask support?
 		}
@@ -464,12 +463,12 @@ namespace ciri {
 		}
 
 		// cannot draw with no active shader
-		if( nullptr == _activeShader ) {
+		if( _activeShader.expired() ) {
 			return;
 		}
 
 		// cannot draw with no active vertex buffer
-		if( nullptr == _activeVertexBuffer ) {
+		if( _activeVertexBuffer.expired() ) {
 			return;
 		}
 
@@ -493,12 +492,12 @@ namespace ciri {
 		}
 
 		// cannot draw with no active shader
-		if( nullptr == _activeShader ) {
+		if( _activeShader.expired() ) {
 			return;
 		}
 
 		// cannot draw without a valid vertex and index buffer
-		if( nullptr == _activeVertexBuffer || nullptr == _activeIndexBuffer ) {
+		if( _activeVertexBuffer.expired() || _activeIndexBuffer .expired() ) {
 			return;
 		}
 
@@ -657,8 +656,8 @@ namespace ciri {
 			throw; // not yet implemented
 		}
 
-		DXRasterizerState* dxRaster = reinterpret_cast<DXRasterizerState*>(state.get());
-		if( dxRaster == _activeRasterizerState ) {
+		const std::shared_ptr<DXRasterizerState> dxRaster = std::static_pointer_cast<DXRasterizerState>(state);
+		if( !_activeRasterizerState.expired() && (dxRaster == _activeRasterizerState.lock()) ) {
 			return;
 		}
 		_activeRasterizerState = dxRaster;
@@ -676,8 +675,8 @@ namespace ciri {
 			throw; // not yet implemented
 		}
 
-		DXDepthStencilState* dxState = reinterpret_cast<DXDepthStencilState*>(state.get());
-		if( dxState == _activeDepthStencilState ) {
+		const std::shared_ptr<DXDepthStencilState> dxState = std::static_pointer_cast<DXDepthStencilState>(state);
+		if( !_activeDepthStencilState.expired() && (dxState == _activeDepthStencilState.lock()) ) {
 			return;
 		}
 		_activeDepthStencilState = dxState;
