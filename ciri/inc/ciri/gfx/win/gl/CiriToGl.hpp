@@ -39,7 +39,7 @@ namespace ciri {
 				return GL_NOTEQUAL;
 			}
 			default: {
-					return GL_NEVER;
+				throw; //return GL_NEVER;
 			}
 		}
 	}
@@ -71,7 +71,7 @@ namespace ciri {
 				return GL_INVERT;
 			}
 			default: {
-				return GL_KEEP;
+				throw; //return GL_KEEP;
 			}
 		}
 	}
@@ -99,7 +99,7 @@ namespace ciri {
 			}
 
 			default: {
-				return GL_REPEAT;
+				throw; //return GL_REPEAT;
 			}
 		}
 	}
@@ -212,7 +212,7 @@ namespace ciri {
 			}
 
 			default: {
-				return GL_INVALID_ENUM; // lol
+				throw; //return GL_INVALID_ENUM; // lol
 			}
 		}
 	}

@@ -30,7 +30,7 @@ namespace ciri {
 				}
 
 				default: {
-					return 0;
+					throw; //return 0;
 				}
 			}
 		}

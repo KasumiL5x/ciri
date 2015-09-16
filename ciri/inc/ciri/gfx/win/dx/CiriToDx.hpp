@@ -49,7 +49,7 @@ namespace ciri {
 			}
 
 			default: {
-				return D3D11_COMPARISON_NEVER;
+				throw; //return D3D11_COMPARISON_NEVER;
 			}
 		}
 	}
@@ -81,7 +81,7 @@ namespace ciri {
 				return D3D11_STENCIL_OP_INVERT;
 			}
 			default: {
-				return D3D11_STENCIL_OP_KEEP;
+				throw; //return D3D11_STENCIL_OP_KEEP;
 			}
 		}
 	}
@@ -109,7 +109,7 @@ namespace ciri {
 			}
 
 			default: {
-				return D3D11_TEXTURE_ADDRESS_WRAP;
+				throw; //return D3D11_TEXTURE_ADDRESS_WRAP;
 			}
 		}
 	}
@@ -178,7 +178,7 @@ namespace ciri {
 			}
 
 			default: {
-				return DXGI_FORMAT_UNKNOWN;
+				throw; //return DXGI_FORMAT_UNKNOWN;
 			}
 		}
 	}
@@ -202,7 +202,7 @@ namespace ciri {
 			}
 
 			default: {
-				return DXGI_FORMAT_UNKNOWN;
+				throw; //return DXGI_FORMAT_UNKNOWN;
 			}
 		}
 	}
@@ -230,7 +230,7 @@ namespace ciri {
 			}
 
 			default: {
-				return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+				throw; //return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 			}
 		}
 	}

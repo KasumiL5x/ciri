@@ -93,8 +93,8 @@ namespace ciri {
 			RETURN_KEY(Key::F11, VK_F11)
 			RETURN_KEY(Key::F12, VK_F12)
 			default: {
-					return 0;
-				}
+				return 0;
+			}
 		}
 		#undef RETURN_KEY
 	}

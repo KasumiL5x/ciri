@@ -43,7 +43,7 @@ namespace ciri {
 			}
 
 			default: {
-				return 0;
+				throw; // forgot to implement
 			}
 		}
 	}
@@ -67,7 +67,7 @@ namespace ciri {
 			}
 
 			default: {
-				return 0;
+				throw; // forgot to implement
 			}
 		}
 	}
