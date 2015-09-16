@@ -117,6 +117,8 @@ namespace ciri {
 		std::vector<std::shared_ptr<GLBlendState>> _blendStates;
 		//
 		std::vector<std::shared_ptr<GLTextureCube>> _textureCubes;
+		//
+		GLuint _dummyVao;
 	};
 } // ciri
 

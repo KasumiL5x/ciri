@@ -28,7 +28,7 @@
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
 		: IGraphicsDevice(), _isValid(false), _window(nullptr), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0),
-			_currentFbo(0), _shaderExt(".glsl") {
+			_currentFbo(0), _shaderExt(".glsl"), _dummyVao(0) {
 		// configure mrt draw buffers
 		for( int i = 0; i < MAX_MRTS; ++i ) {
 			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
@@ -148,6 +148,12 @@ namespace ciri {
 			curr->destroy();
 		}
 		_shaders.clear();
+
+		// delete dummy vao
+		if( _dummyVao != 0 ) {
+			glDeleteVertexArrays(1, &_dummyVao);
+			_dummyVao = 0;
+		}
 
 		// make rendering context not current
 		wglMakeCurrent(0, 0);
@@ -771,8 +777,8 @@ namespace ciri {
 			WGL_CONTEXT_MAJOR_VERSION_ARB, 4, // need 4.2 for shader uniform location binding
 			WGL_CONTEXT_MINOR_VERSION_ARB, 2,
 			WGL_CONTEXT_FLAGS_ARB, contextFlags,
-			//WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, // not using VAOs; core requires?
+			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+			//WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, // not using VAOs; core requires?
 			0
 		};
 		_hglrc = wglCreateContextAttribsARB(_hdc, NULL, contextAttribs);
@@ -811,6 +817,12 @@ namespace ciri {
 
 		// default clear color
 		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+
+		// *cough*
+		// gimmie dat dank core profile (temp hack, unless it works)
+		// *cough*
+		glGenVertexArrays(1, &_dummyVao);
+		glBindVertexArray(_dummyVao);
 
 		return true;
 	}
