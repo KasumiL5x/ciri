@@ -18,6 +18,7 @@ namespace ciri {
 
 		virtual int getWidth() const override;
 		virtual int getHeight() const override;
+		virtual TextureFormat::Format getFormat() const override;
 
 		virtual ErrorCode writeToTGA( const char* file ) override;
 		virtual ErrorCode writeToDDS( const char* file ) override;

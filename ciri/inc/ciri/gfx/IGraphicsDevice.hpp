@@ -219,6 +219,24 @@ namespace ciri {
 		virtual ErrorCode resize()=0;
 
 		/**
+		 * Resizes a given 2d texture to the given dimensions.
+		 * @param texture 2D texture to resize.
+		 * @param width   New width in pixels.
+		 * @param height  New height in pixels.
+		 * @returns ErrorCode indicating success or failure.
+		 */
+		virtual ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height )=0;
+
+		/**
+		 * Resizes a given 2d render target to the given dimensions.
+		 * @param texture 2D render target to resize.
+		 * @param width   New width in pixels.
+		 * @param height  New height in pixels.
+		 * @returns ErrorCode indicating success or failure.
+		 */
+		virtual ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height )=0;
+
+		/**
 		 * Sets the color that will be applied to the active render targets when the clear function is called.
 		 * @param r Red.
 		 * @param g Green.

@@ -119,9 +119,11 @@ void TerrainDemo::onLoadContent() {
 	_alphaBlendState = graphicsDevice()->createBlendState(alphaBlendDesc);
 
 	// create render target for water reflections
-	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(window()->getWidth(), window()->getHeight(), ciri::TextureFormat::RGBA32_Float);
+	const unsigned int RTT_WIDTH = 640;
+	const unsigned int RTT_HEIGHT = 360;
+	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(RTT_WIDTH, RTT_HEIGHT, ciri::TextureFormat::RGBA32_Float);
 // and for refractions
-	_waterRefractionTarget = graphicsDevice()->createRenderTarget2D(window()->getWidth(), window()->getHeight(), ciri::TextureFormat::RGBA32_Float);
+	_waterRefractionTarget = graphicsDevice()->createRenderTarget2D(RTT_WIDTH, RTT_HEIGHT, ciri::TextureFormat::RGBA32_Float);
 	// and the sampler
 	ciri::SamplerDesc reflSamplerDesc;
 	reflSamplerDesc.filter = ciri::SamplerFilter::Linear;
@@ -183,7 +185,6 @@ void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
 			graphicsDevice()->resize();
-			// todo: resize _waterReflectionTarget and _waterRefractionTarget
 			break;
 		}
 	}

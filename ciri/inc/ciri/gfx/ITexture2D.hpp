@@ -45,6 +45,12 @@ namespace ciri {
 		virtual int getHeight() const=0;
 
 		/**
+		 * Gets the format of the texture.
+		 * @returns Format of the texture.
+		 */
+		virtual TextureFormat::Format getFormat() const=0;
+
+		/**
 		 * Writes the texture's contents to a TGA file.
 		 * @param file TGA file to write to.
 		 * @returns ErrorCode indicating success or failure.

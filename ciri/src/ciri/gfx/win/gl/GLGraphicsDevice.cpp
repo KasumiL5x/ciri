@@ -280,7 +280,11 @@ namespace ciri {
 		if( nullptr == texture ) {
 			return nullptr;
 		}
-		std::shared_ptr<GLRenderTarget2D> glTarget = std::make_shared<GLRenderTarget2D>(texture);
+		std::shared_ptr<GLRenderTarget2D> glTarget = std::make_shared<GLRenderTarget2D>();
+		if( !glTarget->create(texture) ) {
+			texture.reset();
+			return nullptr;
+		}
 		_renderTarget2Ds.push_back(glTarget);
 		return glTarget;
 	}
@@ -576,6 +580,53 @@ namespace ciri {
 		glViewport(0, 0, _defaultWidth, _defaultHeight);
 
 		return ErrorCode::CIRI_OK;
+	}
+
+	ErrorCode GLGraphicsDevice::resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height ) {
+		if( !_isValid ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		if( width <= 0 || height <= 0 || nullptr == texture ) {
+			return ErrorCode::CIRI_INVALID_ARGUMENT;
+		}
+
+		const std::shared_ptr<GLTexture2D> glTexture = std::static_pointer_cast<GLTexture2D>(texture);
+
+		// check for texture that isn't created
+		if( 0 == glTexture->getTextureId() ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		glTexture->destroy();
+		return glTexture->setData(0, 0, width, height, nullptr, glTexture->getFormat());
+	}
+
+	ErrorCode GLGraphicsDevice::resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height ) {
+		if( !_isValid ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		if( width <= 0 || height <= 0 || nullptr == target ) {
+			return ErrorCode::CIRI_INVALID_ARGUMENT;
+		}
+
+		const std::shared_ptr<GLRenderTarget2D> glTarget = std::static_pointer_cast<GLRenderTarget2D>(target);
+
+		// check for texture that isn't created
+		if( nullptr == glTarget->getTexture2D() ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		// store texture's format for re-creation
+		const TextureFormat::Format textureFormat = glTarget->getTexture2D()->getFormat();
+
+		glTarget->destroy();
+		const std::shared_ptr<GLTexture2D> glTexture = std::static_pointer_cast<GLTexture2D>(createTexture2D(width, height, textureFormat, TextureFlags::RenderTarget, nullptr));
+		if( nullptr == glTexture ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+		return glTarget->create(glTexture) ? ErrorCode::CIRI_OK : ErrorCode::CIRI_UNKNOWN_ERROR;
 	}
 
 	void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {

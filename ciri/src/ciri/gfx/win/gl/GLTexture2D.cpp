@@ -93,6 +93,10 @@ namespace ciri {
 		return _height;
 	}
 
+	TextureFormat::Format GLTexture2D::getFormat() const {
+		return _format;
+	}
+
 	ErrorCode GLTexture2D::writeToTGA( const char* file ) {
 		// todo: return ciri error codes instead of a boolean
 		if( nullptr == file || 0 == _textureId ) {

@@ -597,6 +597,53 @@ namespace ciri {
 		return ErrorCode::CIRI_OK;
 	}
 
+	ErrorCode DXGraphicsDevice::resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height )  {
+		if( !_isValid ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		if( width <= 0 || height <= 0 || nullptr == texture ) {
+			return ErrorCode::CIRI_INVALID_ARGUMENT;
+		}
+
+		const std::shared_ptr<DXTexture2D> dxTexture = std::static_pointer_cast<DXTexture2D>(texture);
+		
+		// check for texture that isn't created
+		if( nullptr == dxTexture->getTexture() ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		dxTexture->destroy();
+		return dxTexture->setData(0, 0, width, height, nullptr, dxTexture->getFormat());
+	}
+
+	ErrorCode DXGraphicsDevice::resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height ) {
+		if( !_isValid ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		if( width <= 0 || height <= 0 || nullptr == target ) {
+			return ErrorCode::CIRI_INVALID_ARGUMENT;
+		}
+
+		const std::shared_ptr<DXRenderTarget2D> dxTarget = std::static_pointer_cast<DXRenderTarget2D>(target);
+
+		// check for texure that isn't created
+		if( nullptr == dxTarget->getTexture2D() ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+
+		// store texture's format for re-creation
+		const TextureFormat::Format textureFormat = dxTarget->getTexture2D()->getFormat();
+
+		dxTarget->destroy();
+		const std::shared_ptr<DXTexture2D> dxTexture = std::static_pointer_cast<DXTexture2D>(createTexture2D(width, height, textureFormat, TextureFlags::RenderTarget, nullptr));
+		if( nullptr == dxTexture ) {
+			return ErrorCode::CIRI_UNKNOWN_ERROR;
+		}
+		return dxTarget->create(dxTexture) ? ErrorCode::CIRI_OK : ErrorCode::CIRI_UNKNOWN_ERROR;
+	}
+
 	void DXGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
 		if( !_isValid ) { // gl requires an active context, so behave the same in dx
 			return;

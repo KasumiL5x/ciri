@@ -104,6 +104,10 @@ namespace ciri {
 		return _height;
 	}
 
+	TextureFormat::Format DXTexture2D::getFormat() const {
+		return _format;
+	}
+
 	ErrorCode DXTexture2D::writeToTGA( const char* file ) {
 		// todo: somehow figure this out!
 		// https://github.com/Microsoft/DirectXTK/blob/master/Src/ScreenGrab.cpp

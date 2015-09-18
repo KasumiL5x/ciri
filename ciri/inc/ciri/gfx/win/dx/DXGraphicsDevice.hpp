@@ -51,6 +51,8 @@ namespace ciri {
 		virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) override;
 		virtual void restoreDefaultRenderTargets() override;
 		virtual ErrorCode resize() override;
+		virtual ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height ) override;
+		virtual ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height ) override;
 		virtual void setClearColor( float r, float g, float b, float a ) override;
 		virtual void clear( int flags ) override;
 		virtual void setRasterizerState( const std::shared_ptr<IRasterizerState>& state ) override;

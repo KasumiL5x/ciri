@@ -9,8 +9,10 @@ namespace ciri {
 
 	class GLRenderTarget2D : public IRenderTarget2D {
 	public:
-		GLRenderTarget2D( const std::shared_ptr<GLTexture2D>& texture );
+		GLRenderTarget2D();
 		virtual ~GLRenderTarget2D();
+
+		bool create( const std::shared_ptr<GLTexture2D>& texture );
 
 		virtual void destroy() override;
 
