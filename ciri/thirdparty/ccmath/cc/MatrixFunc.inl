@@ -74,12 +74,19 @@ namespace cc {
     template<typename T>
     inline Mat4<T> orthographic( const T& left, const T& right, const T& bottom, const T& top, const T& near, const T& far ) {
       Mat4<T> ortho;
-      ortho[0][0] = static_cast<T>(2) / (right - left);
-      ortho[1][1] = static_cast<T>(2) / (top - bottom);
-      ortho[2][2] = static_cast<T>(-1) / (far - near);
-      ortho[3][0] = -(right + left) / (right - left);
-      ortho[3][1] = -(top + bottom) / (top - bottom);
-      ortho[3][2] = -near / (far - near);
+			//// no f/n from glm
+			//ortho[0][0] = static_cast<T>(2) / (right - left);
+			//ortho[1][1] = static_cast<T>(2) / (top - bottom);
+			//ortho[2][2] = - static_cast<T>(1);
+			//ortho[3][0] = - (right + left) / (right - left);
+			//ortho[3][1] = - (top + bottom) / (top - bottom);
+
+			ortho[0][0] =  static_cast<T>(2) / (right - left);
+			ortho[1][1] =  static_cast<T>(2) / (top - bottom);
+			ortho[2][2] = -static_cast<T>(2) / (far - near);
+			ortho[3][0] = -(right + left) / (right - left);
+			ortho[3][1] = -(top + bottom) / (top - bottom);
+			ortho[3][2] = -(far + near) / (far - near);
       return ortho;
     }
 
