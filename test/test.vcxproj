@@ -90,6 +90,8 @@
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
+    <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
+    <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
     <ClCompile Include="src\demos\terrain\TerrainDemo.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -105,6 +107,8 @@
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\IDemo.hpp" />
+    <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
+    <ClInclude Include="src\demos\sprites\SpritesDemo.hpp" />
     <ClInclude Include="src\demos\terrain\TerrainDemo.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

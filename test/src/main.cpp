@@ -5,10 +5,12 @@
 #include <ciri/input/IInput.hpp>
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
 #include "demos/terrain/TerrainDemo.hpp"
+#include "demos/sprites/SpritesDemo.hpp"
 
 enum class Demo {
 	Dynvb,
-	Terrain
+	Terrain,
+	Sprites
 };
 
 std::unique_ptr<IDemo> createDemo( Demo type ) {
@@ -19,6 +21,10 @@ std::unique_ptr<IDemo> createDemo( Demo type ) {
 
 		case Demo::Terrain:{ 
 			return std::unique_ptr<IDemo>(new TerrainDemo());
+		}
+
+		case Demo::Sprites: {
+			return std::unique_ptr<IDemo>(new SpritesDemo());
 		}
 
 		default: {
@@ -37,7 +43,7 @@ int main() {
 #endif
 
 	// create the demo and get its configuration
-	std::unique_ptr<IDemo> demo = createDemo(Demo::Terrain);
+	std::unique_ptr<IDemo> demo = createDemo(Demo::Sprites);
 	const DemoConfig config = demo->getConfig();
 
 	// create window

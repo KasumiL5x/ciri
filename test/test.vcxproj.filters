@@ -29,6 +29,12 @@
     <ClCompile Include="src\demos\terrain\TerrainDemo.cpp">
       <Filter>demos\terrain</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\sprites\SpritesDemo.cpp">
+      <Filter>demos\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\sprites\SpriteBatch.cpp">
+      <Filter>demos\sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -42,6 +48,9 @@
     </Filter>
     <Filter Include="demos\terrain">
       <UniqueIdentifier>{3f6d2871-1705-42af-b5f2-3ee8cb48c1d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\sprites">
+      <UniqueIdentifier>{a38785e1-2cf9-49af-a023-330851920245}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +89,12 @@
     </ClInclude>
     <ClInclude Include="src\demos\terrain\TerrainDemo.hpp">
       <Filter>demos\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\SpritesDemo.hpp">
+      <Filter>demos\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\SpriteBatch.hpp">
+      <Filter>demos\sprites</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
