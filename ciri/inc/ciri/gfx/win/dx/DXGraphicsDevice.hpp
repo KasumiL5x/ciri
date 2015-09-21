@@ -63,6 +63,19 @@ namespace ciri {
 		virtual const char* getGpuName() const override;
 		virtual const char* getApiInfo() const override;
 		virtual GraphicsApiType getApiType() const override;
+		virtual ErrorCode restoreDefaultBlendState() override;
+		virtual ErrorCode restoreDefaultRasterizerState() override;
+		virtual ErrorCode restoreDefaultDepthStencilState() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendAdditive() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendAlpha() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendNonPremul() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendOpaque() override;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterNone() override;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterClockwise() override;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterCounterClockwise() override;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilDefault() override;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilDepthRead() override;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilNone() override;
 
 		ID3D11Device* getDevice() const;
 		ID3D11DeviceContext* getContext() const;
@@ -118,6 +131,20 @@ namespace ciri {
 		std::vector<std::shared_ptr<DXBlendState>> _blendStates;
 		//
 		std::vector<std::shared_ptr<DXTextureCube>> _textureCubes;
+
+		// default blend states
+		std::shared_ptr<IBlendState> _defaultBlendAdditive;
+		std::shared_ptr<IBlendState> _defaultBlendAlpha;
+		std::shared_ptr<IBlendState> _defaultBlendNonPremul;
+		std::shared_ptr<IBlendState> _defaultBlendOpaque;
+		// default rasterizer states
+		std::shared_ptr<IRasterizerState> _defaultRasterNone;
+		std::shared_ptr<IRasterizerState> _defaultRasterClockwise;
+		std::shared_ptr<IRasterizerState> _defaultRasterCounterClockwise;
+		// default depth states
+		std::shared_ptr<IDepthStencilState> _defaultDepthStencilDefault;
+		std::shared_ptr<IDepthStencilState> _defaultDepthStencilDepthRead;
+		std::shared_ptr<IDepthStencilState> _defaultDepthStencilNone;
 	};
 } // ciri
 

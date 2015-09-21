@@ -339,6 +339,12 @@ namespace ciri {
 			return;
 		}
 
+		if( nullptr == shader ) {
+			glUseProgram(0);
+			_activeShader.reset();
+			return;
+		}
+
 		if( !shader->isValid() ) {
 			_activeShader.reset();
 			return;
@@ -444,33 +450,34 @@ namespace ciri {
 
 		if( nullptr == state ) {
 			restoreDefaultBlendState();
-		} else {
-			const std::shared_ptr<GLBlendState> glState = std::static_pointer_cast<GLBlendState>(state);
-			const BlendDesc desc = glState->getDesc();
-
-			// enable blending
-			if( desc.blendingEnabled() ) {
-				glEnable(GL_BLEND);
-			} else {
-				glDisable(GL_BLEND);
-			}
-
-			// blend color
-			glBlendColor(desc.blendFactor[0], desc.blendFactor[1], desc.blendFactor[2], desc.blendFactor[3]);
-
-			// blend equations
-			glBlendEquationSeparate(ciriToGlBlendFunction(desc.colorFunc), ciriToGlBlendFunction(desc.alphaFunc));
-
-			// blend functions
-			glBlendFuncSeparate(ciriToGlBlendMode(desc.srcColorBlend, false), ciriToGlBlendMode(desc.dstColorBlend, false), ciriToGlBlendMode(desc.srcAlphaBlend, true), ciriToGlBlendMode(desc.dstAlphaBlend, true));
-
-			// color write mask
-			const GLboolean redMask   = (desc.colorMask & static_cast<int>(BlendColorMask::Red)) != 0;
-			const GLboolean greenMask = (desc.colorMask & static_cast<int>(BlendColorMask::Green)) != 0;
-			const GLboolean blueMask  = (desc.colorMask & static_cast<int>(BlendColorMask::Blue)) != 0;
-			const GLboolean alphaMask = (desc.colorMask & static_cast<int>(BlendColorMask::Alpha)) != 0;
-			glColorMask(redMask, greenMask, blueMask, alphaMask);
+			return;
 		}
+
+		const std::shared_ptr<GLBlendState> glState = std::static_pointer_cast<GLBlendState>(state);
+		const BlendDesc desc = glState->getDesc();
+
+		// enable blending
+		if( desc.blendingEnabled() ) {
+			glEnable(GL_BLEND);
+		} else {
+			glDisable(GL_BLEND);
+		}
+
+		// blend color
+		glBlendColor(desc.blendFactor[0], desc.blendFactor[1], desc.blendFactor[2], desc.blendFactor[3]);
+
+		// blend equations
+		glBlendEquationSeparate(ciriToGlBlendFunction(desc.colorFunc), ciriToGlBlendFunction(desc.alphaFunc));
+
+		// blend functions
+		glBlendFuncSeparate(ciriToGlBlendMode(desc.srcColorBlend, false), ciriToGlBlendMode(desc.dstColorBlend, false), ciriToGlBlendMode(desc.srcAlphaBlend, true), ciriToGlBlendMode(desc.dstAlphaBlend, true));
+
+		// color write mask
+		const GLboolean redMask   = (desc.colorMask & static_cast<int>(BlendColorMask::Red)) != 0;
+		const GLboolean greenMask = (desc.colorMask & static_cast<int>(BlendColorMask::Green)) != 0;
+		const GLboolean blueMask  = (desc.colorMask & static_cast<int>(BlendColorMask::Blue)) != 0;
+		const GLboolean alphaMask = (desc.colorMask & static_cast<int>(BlendColorMask::Alpha)) != 0;
+		glColorMask(redMask, greenMask, blueMask, alphaMask);
 	}
 
 	void GLGraphicsDevice::drawArrays( PrimitiveTopology topology, int vertexCount, int startIndex ) {
@@ -479,7 +486,7 @@ namespace ciri {
 		}
 
 		// cannot draw with no active shader
-		if( _activeShader .expired() ) {
+		if( _activeShader.expired() ) {
 			return;
 		}
 
@@ -660,9 +667,9 @@ namespace ciri {
 			return;
 		}
 
-		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
-			throw; // not yet implemented
+			restoreDefaultRasterizerState();
+			return;
 		}
 
 		const std::shared_ptr<GLRasterizerState> glRaster = std::static_pointer_cast<GLRasterizerState>(state);
@@ -718,9 +725,9 @@ namespace ciri {
 			return;
 		}
 
-		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
-			throw; // not yet implemented
+			restoreDefaultDepthStencilState();
+			return;
 		}
 
 		const std::shared_ptr<GLDepthStencilState> glState = std::static_pointer_cast<GLDepthStencilState>(state);
@@ -787,6 +794,126 @@ namespace ciri {
 
 	GraphicsApiType GLGraphicsDevice::getApiType() const {
 		return GraphicsApiType::OpenGL;
+	}
+
+	ErrorCode GLGraphicsDevice::restoreDefaultBlendState() {
+		setBlendState(getDefaultBlendOpaque());
+		return ErrorCode::CIRI_OK;
+	}
+
+	ErrorCode GLGraphicsDevice::restoreDefaultRasterizerState() {
+		setRasterizerState(getDefaultRasterCounterClockwise());
+		return ErrorCode::CIRI_OK;
+	}
+
+	ErrorCode GLGraphicsDevice::restoreDefaultDepthStencilState() {
+		setDepthStencilState(getDefaultDepthStencilDefault());
+		return ErrorCode::CIRI_OK;
+	}
+
+	std::shared_ptr<IBlendState> GLGraphicsDevice::getDefaultBlendAdditive() {
+		if( nullptr == _defaultBlendAdditive ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::SourceAlpha;
+			desc.srcAlphaBlend = BlendMode::SourceAlpha;
+			desc.dstColorBlend = BlendMode::One;
+			desc.dstAlphaBlend = BlendMode::One;
+			_defaultBlendAdditive = createBlendState(desc);
+		}
+		return _defaultBlendAdditive;
+	}
+
+	std::shared_ptr<IBlendState> GLGraphicsDevice::getDefaultBlendAlpha() {
+		if( nullptr == _defaultBlendAlpha ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::One;
+			desc.srcAlphaBlend = BlendMode::One;
+			desc.dstColorBlend = BlendMode::InverseSourceAlpha;
+			desc.dstAlphaBlend = BlendMode::InverseSourceAlpha;
+			_defaultBlendAlpha = createBlendState(desc);
+		}
+		return _defaultBlendAlpha;
+	}
+
+	std::shared_ptr<IBlendState> GLGraphicsDevice::getDefaultBlendNonPremul() {
+		if( nullptr == _defaultBlendNonPremul ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::SourceAlpha;
+			desc.srcAlphaBlend = BlendMode::SourceAlpha;
+			desc.dstColorBlend = BlendMode::InverseSourceAlpha;
+			desc.dstAlphaBlend = BlendMode::InverseSourceAlpha;
+			_defaultBlendNonPremul = createBlendState(desc);
+		}
+		return _defaultBlendNonPremul;
+	}
+
+	std::shared_ptr<IBlendState> GLGraphicsDevice::getDefaultBlendOpaque() {
+		if( nullptr == _defaultBlendOpaque ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::One;
+			desc.srcAlphaBlend = BlendMode::One;
+			desc.dstColorBlend = BlendMode::Zero;
+			desc.dstAlphaBlend = BlendMode::Zero;
+			_defaultBlendOpaque = createBlendState(desc);
+		}
+		return _defaultBlendOpaque;
+	}
+
+	std::shared_ptr<IRasterizerState> GLGraphicsDevice::getDefaultRasterNone() {
+		if( nullptr == _defaultRasterNone ) {
+			RasterizerDesc desc;
+			desc.cullMode = CullMode::None;
+			_defaultRasterNone = createRasterizerState(desc);
+		}
+		return _defaultRasterNone;
+	}
+
+	std::shared_ptr<IRasterizerState> GLGraphicsDevice::getDefaultRasterClockwise() {
+		if( nullptr == _defaultRasterClockwise ) {
+			RasterizerDesc desc;
+			desc.cullMode = CullMode::Clockwise;
+			_defaultRasterClockwise = createRasterizerState(desc);
+		}
+		return _defaultRasterClockwise;
+	}
+
+	std::shared_ptr<IRasterizerState> GLGraphicsDevice::getDefaultRasterCounterClockwise() {
+		if( nullptr == _defaultRasterCounterClockwise ){
+			RasterizerDesc desc;
+			desc.cullMode = CullMode::CounterClockwise;
+			_defaultRasterCounterClockwise = createRasterizerState(desc);
+		}
+		return _defaultRasterCounterClockwise;
+	}
+
+	std::shared_ptr<IDepthStencilState> GLGraphicsDevice::getDefaultDepthStencilDefault() {
+		if( nullptr == _defaultDepthStencilDefault ) {
+			DepthStencilDesc desc;
+			desc.depthEnable = true;
+			desc.depthWriteMask = true;
+			_defaultDepthStencilDefault = createDepthStencilState(desc);
+		}
+		return _defaultDepthStencilDefault;
+	}
+
+	std::shared_ptr<IDepthStencilState> GLGraphicsDevice::getDefaultDepthStencilDepthRead() {
+		if( nullptr == _defaultDepthStencilDepthRead ) {
+			DepthStencilDesc desc;
+			desc.depthEnable = true;
+			desc.depthWriteMask = false;
+			_defaultDepthStencilDepthRead = createDepthStencilState(desc);
+		}
+		return _defaultDepthStencilDepthRead;
+	}
+
+	std::shared_ptr<IDepthStencilState> GLGraphicsDevice::getDefaultDepthStencilNone() {
+		if( nullptr == _defaultDepthStencilNone ) {
+			DepthStencilDesc desc;
+			desc.depthEnable = false;
+			desc.depthWriteMask = false;
+			_defaultDepthStencilNone = createDepthStencilState(desc);
+		}
+		return _defaultDepthStencilNone;
 	}
 
 	bool GLGraphicsDevice::configureGl( HWND hwnd ) {
@@ -1019,22 +1146,22 @@ namespace ciri {
 		printf(ss.str().c_str());
 	}
 
-	void GLGraphicsDevice::restoreDefaultBlendState() {
-		if( !_isValid ) {
-			return;
-		}
+	//void GLGraphicsDevice::restoreDefaultBlendState() {
+	//	if( !_isValid ) {
+	//		return;
+	//	}
 
-		// disable blending
-		glDisable(GL_BLEND);
-		// blend color (http://docs.gl/gl4/glBlendColor)
-		glBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
-		// blend equations (http://docs.gl/gl4/glBlendEquationSeparate)
-		glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-		// blend functions (http://docs.gl/gl4/glBlendFuncSeparate)
-		glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-		// color write mask (http://docs.gl/gl4/glColorMask)
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	}
+	//	// disable blending
+	//	glDisable(GL_BLEND);
+	//	// blend color (http://docs.gl/gl4/glBlendColor)
+	//	glBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//	// blend equations (http://docs.gl/gl4/glBlendEquationSeparate)
+	//	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+	//	// blend functions (http://docs.gl/gl4/glBlendFuncSeparate)
+	//	glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+	//	// color write mask (http://docs.gl/gl4/glColorMask)
+	//	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	//}
 
 	std::shared_ptr<IGraphicsDevice> createGraphicsDevice() {
 		return std::shared_ptr<IGraphicsDevice>(new GLGraphicsDevice());

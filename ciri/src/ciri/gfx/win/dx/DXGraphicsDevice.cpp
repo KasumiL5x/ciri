@@ -300,6 +300,14 @@ namespace ciri {
 			return;
 		}
 
+		if( nullptr == shader ) {
+			_context->VSSetShader(nullptr, nullptr, 0);
+			_context->GSSetShader(nullptr, nullptr, 0);
+			_context->PSSetShader(nullptr, nullptr, 0);
+			_activeShader.reset();
+			return;
+		}
+
 		if( !shader->isValid() ) {
 			_activeShader.reset();
 			return;
@@ -450,12 +458,14 @@ namespace ciri {
 		}
 
 		if( nullptr == state ) {
-			_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
-		} else {
-			const std::shared_ptr<DXBlendState> dxState = std::static_pointer_cast<DXBlendState>(state);
-			ID3D11BlendState* bs = dxState->getBlendState();
-			_context->OMSetBlendState(bs, dxState->getDesc().blendFactor, 0xffffffff); // todo: sample mask support?
+			restoreDefaultBlendState();
+			//_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+			return;
 		}
+
+		const std::shared_ptr<DXBlendState> dxState = std::static_pointer_cast<DXBlendState>(state);
+		ID3D11BlendState* bs = dxState->getBlendState();
+		_context->OMSetBlendState(bs, dxState->getDesc().blendFactor, 0xffffffff); // todo: sample mask support?
 	}
 
 	void DXGraphicsDevice::drawArrays( PrimitiveTopology topology, int vertexCount, int startIndex ) {
@@ -699,9 +709,9 @@ namespace ciri {
 			return;
 		}
 
-		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
-			throw; // not yet implemented
+			restoreDefaultRasterizerState();
+			return;
 		}
 
 		const std::shared_ptr<DXRasterizerState> dxRaster = std::static_pointer_cast<DXRasterizerState>(state);
@@ -718,9 +728,9 @@ namespace ciri {
 			return;
 		}
 
-		// todo: if state is nullptr, revert to a default set state
 		if( nullptr == state ) {
-			throw; // not yet implemented
+			restoreDefaultDepthStencilState();
+			return;
 		}
 
 		const std::shared_ptr<DXDepthStencilState> dxState = std::static_pointer_cast<DXDepthStencilState>(state);
@@ -754,6 +764,126 @@ namespace ciri {
 
 	GraphicsApiType DXGraphicsDevice::getApiType() const {
 		return GraphicsApiType::DirectX11;
+	}
+
+	ErrorCode DXGraphicsDevice::restoreDefaultBlendState() {
+		setBlendState(getDefaultBlendOpaque());
+		return ErrorCode::CIRI_OK;
+	}
+
+	ErrorCode DXGraphicsDevice::restoreDefaultRasterizerState() {
+		setRasterizerState(getDefaultRasterCounterClockwise());
+		return ErrorCode::CIRI_OK;
+	}
+
+	ErrorCode DXGraphicsDevice::restoreDefaultDepthStencilState() {
+		setDepthStencilState(getDefaultDepthStencilDefault());
+		return ErrorCode::CIRI_OK;
+	}
+
+	std::shared_ptr<IBlendState> DXGraphicsDevice::getDefaultBlendAdditive() {
+		if( nullptr == _defaultBlendAdditive ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::SourceAlpha;
+			desc.srcAlphaBlend = BlendMode::SourceAlpha;
+			desc.dstColorBlend = BlendMode::One;
+			desc.dstAlphaBlend = BlendMode::One;
+			_defaultBlendAdditive = createBlendState(desc);
+		}
+		return _defaultBlendAdditive;
+	}
+
+	std::shared_ptr<IBlendState> DXGraphicsDevice::getDefaultBlendAlpha() {
+		if( nullptr == _defaultBlendAlpha ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::One;
+			desc.srcAlphaBlend = BlendMode::One;
+			desc.dstColorBlend = BlendMode::InverseSourceAlpha;
+			desc.dstAlphaBlend = BlendMode::InverseSourceAlpha;
+			_defaultBlendAlpha = createBlendState(desc);
+		}
+		return _defaultBlendAlpha;
+	}
+
+	std::shared_ptr<IBlendState> DXGraphicsDevice::getDefaultBlendNonPremul() {
+		if( nullptr == _defaultBlendNonPremul ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::SourceAlpha;
+			desc.srcAlphaBlend = BlendMode::SourceAlpha;
+			desc.dstColorBlend = BlendMode::InverseSourceAlpha;
+			desc.dstAlphaBlend = BlendMode::InverseSourceAlpha;
+			_defaultBlendNonPremul = createBlendState(desc);
+		}
+		return _defaultBlendNonPremul;
+	}
+
+	std::shared_ptr<IBlendState> DXGraphicsDevice::getDefaultBlendOpaque() {
+		if( nullptr == _defaultBlendOpaque ) {
+			BlendDesc desc;
+			desc.srcColorBlend = BlendMode::One;
+			desc.srcAlphaBlend = BlendMode::One;
+			desc.dstColorBlend = BlendMode::Zero;
+			desc.dstAlphaBlend = BlendMode::Zero;
+			_defaultBlendOpaque = createBlendState(desc);
+		}
+		return _defaultBlendOpaque;
+	}
+
+	std::shared_ptr<IRasterizerState> DXGraphicsDevice::getDefaultRasterNone() {
+		if( nullptr == _defaultRasterNone ) {
+			RasterizerDesc desc;
+			desc.cullMode = CullMode::None;
+			_defaultRasterNone = createRasterizerState(desc);
+		}
+		return _defaultRasterNone;
+	}
+
+	std::shared_ptr<IRasterizerState> DXGraphicsDevice::getDefaultRasterClockwise() {
+		if( nullptr == _defaultRasterClockwise ) {
+			RasterizerDesc desc;
+			desc.cullMode = CullMode::Clockwise;
+			_defaultRasterClockwise = createRasterizerState(desc);
+		}
+		return _defaultRasterClockwise;
+	}
+
+	std::shared_ptr<IRasterizerState> DXGraphicsDevice::getDefaultRasterCounterClockwise() {
+		if( nullptr == _defaultRasterCounterClockwise ){
+			RasterizerDesc desc;
+			desc.cullMode = CullMode::CounterClockwise;
+			_defaultRasterCounterClockwise = createRasterizerState(desc);
+		}
+		return _defaultRasterCounterClockwise;
+	}
+
+	std::shared_ptr<IDepthStencilState> DXGraphicsDevice::getDefaultDepthStencilDefault() {
+		if( nullptr == _defaultDepthStencilDefault ) {
+			DepthStencilDesc desc;
+			desc.depthEnable = true;
+			desc.depthWriteMask = true;
+			_defaultDepthStencilDefault = createDepthStencilState(desc);
+		}
+		return _defaultDepthStencilDefault;
+	}
+
+	std::shared_ptr<IDepthStencilState> DXGraphicsDevice::getDefaultDepthStencilDepthRead() {
+		if( nullptr == _defaultDepthStencilDepthRead ) {
+			DepthStencilDesc desc;
+			desc.depthEnable = true;
+			desc.depthWriteMask = false;
+			_defaultDepthStencilDepthRead = createDepthStencilState(desc);
+		}
+		return _defaultDepthStencilDepthRead;
+	}
+
+	std::shared_ptr<IDepthStencilState> DXGraphicsDevice::getDefaultDepthStencilNone() {
+		if( nullptr == _defaultDepthStencilNone ) {
+			DepthStencilDesc desc;
+			desc.depthEnable = false;
+			desc.depthWriteMask = false;
+			_defaultDepthStencilNone = createDepthStencilState(desc);
+		}
+		return _defaultDepthStencilNone;
 	}
 
 	ID3D11Device* DXGraphicsDevice::getDevice() const {

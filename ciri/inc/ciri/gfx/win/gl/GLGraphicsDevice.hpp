@@ -66,6 +66,19 @@ namespace ciri {
 		virtual const char* getGpuName() const override;
 		virtual const char* getApiInfo() const override;
 		virtual GraphicsApiType getApiType() const override;
+		virtual ErrorCode restoreDefaultBlendState() override;
+		virtual ErrorCode restoreDefaultRasterizerState() override;
+		virtual ErrorCode restoreDefaultDepthStencilState() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendAdditive() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendAlpha() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendNonPremul() override;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendOpaque() override;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterNone() override;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterClockwise() override;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterCounterClockwise() override;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilDefault() override;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilDepthRead() override;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilNone() override;
 
 	private:
 		bool configureGl( HWND hwnd );
@@ -74,7 +87,7 @@ namespace ciri {
 		static void APIENTRY debugContextCb( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam );
 		static void APIENTRY debugContextAmdCb( GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, void* userParam );
 		// restore states
-		void restoreDefaultBlendState();
+		//void restoreDefaultBlendState();
 
 	private:
 		bool _isValid;
@@ -121,6 +134,20 @@ namespace ciri {
 		std::vector<std::shared_ptr<GLTextureCube>> _textureCubes;
 		//
 		GLuint _dummyVao;
+
+		// default blend states
+		std::shared_ptr<IBlendState> _defaultBlendAdditive;
+		std::shared_ptr<IBlendState> _defaultBlendAlpha;
+		std::shared_ptr<IBlendState> _defaultBlendNonPremul;
+		std::shared_ptr<IBlendState> _defaultBlendOpaque;
+		// default rasterizer states
+		std::shared_ptr<IRasterizerState> _defaultRasterNone;
+		std::shared_ptr<IRasterizerState> _defaultRasterClockwise;
+		std::shared_ptr<IRasterizerState> _defaultRasterCounterClockwise;
+		// default depth states
+		std::shared_ptr<IDepthStencilState> _defaultDepthStencilDefault;
+		std::shared_ptr<IDepthStencilState> _defaultDepthStencilDepthRead;
+		std::shared_ptr<IDepthStencilState> _defaultDepthStencilNone;
 	};
 } // ciri
 

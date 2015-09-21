@@ -297,6 +297,36 @@ namespace ciri {
 		 * Gets the underlying API type.
 		 */
 		virtual GraphicsApiType getApiType() const=0;
+
+		/**
+		 * Restores the device's default blending state.
+		 * @returns ErrorCode indicating success or failure.
+		 */
+		virtual ErrorCode restoreDefaultBlendState()=0;
+
+		/**
+		 * Restores the device's default rasterizer state.
+		 * @returns ErrorCode indicating success or failure.
+		 */
+		virtual ErrorCode restoreDefaultRasterizerState()=0;
+
+		/**
+		 * Restores the device's default depth stencil state.
+		 * @returns ErrorCode indicating success or failure.
+		 */
+		virtual ErrorCode restoreDefaultDepthStencilState()=0;
+
+		virtual std::shared_ptr<IBlendState> getDefaultBlendAdditive()=0;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendAlpha()=0;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendNonPremul()=0;
+		virtual std::shared_ptr<IBlendState> getDefaultBlendOpaque()=0;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterNone()=0;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterClockwise()=0;
+		virtual std::shared_ptr<IRasterizerState> getDefaultRasterCounterClockwise()=0;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilDefault()=0;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilDepthRead()=0;
+		virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilNone()=0;
+		
 	};
 
 	/**
