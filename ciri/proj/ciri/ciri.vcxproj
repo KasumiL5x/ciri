@@ -135,6 +135,7 @@
     <ClInclude Include="..\..\inc\ciri\input\IInput.hpp" />
     <ClInclude Include="..\..\inc\ciri\input\Keyboard.hpp" />
     <ClInclude Include="..\..\inc\ciri\input\Mouse.hpp" />
+    <ClInclude Include="..\..\inc\ciri\Window.hpp" />
     <ClInclude Include="..\..\inc\ciri\wnd\IWindow.hpp" />
     <ClInclude Include="..\..\inc\ciri\wnd\WindowEvent.hpp" />
   </ItemGroup>

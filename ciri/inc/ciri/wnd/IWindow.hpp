@@ -76,13 +76,6 @@ namespace ciri {
 		 */
 		virtual void* getNativeHandle() const=0;
 	};
-
-	/**
-	 * Creates a new window.
-	 * Note that this function is defined in the linked window library, not in ciri itself.
-	 * @return Pointer to a new window.
-	 */
-	std::shared_ptr<IWindow> createWindow(); 
 } // ciri
 
 #endif /* __ciri_wnd_iwindow__ */

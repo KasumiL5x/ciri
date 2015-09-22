@@ -1,6 +1,6 @@
 #include <crtdbg.h>
 #include <memory>
-#include <ciri/wnd/IWindow.hpp>
+#include <ciri/Window.hpp>
 #include <ciri/core/ITimer.hpp>
 #include <ciri/input/IInput.hpp>
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
@@ -127,58 +127,3 @@ int main() {
 
 	return 0;
 }
-
-
-
-
-//#include <crtdbg.h>
-//#include <iostream>
-//#include <ciri/wnd/IWindow.hpp>
-//#include <ciri/core/ITimer.hpp>
-//#include <ciri/input/IInput.hpp>
-//
-//int main() {
-//#ifdef _DEBUG
-//	int debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-//	debugFlag|= _CRTDBG_LEAK_CHECK_DF;
-//	debugFlag |= _CRTDBG_CHECK_ALWAYS_DF;
-//	_CrtSetDbgFlag(debugFlag);
-//#endif
-//
-//	std::shared_ptr<ciri::IWindow> window = ciri::createWindow();
-//	if( !window->create(800, 600) ) {
-//		return -1;
-//	}
-//
-//	window->setWindowText("Hello, Kitty!");
-//
-//	std::shared_ptr<ciri::ITimer> timer = ciri::createTimer();
-//	timer->start();
-//
-//	std::shared_ptr<ciri::IInput> input = ciri::createInput();
-//	if( !input->create(window.get()) ) {
-//		printf("Failed to create input.");
-//	}
-//
-//	bool running = true;
-//	while( running ) {
-//		ciri::WindowEvent evt;
-//		while( window->pollEvent(evt) ) {
-//			if( ciri::WindowEvent::Closed == evt.type ) {
-//				running = false;
-//				break;
-//			}
-//		}
-//
-//		input->poll();
-//		input->update();
-//	}
-//
-//	window->close();
-//
-//
-//
-//	//system("pause");
-//
-//	return 0;
-//}
