@@ -10,6 +10,7 @@
 _declspec(align(16))
 struct SpriteConstants {
 	cc::Mat4f projection;
+	cc::Vec2f screenSize;
 };
 
 struct SpriteBatchItem {
@@ -38,11 +39,11 @@ public:
 	bool create( const std::shared_ptr<ciri::IGraphicsDevice>& device );
 	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState );
 	bool draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, const cc::Vec2f& scale );
-	bool end( float width, float height );
+	bool end();
 	void clean();
 
 private:
-	bool configure( float width, float height );
+	bool configure();
 	int getNextFreeIndex() const;
 
 private:

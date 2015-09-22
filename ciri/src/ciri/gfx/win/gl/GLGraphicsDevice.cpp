@@ -59,15 +59,10 @@ namespace ciri {
 			return false;
 		}
 
-		// temp:
-		//printf("**********\n");
-		//printf("Vendor: %s\n", glGetString(GL_VENDOR));
-		//printf("Renderer: %s\n", glGetString(GL_RENDERER));
-		//printf("Version: %s\n", glGetString(GL_VERSION));
-		//printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-		//printf("**********\n");
-
 		_isValid = true;
+
+		// apply a fullsize viewport
+		setViewport(Viewport(0, 0, window->getWidth(), window->getHeight(), 0.0f, 1.0f));
 
 		return true;
 	}
@@ -173,6 +168,19 @@ namespace ciri {
 		}
 
 		SwapBuffers(_hdc);
+	}
+
+	void GLGraphicsDevice::setViewport( const Viewport& vp ) {
+		// todo: if has valid context, can apply
+
+		glViewport(vp.x(), vp.y(), vp.width(), vp.height());
+		glDepthRange(vp.minDepth(), vp.maxDepth());
+
+		_activeViewport = vp;
+	}
+
+	const Viewport& GLGraphicsDevice::getViewport() const {
+		return _activeViewport;
 	}
 
 	std::shared_ptr<IShader> GLGraphicsDevice::createShader() {
@@ -550,7 +558,7 @@ namespace ciri {
 		glDrawBuffers(numRenderTargets, _drawBuffers);
 
 		// set viewport (use 0's size)
-		glViewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight());
+		setViewport(Viewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight()));
 	}
 
 	void GLGraphicsDevice::restoreDefaultRenderTargets() {
@@ -559,7 +567,7 @@ namespace ciri {
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, _defaultWidth, _defaultHeight);
+		setViewport(Viewport(0, 0, _defaultWidth, _defaultHeight));
 	}
 
 	ErrorCode GLGraphicsDevice::resize() {
@@ -584,7 +592,7 @@ namespace ciri {
 		
 		// bind backbuffer and resize the viewport
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, _defaultWidth, _defaultHeight);
+		setViewport(Viewport(0, 0, _defaultWidth, _defaultHeight));
 
 		return ErrorCode::CIRI_OK;
 	}
@@ -989,9 +997,6 @@ namespace ciri {
 		const std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
 		const std::string glslVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
 		_apiInfo = "OpenGL " + glVersion + "; GLSL " + glslVersion;
-
-		// default to fullscreen viewport
-		glViewport(0, 0, _defaultWidth, _defaultHeight);
 
 		// default clear color
 		glClearColor(0.39f, 0.58f, 0.93f, 1.0f);

@@ -88,7 +88,7 @@ bool SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	return true;
 }
 
-bool SpriteBatch::end( float width, float height ) {
+bool SpriteBatch::end() {
 	// cannot end without begin
 	if( false == _beginCalled ) {
 		return false;
@@ -103,7 +103,7 @@ bool SpriteBatch::end( float width, float height ) {
 	}
 
 	// configure gpu resources
-	configure(width, height);
+	configure();
 
 	while( !_batchedItems.empty() ) {
 		const SpriteBatchItem& item = _batchedItems.front();
@@ -144,17 +144,18 @@ void SpriteBatch::clean() {
 	_shader = nullptr;
 }
 
-bool SpriteBatch::configure( float width, float height ) {
+bool SpriteBatch::configure() {
 	_device->setBlendState(_blendState);
 	_device->setDepthStencilState(_depthStencilState);
 	_device->setRasterizerState(_rasterizerState);
 	_device->setSamplerState(0, _samplerState, ciri::ShaderStage::Pixel);
 
-	// todo: get viewport from device instead of taking variables in
+	const ciri::Viewport& vp = _device->getViewport();
 
 	// update constant buffer
-	//_constants.projection = cc::math::orthographic(0.0f, width, height, 0.0f, -1.0f, 0.0f);
-	_constants.projection = cc::math::orthographic(0.0f, width, 0.0f, height, -1.0f, 1.0f);
+	_constants.projection = cc::math::orthographic(0.0f, static_cast<float>(vp.width()), 0.0f, static_cast<float>(vp.height()), -1.0f, 1.0f);
+	_constants.screenSize.x = vp.width();
+	_constants.screenSize.y = vp.height();
 	if( ciri::failed(_constantBuffer->setData(sizeof(SpriteConstants), &_constants)) ) {
 		return false;
 	}

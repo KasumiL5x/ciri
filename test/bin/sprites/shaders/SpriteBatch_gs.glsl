@@ -2,6 +2,7 @@
 
 layout (std140) uniform SpriteConstants {
 	mat4 projection;
+	vec2 screenSize;
 };
 
 layout ( points) in;
@@ -19,7 +20,7 @@ void main() {
 	// |\ |
 	// c--b
 
-	vec4 center = projection * vec4(gl_in[0].gl_Position.xy, 0.0f, 1.0f);
+	vec4 center = projection * vec4(gl_in[0].gl_Position.xy * screenSize, 0.0f, 1.0f);
 
 	vec4 a = vec4(center + vec4(-sx,  sy, 0.0f, 0.0f));
 	vec4 b = vec4(center + vec4( sx, -sy, 0.0f, 0.0f));

@@ -2,6 +2,7 @@
 #define __ciri_gfx_igraphicsdevice__
 
 #include <memory>
+#include "Viewport.hpp"
 #include "IShader.hpp"
 #include "IVertexBuffer.hpp"
 #include "IIndexBuffer.hpp"
@@ -48,6 +49,18 @@ namespace ciri {
 		 * Presents the backbuffer to the screen.
 		 */
 		virtual void present()=0;
+
+		/**
+		 * Sets the viewport.
+		 * @param vp Viewport to set.
+		 */
+		virtual void setViewport( const Viewport& vp )=0;
+
+		/**
+		 * Gets the currently active Viewport.
+		 * @returns Currently active Viewport.
+		 */
+		virtual const Viewport& getViewport() const=0;
 
 		/**
 		 * Creates a new shader.

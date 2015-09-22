@@ -133,6 +133,27 @@ namespace ciri {
 		_swapchain->Present(0, 0);
 	}
 
+	void DXGraphicsDevice::setViewport( const Viewport& vp ) {
+		if( nullptr == _context ) {
+			return;
+		}
+
+		D3D11_VIEWPORT dxVp;
+		dxVp.TopLeftX = vp.x();
+		dxVp.TopLeftY = vp.y();
+		dxVp.Width = vp.width();
+		dxVp.Height = vp.height();
+		dxVp.MinDepth = vp.minDepth();
+		dxVp.MaxDepth = vp.maxDepth();
+		_context->RSSetViewports(1, &dxVp);
+
+		_activeViewport = vp;
+	}
+
+	const Viewport& DXGraphicsDevice::getViewport() const {
+		return _activeViewport;
+	}
+
 	std::shared_ptr<IShader> DXGraphicsDevice::createShader() {
 		if( !_isValid ) {
 			return nullptr;
@@ -538,6 +559,8 @@ namespace ciri {
 		// todo: take either a separate depth render target, OR take the first render target's depth render target,
 		//       as by convention, they should all have the same format depth target
 		_context->OMSetRenderTargets(numRenderTargets, _activeRenderTargets, nullptr);
+
+		setViewport(Viewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight()));
 	}
 
 	void DXGraphicsDevice::restoreDefaultRenderTargets() {
@@ -549,6 +572,8 @@ namespace ciri {
 			_activeRenderTargets[i] = nullptr;
 		}
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
+
+		setViewport(Viewport(0, 0, _defaultWidth, _defaultHeight));
 	}
 
 	ErrorCode DXGraphicsDevice::resize() {
@@ -595,14 +620,7 @@ namespace ciri {
 		// set render target back to backbuffer
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 		// create and set the new viewport
-		D3D11_VIEWPORT vp;
-		vp.Width = static_cast<FLOAT>(width);
-		vp.Height = static_cast<FLOAT>(height);
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		_context->RSSetViewports(1, &vp);
+		setViewport(Viewport(0, 0, width, height));
 
 		return ErrorCode::CIRI_OK;
 	}
@@ -1019,14 +1037,7 @@ namespace ciri {
 		_context->OMSetRenderTargets(1, &_backbuffer, _depthStencilView);
 
 		// setup the viewport
-		D3D11_VIEWPORT vp;
-		vp.Width = static_cast<FLOAT>(width);
-		vp.Height = static_cast<FLOAT>(height);
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		_context->RSSetViewports(1, &vp);
+		setViewport(Viewport(0, 0, width, height));
 
 		// holy crap that was long
 		return true;

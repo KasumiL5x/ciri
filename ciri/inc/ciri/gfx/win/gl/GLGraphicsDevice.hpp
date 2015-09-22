@@ -31,6 +31,8 @@ namespace ciri {
 		virtual void destroy() override;
 		virtual void present() override;
 
+		virtual void setViewport( const Viewport& vp ) override;
+		virtual const Viewport& getViewport() const override;
 		virtual std::shared_ptr<IShader> createShader() override;
 		virtual std::shared_ptr<IVertexBuffer> createVertexBuffer() override;
 		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer() override;
@@ -97,6 +99,8 @@ namespace ciri {
 		HGLRC _hglrc;
 		int _defaultWidth;
 		int _defaultHeight;
+		//
+		Viewport _activeViewport;
 		//
 		std::vector<std::shared_ptr<GLShader>> _shaders;
 		std::vector<std::shared_ptr<GLVertexBuffer>> _vertexBuffers;

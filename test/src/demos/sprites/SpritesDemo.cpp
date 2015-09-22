@@ -79,14 +79,12 @@ void SpritesDemo::onDraw() {
 	static float time = 0.0f;
 	time += 0.1f;
 
-	float x = (1280.0f * 0.5f) + (sin(time * 50.0f) * 15.0f);
-	float y = (720.0f  * 0.5f) + (cos(time * 50.0f) * 15.0f);
+	float x = 0.5f;
+	float y = 0.5f;
 
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState);
 	_spritebatch.draw(_texture, cc::Vec2f(x, y), cc::Vec2f(0.25f, 0.25f));
-	const float width = static_cast<float>(window()->getWidth());
-	const float height = static_cast<float>(window()->getHeight());
-	_spritebatch.end(width, height);
+	_spritebatch.end();
 
 	device->present();
 }

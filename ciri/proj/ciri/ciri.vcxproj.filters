@@ -146,6 +146,9 @@
     <ClInclude Include="..\..\inc\ciri\gfx\VertexUsage.hpp">
       <Filter>inc\gfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\Viewport.hpp">
+      <Filter>inc\gfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\Ciri.cpp" />
@@ -180,6 +183,9 @@
       <Filter>src\gfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ciri\gfx\VertexElement.cpp">
+      <Filter>src\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\Viewport.cpp">
       <Filter>src\gfx</Filter>
     </ClCompile>
   </ItemGroup>
