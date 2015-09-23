@@ -2,33 +2,18 @@
 #define __spritebatch__
 
 #include <memory>
+#include <vector>
 #include <queue>
 #include <cc/Mat4.hpp>
 #include <cc/Vec2.hpp>
-#include <ciri/gfx/IGraphicsDevice.hpp>
+#include <cc/Vec4.hpp>
+#include <ciri/Graphics.hpp>
+#include "SpriteVertex.hpp"
+#include "SpriteBatchItem.hpp"
 
 _declspec(align(16))
 struct SpriteConstants {
 	cc::Mat4f projection;
-	cc::Vec2f screenSize;
-};
-
-struct SpriteBatchItem {
-	int vbIndex;
-	std::weak_ptr<ciri::ITexture2D> texture;
-
-	SpriteBatchItem()
-		: vbIndex(-1) {
-	}
-};
-
-struct SpriteVertex {
-	cc::Vec2f position;
-	cc::Vec2f scale;
-
-	SpriteVertex()
-		: position(0.0f, 0.0f), scale(1.0f, 1.0f) {
-	}
 };
 
 class SpriteBatch {
@@ -38,13 +23,26 @@ public:
 
 	bool create( const std::shared_ptr<ciri::IGraphicsDevice>& device );
 	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState );
-	bool draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, const cc::Vec2f& scale );
+
+	/**
+	 * Draws a sprite with a texture, position, width, height, rotation, and pivot origin.
+	 * @param texture  Texture to draw.
+	 * @param dstRect  X and Y are the position on the screen in pixels; Z and W are the width and height on the screen in pixels.
+	 * @param rotation Rotation angle in radians.
+	 * @param origin   Pivot point where {0, 0} is the bottom left.
+	 */
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin );
+	
 	bool end();
 	void clean();
 
+	void debugReloadShaders();
+
 private:
 	bool configure();
-	int getNextFreeIndex() const;
+	std::shared_ptr<SpriteBatchItem> createBatchItem();
+	void ensureArrayCapacity( int size );
+	//void flushVertexArray( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture );
 
 private:
 	std::shared_ptr<ciri::IGraphicsDevice> _device; // external
@@ -60,11 +58,12 @@ private:
 
 	bool _beginCalled;
 
-	const unsigned int MAX_SPRITES;
-	SpriteVertex* _sprites;
 	std::shared_ptr<ciri::IVertexBuffer> _spritesBuffer;
 
-	std::queue<SpriteBatchItem> _batchedItems;
+	std::vector<std::shared_ptr<SpriteBatchItem>> _batchItemList;
+	std::queue<std::shared_ptr<SpriteBatchItem>> _freeBatchItemQueue;
+
+	std::vector<SpriteVertex> _vertexArray;
 };
 
 #endif /* __spritebatch__ */

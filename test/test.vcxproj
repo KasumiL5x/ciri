@@ -108,7 +108,9 @@
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\IDemo.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
+    <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp" />
+    <ClInclude Include="src\demos\sprites\SpriteVertex.hpp" />
     <ClInclude Include="src\demos\terrain\TerrainDemo.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

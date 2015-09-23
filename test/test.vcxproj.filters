@@ -96,5 +96,11 @@
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
+    <ClInclude Include="src\demos\sprites\SpriteVertex.hpp">
+      <Filter>demos\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp">
+      <Filter>demos\sprites</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

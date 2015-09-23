@@ -1,5 +1,7 @@
 #include "SpritesDemo.hpp"
 #include <ciri/core/PNG.hpp>
+#include <cc/Common.hpp>
+#include <ctime>
 
 SpritesDemo::SpritesDemo()
 	: IDemo() {
@@ -25,6 +27,9 @@ DemoConfig SpritesDemo::getConfig() {
 }
 
 void SpritesDemo::onInitialize() {
+	srand(time(0));
+	rand();
+
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
 	printf("API: %s\n", graphicsDevice()->getApiInfo());
@@ -46,13 +51,28 @@ void SpritesDemo::onInitialize() {
 	//ciri::DepthStencilDesc depthStencilDesc;
 	_depthStencilState = graphicsDevice()->getDefaultDepthStencilNone(); //graphicsDevice()->createDepthStencilState(depthStencilDesc);
 
+	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise();
 	//ciri::RasterizerDesc rasterizerDesc;
-	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise(); //graphicsDevice()->createRasterizerState(rasterizerDesc);
+	//rasterizerDesc.cullMode = ciri::CullMode::None;
+	//rasterizerDesc.fillMode = ciri::FillMode::Wireframe;
+	//_rasterizerState = graphicsDevice()->createRasterizerState(rasterizerDesc);
 
 	// load textures
 	ciri::PNG png;
 	if( png.loadFromFile("sprites/textures/test.png") && (4 == png.getBytesPerPixel()) ) {
 		_texture = graphicsDevice()->createTexture2D(png.getWidth(), png.getHeight(), ciri::TextureFormat::Color, 0, png.getPixels());
+	}
+
+	// load balls
+	const float MAX_VELOCITY = 1000.0f;
+	for( int i = 0; i < 20; ++i ) {
+		Ball b;
+		b.texture = _texture;
+		b.position.x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth() - _texture->getWidth()));
+		b.position.y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight() - _texture->getHeight()));
+		b.velocity.x = cc::math::randRange<float>(-MAX_VELOCITY, MAX_VELOCITY);
+		b.velocity.y = cc::math::randRange<float>(-MAX_VELOCITY, MAX_VELOCITY);
+		_balls.push_back(b);
 	}
 }
 
@@ -76,6 +96,15 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		this->gtfo();
 		return;
 	}
+
+	if( input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
+		_spritebatch.debugReloadShaders();
+	}
+
+	for( auto& ball : _balls ) {
+		ball.step(deltaTime);
+		ball.collideWalls(0.0f, window()->getWidth(), 0.0f, window()->getHeight());
+	}
 }
 
 void SpritesDemo::onDraw() {
@@ -91,7 +120,9 @@ void SpritesDemo::onDraw() {
 	float y = 0.5f;
 
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState);
-	_spritebatch.draw(_texture, cc::Vec2f(x, y), cc::Vec2f(0.25f, 0.25f));
+	for( const auto& ball : _balls ) {
+		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), 0.0f, cc::Vec2f(0.0f, 0.0f));
+	}
 	_spritebatch.end();
 
 	device->present();
