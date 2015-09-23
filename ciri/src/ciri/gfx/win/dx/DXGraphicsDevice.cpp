@@ -139,10 +139,10 @@ namespace ciri {
 		}
 
 		D3D11_VIEWPORT dxVp;
-		dxVp.TopLeftX = vp.x();
-		dxVp.TopLeftY = vp.y();
-		dxVp.Width = vp.width();
-		dxVp.Height = vp.height();
+		dxVp.TopLeftX = static_cast<float>(vp.x());
+		dxVp.TopLeftY = static_cast<float>(vp.y());
+		dxVp.Width = static_cast<float>(vp.width());
+		dxVp.Height = static_cast<float>(vp.height());
 		dxVp.MinDepth = vp.minDepth();
 		dxVp.MaxDepth = vp.maxDepth();
 		_context->RSSetViewports(1, &dxVp);

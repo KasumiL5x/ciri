@@ -3,21 +3,38 @@
 -*-------------*-
 
 The ciri library is a mixture of platform-independent source code and platform-agnostic interfaces, with the latter
-having no formal definition directly within ciri.  What this means is that ciri provides interfaces for platform-specific
-code which is then linked in to ciri externally to provide concrete functionality.  For example, windows are created
-in very different ways on different platforms.  The traditional method is to have a large number of preprocessor checks
-in various files, which quickly gets painful to manage.  Instead, ciri opts for providing an interface for what a window
-should do, and then a library is linked in providing concrete functionality for that interface, as well as a method of
-instantiating the concretion.  ciri's window component on the Windows operating system could be linked in when compiling
-for Windows, and the window component of OS X could be linked in when appropriate; ciri does not care what is linked, as
-long as it implements what it needs to.
-	This separation means that ciri can be easily recompiled per platform.  The downside is that, on Windows, it no longer
-allows for switching between DirectX and OpenGL in the target application; ciri defines that dependent on what is linked.
-However, ciri was not intended to be a switchable library.
-	ciri's platform specific source code is self-contained within ciri's according folders (although this does not have to
-be the case) to simplify projects.  For example, ciri's input contains a 'win' folder of which contains headers or source
-files for the Windows implementation of input.  On platforms other than Windows, this folder can simply be ignored.
-Likewise, an OS X folder could be inserted at the same location for compilation on that platform.
+having no formal definition directly within ciri itself.  The platform-agnostic interfaces are expected to be inherited
+from in platform-specific implementations.
+
+ciri is inherently divided up into multiple components, each of which provide both platform-independent source code as
+well as platform-specific concrete implementations of the aforementioned platform-agnostic interfaces.  Certain components
+can depend upon other components (e.g. graphics may depend upon a window).
+
+Naturally, an end-user should never interact directly with platform-specific code, and thus ciri provides generic include
+headers for each component, which provides all necessary platform-independent headers and platform-agnostic interfaces.
+The platform-specific concrete implementations of components' interfaces are to be created using pre-defined, but not yet
+implemented, creator functions located within ciri's generic include headers.  For example, a concrete window can be
+created using the ciri::createWindow() function defined in ciri/Window.hpp; the implementing library should define this
+function to return their own derived IWindow class, thus, when the user creates an 'IWindow,' it is really creating the
+concrete implementation instead.
+
+ciri's components are:
+	core  -> Provides all core functionality that does not fit into other categories, e.g. timers.
+	wnd   -> Provides windowing functionality.
+	input -> Provides input functionality.
+	gfx   -> Provides graphics functionality. 
+
+Due to ciri's components being separated, with the exception of build and linking dependencies, they are very plug-n-play.
+For instance, on the Windows platform, ciri's gfx library could have both a DirectX and OpenGL implementation, but the
+rest of the library would be clueless to the actual graphics library being used.  This separation also allows for ciri
+to be compiled for multiple platforms providing that there is a concrete implementation developed for the platform.
+
+ciri's generic include files are located directly within the ciri include folder.  Each component has its own dedicated
+folder within ciri, such as core, gfx, and so on.  Within each component is the headers for both the platform-independent
+code and the platform-agnostic interfaces; platform-specific headers (such as those for concrete implementations) are
+located within subfolders named after the platform, e.g. ciri/input/win contains Windows concrete input headers.  The same
+ruling holds true for ciri's source code folder.  When compiling for specific platforms, simply compile the platform's
+specific code and ignore all other platforms' folders.
 
 \--inc            -> 
 |  \--ciri        -> 
@@ -56,3 +73,9 @@ Likewise, an OS X folder could be inserted at the same location for compilation 
 |  \--lpng1618    -> 
 |  \--zlib-1.2.8  -> 
 \--tmp            -> 
+
+-*----------------*-
+-*- Dependencies -*-
+-*----------------*-
+
+todo: list which components require which

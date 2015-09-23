@@ -8,6 +8,14 @@ SpritesDemo::SpritesDemo()
 SpritesDemo::~SpritesDemo() {
 }
 
+void* SpritesDemo::operator new( size_t i ) {
+	return _mm_malloc(i, 16); // allocate aligned to 16
+}
+
+void SpritesDemo::operator delete( void* p ) {
+	_mm_free(p);
+}
+
 DemoConfig SpritesDemo::getConfig() {
 	DemoConfig cfg;
 	cfg.windowHeight = 720;
@@ -90,4 +98,5 @@ void SpritesDemo::onDraw() {
 }
 
 void SpritesDemo::onUnloadContent() {
+	_spritebatch.clean();
 }

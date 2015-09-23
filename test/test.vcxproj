@@ -63,7 +63,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ciri-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ciri-core-d.lib;ciri-wnd-d.lib;ciri-input-d.lib;ciri-gfx-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,7 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ciri.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ciri-core.lib;ciri-wnd.lib;ciri-input.lib;ciri-gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

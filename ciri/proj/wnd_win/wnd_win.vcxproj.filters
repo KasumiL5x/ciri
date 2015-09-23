@@ -7,15 +7,21 @@
     <Filter Include="src">
       <UniqueIdentifier>{dbdb9995-b89f-4534-8717-783d64018d6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="inc\win">
+      <UniqueIdentifier>{a66fb2bc-69d1-45d8-9f8f-79064dfde195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\win">
+      <UniqueIdentifier>{e5fead38-f965-4308-98b8-abd75e2c0972}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\wnd\win\Window.hpp">
-      <Filter>inc</Filter>
+      <Filter>inc\win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\wnd\win\Window.cpp">
-      <Filter>src</Filter>
+      <Filter>src\win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

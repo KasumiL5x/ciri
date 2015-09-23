@@ -45,13 +45,13 @@
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <IncludePath>../../inc/;$(IncludePath)</IncludePath>
-    <TargetName>input-d</TargetName>
+    <TargetName>ciri-input-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <IncludePath>../../inc/;$(IncludePath)</IncludePath>
-    <TargetName>input</TargetName>
+    <TargetName>ciri-input</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
