@@ -12,6 +12,6 @@ namespace ciri {
 	 * @return Pointer to a new window.
 	 */
 	std::shared_ptr<IWindow> createWindow();
-}
+} // ciri
 
 #endif /* __ciri_window__ */

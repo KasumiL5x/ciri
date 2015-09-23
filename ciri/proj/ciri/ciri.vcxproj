@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\Ciri.hpp" />
+    <ClInclude Include="..\..\inc\ciri\Core.hpp" />
     <ClInclude Include="..\..\inc\ciri\core\ErrorCodes.hpp" />
     <ClInclude Include="..\..\inc\ciri\core\File.hpp" />
     <ClInclude Include="..\..\inc\ciri\core\ITimer.hpp" />
@@ -132,6 +133,8 @@
     <ClInclude Include="..\..\inc\ciri\gfx\VertexFormat.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\VertexUsage.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\Viewport.hpp" />
+    <ClInclude Include="..\..\inc\ciri\Graphics.hpp" />
+    <ClInclude Include="..\..\inc\ciri\Input.hpp" />
     <ClInclude Include="..\..\inc\ciri\input\IInput.hpp" />
     <ClInclude Include="..\..\inc\ciri\input\Keyboard.hpp" />
     <ClInclude Include="..\..\inc\ciri\input\Mouse.hpp" />

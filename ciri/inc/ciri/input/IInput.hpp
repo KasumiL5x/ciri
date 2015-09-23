@@ -122,8 +122,6 @@ namespace ciri {
 		 */
 		virtual int lastMouseY() const=0;
 	};
-
-	std::shared_ptr<IInput> createInput();
 } // ciri
 
 #endif /* __ciri_input_iinput__ */

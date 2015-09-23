@@ -342,13 +342,6 @@ namespace ciri {
 		
 	};
 
-	/**
-	 * Creates a new graphics device.
-	 * Note that this function is defined in the linked graphics library, not in ciri itself.
-	 * @returns Pointer to a new graphics device.
-	 */
-	std::shared_ptr<IGraphicsDevice> createGraphicsDevice();
-
 } // ciri
 
 #endif /* __ciri_gfx_igraphicsdevice__ */

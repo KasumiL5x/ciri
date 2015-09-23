@@ -51,13 +51,6 @@ namespace ciri {
 		 */
 		virtual double getElapsedSecs()=0;
 	};
-
-	/**
-	 * Creates a new timer.
-	 * Note that this function is defined in the linked window library, not in ciri itself.
-	 * @return Pointer to a new timer.
-	 */
-	std::shared_ptr<ITimer> createTimer();
 } // ciri
 
 #endif /* __ciri_core_itimer__ */

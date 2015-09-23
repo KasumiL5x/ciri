@@ -1,8 +1,9 @@
 #include <crtdbg.h>
 #include <memory>
 #include <ciri/Window.hpp>
-#include <ciri/core/ITimer.hpp>
-#include <ciri/input/IInput.hpp>
+#include <ciri/Graphics.hpp>
+#include <ciri/Input.hpp>
+#include <ciri/Core.hpp>
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
 #include "demos/terrain/TerrainDemo.hpp"
 #include "demos/sprites/SpritesDemo.hpp"

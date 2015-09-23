@@ -152,6 +152,15 @@
     <ClInclude Include="..\..\inc\ciri\Window.hpp">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\Graphics.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\Input.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\Core.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\Ciri.cpp" />
