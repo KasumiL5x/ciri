@@ -30,11 +30,11 @@ namespace ciri {
 		DepthStencilDesc() {
 			depthEnable = true;
 			depthWriteMask = true;
-			depthFunc = CompareFunction::Less;
+			depthFunc = CompareFunction::LessEqual;
 			//
 			stencilEnable = false;
-			stencilReadMask = 1;
-			stencilWriteMask = 1;
+			stencilReadMask = 0xff;//1;
+			stencilWriteMask = 0xff;//1;
 			//
 			frontStencilFailOp = StencilOperation::Keep;
 			frontStencilDepthFailOp = StencilOperation::Keep;

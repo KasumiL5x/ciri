@@ -733,7 +733,7 @@ namespace ciri {
 		}
 		// todo: only if depth clamping is supported (how?)
 		// depth clipping
-		if( !desc.depthClipEnable ) {
+		if( desc.depthClipEnable ) { // inverted??
 			glEnable(GL_DEPTH_CLAMP);
 		} else {
 			glDisable(GL_DEPTH_CLAMP);

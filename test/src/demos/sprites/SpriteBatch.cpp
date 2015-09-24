@@ -68,6 +68,11 @@ bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, c
 		return false;
 	}
 
+	// must have a valid shader
+	if( !_shader->isValid() ) {
+		return false;
+	}
+
 	_blendState = blendState;
 	_samplerState = samplerState;
 	_depthStencilState = depthStencilState;
@@ -194,36 +199,6 @@ void SpriteBatch::clean() {
 	_constantBuffer = nullptr;
 
 	_shader = nullptr;
-}
-
-void SpriteBatch::debugReloadShaders() {
-	if( _beginCalled ) {
-		return;
-	}
-
-	_shader->destroy();
-
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
-	const std::string shaderExt = _device->getShaderExt();
-	const std::string vsFile = ("sprites/shaders/SpriteBatch_vs" + shaderExt);
-	//const std::string gsFile = ("sprites/shaders/SpriteBatch_gs" + shaderExt);
-	const std::string psFile = ("sprites/shaders/SpriteBatch_ps" + shaderExt);
-	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
-		printf("Failed to load SpriteBatch shader:\n");
-		for( auto err : _shader->getErrors() ) {
-			printf("%s\n", err.msg.c_str());
-		}
-		return;
-	}
-	if( ciri::failed(_constantBuffer->setData(sizeof(SpriteConstants), &_constants)) ) {
-		printf("Failed to create SpriteBatch constants.\n");
-		return ;
-	}
-	if( ciri::failed(_shader->addConstants(_constantBuffer, "SpriteConstants", ciri::ShaderStage::Vertex)) ) {
-		printf("Failed to assign constants to SpriteBatch shader.\n");
-		return;
-	}
 }
 
 bool SpriteBatch::configure() {

@@ -43,8 +43,6 @@ public:
 	bool end();
 	void clean();
 
-	void debugReloadShaders();
-
 private:
 	bool configure();
 	std::shared_ptr<SpriteBatchItem> createBatchItem();

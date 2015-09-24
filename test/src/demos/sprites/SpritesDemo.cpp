@@ -51,7 +51,7 @@ void SpritesDemo::onInitialize() {
 
 	//ciri::DepthStencilDesc depthStencilDesc;
 	//graphicsDevice()->createDepthStencilState(depthStencilDesc);
-	_depthStencilState = graphicsDevice()->getDefaultDepthStencilDefault();
+	_depthStencilState = graphicsDevice()->getDefaultDepthStencilNone();//Default();
 
 	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise();
 	//ciri::RasterizerDesc rasterizerDesc;
@@ -99,10 +99,6 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		return;
 	}
 
-	if( input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
-		_spritebatch.debugReloadShaders();
-	}
-
 	for( auto& ball : _balls ) {
 		ball.step(deltaTime);
 		ball.collideWalls(0.0f, window()->getWidth(), 0.0f, window()->getHeight());
@@ -114,7 +110,7 @@ void SpritesDemo::onDraw() {
 
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
-
+	
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred);
 	int counter = 0;
 	for( const auto& ball : _balls ) {
