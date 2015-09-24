@@ -145,23 +145,33 @@ bool SpriteBatch::end() {
 	configure();
 
 	// draw batched
-	int batchDrawCount = 0;
+	int startIndex = 0;
+	int endIndex = 0;
 	std::shared_ptr<ciri::ITexture2D> boundTexture = nullptr;
 	for( int i = 0; i < batchCount; ++i ) {
 		std::shared_ptr<SpriteBatchItem> item = _batchItemList[i];
-		if( boundTexture != item->texture ) {
-			_device->setTexture2D(0, item->texture, ciri::ShaderStage::Pixel);
+		// if texture has changed...
+		if( item->texture != boundTexture ) {
+			// draw what is already backlogged
+			flush(startIndex, endIndex, boundTexture);
+
+			// bind new texture
 			boundTexture = item->texture;
-			batchDrawCount = 0;
+
+			// reset start index
+			startIndex = i;
 		}
 
-		batchDrawCount += 1;
-
-		_device->drawArrays(ciri::PrimitiveTopology::TriangleList, 6 * batchDrawCount, i * 6);
+		// update end index
+		endIndex = i+1;
 
 		item->texture = nullptr;
 		_freeBatchItemQueue.push(item);
 	}
+	// draw remaining items
+	flush(startIndex, endIndex, boundTexture);
+
+	// discard batched items
 	_batchItemList.clear();
 
 	// reset gpu states
@@ -259,4 +269,15 @@ void SpriteBatch::ensureArrayCapacity( int size ) {
 	if( _vertexArray.size() < requiredSize ) {
 		_vertexArray.resize(requiredSize);
 	}
+}
+
+void SpriteBatch::flush( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture ) {
+	if( start == end ) {
+		return;
+	}
+
+	_device->setTexture2D(0, texture, ciri::ShaderStage::Pixel);
+
+	const int count = end - start;
+	_device->drawArrays(ciri::PrimitiveTopology::TriangleList, count * 6, start);
 }

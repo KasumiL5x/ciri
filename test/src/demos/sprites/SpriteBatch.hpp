@@ -49,6 +49,7 @@ private:
 	bool configure();
 	std::shared_ptr<SpriteBatchItem> createBatchItem();
 	void ensureArrayCapacity( int size );
+	void flush( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture );
 
 private:
 	std::shared_ptr<ciri::IGraphicsDevice> _device; // external

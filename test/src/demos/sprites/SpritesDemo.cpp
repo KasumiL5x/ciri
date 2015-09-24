@@ -66,7 +66,7 @@ void SpritesDemo::onInitialize() {
 	}
 
 	// load balls
-	const float MAX_VELOCITY = 100.0f;
+	const float MAX_VELOCITY = 500.0f;
 	for( int i = 0; i < 20; ++i ) {
 		Ball b;
 		b.texture = _texture;
