@@ -16,13 +16,20 @@ struct SpriteConstants {
 	cc::Mat4f projection;
 };
 
+enum class SpriteSortMode {
+	Deferred, // order of user draw calls a.k.a untouched
+	Texture, // sort by texture for optimum texture switches
+	FrontToBack,
+	BackToFront
+};
+
 class SpriteBatch {
 public:
 	SpriteBatch();
 	~SpriteBatch();
 
 	bool create( const std::shared_ptr<ciri::IGraphicsDevice>& device );
-	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState );
+	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode );
 
 	/**
 	 * Draws a sprite with a texture, position, width, height, rotation, and pivot origin.
@@ -31,7 +38,7 @@ public:
 	 * @param rotation Rotation angle in radians.
 	 * @param origin   Pivot point where {0, 0} is the bottom left.
 	 */
-	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin );
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth );
 	
 	bool end();
 	void clean();
@@ -42,7 +49,6 @@ private:
 	bool configure();
 	std::shared_ptr<SpriteBatchItem> createBatchItem();
 	void ensureArrayCapacity( int size );
-	//void flushVertexArray( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture );
 
 private:
 	std::shared_ptr<ciri::IGraphicsDevice> _device; // external
@@ -64,6 +70,8 @@ private:
 	std::queue<std::shared_ptr<SpriteBatchItem>> _freeBatchItemQueue;
 
 	std::vector<SpriteVertex> _vertexArray;
+
+	SpriteSortMode _sortMode;
 };
 
 #endif /* __spritebatch__ */

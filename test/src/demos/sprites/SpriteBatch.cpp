@@ -1,8 +1,26 @@
 #include "SpriteBatch.hpp"
 #include <cc/MatrixFunc.hpp>
 
+struct SpriteSortTexture {
+	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
+		return (lhs->texture == rhs->texture);
+	}
+};
+
+struct SpriteSortFrontToBack {
+	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
+		return (lhs->depth < rhs->depth);
+	}
+};
+
+struct SpriteSortBackToFront {
+	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
+		return (rhs->depth < lhs->depth);
+	}
+};
+
 SpriteBatch::SpriteBatch()
-	: _beginCalled(false) {
+	: _beginCalled(false), _sortMode(SpriteSortMode::Deferred) {
 }
 
 SpriteBatch::~SpriteBatch() {
@@ -18,7 +36,7 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 
 	// load and configure shader and constants
 	_shader = device->createShader();
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Position, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("sprites/shaders/SpriteBatch_vs" + shaderExt);
@@ -44,7 +62,7 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 	return true;
 }
 
-bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState ) {
+bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode ) {
 	// check for bad inputs
 	if( nullptr == blendState || nullptr == samplerState || nullptr == depthStencilState || nullptr == rasterizerState || nullptr == _shader ) {
 		return false;
@@ -54,45 +72,22 @@ bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, c
 	_samplerState = samplerState;
 	_depthStencilState = depthStencilState;
 	_rasterizerState = rasterizerState;
+	_sortMode = sortMode;
 
 	_beginCalled = true;
 
 	return true;
 }
 
-void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin ) {
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth ) {
 	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
 	item->texture = texture;
 
 	const float textureWidth = static_cast<float>(texture->getWidth());
 	const float textureHeight = static_cast<float>(texture->getHeight());
 	const cc::Vec2f newOrigin(origin.x * (dstRect.z / textureWidth), origin.y * (dstRect.w / textureHeight));
-	item->set(dstRect.x, dstRect.y, -newOrigin.x, -newOrigin.y, dstRect.z, dstRect.w, sinf(rotation), cosf(rotation));
+	item->set(dstRect.x, dstRect.y, -newOrigin.x, -newOrigin.y, dstRect.z, dstRect.w, sinf(rotation), cosf(rotation), depth);
 }
-
-//bool SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, const cc::Vec2f& scale ) {
-//	if( false == _beginCalled ) {
-//		return false;
-//	}
-//
-//	// get next valid index in buffer
-//	const int idx = getNextFreeIndex();
-//	if( -1 == idx ) {
-//		return false;
-//	}
-//
-//	// set sprite's data in the vertex buffer
-//	_sprites[idx].position = position;
-//	_sprites[idx].scale = scale;
-//
-//	// batch an item that references the idx with the texture
-//	SpriteBatchItem item;
-//	item.vbIndex = idx;
-//	item.texture = texture;
-//	_batchedItems.push(item);
-//
-//	return true;
-//}
 
 bool SpriteBatch::end() {
 	// cannot end without begin
@@ -111,6 +106,28 @@ bool SpriteBatch::end() {
 	const int batchCount = _batchItemList.size();
 
 	ensureArrayCapacity(batchCount);
+
+	// sort array
+	switch( _sortMode ) {
+		case SpriteSortMode::Texture: {
+			std::sort(_batchItemList.begin(), _batchItemList.end(), SpriteSortTexture());
+			break;
+		}
+
+		case SpriteSortMode::FrontToBack: {
+			std::sort(_batchItemList.begin(), _batchItemList.end(), SpriteSortFrontToBack());
+			break;
+		}
+
+		case SpriteSortMode::BackToFront: {
+			std::sort(_batchItemList.begin(), _batchItemList.end(), SpriteSortBackToFront());
+			break;
+		}
+
+		default: {
+			break;
+		}
+	}
 	
 	// update vertex array
 	int batchIndex = 0;
@@ -148,7 +165,7 @@ bool SpriteBatch::end() {
 	_batchItemList.clear();
 
 	// reset gpu states
-	//_device->setVertexBuffer(nullptr);
+	_device->setVertexBuffer(nullptr);
 	_device->setBlendState(nullptr);
 	_device->setDepthStencilState(nullptr);
 	_device->setRasterizerState(nullptr);
@@ -176,7 +193,7 @@ void SpriteBatch::debugReloadShaders() {
 
 	_shader->destroy();
 
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Position, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	const std::string shaderExt = _device->getShaderExt();
 	const std::string vsFile = ("sprites/shaders/SpriteBatch_vs" + shaderExt);
@@ -243,17 +260,3 @@ void SpriteBatch::ensureArrayCapacity( int size ) {
 		_vertexArray.resize(requiredSize);
 	}
 }
-
-//void SpriteBatch::flushVertexArray( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture ) {
-//	if( start == end ) {
-//		return;
-//	}
-//
-//	if( nullptr == texture ) {
-//		return;
-//	}
-//
-//	const int vertexCount = end - start;
-//	_device->setTexture2D(0, texture, ciri::ShaderStage::Pixel);
-//	throw;
-//}

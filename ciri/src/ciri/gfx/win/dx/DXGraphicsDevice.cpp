@@ -378,10 +378,18 @@ namespace ciri {
 			return;
 		}
 
+		if( nullptr == buffer ) {
+			_context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
+			return;
+		}
+
 		const std::shared_ptr<DXVertexBuffer> dxBuffer = std::static_pointer_cast<DXVertexBuffer>(buffer);
 		UINT stride = buffer->getStride();
 		UINT offset = 0;
 		ID3D11Buffer* vb = dxBuffer->getVertexBuffer();
+		if( nullptr == vb ) {
+			return;
+		}
 		_context->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
 		// set input layout here as current GL solution requires vertex array to be bound when setting vertex attributes (hence cannot set in applyShader)
@@ -396,11 +404,16 @@ namespace ciri {
 			return;
 		}
 
+		if( nullptr == buffer ) {
+			_context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+			return;
+		}
+
 		const std::shared_ptr<DXIndexBuffer> dxBuffer = std::static_pointer_cast<DXIndexBuffer>(buffer);
 
 		ID3D11Buffer* ib = dxBuffer->getIndexBuffer();
 		if( nullptr == ib ) {
-			_activeIndexBuffer.reset();
+			//_activeIndexBuffer.reset();
 			return; // todo: error
 		}
 		_context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);

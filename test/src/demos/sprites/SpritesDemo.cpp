@@ -43,13 +43,15 @@ void SpritesDemo::onInitialize() {
 
 	// create states
 	//ciri::BlendDesc blendDesc;
-	_blendState = graphicsDevice()->getDefaultBlendAlpha(); //graphicsDevice()->createBlendState(blendDesc);
+	 //graphicsDevice()->createBlendState(blendDesc);
+	_blendState = graphicsDevice()->getDefaultBlendAlpha();
 
 	ciri::SamplerDesc samplerDesc;
 	_samplerState = graphicsDevice()->createSamplerState(samplerDesc);
 
 	//ciri::DepthStencilDesc depthStencilDesc;
-	_depthStencilState = graphicsDevice()->getDefaultDepthStencilNone(); //graphicsDevice()->createDepthStencilState(depthStencilDesc);
+	//graphicsDevice()->createDepthStencilState(depthStencilDesc);
+	_depthStencilState = graphicsDevice()->getDefaultDepthStencilDefault();
 
 	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise();
 	//ciri::RasterizerDesc rasterizerDesc;
@@ -64,7 +66,7 @@ void SpritesDemo::onInitialize() {
 	}
 
 	// load balls
-	const float MAX_VELOCITY = 1000.0f;
+	const float MAX_VELOCITY = 100.0f;
 	for( int i = 0; i < 20; ++i ) {
 		Ball b;
 		b.texture = _texture;
@@ -113,15 +115,12 @@ void SpritesDemo::onDraw() {
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
-	static float time = 0.0f;
-	time += 0.1f;
-
-	float x = 0.5f;
-	float y = 0.5f;
-
-	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState);
+	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred);
+	int counter = 0;
 	for( const auto& ball : _balls ) {
-		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), 0.0f, cc::Vec2f(0.0f, 0.0f));
+		counter += 1;
+		const float depth = (float)counter / (float)_balls.size();
+		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), 0.0f, cc::Vec2f(0.0f, 0.0f), depth);
 	}
 	_spritebatch.end();
 

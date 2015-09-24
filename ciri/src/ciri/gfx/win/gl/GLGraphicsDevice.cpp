@@ -377,8 +377,17 @@ namespace ciri {
 			return;
 		}
 
+		if( nullptr == buffer ) {
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			return;
+		}
+
 		const std::shared_ptr<GLVertexBuffer> glBuffer = std::static_pointer_cast<GLVertexBuffer>(buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, glBuffer->getVbo());
+		const GLuint vbo = glBuffer->getVbo();
+		if( 0 == vbo ) {
+			return;
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		// apply vertex attribute pointers based on the shader's vertex declaration
 		int offset = 0;
@@ -410,11 +419,15 @@ namespace ciri {
 			return;
 		}
 
-		const std::shared_ptr<GLIndexBuffer> glBuffer = std::static_pointer_cast<GLIndexBuffer>(buffer);
+		if( nullptr == buffer ) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			return;
+		}
 
+		const std::shared_ptr<GLIndexBuffer> glBuffer = std::static_pointer_cast<GLIndexBuffer>(buffer);
 		const GLuint evbo = glBuffer->getEvbo();
 		if( 0 == evbo ) {
-			_activeIndexBuffer.reset();
+			//_activeIndexBuffer.reset();
 			return; // todo: error
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, evbo);
