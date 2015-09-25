@@ -164,11 +164,11 @@ bool SpriteBatch::end() {
 			boundTexture = item->texture;
 
 			// reset start index
-			startIndex = i;
+			startIndex = i * 6;
 		}
 
 		// update end index
-		endIndex = i+1;
+		endIndex += 1 * 6;
 
 		item->texture = nullptr;
 		_freeBatchItemQueue.push(item);
@@ -254,5 +254,5 @@ void SpriteBatch::flush( int start, int end, const std::shared_ptr<ciri::ITextur
 	_device->setTexture2D(0, texture, ciri::ShaderStage::Pixel);
 
 	const int count = end - start;
-	_device->drawArrays(ciri::PrimitiveTopology::TriangleList, count * 6, start);
+	_device->drawArrays(ciri::PrimitiveTopology::TriangleList, count, start);
 }

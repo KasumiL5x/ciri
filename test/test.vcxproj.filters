@@ -35,6 +35,9 @@
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\sprites\Car.cpp">
+      <Filter>demos\sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -100,6 +103,9 @@
       <Filter>demos\sprites</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp">
+      <Filter>demos\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\Car.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
   </ItemGroup>

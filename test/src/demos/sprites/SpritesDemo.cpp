@@ -81,6 +81,12 @@ void SpritesDemo::onInitialize() {
 }
 
 void SpritesDemo::onLoadContent() {
+	ciri::PNG carPng;
+	if( carPng.loadFromFile("sprites/textures/car.png") && (4 == carPng.getBytesPerPixel()) ) {
+		_car.setTexture(graphicsDevice()->createTexture2D(carPng.getWidth(), carPng.getHeight(), ciri::TextureFormat::Color, 0, carPng.getPixels()));
+		_car.setOrigin(carPng.getWidth() / 2, carPng.getHeight() / 2);
+		_car.setPosition(window()->getWidth()/2, window()->getHeight()/2);
+	}
 }
 
 void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
@@ -115,6 +121,11 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			ball.rotation = cc::math::wrapAngle(ball.rotation, 0.0f, cc::math::degreesToRadians(360.0f));
 		}
 	}
+
+	// car update
+	const float throttleInput = input()->isKeyDown(ciri::Key::Up) ? 10.0f : (input()->isKeyDown(ciri::Key::Down) ? -10.0f : 0.0f);
+	const float steerInput = input()->isKeyDown(ciri::Key::Left) ? 1.0f : (input()->isKeyDown(ciri::Key::Right) ? -1.0f : 0.0f);
+	_car.update(throttleInput, steerInput, deltaTime);
 }
 
 void SpritesDemo::onDraw() {
@@ -129,6 +140,14 @@ void SpritesDemo::onDraw() {
 		counter += 1;
 		const float depth = (float)counter / (float)_balls.size();
 		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), ball.rotation, ball.origin, depth);
+	}
+	if( _car.getTexture() != nullptr ) {
+		cc::Vec4f destRect;
+		destRect.x = _car.getPosition().x;
+		destRect.y = _car.getPosition().y;
+		destRect.z = _car.getTexture()->getWidth();
+		destRect.w = _car.getTexture()->getHeight();
+		_spritebatch.draw(_car.getTexture(), destRect, _car.getRotation(), _car.getOrigin(), 0.0f);
 	}
 	_spritebatch.end();
 

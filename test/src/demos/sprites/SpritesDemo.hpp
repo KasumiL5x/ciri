@@ -4,6 +4,7 @@
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
 #include <cc/Vec2.hpp>
+#include "Car.hpp"
 
 struct Ball {
 	std::shared_ptr<ciri::ITexture2D> texture;
@@ -76,6 +77,8 @@ private:
 
 	std::vector<Ball> _balls;
 	bool _ballsMoving;
+
+	Car _car;
 };
 
 #endif /* __spritesdemo__ */
