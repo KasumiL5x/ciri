@@ -9,30 +9,42 @@ struct Ball {
 	std::shared_ptr<ciri::ITexture2D> texture;
 	cc::Vec2f position;
 	cc::Vec2f velocity;
+	float rotation;
+	cc::Vec2f origin;
 
 	void step( float deltaTime ) {
 		position += velocity * deltaTime;
 	}
 
 	void collideWalls( float left, float right, float top, float bottom ) {
-		if( position.x < left ) {
-			position.x = left;
+		bool collided = false;
+
+		if( (position.x - origin.x) < left ) {
+			position.x = left + origin.x;
 			velocity.x = -velocity.x;
+			collided = true;
 		}
 
-		if( position.x > (right - texture->getWidth()) ) {
-			position.x = (right - texture->getWidth());
+		if( (position.x - origin.x) > (right - texture->getWidth()) ) {
+			position.x = (right - texture->getWidth()) + origin.x;
 			velocity.x = -velocity.x;
+			collided = true;
 		}
 
-		if( position.y < top ) {
-			position.y = top;
+		if( (position.y - origin.y) < top ) {
+			position.y = top + origin.y;
 			velocity.y = -velocity.y;
+			collided = true;
 		}
 
-		if( position.y > (bottom - texture->getHeight()) ) {
-			position.y = (bottom - texture->getHeight());
+		if( (position.y - origin.y) > (bottom - texture->getHeight()) ) {
+			position.y = (bottom - texture->getHeight()) + origin.y;
 			velocity.y = -velocity.y;
+			collided = true;
+		}
+
+		if( collided ) {
+			velocity *= 0.9f;
 		}
 	}
 };
@@ -63,6 +75,7 @@ private:
 	std::shared_ptr<ciri::ITexture2D> _texture;
 
 	std::vector<Ball> _balls;
+	bool _ballsMoving;
 };
 
 #endif /* __spritesdemo__ */

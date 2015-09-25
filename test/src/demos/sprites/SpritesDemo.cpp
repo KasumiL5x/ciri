@@ -4,7 +4,7 @@
 #include <ctime>
 
 SpritesDemo::SpritesDemo()
-	: IDemo() {
+	: IDemo(), _ballsMoving(false) {
 }
 
 SpritesDemo::~SpritesDemo() {
@@ -74,6 +74,8 @@ void SpritesDemo::onInitialize() {
 		b.position.y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight() - _texture->getHeight()));
 		b.velocity.x = cc::math::randRange<float>(-MAX_VELOCITY, MAX_VELOCITY);
 		b.velocity.y = cc::math::randRange<float>(-MAX_VELOCITY, MAX_VELOCITY);
+		b.origin = cc::Vec2f(_texture->getWidth() * 0.5f, _texture->getHeight() * 0.5f);
+		b.rotation = 0.0f;
 		_balls.push_back(b);
 	}
 }
@@ -99,9 +101,19 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		return;
 	}
 
-	for( auto& ball : _balls ) {
-		ball.step(deltaTime);
-		ball.collideWalls(0.0f, window()->getWidth(), 0.0f, window()->getHeight());
+	// toggle balls update
+	if( input()->isKeyDown(ciri::Key::P) && input()->wasKeyUp(ciri::Key::P) ) {
+		_ballsMoving = !_ballsMoving;
+	}
+
+	if( _ballsMoving ) {
+		for( auto& ball : _balls ) {
+			ball.velocity.y -= 20.8f;
+			ball.step(deltaTime);
+			ball.collideWalls(0.0f, window()->getWidth(), 0.0f, window()->getHeight());
+			ball.rotation += cc::math::degreesToRadians(ball.velocity.x * deltaTime);
+			ball.rotation = cc::math::wrapAngle(ball.rotation, 0.0f, cc::math::degreesToRadians(360.0f));
+		}
 	}
 }
 
@@ -116,7 +128,7 @@ void SpritesDemo::onDraw() {
 	for( const auto& ball : _balls ) {
 		counter += 1;
 		const float depth = (float)counter / (float)_balls.size();
-		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), 0.0f, cc::Vec2f(0.0f, 0.0f), depth);
+		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), ball.rotation, ball.origin, depth);
 	}
 	_spritebatch.end();
 
