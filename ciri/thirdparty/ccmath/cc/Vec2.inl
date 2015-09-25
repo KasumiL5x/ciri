@@ -193,11 +193,11 @@ namespace cc {
 
     // Other things.
     template<typename T>
-    inline T Vec2<T>::magnitude( const Vec2<T>& rhs ) const {
+    inline T Vec2<T>::magnitude() const {
       return static_cast<T>(sqrt(x*x + y*y));
     }
     template<typename T>
-    inline T Vec2<T>::sqrMagnitude( const Vec2<T>& rhs ) const {
+    inline T Vec2<T>::sqrMagnitude() const {
       return x*x + y*y;
     }
     template<typename T>

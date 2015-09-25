@@ -67,8 +67,8 @@ namespace cc {
       // All defined in vec2.inl.
 
       // Other things.
-      inline T       magnitude   ( const Vec2<T>& rhs ) const;
-      inline T       sqrMagnitude( const Vec2<T>& rhs ) const;
+      inline T       magnitude   () const;
+      inline T       sqrMagnitude() const;
       inline void    normalize   ();
       inline Vec2<T> normalized  () const;
       inline bool    equalTo     ( const Vec2<T>& rhs ) const;
