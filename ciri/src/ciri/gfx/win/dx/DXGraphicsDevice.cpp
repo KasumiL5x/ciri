@@ -535,9 +535,9 @@ namespace ciri {
 		}
 
 		// start index must be greater than zero and less than vertex count
-		if( startIndex < 0 || startIndex >= vertexCount ) {
-			return;
-		}
+		//if( startIndex < 0 || startIndex >= vertexCount ) {
+			//return;
+		//}
 
 		_context->IASetPrimitiveTopology(ciriToDxTopology(topology));
 		_context->Draw(vertexCount, startIndex);

@@ -534,9 +534,9 @@ namespace ciri {
 		}
 
 		// start index must be greater than zero and less than vertex count
-		if( startIndex < 0 || startIndex >= vertexCount ) {
-			return;
-		}
+		//if( startIndex < 0 || startIndex >= vertexCount ) {
+		//	return;
+		//}
 
 		glDrawArrays(ciriToGlTopology(topology), startIndex, vertexCount);
 	}
