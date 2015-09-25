@@ -72,6 +72,18 @@ namespace ciri {
 			return;
 		}
 
+		// clean default state pointers
+		_defaultBlendAdditive = nullptr;
+		_defaultBlendAlpha = nullptr;
+		_defaultBlendNonPremul = nullptr;
+		_defaultBlendOpaque = nullptr;
+		_defaultRasterNone = nullptr;
+		_defaultRasterClockwise = nullptr;
+		_defaultRasterCounterClockwise = nullptr;
+		_defaultDepthStencilDefault = nullptr;
+		_defaultDepthStencilDepthRead = nullptr;
+		_defaultDepthStencilNone = nullptr;
+
 		// clean texture cubes
 		for( auto curr : _textureCubes ) {
 			curr->destroy();
