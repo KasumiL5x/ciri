@@ -61,7 +61,7 @@ void SpritesDemo::onInitialize() {
 
 	// load textures
 	ciri::PNG png;
-	if( png.loadFromFile("sprites/textures/test.png") && (4 == png.getBytesPerPixel()) ) {
+	if( png.loadFromFile("sprites/textures/ball.png") && (4 == png.getBytesPerPixel()) ) {
 		_texture = graphicsDevice()->createTexture2D(png.getWidth(), png.getHeight(), ciri::TextureFormat::Color, 0, png.getPixels());
 	}
 
@@ -111,7 +111,9 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	if( input()->isKeyDown(ciri::Key::P) && input()->wasKeyUp(ciri::Key::P) ) {
 		_ballsMoving = !_ballsMoving;
 	}
+}
 
+void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 	if( _ballsMoving ) {
 		for( auto& ball : _balls ) {
 			ball.velocity.y -= 20.8f;

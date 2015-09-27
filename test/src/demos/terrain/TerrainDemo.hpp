@@ -41,6 +41,7 @@ public:
 	virtual void onLoadContent();
 	virtual void onEvent( ciri::WindowEvent evt );
 	virtual void onUpdate( double deltaTime, double elapsedTime );
+	virtual void onFixedUpdate( double deltaTime, double elapsedTime ) override;
 	virtual void onDraw();
 	virtual void onUnloadContent();
 

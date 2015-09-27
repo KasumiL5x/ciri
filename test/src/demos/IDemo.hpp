@@ -107,6 +107,13 @@ public:
 	virtual void onUpdate( double deltaTime, double elapsedTime )=0;
 
 	/**
+	 * Called at a fixed timestep.  Update time-dependent logic here.
+	 * @param[in] deltaTime Time elapsed since the last update.
+	 * @param[in] elapsedTime Time elapsed since the main loop started.
+	 */
+	virtual void onFixedUpdate( double deltaTime, double elapsedTime )=0;
+
+	/**
 	 * Called every loop after all updating.  Draw the demo here.
 	 */
 	virtual void onDraw()=0;

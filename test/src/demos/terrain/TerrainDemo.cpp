@@ -268,6 +268,10 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	//_plane->updateBuffers(true, false);
 }
 
+void TerrainDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
+
+}
+
 void TerrainDemo::onDraw() {
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 

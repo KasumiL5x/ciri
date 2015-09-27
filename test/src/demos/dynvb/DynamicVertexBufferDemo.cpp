@@ -140,12 +140,17 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			_camera.pan(dx, -dy);
 		}
 	}
-	_camera.update(static_cast<float>(deltaTime));
-
-	// update cloth
+	
 	if( input()->isKeyDown(ciri::Key::P) && input()->wasKeyUp(ciri::Key::P) ) {
 		_clothRunning = !_clothRunning;
 	}
+
+}
+
+void DynamicVertexBufferDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
+	_camera.update(static_cast<float>(deltaTime));
+
+	// update cloth
 	if( _clothRunning ) {
 		_cloth.update(static_cast<float>(deltaTime));
 	}

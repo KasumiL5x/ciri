@@ -18,7 +18,7 @@ public:
 	const cc::Vec2f& getOrigin() const;
 	float getRotation() const;
 
-	void update( float throttleInput, float steetInput, float deltaTime );
+	void update( float throttleInput, float steerInput, float deltaTime );
 
 private:
 	cc::Vec2f getForward() const;

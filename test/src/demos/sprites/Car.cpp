@@ -39,9 +39,11 @@ float Car::getRotation() const {
 	return -_rotation;
 }
 
-void Car::update( float throttleInput, float steetInput, float deltaTime ) {
+void Car::update( float throttleInput, float steerInput, float deltaTime ) {
+	steerInput = cc::math::degreesToRadians(steerInput);
+
 	_acceleration = getForward() * throttleInput * _speed;
-	const float steerAngle = (steetInput * _steer) * (_currentSpeed / _maxSpeed);
+	const float steerAngle = (steerInput * _steer) * (_currentSpeed / _maxSpeed);
 
 	const cc::Vec2f lateralVelocity = getRight() * _velocity.dot(getRight());
 	const cc::Vec2f lateralFriction = -lateralVelocity * _lateralFrictionFactor;
@@ -55,7 +57,7 @@ void Car::update( float throttleInput, float steetInput, float deltaTime ) {
 		_velocity += _acceleration * deltaTime;
 	}
 	_position += _velocity * deltaTime;
-	_rotation += cc::math::DEG_TO_RAD * -steerAngle;
+	_rotation += -steerAngle;
 
 	if( _isSliding ) {
 		// todo: add slip item

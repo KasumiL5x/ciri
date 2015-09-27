@@ -62,6 +62,7 @@ public:
 	virtual void onLoadContent() override;
 	virtual void onEvent( ciri::WindowEvent evt ) override;
 	virtual void onUpdate( double deltaTime, double elapsedTime ) override;
+	virtual void onFixedUpdate( double deltaTime, double elapsedTime ) override;
 	virtual void onDraw() override;
 	virtual void onUnloadContent() override;
 

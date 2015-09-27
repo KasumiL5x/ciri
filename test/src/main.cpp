@@ -99,9 +99,6 @@ int main() {
 			}
 		}
 
-		// poll input
-		input->poll();
-
 		// delta and elapsed time
 		const double currTime = timer->getElapsedMicrosecs();
 		const double deltaTime = (currTime - lastTime) * 0.000001;
@@ -109,17 +106,23 @@ int main() {
 		elapsedTime += deltaTime;
 		lag += deltaTime;
 
+		// poll input
+		input->poll();
+
+		// standard update run every frame
+		demo->onUpdate(deltaTime, elapsedTime);
+
 		// catch-up update
 		while( lag >= MS_PER_UPDATE ) {
-			demo->onUpdate(MS_PER_UPDATE, elapsedTime);
+			demo->onFixedUpdate(MS_PER_UPDATE, elapsedTime);
 			lag -= MS_PER_UPDATE;
 		}
 
-		// draw
-		demo->onDraw();
-
 		// update input
 		input->update();
+
+		// draw
+		demo->onDraw();
 	}
 
 	// clean demo
