@@ -84,6 +84,8 @@ int main() {
 	timer->start();
 
 	// main loop
+	const double MS_PER_UPDATE = 0.01;
+	double lag = 0.0;
 	bool running = true;
 	while( running && !demo->hasRequestedToQuit() ) {
 		// event processing
@@ -105,9 +107,15 @@ int main() {
 		const double deltaTime = (currTime - lastTime) * 0.000001;
 		lastTime = currTime;
 		elapsedTime += deltaTime;
+		lag += deltaTime;
 
-		// update and draw
-		demo->onUpdate(deltaTime, elapsedTime);
+		// catch-up update
+		while( lag >= MS_PER_UPDATE ) {
+			demo->onUpdate(MS_PER_UPDATE, elapsedTime);
+			lag -= MS_PER_UPDATE;
+		}
+
+		// draw
 		demo->onDraw();
 
 		// update input
