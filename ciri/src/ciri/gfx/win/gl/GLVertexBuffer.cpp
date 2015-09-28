@@ -21,30 +21,21 @@ namespace ciri {
 				return ErrorCode::CIRI_STATIC_BUFFER_AS_DYNAMIC;
 			}
 
-			// for now, size must be the same as the original data
-			if( vertexStride != _vertexStride || vertexCount != _vertexCount ) {
-				return ErrorCode::CIRI_NOT_IMPLEMENTED; // todo
+			// do not let the vertex stride change regardless until i decide how to handle it
+			if( _vertexStride != vertexStride ) {
+				return ErrorCode::CIRI_NOT_IMPLEMENTED;
 			}
 
-			// bind, upload new data, and unbind
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, vertexStride * vertexCount, vertices);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			// if the new data is larger...
+			if( (vertexStride * vertexCount) > (_vertexStride * _vertexCount) ) {
+				destroy();
+				return createBuffer(vertices, vertexStride, vertexCount, true);
+			}
 
-			return ErrorCode::CIRI_OK;
+			return updateBuffer(vertices, vertexStride, vertexCount);
 		}
 
-		_vertexStride = vertexStride;
-		_vertexCount = vertexCount;
-		_isDynamic = dynamic;
-
-		// generate a new buffer, bind it, set the data, and unbind it
-		glGenBuffers(1, &_vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertexStride * vertexCount, vertices, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		return ErrorCode::CIRI_OK;
+		return createBuffer(vertices, vertexStride, vertexCount, dynamic);
 	}
 
 	void GLVertexBuffer::destroy() {
@@ -64,5 +55,29 @@ namespace ciri {
 
 	GLuint GLVertexBuffer::getVbo() const {
 		return _vbo;
+	}
+
+	ErrorCode GLVertexBuffer::createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
+		// generate a new buffer, bind it, set the data, and unbind it
+		glGenBuffers(1, &_vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+		glBufferData(GL_ARRAY_BUFFER, vertexStride * vertexCount, vertices, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		// store settings upon successful buffer creation
+		_vertexStride = vertexStride;
+		_vertexCount = vertexCount;
+		_isDynamic = dynamic;
+
+		return ErrorCode::CIRI_OK;
+	}
+
+	ErrorCode GLVertexBuffer::updateBuffer( void* vertices, int vertexStride, int vertexCount ) {
+		// bind, upload new data, and unbind
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, vertexStride * vertexCount, vertices);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		return ErrorCode::CIRI_OK;
 	}
 } // ciri

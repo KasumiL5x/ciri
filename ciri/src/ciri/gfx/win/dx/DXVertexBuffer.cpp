@@ -29,29 +29,36 @@ namespace ciri {
 				return ErrorCode::CIRI_STATIC_BUFFER_AS_DYNAMIC;
 			}
 
-			// for now, size must be the same as the original data
-			if( vertexStride != _vertexStride || vertexCount != _vertexCount ) {
+			// do not let the vertex stride change regardless until i decide how to handle it
+			if( _vertexStride != vertexStride ) {
 				return ErrorCode::CIRI_NOT_IMPLEMENTED;
 			}
 
-			// map buffer to get pointer
-			D3D11_MAPPED_SUBRESOURCE map;
-			ZeroMemory(&map, sizeof(map));
-			if( FAILED(_device->getContext()->Map(_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map)) ) {
-				return ErrorCode::CIRI_BUFFER_MAP_FAILED;
+			// if the new data is larger...
+			if( (vertexStride * vertexCount) > (_vertexStride * _vertexCount) ) {
+				destroy();
+				return createBuffer(vertices, vertexStride, vertexCount, true);
 			}
 
-			// copy data and unmap
-			memcpy(map.pData, vertices, (vertexStride * vertexCount));
-			_device->getContext()->Unmap(_vertexBuffer, 0);
-
-			return ErrorCode::CIRI_OK;
+			return updateBuffer(vertices, vertexStride, vertexCount);
 		}
 
-		_vertexStride = vertexStride;
-		_vertexCount = vertexCount;
-		_isDynamic = dynamic;
+		return createBuffer(vertices, vertexStride, vertexCount, dynamic);
+	}
 
+	int DXVertexBuffer::getStride() const {
+		return _vertexStride;
+	}
+
+	int DXVertexBuffer::getVertexCount() {
+		return _vertexCount;
+	}
+
+	ID3D11Buffer* DXVertexBuffer::getVertexBuffer() const {
+		return _vertexBuffer;
+	}
+
+	ErrorCode DXVertexBuffer::createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic ) {
 		// description of the vertex buffer
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
@@ -75,18 +82,26 @@ namespace ciri {
 			return ErrorCode::CIRI_BUFFER_CREATION_FAILED;
 		}
 
+		// store settings upon successful buffer creation
+		_vertexStride = vertexStride;
+		_vertexCount = vertexCount;
+		_isDynamic = dynamic;
+
 		return ErrorCode::CIRI_OK;
 	}
 
-	int DXVertexBuffer::getStride() const {
-		return _vertexStride;
-	}
+	ErrorCode DXVertexBuffer::updateBuffer( void* vertices, int vertexStride, int vertexCount ) {
+			// map buffer to get pointer
+			D3D11_MAPPED_SUBRESOURCE map;
+			ZeroMemory(&map, sizeof(map));
+			if( FAILED(_device->getContext()->Map(_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map)) ) {
+				return ErrorCode::CIRI_BUFFER_MAP_FAILED;
+			}
 
-	int DXVertexBuffer::getVertexCount() {
-		return _vertexCount;
-	}
+			// copy data and unmap
+			memcpy(map.pData, vertices, (vertexStride * vertexCount));
+			_device->getContext()->Unmap(_vertexBuffer, 0);
 
-	ID3D11Buffer* DXVertexBuffer::getVertexBuffer() const {
-		return _vertexBuffer;
+			return ErrorCode::CIRI_OK;
 	}
 } // ciri

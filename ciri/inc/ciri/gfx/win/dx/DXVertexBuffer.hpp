@@ -21,6 +21,10 @@ namespace ciri {
 		ID3D11Buffer* getVertexBuffer() const;
 
 	private:
+		ErrorCode createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic );
+		ErrorCode updateBuffer( void* vertices, int vertexStride, int vertexCount );
+
+	private:
 		std::shared_ptr<DXGraphicsDevice> _device;
 		ID3D11Buffer* _vertexBuffer;
 		int _vertexStride;

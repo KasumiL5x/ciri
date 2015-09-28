@@ -17,6 +17,10 @@ class GLVertexBuffer : public IVertexBuffer {
 
 		GLuint getVbo() const;
 
+private:
+		ErrorCode createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic );
+		ErrorCode updateBuffer( void* vertices, int vertexStride, int vertexCount );
+
 	private:
 		GLuint _vbo;
 		int _vertexStride;
