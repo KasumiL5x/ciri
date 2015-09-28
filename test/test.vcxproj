@@ -90,6 +90,7 @@
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
+    <ClCompile Include="src\demos\sprites\Ball.cpp" />
     <ClCompile Include="src\demos\sprites\Car.cpp" />
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\IDemo.hpp" />
+    <ClInclude Include="src\demos\sprites\Ball.hpp" />
     <ClInclude Include="src\demos\sprites\Car.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />

@@ -32,13 +32,36 @@ public:
 	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode );
 
 	/**
-	 * Draws a sprite with a texture, position, width, height, rotation, and pivot origin.
+	 * Draws a sprite.
 	 * @param texture  Texture to draw.
 	 * @param dstRect  X and Y are the position on the screen in pixels; Z and W are the width and height on the screen in pixels.
 	 * @param rotation Rotation angle in radians.
 	 * @param origin   Pivot point where {0, 0} is the bottom left.
+	 * @param depth     Depth used for rendering and sorting of sprites.
 	 */
 	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth );
+
+	/**
+	 * Draws a sprite.
+	 * @param texture   Texture to draw.
+	 * @param position  X and Y are the position on the screen in pixels.
+	 * @param rotation  Rotation angle in radians.
+	 * @param origin    Pivot point where {0, 0} is the bottom left.
+	 * @param scale     Scaling factor.
+	 * @param depth     Depth used for rendering and sorting of sprites.
+	 */
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth );
+
+	/**
+	 * Draws a sprite.
+	 * @param texture   Texture to draw.
+	 * @param position  X and Y are the position on the screen in pixels.
+	 * @param rotation  Rotation angle in radians.
+	 * @param origin    Pivot point where {0, 0} is the bottom left.
+	 * @param scale     Uniform scaling factor.
+	 * @param depth     Depth used for rendering and sorting of sprites.
+	 */
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth );
 	
 	bool end();
 	void clean();

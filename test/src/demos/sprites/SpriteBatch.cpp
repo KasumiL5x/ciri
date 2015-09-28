@@ -85,6 +85,10 @@ bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, c
 }
 
 void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth ) {
+	if( nullptr == texture ) {
+		return;
+	}
+
 	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
 	item->texture = texture;
 
@@ -92,6 +96,34 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	const float textureHeight = static_cast<float>(texture->getHeight());
 	const cc::Vec2f newOrigin(origin.x * (dstRect.z / textureWidth), origin.y * (dstRect.w / textureHeight));
 	item->set(dstRect.x, dstRect.y, -newOrigin.x, -newOrigin.y, dstRect.z, dstRect.w, sinf(rotation), cosf(rotation), depth);
+}
+
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth ) {
+	if( nullptr == texture ) {
+		return;
+	}
+
+	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	item->texture = texture;
+
+	const float textureWidth = static_cast<float>(texture->getWidth()) * scale.x;
+	const float textureHeight = static_cast<float>(texture->getHeight()) * scale.y;
+	const cc::Vec2f newOrigin = origin * scale;
+	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth);
+}
+
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth ) {
+	if( nullptr == texture ) {
+		return;
+	}
+
+	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	item->texture = texture;
+
+	const float textureWidth = static_cast<float>(texture->getWidth()) * scale;
+	const float textureHeight = static_cast<float>(texture->getHeight()) * scale;
+	const cc::Vec2f newOrigin = origin * scale;
+	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth);
 }
 
 bool SpriteBatch::end() {

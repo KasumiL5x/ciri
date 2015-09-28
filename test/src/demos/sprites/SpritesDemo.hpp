@@ -3,52 +3,7 @@
 
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
-#include <cc/Vec2.hpp>
-#include "Car.hpp"
-
-struct Ball {
-	std::shared_ptr<ciri::ITexture2D> texture;
-	cc::Vec2f position;
-	cc::Vec2f velocity;
-	float rotation;
-	cc::Vec2f origin;
-
-	void step( float deltaTime ) {
-		position += velocity * deltaTime;
-	}
-
-	void collideWalls( float left, float right, float top, float bottom ) {
-		bool collided = false;
-
-		if( (position.x - origin.x) < left ) {
-			position.x = left + origin.x;
-			velocity.x = -velocity.x;
-			collided = true;
-		}
-
-		if( (position.x - origin.x) > (right - texture->getWidth()) ) {
-			position.x = (right - texture->getWidth()) + origin.x;
-			velocity.x = -velocity.x;
-			collided = true;
-		}
-
-		if( (position.y - origin.y) < top ) {
-			position.y = top + origin.y;
-			velocity.y = -velocity.y;
-			collided = true;
-		}
-
-		if( (position.y - origin.y) > (bottom - texture->getHeight()) ) {
-			position.y = (bottom - texture->getHeight()) + origin.y;
-			velocity.y = -velocity.y;
-			collided = true;
-		}
-
-		if( collided ) {
-			velocity *= 0.9f;
-		}
-	}
-};
+#include "Ball.hpp"
 
 class SpritesDemo : public IDemo {
 public:
@@ -79,7 +34,7 @@ private:
 	std::vector<Ball> _balls;
 	bool _ballsMoving;
 
-	Car _car;
+	cc::Vec2f _ballSpawnPosition;
 };
 
 #endif /* __spritesdemo__ */

@@ -4,7 +4,7 @@
 #include <ctime>
 
 SpritesDemo::SpritesDemo()
-	: IDemo(), _ballsMoving(false) {
+	: IDemo(), _ballsMoving(true) {
 }
 
 SpritesDemo::~SpritesDemo() {
@@ -59,33 +59,25 @@ void SpritesDemo::onInitialize() {
 	//rasterizerDesc.fillMode = ciri::FillMode::Wireframe;
 	//_rasterizerState = graphicsDevice()->createRasterizerState(rasterizerDesc);
 
+	// set the ball spawning position
+	_ballSpawnPosition.x = 50.0f;
+	_ballSpawnPosition.y = static_cast<float>(window()->getHeight()) * 0.5f;
+}
+
+void SpritesDemo::onLoadContent() {
 	// load textures
 	ciri::PNG png;
 	if( png.loadFromFile("sprites/textures/ball.png") && (4 == png.getBytesPerPixel()) ) {
 		_texture = graphicsDevice()->createTexture2D(png.getWidth(), png.getHeight(), ciri::TextureFormat::Color, 0, png.getPixels());
 	}
 
-	// load balls
-	const float MAX_VELOCITY = 500.0f;
-	for( int i = 0; i < 20; ++i ) {
+	// initialize balls
+	const int NUM_BALLS = 20;
+	for( int i = 0; i < NUM_BALLS; ++i ) {
 		Ball b;
-		b.texture = _texture;
-		b.position.x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth() - _texture->getWidth()));
-		b.position.y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight() - _texture->getHeight()));
-		b.velocity.x = cc::math::randRange<float>(-MAX_VELOCITY, MAX_VELOCITY);
-		b.velocity.y = cc::math::randRange<float>(-MAX_VELOCITY, MAX_VELOCITY);
-		b.origin = cc::Vec2f(_texture->getWidth() * 0.5f, _texture->getHeight() * 0.5f);
-		b.rotation = 0.0f;
+		b.setTexture(_texture);
+		b.setActive(false);
 		_balls.push_back(b);
-	}
-}
-
-void SpritesDemo::onLoadContent() {
-	ciri::PNG carPng;
-	if( carPng.loadFromFile("sprites/textures/car.png") && (4 == carPng.getBytesPerPixel()) ) {
-		_car.setTexture(graphicsDevice()->createTexture2D(carPng.getWidth(), carPng.getHeight(), ciri::TextureFormat::Color, 0, carPng.getPixels()));
-		_car.setOrigin(carPng.getWidth() / 2, carPng.getHeight() / 2);
-		_car.setPosition(window()->getWidth()/2, window()->getHeight()/2);
 	}
 }
 
@@ -101,6 +93,9 @@ void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
 }
 
 void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
+	if( !window()->hasFocus() ) {
+		return;
+	}
 	// check for close w/ escape
 	if( input()->isKeyDown(ciri::Key::Escape) ) {
 		this->gtfo();
@@ -111,23 +106,60 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	if( input()->isKeyDown(ciri::Key::P) && input()->wasKeyUp(ciri::Key::P) ) {
 		_ballsMoving = !_ballsMoving;
 	}
+
+	// fire!
+	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && input()->wasMouseButtonUp(ciri::MouseButton::Left) ) {
+		for( auto& b : _balls ) {
+			if( b.isActive() ) {
+				continue;
+			}
+
+			b.setActive(true);
+			b.setPosition(_ballSpawnPosition);
+			b.setVelocity(cc::Vec2f(1000.0f, 100.0f));
+			b.setRotation(0.0f);
+			break;
+		}
+	}
 }
 
 void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 	if( _ballsMoving ) {
-		for( auto& ball : _balls ) {
-			ball.velocity.y -= 20.8f;
-			ball.step(deltaTime);
-			ball.collideWalls(0.0f, window()->getWidth(), 0.0f, window()->getHeight());
-			ball.rotation += cc::math::degreesToRadians(ball.velocity.x * deltaTime);
-			ball.rotation = cc::math::wrapAngle(ball.rotation, 0.0f, cc::math::degreesToRadians(360.0f));
-		}
-	}
 
-	// car update
-	const float throttleInput = input()->isKeyDown(ciri::Key::Up) ? 10.0f : (input()->isKeyDown(ciri::Key::Down) ? -10.0f : 0.0f);
-	const float steerInput = input()->isKeyDown(ciri::Key::Left) ? 1.0f : (input()->isKeyDown(ciri::Key::Right) ? -1.0f : 0.0f);
-	_car.update(throttleInput, steerInput, deltaTime);
+		for( auto& b : _balls ) {
+			if( !b.isActive() ) {
+				continue;
+			}
+
+			b.setVelocity(b.getVelocity() + cc::Vec2f(0.0f, -9.8f));
+
+			// integrate
+			b.setPosition(b.getPosition() + b.getVelocity() * static_cast<float>(deltaTime));
+
+			// disable if off screen (bad hack because i need to go to uni now!)
+			if( b.getPosition().x < 0.0f ) {
+				b.setActive(false);
+			}
+			if( b.getPosition().x > window()->getWidth() ) {
+				b.setActive(false);
+			}
+			if( b.getPosition().y < 0.0f ) {
+				b.setActive(false);
+			}
+			if( b.getPosition().y > window()->getHeight() ) {
+				b.setActive(false);
+			}
+
+		}
+
+		//for( auto& ball : _balls ) {
+		//	ball.velocity.y -= 20.8f;
+		//	ball.step(deltaTime);
+		//	ball.collideWalls(0.0f, window()->getWidth(), 0.0f, window()->getHeight());
+		//	ball.rotation += cc::math::degreesToRadians(ball.velocity.x * deltaTime);
+		//	ball.rotation = cc::math::wrapAngle(ball.rotation, 0.0f, cc::math::degreesToRadians(360.0f));
+		//}
+	}
 }
 
 void SpritesDemo::onDraw() {
@@ -140,16 +172,13 @@ void SpritesDemo::onDraw() {
 	int counter = 0;
 	for( const auto& ball : _balls ) {
 		counter += 1;
-		const float depth = (float)counter / (float)_balls.size();
-		_spritebatch.draw(ball.texture, cc::Vec4f(ball.position.x, ball.position.y, ball.texture->getWidth(), ball.texture->getHeight()), ball.rotation, ball.origin, depth);
-	}
-	if( _car.getTexture() != nullptr ) {
-		cc::Vec4f destRect;
-		destRect.x = _car.getPosition().x;
-		destRect.y = _car.getPosition().y;
-		destRect.z = _car.getTexture()->getWidth();
-		destRect.w = _car.getTexture()->getHeight();
-		_spritebatch.draw(_car.getTexture(), destRect, _car.getRotation(), _car.getOrigin(), 0.0f);
+
+		if( !ball.isActive() ) {
+			continue;
+		}
+
+		const float depth = static_cast<float>(counter) / static_cast<float>(_balls.size());
+		_spritebatch.draw(ball.getTexture(), ball.getPosition(), ball.getRotation(), ball.getOrigin(), 1.0f, depth);
 	}
 	_spritebatch.end();
 
