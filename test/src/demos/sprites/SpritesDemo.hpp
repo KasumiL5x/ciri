@@ -29,8 +29,9 @@ private:
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
 	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 
-	std::shared_ptr<ciri::ITexture2D> _texture;
+	std::shared_ptr<ciri::ITexture2D> _backgroundTexture;
 
+	std::shared_ptr<ciri::ITexture2D> _texture;
 	std::vector<Ball> _balls;
 	bool _ballsMoving;
 

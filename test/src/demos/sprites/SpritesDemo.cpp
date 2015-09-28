@@ -65,6 +65,12 @@ void SpritesDemo::onInitialize() {
 }
 
 void SpritesDemo::onLoadContent() {
+	// load background texture
+	ciri::PNG bgPng;
+	if( bgPng.loadFromFile("sprites/textures/bg.png") && (4 == bgPng.getBytesPerPixel()) ) {
+		_backgroundTexture = graphicsDevice()->createTexture2D(bgPng.getWidth(), bgPng.getHeight(), ciri::TextureFormat::Color, 0, bgPng.getPixels());
+	}
+
 	// load textures
 	ciri::PNG png;
 	if( png.loadFromFile("sprites/textures/ball.png") && (4 == png.getBytesPerPixel()) ) {
@@ -174,6 +180,10 @@ void SpritesDemo::onDraw() {
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 	
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred);
+
+	// draw background
+	_spritebatch.draw(_backgroundTexture, cc::Vec2f(0.0f, 0.0f), 0.0f, cc::Vec2f(0.0f, 0.0f), 1.0f, 0.0f);
+
 	int counter = 0;
 	for( const auto& ball : _balls ) {
 		counter += 1;
