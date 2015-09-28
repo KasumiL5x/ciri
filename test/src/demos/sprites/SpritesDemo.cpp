@@ -114,9 +114,14 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 				continue;
 			}
 
+			const cc::Vec2f mousePosition = cc::Vec2f(static_cast<float>(input()->mouseX()), window()->getHeight() - static_cast<float>(input()->mouseY()));
+			const cc::Vec2f direction = (mousePosition - _ballSpawnPosition).normalized();
+
+			const float SPEED = 1250.0f;
+
 			b.setActive(true);
 			b.setPosition(_ballSpawnPosition);
-			b.setVelocity(cc::Vec2f(1000.0f, 100.0f));
+			b.setVelocity(direction * SPEED);
 			b.setRotation(0.0f);
 			break;
 		}
