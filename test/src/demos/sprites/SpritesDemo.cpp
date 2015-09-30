@@ -2,6 +2,7 @@
 #include <ciri/core/PNG.hpp>
 #include <cc/Common.hpp>
 #include <ctime>
+#include <cc/Quaternion.hpp>
 
 SpritesDemo::SpritesDemo()
 	: IDemo() {
@@ -65,6 +66,16 @@ void SpritesDemo::onLoadContent() {
 		_playerTexture = graphicsDevice()->createTexture2D(playerPng.getWidth(), playerPng.getHeight(), ciri::TextureFormat::Color, 0, playerPng.getPixels());
 	}
 	_player.setTexture(_playerTexture);
+
+	// load bullet texture
+	ciri::PNG bulletPng;
+	if( bulletPng.loadFromFile("sprites/textures/Bullet.png") && (4 == bulletPng.getBytesPerPixel()) ) {
+		_bulletTexture = graphicsDevice()->createTexture2D(bulletPng.getWidth(), bulletPng.getHeight(), ciri::TextureFormat::Color, 0, bulletPng.getPixels());
+	}
+	// assign bullet textures
+	for( auto& bullet : _bullets ) {
+		bullet.setTexture(_bulletTexture);
+	}
 }
 
 void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
@@ -105,10 +116,45 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	if( _playerMovement.sqrMagnitude() > 1.0f ) {
 		_playerMovement.normalize();
 	}
+
+	_fireTimer += deltaTime;
+
+	// firing
+	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && (_fireTimer > FIRE_DELAY) ) {
+		_fireTimer = 0.0f;
+
+		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
+		const cc::Vec2f diff = (mousePos - _player.getPosition()).normalized();
+
+		const float aimAngle = atan2f(diff.y, diff.x);
+		const cc::Quatf aimQuat = quatYawPitchRoll(0.0f, 0.0f, aimAngle);
+
+		const float randomSpread = cc::math::randRange<float>(-0.04f, 0.04f) + cc::math::randRange<float>(-0.04f, 0.04f);
+		const cc::Vec2f vel = fromPolar(aimAngle + randomSpread, 11.0f);
+
+		const cc::Vec2f offset1 = transformVec2Quat(cc::Vec2f(35.0f, -8.0f), aimQuat);
+		addBullet(_player.getPosition() + offset1, vel);
+
+		const cc::Vec2f offset2 = transformVec2Quat(cc::Vec2f(35.0f, 8.0f), aimQuat);
+		addBullet(_player.getPosition() + offset2, vel);
+
+
+		//addBullet(_player.getPosition(), diff * 10.0f);
+	}
 }
 
 void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 	_player.update(_playerMovement);
+
+	const ciri::Viewport& vp = graphicsDevice()->getViewport();
+	const cc::Vec4f screenSize(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height()));
+	for( auto& curr : _bullets ) {
+		if( !curr.isAlive() ) {
+			continue;
+		}
+		curr.update(screenSize);
+	}
+
 	_grid.update();
 }
 
@@ -122,6 +168,12 @@ void SpritesDemo::onDraw() {
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
 	_grid.draw(_spritebatch, static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 	_spritebatch.draw(_player.getTexture(), _player.getPosition(), _player.getOrientation(), _player.getOrigin(), 1.0f, 1.0f);
+	for( auto& bullet : _bullets ) {
+		if( !bullet.isAlive() ) {
+			continue;
+		}
+		_spritebatch.draw(bullet.getTexture(), bullet.getPosition(), bullet.getOrientation(), bullet.getOrientation(), 1.0f, 1.0f);
+	}
 	_spritebatch.end();
 
 	device->present();
@@ -129,4 +181,52 @@ void SpritesDemo::onDraw() {
 
 void SpritesDemo::onUnloadContent() {
 	_spritebatch.clean();
+}
+
+void SpritesDemo::addBullet( const cc::Vec2f& position, const cc::Vec2f& velocity ) {
+	for( auto& curr : _bullets ) {
+		if( curr.isAlive() ) {
+			continue;
+		}
+
+		curr.setIsAlive(true);
+		curr.setPosition(position);
+		curr.setVelocity(velocity);
+		break;
+	}
+}
+
+cc::Vec2f SpritesDemo::fromPolar( float angle, float magnitude ) const {
+	return magnitude * cc::Vec2f(cosf(angle), sinf(angle));
+}
+
+cc::Vec2f SpritesDemo::transformVec2Quat( const cc::Vec2f& value, const cc::Quatf& rotation ) const {
+	const cc::Vec3f rot1 = cc::Vec3f(rotation.x + rotation.x, rotation.y + rotation.y, rotation.z + rotation.z);
+	const cc::Vec3f rot2 = cc::Vec3f(rotation.x, rotation.x, rotation.w);
+	const cc::Vec3f rot3 = cc::Vec3f(1, rotation.y, rotation.z);
+	const cc::Vec3f rot4 = rot1*rot2;
+	const cc::Vec3f rot5 = rot1*rot3;
+
+	cc::Vec2f v;
+  v.x = (float)((double)value.x * (1.0 - (double)rot5.y - (double)rot5.z) + (double)value.y * ((double)rot4.y - (double)rot4.z));
+  v.y = (float)((double)value.x * ((double)rot4.y + (double)rot4.z) + (double)value.y * (1.0 - (double)rot4.x - (double)rot5.z));
+	return v;
+}
+
+cc::Quatf SpritesDemo::quatYawPitchRoll( float yaw, float pitch, float roll ) const {
+	cc::Quatf quaternion;
+	const float num9 = roll * 0.5f;
+	const float num6 = sinf(num9);
+	const float num5 = cosf(num9);
+	const float num8 = pitch * 0.5f;
+	const float num4 = sinf(num8);
+	const float num3 = cosf(num8);
+	const float num7 = yaw * 0.5f;
+	const float num2 = sinf(num7);
+	const float num = cosf(num7);
+	quaternion.x = ((num * num4) * num5) + ((num2 * num3) * num6);
+	quaternion.y = ((num2 * num3) * num5) - ((num * num4) * num6);
+	quaternion.z = ((num * num3) * num6) - ((num2 * num4) * num5);
+	quaternion.w = ((num * num3) * num5) + ((num2 * num4) * num6);
+	return quaternion;
 }

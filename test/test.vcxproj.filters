@@ -41,6 +41,9 @@
     <ClCompile Include="src\demos\sprites\PlayerShip.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\sprites\Bullet.cpp">
+      <Filter>demos\sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -112,6 +115,9 @@
       <Filter>demos\sprites</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp">
+      <Filter>demos\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\Bullet.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
   </ItemGroup>
