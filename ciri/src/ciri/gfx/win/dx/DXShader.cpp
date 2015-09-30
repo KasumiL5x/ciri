@@ -167,7 +167,11 @@ namespace ciri {
 					hr = _device->getDevice()->CreateInputLayout(layout, elements.size(), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &_inputLayout);
 					delete[] layout; layout = nullptr;
 					if( FAILED(hr) ) {
-						addError(ErrorCode::CIRI_UNKNOWN_ERROR, getErrorString(ErrorCode::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
+						if( errorBlob != nullptr ) {
+							addError(ErrorCode::CIRI_UNKNOWN_ERROR, getErrorString(ErrorCode::CIRI_UNKNOWN_ERROR) + std::string(": ") + std::string((const char*)errorBlob->GetBufferPointer()));
+						} else {
+							addError(ErrorCode::CIRI_UNKNOWN_ERROR, getErrorString(ErrorCode::CIRI_UNKNOWN_ERROR) + std::string(": Unknown error.\n"));
+						}
 					} else {
 						// reflect the constant buffers of the vertex shader
 						ID3D11ShaderReflection* refl = nullptr;
