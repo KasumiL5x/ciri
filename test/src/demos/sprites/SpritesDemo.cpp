@@ -122,7 +122,7 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 	// fire!
 	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && input()->wasMouseButtonUp(ciri::MouseButton::Left) ) {
-		const cc::Vec2f curr = cc::Vec2f(input()->mouseX(), window()->getHeight()-input()->mouseY());
+		//const cc::Vec2f curr = cc::Vec2f(input()->mouseX(), window()->getHeight()-input()->mouseY());
 		//_grid->applyExplosiveForce(50.0f, curr, 100.0f);
 		for( auto& b : _balls ) {
 			if( b.isActive() ) {
@@ -154,9 +154,9 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		if( !b.isActive() ) {
 			continue;
 		}
-		_grid->applyDirectedForce(b.getVelocity() * 0.01f, b.getPosition(), 10.0f);
-		//_grid->applyExplosiveForce(100.0f, pos, 10.0f);
-		//_grid->applyImplosiveForce(100.0f, pos, 10.0f);
+		//_grid->applyDirectedForce(b.getVelocity() * 0.01f, b.getPosition(), 10.0f);
+		//_grid->applyExplosiveForce(5.0f, b.getPosition(), 100.0f);
+		_grid->applyImplosiveForce(5.0f, b.getPosition(), 100.0f);
 	}
 }
 

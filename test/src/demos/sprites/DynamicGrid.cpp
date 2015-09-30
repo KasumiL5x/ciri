@@ -183,10 +183,10 @@ void DynamicGrid::draw( SpriteBatch& spriteBatch, float scrw, float scrh ) {
 
 				// if grid is straight, draw line, otherwise draw interp midpoint
 				if( mid.sqrDistance((left + p) * 0.5f) > 1.0f ) {
-					drawLine(spriteBatch, left, mid, thickness);
-					drawLine(spriteBatch, mid, p, thickness);
+					drawLine(spriteBatch, left, mid, color, thickness);
+					drawLine(spriteBatch, mid, p, color, thickness);
 				} else {
-					drawLine(spriteBatch, left, p, thickness);
+					drawLine(spriteBatch, left, p, color, thickness);
 				}
 			}
 
@@ -201,28 +201,28 @@ void DynamicGrid::draw( SpriteBatch& spriteBatch, float scrw, float scrh ) {
 																									 0.5f);
 
 				if( mid.sqrDistance((up + p) * 0.5f) > 1.0f ) {
-					drawLine(spriteBatch, up, mid, thickness);
-					drawLine(spriteBatch, mid, p, thickness);
+					drawLine(spriteBatch, up, mid, color, thickness);
+					drawLine(spriteBatch, mid, p, color, thickness);
 				} else {
-					drawLine(spriteBatch, up, p, thickness);
+					drawLine(spriteBatch, up, p, color, thickness);
 				}
 			}
 
 			// interp lines between point masses; makes it look denser
 			if( x > 1 && y > 1 ) {
 				const cc::Vec2f upLeft = toVec2(_points[getPixelCoord(x-1, y-1)].position, screenSize);
-				drawLine(spriteBatch, 0.5f * (upLeft + up), 0.5f * (left + p), 1.0f); // vertical
-				drawLine(spriteBatch, 0.5f * (upLeft + left), 0.5f * (up + p), 1.0f); // horizontal
+				drawLine(spriteBatch, 0.5f * (upLeft + up), 0.5f * (left + p), color, 1.0f); // vertical
+				drawLine(spriteBatch, 0.5f * (upLeft + left), 0.5f * (up + p), color, 1.0f); // horizontal
 			}
 		}
 	}
 }
 
-void DynamicGrid::drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, float thickness ) {
+void DynamicGrid::drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness ) {
 	const cc::Vec2f delta = end - start;
 	const float angle = atan2f(delta.y, delta.x);
 	const cc::Vec2f scale = cc::Vec2f(delta.magnitude(), thickness);
-	spriteBatch.draw(_pixel, start, angle, cc::Vec2f(0.0f, 0.5f), scale, 0.0f);
+	spriteBatch.draw(_pixel, start, angle, cc::Vec2f(0.0f, 0.5f), scale, 0.0f, color);
 }
 
 cc::Vec2f DynamicGrid::toVec2( const cc::Vec3f& vec, const cc::Vec2f& screenSize ) {

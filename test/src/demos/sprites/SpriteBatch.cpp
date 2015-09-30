@@ -38,6 +38,7 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 	_defaultShader = device->createShader();
 	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
 	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Color, 0));
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("sprites/shaders/SpriteBatch_vs" + shaderExt);
 	//const std::string gsFile = ("sprites/shaders/SpriteBatch_gs" + shaderExt);
@@ -101,7 +102,7 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	const float textureWidth = static_cast<float>(texture->getWidth());
 	const float textureHeight = static_cast<float>(texture->getHeight());
 	const cc::Vec2f newOrigin(origin.x * (dstRect.z / textureWidth), origin.y * (dstRect.w / textureHeight));
-	item->set(dstRect.x, dstRect.y, -newOrigin.x, -newOrigin.y, dstRect.z, dstRect.w, sinf(rotation), cosf(rotation), depth);
+	item->set(dstRect.x, dstRect.y, -newOrigin.x, -newOrigin.y, dstRect.z, dstRect.w, sinf(rotation), cosf(rotation), depth, cc::Vec4f(1.0f));
 }
 
 void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth ) {
@@ -115,7 +116,7 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	const float textureWidth = static_cast<float>(texture->getWidth()) * scale.x;
 	const float textureHeight = static_cast<float>(texture->getHeight()) * scale.y;
 	const cc::Vec2f newOrigin = origin * scale;
-	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth);
+	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, cc::Vec4f(1.0f));
 }
 
 void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth ) {
@@ -129,7 +130,21 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	const float textureWidth = static_cast<float>(texture->getWidth()) * scale;
 	const float textureHeight = static_cast<float>(texture->getHeight()) * scale;
 	const cc::Vec2f newOrigin = origin * scale;
-	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth);
+	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, cc::Vec4f(1.0f));
+}
+
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color ) {
+	if( nullptr == texture ) {
+		return;
+	}
+
+	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	item->texture = texture;
+
+	const float textureWidth = static_cast<float>(texture->getWidth()) * scale.x;
+	const float textureHeight = static_cast<float>(texture->getHeight()) * scale.y;
+	const cc::Vec2f newOrigin = origin * scale;
+	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, color);
 }
 
 bool SpriteBatch::end() {

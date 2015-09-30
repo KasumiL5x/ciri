@@ -50,7 +50,7 @@ public:
 	void draw( SpriteBatch& spriteBatch, float scrw, float scrh );
 
 private:
-	void drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, float thickness=2.0f );
+	void drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness=2.0f );
 	cc::Vec2f toVec2( const cc::Vec3f& vec, const cc::Vec2f& screenSize );
 	__forceinline	int getPixelCoord( int x, int y ) const;
 

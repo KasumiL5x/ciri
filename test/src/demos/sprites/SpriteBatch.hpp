@@ -62,6 +62,18 @@ public:
 	 * @param depth     Depth used for rendering and sorting of sprites.
 	 */
 	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth );
+
+	/**
+	 * Draws a sprite.
+	 * @param texture   Texture to draw.
+	 * @param position  X and Y are the position on the screen in pixels.
+	 * @param rotation  Rotation angle in radians.
+	 * @param origin    Pivot point where {0, 0} is the bottom left.
+	 * @param scale     Scaling factor.
+	 * @param depth     Depth used for rendering and sorting of sprites.
+	 * @param color     Color (including alpha) to multiply the texture by.
+	 */
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color );
 	
 	bool end();
 	void clean();
