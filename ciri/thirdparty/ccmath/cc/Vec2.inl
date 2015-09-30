@@ -244,6 +244,10 @@ namespace cc {
     inline T Vec2<T>::distance( const Vec2<T>& rhs ) const {
       return magnitude(*this - rhs).magnitude();
     }
+		template<typename T>
+		inline T Vec2<T>::sqrDistance( const Vec2<T>& rhs ) const {
+			return (*this - rhs).sqrMagnitude();
+		}
     template<typename T>
     inline Vec2<T> Vec2<T>::minimum( const Vec2<T>& rhs ) const {
       return Vec2<T>(math::minimum<T>(x, rhs.x), math::minimum<T>(y, rhs.y));

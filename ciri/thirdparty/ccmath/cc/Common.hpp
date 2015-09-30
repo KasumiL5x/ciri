@@ -224,7 +224,7 @@ namespace cc {
      * @return TODO.
      */
     template<typename T>
-    inline T catmullRom( T val1, T val2, T val3, T val4, T amount ) {
+    inline T catmullRom( T val1, T val2, T val3, T val4, float amount ) {
       const T n  = amount * amount;
       const T n2 = amount * n;
       const T half  = static_cast<T>(0.5f);

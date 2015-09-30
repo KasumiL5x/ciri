@@ -80,6 +80,7 @@ namespace cc {
       // Returns a vector perpendicular to this one.
       inline Vec2<T> cross2d     () const;
       inline T       distance    ( const Vec2<T>& rhs ) const;
+			inline T       sqrDistance ( const Vec2<T>& rhs ) const;
       inline Vec2<T> minimum     ( const Vec2<T>& rhs ) const;
       inline Vec2<T> maximum     ( const Vec2<T>& rhs ) const;
       inline Vec2<T> lerp        ( const Vec2<T>& to, const float& t ) const;
