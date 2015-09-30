@@ -4,6 +4,7 @@
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
 #include "Ball.hpp"
+#include "DynamicGrid.hpp"
 
 class SpritesDemo : public IDemo {
 public:
@@ -36,6 +37,8 @@ private:
 	bool _ballsMoving;
 
 	cc::Vec2f _ballSpawnPosition;
+
+	DynamicGrid* _grid;
 };
 
 #endif /* __spritesdemo__ */

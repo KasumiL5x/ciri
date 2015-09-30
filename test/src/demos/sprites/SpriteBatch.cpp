@@ -35,16 +35,16 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 	//ensureArrayCapacity(10);
 
 	// load and configure shader and constants
-	_shader = device->createShader();
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	_defaultShader = device->createShader();
+	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("sprites/shaders/SpriteBatch_vs" + shaderExt);
 	//const std::string gsFile = ("sprites/shaders/SpriteBatch_gs" + shaderExt);
 	const std::string psFile = ("sprites/shaders/SpriteBatch_ps" + shaderExt);
-	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_defaultShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to load SpriteBatch shader:\n");
-		for( auto err : _shader->getErrors() ) {
+		for( auto err : _defaultShader->getErrors() ) {
 			printf("%s\n", err.msg.c_str());
 		}
 		return false;
@@ -54,7 +54,7 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 		printf("Failed to create SpriteBatch constants.\n");
 		return false;
 	}
-	if( ciri::failed(_shader->addConstants(_constantBuffer, "SpriteConstants", ciri::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_defaultShader->addConstants(_constantBuffer, "SpriteConstants", ciri::ShaderStage::Vertex)) ) {
 		printf("Failed to assign constants to SpriteBatch shader.\n");
 		return false;
 	}
@@ -62,13 +62,19 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 	return true;
 }
 
-bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode ) {
-	// check for bad inputs
-	if( nullptr == blendState || nullptr == samplerState || nullptr == depthStencilState || nullptr == rasterizerState || nullptr == _shader ) {
+bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<ciri::IShader>& shader ) {
+	// check for bad inputs (shader is optional and will be set to a default one if it is null, so don't check it)
+	if( nullptr == blendState || nullptr == samplerState || nullptr == depthStencilState || nullptr == rasterizerState ) {
 		return false;
 	}
 
-	// must have a valid shader
+	// save custom shader if provided
+	_shader = (shader != nullptr) ? shader : _defaultShader;
+	if( shader != nullptr ) {
+	} else {
+	}
+
+	// must have a valid shader set
 	if( !_shader->isValid() ) {
 		return false;
 	}
@@ -230,6 +236,8 @@ void SpriteBatch::clean() {
 
 	_constantBuffer = nullptr;
 
+	_defaultShader = nullptr;
+
 	_shader = nullptr;
 }
 
@@ -257,6 +265,8 @@ bool SpriteBatch::configure() {
 
 	// set vertex buffer
 	_device->setVertexBuffer(_spritesBuffer);
+
+	return true;
 }
 
 std::shared_ptr<SpriteBatchItem> SpriteBatch::createBatchItem() {
@@ -273,7 +283,7 @@ std::shared_ptr<SpriteBatchItem> SpriteBatch::createBatchItem() {
 
 void SpriteBatch::ensureArrayCapacity( int size ) {
 	const int requiredSize = size * 6;
-	if( _vertexArray.size() < requiredSize ) {
+	if( static_cast<int>(_vertexArray.size()) < requiredSize ) {
 		_vertexArray.resize(requiredSize);
 	}
 }

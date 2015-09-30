@@ -62,6 +62,13 @@ void SpritesDemo::onInitialize() {
 	// set the ball spawning position
 	_ballSpawnPosition.x = 50.0f;
 	_ballSpawnPosition.y = static_cast<float>(window()->getHeight()) * 0.5f;
+
+	const ciri::Viewport& vp = graphicsDevice()->getViewport();
+	const int maxGridPoints = 1600;
+	const cc::Vec2f gridSpacing = cc::Vec2f(sqrtf(vp.width() * vp.height() / maxGridPoints));
+	_grid = new DynamicGrid(cc::Vec4f(vp.x(), vp.y(), vp.width(), vp.height()), gridSpacing, graphicsDevice());
+	_grid->applyImplosiveForce(1000.0f, cc::Vec2f(vp.width()/2, vp.height()/2), 100.0f);
+	//_grid->applyDirectedForce(cc::Vec2f(100.0f, 100.0f), cc::Vec2f(vp.width()/2, vp.height()/2), 10.0f);
 }
 
 void SpritesDemo::onLoadContent() {
@@ -115,6 +122,8 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 	// fire!
 	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && input()->wasMouseButtonUp(ciri::MouseButton::Left) ) {
+		const cc::Vec2f curr = cc::Vec2f(input()->mouseX(), window()->getHeight()-input()->mouseY());
+		//_grid->applyExplosiveForce(50.0f, curr, 100.0f);
 		for( auto& b : _balls ) {
 			if( b.isActive() ) {
 				continue;
@@ -131,6 +140,23 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			b.setRotation(0.0f);
 			break;
 		}
+	}
+
+	// mouse grid effect
+	if( input()->mouseX() != input()->lastMouseX() || input()->mouseY() != input()->lastMouseY() ) {
+		const cc::Vec2f curr = cc::Vec2f(input()->mouseX(), window()->getHeight()-input()->mouseY());
+		const cc::Vec2f prev = cc::Vec2f(input()->lastMouseX(), window()->getHeight()-input()->lastMouseY());
+		const cc::Vec2f diff = curr - prev;
+		//_grid->applyDirectedForce(diff, curr, 10.0f);
+	}
+
+	for( auto& b : _balls ) {
+		if( !b.isActive() ) {
+			continue;
+		}
+		_grid->applyDirectedForce(b.getVelocity() * 0.01f, b.getPosition(), 10.0f);
+		//_grid->applyExplosiveForce(100.0f, pos, 10.0f);
+		//_grid->applyImplosiveForce(100.0f, pos, 10.0f);
 	}
 }
 
@@ -170,6 +196,8 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 		//	ball.rotation += cc::math::degreesToRadians(ball.velocity.x * deltaTime);
 		//	ball.rotation = cc::math::wrapAngle(ball.rotation, 0.0f, cc::math::degreesToRadians(360.0f));
 		//}
+
+		_grid->update();
 	}
 }
 
@@ -179,10 +207,11 @@ void SpritesDemo::onDraw() {
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 	
-	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred);
+	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
+	//_spritebatch.draw(_backgroundTexture, cc::Vec2f(0.0f, 0.0f), 0.0f, cc::Vec2f(0.0f, 0.0f), 1.0f, 0.0f);
 
-	// draw background
-	_spritebatch.draw(_backgroundTexture, cc::Vec2f(0.0f, 0.0f), 0.0f, cc::Vec2f(0.0f, 0.0f), 1.0f, 0.0f);
+	const ciri::Viewport& vp = device->getViewport();
+	_grid->draw(_spritebatch, vp.width(), vp.height());
 
 	int counter = 0;
 	for( const auto& ball : _balls ) {
@@ -201,5 +230,8 @@ void SpritesDemo::onDraw() {
 }
 
 void SpritesDemo::onUnloadContent() {
+	if( _grid != nullptr ) {
+		delete _grid; _grid = nullptr;
+	}
 	_spritebatch.clean();
 }

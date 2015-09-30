@@ -84,7 +84,7 @@ int main() {
 	timer->start();
 
 	// main loop
-	const double MS_PER_UPDATE = 0.01;
+	const double MS_PER_UPDATE = 1.0f / 60.0f;
 	double lag = 0.0;
 	bool running = true;
 	while( running && !demo->hasRequestedToQuit() ) {

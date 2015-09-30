@@ -29,7 +29,7 @@ public:
 	~SpriteBatch();
 
 	bool create( const std::shared_ptr<ciri::IGraphicsDevice>& device );
-	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode );
+	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<ciri::IShader>& shader );
 
 	/**
 	 * Draws a sprite.
@@ -79,7 +79,8 @@ private:
 	std::shared_ptr<ciri::ISamplerState> _samplerState; // external
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState; // external
 	std::shared_ptr<ciri::IRasterizerState> _rasterizerState; // external
-	std::shared_ptr<ciri::IShader> _shader;
+	std::shared_ptr<ciri::IShader> _defaultShader; // default sprite shader loaded within the spritebatch
+	std::shared_ptr<ciri::IShader> _shader; // shader to actually use for drawing (can be external or internal)
 
 	SpriteConstants _constants;
 	std::shared_ptr<ciri::IConstantBuffer> _constantBuffer;

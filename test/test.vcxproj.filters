@@ -35,10 +35,10 @@
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\sprites\Car.cpp">
+    <ClCompile Include="src\demos\sprites\Ball.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\sprites\Ball.cpp">
+    <ClCompile Include="src\demos\sprites\DynamicGrid.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
   </ItemGroup>
@@ -108,10 +108,10 @@
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\demos\sprites\Car.hpp">
+    <ClInclude Include="src\demos\sprites\Ball.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\demos\sprites\Ball.hpp">
+    <ClInclude Include="src\demos\sprites\DynamicGrid.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
   </ItemGroup>
