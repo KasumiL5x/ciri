@@ -90,8 +90,8 @@
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
-    <ClCompile Include="src\demos\sprites\Ball.cpp" />
     <ClCompile Include="src\demos\sprites\DynamicGrid.cpp" />
+    <ClCompile Include="src\demos\sprites\PlayerShip.cpp" />
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
     <ClCompile Include="src\demos\terrain\TerrainDemo.cpp" />
@@ -109,8 +109,8 @@
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\IDemo.hpp" />
-    <ClInclude Include="src\demos\sprites\Ball.hpp" />
     <ClInclude Include="src\demos\sprites\DynamicGrid.hpp" />
+    <ClInclude Include="src\demos\sprites\PlayerShip.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp" />

@@ -50,8 +50,12 @@ void Spring::update() {
 	end2->applyForce(force);
 }
 
+DynamicGrid::DynamicGrid()
+	: _numColumns(0), _numRows(0), _pixel(nullptr) {
+}
+
 DynamicGrid::DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const std::shared_ptr<ciri::IGraphicsDevice>& device )
-	: _numColumns(0), _numRows(0) {
+	: _numColumns(0), _numRows(0), _pixel(nullptr) {
 	_numColumns = static_cast<int>(size.z / spacing.x) + 1;
 	_numRows = static_cast<int>(size.w / spacing.y) + 1;
 	_points.resize(_numColumns * _numRows);

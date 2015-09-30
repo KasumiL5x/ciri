@@ -38,6 +38,7 @@ struct Spring {
 
 class DynamicGrid {
 public:
+	DynamicGrid();
 	DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const std::shared_ptr<ciri::IGraphicsDevice>& device );
 
 	void applyDirectedForce( const cc::Vec2f& force, const cc::Vec2f& position, float radius );

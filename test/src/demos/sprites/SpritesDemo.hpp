@@ -3,8 +3,8 @@
 
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
-#include "Ball.hpp"
 #include "DynamicGrid.hpp"
+#include "PlayerShip.hpp"
 
 class SpritesDemo : public IDemo {
 public:
@@ -30,15 +30,11 @@ private:
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
 	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 
-	std::shared_ptr<ciri::ITexture2D> _backgroundTexture;
+	DynamicGrid _grid;
 
-	std::shared_ptr<ciri::ITexture2D> _texture;
-	std::vector<Ball> _balls;
-	bool _ballsMoving;
-
-	cc::Vec2f _ballSpawnPosition;
-
-	DynamicGrid* _grid;
+	std::shared_ptr<ciri::ITexture2D> _playerTexture;
+	PlayerShip _player;
+	cc::Vec2f _playerMovement;
 };
 
 #endif /* __spritesdemo__ */
