@@ -2,12 +2,14 @@
 #define __spritesdemo__
 
 #include <array>
+#include <memory>
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
 #include "DynamicGrid.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
 #include <cc/Quaternion.hpp>
+#include "Enemy.hpp"
 
 class SpritesDemo : public IDemo {
 public:
@@ -42,13 +44,16 @@ private:
 	DynamicGrid _grid;
 
 	std::shared_ptr<ciri::ITexture2D> _playerTexture;
-	PlayerShip _player;
+	std::shared_ptr<PlayerShip> _player;
 	cc::Vec2f _playerMovement;
 
 	std::shared_ptr<ciri::ITexture2D> _bulletTexture;
 	std::array<Bullet, 100> _bullets;
 	float _fireTimer = {0.0f};
 	const float FIRE_DELAY = {0.1f};
+
+	std::shared_ptr<ciri::ITexture2D> _enemySeekerTexture;
+	std::array<Enemy, 10> _enemies;
 };
 
 #endif /* __spritesdemo__ */

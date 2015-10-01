@@ -55,8 +55,9 @@ void SpritesDemo::onInitialize() {
 	_grid = DynamicGrid(cc::Vec4f(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height())), gridSpacing, graphicsDevice());
 
 	// configure player and set off initial spawn explosion
-	_player.setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
-	_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player.getPosition().x, _player.getPosition().y, 0.0f), 50.0f);
+	_player = std::make_shared<PlayerShip>();
+	_player->setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
+	_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
 }
 
 void SpritesDemo::onLoadContent() {
@@ -65,7 +66,7 @@ void SpritesDemo::onLoadContent() {
 	if( playerPng.loadFromFile("sprites/textures/Player.png") && (4 == playerPng.getBytesPerPixel()) ) {
 		_playerTexture = graphicsDevice()->createTexture2D(playerPng.getWidth(), playerPng.getHeight(), ciri::TextureFormat::Color, 0, playerPng.getPixels());
 	}
-	_player.setTexture(_playerTexture);
+	_player->setTexture(_playerTexture);
 
 	// load bullet texture
 	ciri::PNG bulletPng;
@@ -75,6 +76,22 @@ void SpritesDemo::onLoadContent() {
 	// assign bullet textures
 	for( auto& bullet : _bullets ) {
 		bullet.setTexture(_bulletTexture);
+	}
+
+	// load enemy textures
+	ciri::PNG seekPng;
+	if( seekPng.loadFromFile("sprites/textures/Seeker.png") && (4 == seekPng.getBytesPerPixel()) ) {
+		_enemySeekerTexture = graphicsDevice()->createTexture2D(seekPng.getWidth(), seekPng.getHeight(), ciri::TextureFormat::Color, 0, seekPng.getPixels());
+	}
+
+	// load some enemies
+	for( int i = 0; i < _enemies.size(); ++i ) {
+		const float x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth()));
+		const float y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight()));
+		_enemies[i] = Enemy::createSeeker(cc::Vec2f(x, y));
+		_enemies[i].setTexture(_enemySeekerTexture);
+		_enemies[i].setIsAlive(true);
+		_enemies[i].setTarget(_player);
 	}
 }
 
@@ -124,7 +141,7 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		_fireTimer = 0.0f;
 
 		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
-		const cc::Vec2f diff = (mousePos - _player.getPosition()).normalized();
+		const cc::Vec2f diff = (mousePos - _player->getPosition()).normalized();
 
 		const float aimAngle = atan2f(diff.y, diff.x);
 		const cc::Quatf aimQuat = quatYawPitchRoll(0.0f, 0.0f, aimAngle);
@@ -133,24 +150,35 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		const cc::Vec2f vel = fromPolar(aimAngle + randomSpread, 11.0f);
 
 		const cc::Vec2f offset1 = transformVec2Quat(cc::Vec2f(35.0f, -8.0f), aimQuat);
-		addBullet(_player.getPosition() + offset1, vel);
+		addBullet(_player->getPosition() + offset1, vel);
 
 		const cc::Vec2f offset2 = transformVec2Quat(cc::Vec2f(35.0f, 8.0f), aimQuat);
-		addBullet(_player.getPosition() + offset2, vel);
+		addBullet(_player->getPosition() + offset2, vel);
+	}
 
-
-		//addBullet(_player.getPosition(), diff * 10.0f);
+	if( input()->isMouseButtonDown(ciri::MouseButton::Right) ) {
+		_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
+		//_grid.applyExplosiveForce()
 	}
 }
 
 void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
-	_player.update(_playerMovement);
+	_player->update(_playerMovement);
 
 	const ciri::Viewport& vp = graphicsDevice()->getViewport();
-	const cc::Vec4f screenSize(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height()));
+	const cc::Vec4f bounds(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 	for( auto& curr : _bullets ) {
 		if( !curr.isAlive() ) {
 			continue;
+		}
+		curr.update(bounds);
+		_grid.applyExplosiveForce(0.5f * curr.getVelocity().magnitude(), curr.getPosition(), 80.0f);
+	}
+
+	const cc::Vec2f screenSize = cc::Vec2f(static_cast<float>(vp.width()), static_cast<float>(vp.height()));
+	for( auto& curr : _enemies ) {
+		if( !curr.isAlive() ) {
+			return;
 		}
 		curr.update(screenSize);
 	}
@@ -166,14 +194,29 @@ void SpritesDemo::onDraw() {
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
+
+	// grid
 	_grid.draw(_spritebatch, static_cast<float>(vp.width()), static_cast<float>(vp.height()));
-	_spritebatch.draw(_player.getTexture(), _player.getPosition(), _player.getOrientation(), _player.getOrigin(), 1.0f, 1.0f);
+
+	// enemies
+	for( auto& curr : _enemies ) {
+		if( !curr.isAlive() ) {
+			continue;
+		}
+		_spritebatch.draw(curr.getTexture(), curr.getPosition(), curr.getOrientation(), curr.getOrigin(), 1.0f, 1.0f);
+	}
+
+	// player
+	_spritebatch.draw(_player->getTexture(), _player->getPosition(), _player->getOrientation(), _player->getOrigin(), 1.0f, 1.0f);
+
+	// bullets
 	for( auto& bullet : _bullets ) {
 		if( !bullet.isAlive() ) {
 			continue;
 		}
-		_spritebatch.draw(bullet.getTexture(), bullet.getPosition(), bullet.getOrientation(), bullet.getOrientation(), 1.0f, 1.0f);
+		_spritebatch.draw(bullet.getTexture(), bullet.getPosition(), bullet.getOrientation(), bullet.getOrigin(), 1.0f, 1.0f);
 	}
+
 	_spritebatch.end();
 
 	device->present();

@@ -92,6 +92,8 @@
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="src\demos\sprites\Bullet.cpp" />
     <ClCompile Include="src\demos\sprites\DynamicGrid.cpp" />
+    <ClCompile Include="src\demos\sprites\Enemy.cpp" />
+    <ClCompile Include="src\demos\sprites\Entity.cpp" />
     <ClCompile Include="src\demos\sprites\PlayerShip.cpp" />
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
@@ -112,6 +114,8 @@
     <ClInclude Include="src\demos\IDemo.hpp" />
     <ClInclude Include="src\demos\sprites\Bullet.hpp" />
     <ClInclude Include="src\demos\sprites\DynamicGrid.hpp" />
+    <ClInclude Include="src\demos\sprites\Enemy.hpp" />
+    <ClInclude Include="src\demos\sprites\Entity.hpp" />
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />
