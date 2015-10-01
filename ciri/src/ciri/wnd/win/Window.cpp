@@ -2,7 +2,7 @@
 
 namespace ciri {
 	Window::Window()
-		: IWindow(), _hwnd(0), _isResizing(false), _lastWidth(0), _lastHeight(0), _keyRepeatEnabled(true) {
+		: IWindow(), _hwnd(0), _isResizing(false), _lastWidth(0), _lastHeight(0), _keyRepeatEnabled(true), _isCursorVisible(true) {
 	}
 
 	Window::~Window() {
@@ -81,6 +81,16 @@ namespace ciri {
 
 	void* Window::getNativeHandle() const {
 		return _hwnd;
+	}
+
+	void Window::setCursorVisible( bool visible ) {
+		// don't change if state is already set as windows works on a refcount system such that
+		// show->show->hide will result in showing, I think.
+		if( visible == _isCursorVisible ) {
+			return;
+		}
+		ShowCursor(visible);
+		_isCursorVisible = visible;
 	}
 
 	bool Window::createWindow( int width, int height ) {

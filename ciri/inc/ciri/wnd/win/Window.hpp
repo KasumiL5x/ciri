@@ -20,6 +20,7 @@ namespace ciri {
 		virtual int getHeight() const override;
 		virtual bool hasFocus() const override;
 		virtual void* getNativeHandle() const override;
+		virtual void setCursorVisible( bool visible ) override;
 
 	private:
 		bool createWindow( int width, int height );
@@ -35,6 +36,7 @@ namespace ciri {
 		int _lastWidth;
 		int _lastHeight;
 		bool _keyRepeatEnabled;
+		bool _isCursorVisible;
 	};
 }
 

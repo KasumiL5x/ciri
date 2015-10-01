@@ -54,6 +54,10 @@ private:
 
 	std::shared_ptr<ciri::ITexture2D> _enemySeekerTexture;
 	std::array<Enemy, 10> _enemies;
+
+	std::shared_ptr<ciri::ITexture2D> _cursorTexture;
+	cc::Vec2f _cursorPos;
+	cc::Vec2f _cursorOrigin;
 };
 
 #endif /* __spritesdemo__ */

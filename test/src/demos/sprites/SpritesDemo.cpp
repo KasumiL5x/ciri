@@ -31,6 +31,8 @@ void SpritesDemo::onInitialize() {
 	srand(static_cast<unsigned int>(time(0)));
 	rand();
 
+	window()->setCursorVisible(false);
+
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
 	printf("API: %s\n", graphicsDevice()->getApiInfo());
@@ -93,6 +95,13 @@ void SpritesDemo::onLoadContent() {
 		_enemies[i].setIsAlive(true);
 		_enemies[i].setTarget(_player);
 	}
+
+	// custom cursor texture
+	ciri::PNG cursorPng;
+	if( cursorPng.loadFromFile("sprites/textures/Pointer.png") && (4 == cursorPng.getBytesPerPixel()) ) {
+		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), ciri::TextureFormat::Color, 0, cursorPng.getPixels());
+		_cursorOrigin = cc::Vec2f(0.0f, _cursorTexture->getHeight());
+	}
 }
 
 void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
@@ -115,6 +124,17 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		this->gtfo();
 		return;
 	}
+
+	// move custom cursor
+	if( _cursorTexture != nullptr ) {
+		_cursorPos = cc::Vec2f(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
+		_cursorPos.x = (_cursorPos.x < 0.0f) ? 0.0f : _cursorPos.x;
+		_cursorPos.y = (_cursorPos.y < _cursorTexture->getHeight()) ? _cursorTexture->getHeight() : _cursorPos.y;
+		_cursorPos.x = (_cursorPos.x > window()->getWidth() - _cursorTexture->getWidth()) ? window()->getWidth() - _cursorTexture->getWidth() : _cursorPos.x;
+		_cursorPos.y = (_cursorPos.y > window()->getHeight()) ? window()->getHeight() : _cursorPos.y;
+
+	}
+
 
 	// update player movement
 	_playerMovement = cc::Vec2f::zero();
@@ -216,6 +236,12 @@ void SpritesDemo::onDraw() {
 		}
 		_spritebatch.draw(bullet.getTexture(), bullet.getPosition(), bullet.getOrientation(), bullet.getOrigin(), 1.0f, 1.0f);
 	}
+	
+	// cursor
+	if( _cursorTexture != nullptr ) {
+		_spritebatch.draw(_cursorTexture, _cursorPos, 0.0f, _cursorOrigin, 1.0f, 1.0f);
+	}
+
 
 	_spritebatch.end();
 

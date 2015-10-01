@@ -75,6 +75,12 @@ namespace ciri {
 		 * @returns Pointer to native handle.
 		 */
 		virtual void* getNativeHandle() const=0;
+
+		/**
+		 * Sets whether the mouse cursor is visible or not.
+		 * @param visible True to show the cursor; false to hide it.
+		 */
+		virtual void setCursorVisible( bool visible )=0;
 	};
 } // ciri
 
