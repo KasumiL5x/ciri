@@ -242,7 +242,7 @@ namespace cc {
     }
     template<typename T>
     inline T Vec2<T>::distance( const Vec2<T>& rhs ) const {
-      return magnitude(*this - rhs).magnitude();
+      return (*this - rhs).magnitude();
     }
 		template<typename T>
 		inline T Vec2<T>::sqrDistance( const Vec2<T>& rhs ) const {
