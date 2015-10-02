@@ -29,9 +29,6 @@ public:
 
 private:
 	void addBullet( const cc::Vec2f& position, const cc::Vec2f& velocity );
-	cc::Vec2f fromPolar( float angle, float magnitude ) const;
-	cc::Vec2f transformVec2Quat( const cc::Vec2f& value, const cc::Quatf& rotation ) const;
-	cc::Quatf quatYawPitchRoll( float yaw, float pitch, float roll ) const;
 
 private:
 	SpriteBatch _spritebatch;

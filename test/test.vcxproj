@@ -116,6 +116,7 @@
     <ClInclude Include="src\demos\sprites\DynamicGrid.hpp" />
     <ClInclude Include="src\demos\sprites\Enemy.hpp" />
     <ClInclude Include="src\demos\sprites\Entity.hpp" />
+    <ClInclude Include="src\demos\sprites\MathHelper.hpp" />
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />

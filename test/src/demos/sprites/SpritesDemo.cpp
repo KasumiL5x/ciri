@@ -3,6 +3,7 @@
 #include <cc/Common.hpp>
 #include <ctime>
 #include <cc/Quaternion.hpp>
+#include "MathHelper.hpp"
 
 SpritesDemo::SpritesDemo()
 	: IDemo() {
@@ -164,15 +165,15 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		const cc::Vec2f diff = (mousePos - _player->getPosition()).normalized();
 
 		const float aimAngle = atan2f(diff.y, diff.x);
-		const cc::Quatf aimQuat = quatYawPitchRoll(0.0f, 0.0f, aimAngle);
+		const cc::Quatf aimQuat = MathHelper::quatYawPitchRoll(0.0f, 0.0f, aimAngle);
 
 		const float randomSpread = cc::math::randRange<float>(-0.04f, 0.04f) + cc::math::randRange<float>(-0.04f, 0.04f);
-		const cc::Vec2f vel = fromPolar(aimAngle + randomSpread, 11.0f);
+		const cc::Vec2f vel = MathHelper::fromPolar(aimAngle + randomSpread, 11.0f);
 
-		const cc::Vec2f offset1 = transformVec2Quat(cc::Vec2f(35.0f, -8.0f), aimQuat);
+		const cc::Vec2f offset1 = MathHelper::transformVec2Quat(cc::Vec2f(35.0f, -8.0f), aimQuat);
 		addBullet(_player->getPosition() + offset1, vel);
 
-		const cc::Vec2f offset2 = transformVec2Quat(cc::Vec2f(35.0f, 8.0f), aimQuat);
+		const cc::Vec2f offset2 = MathHelper::transformVec2Quat(cc::Vec2f(35.0f, 8.0f), aimQuat);
 		addBullet(_player->getPosition() + offset2, vel);
 	}
 
@@ -263,39 +264,4 @@ void SpritesDemo::addBullet( const cc::Vec2f& position, const cc::Vec2f& velocit
 		curr.setVelocity(velocity);
 		break;
 	}
-}
-
-cc::Vec2f SpritesDemo::fromPolar( float angle, float magnitude ) const {
-	return magnitude * cc::Vec2f(cosf(angle), sinf(angle));
-}
-
-cc::Vec2f SpritesDemo::transformVec2Quat( const cc::Vec2f& value, const cc::Quatf& rotation ) const {
-	const cc::Vec3f rot1 = cc::Vec3f(rotation.x + rotation.x, rotation.y + rotation.y, rotation.z + rotation.z);
-	const cc::Vec3f rot2 = cc::Vec3f(rotation.x, rotation.x, rotation.w);
-	const cc::Vec3f rot3 = cc::Vec3f(1, rotation.y, rotation.z);
-	const cc::Vec3f rot4 = rot1*rot2;
-	const cc::Vec3f rot5 = rot1*rot3;
-
-	cc::Vec2f v;
-  v.x = (float)((double)value.x * (1.0 - (double)rot5.y - (double)rot5.z) + (double)value.y * ((double)rot4.y - (double)rot4.z));
-  v.y = (float)((double)value.x * ((double)rot4.y + (double)rot4.z) + (double)value.y * (1.0 - (double)rot4.x - (double)rot5.z));
-	return v;
-}
-
-cc::Quatf SpritesDemo::quatYawPitchRoll( float yaw, float pitch, float roll ) const {
-	cc::Quatf quaternion;
-	const float num9 = roll * 0.5f;
-	const float num6 = sinf(num9);
-	const float num5 = cosf(num9);
-	const float num8 = pitch * 0.5f;
-	const float num4 = sinf(num8);
-	const float num3 = cosf(num8);
-	const float num7 = yaw * 0.5f;
-	const float num2 = sinf(num7);
-	const float num = cosf(num7);
-	quaternion.x = ((num * num4) * num5) + ((num2 * num3) * num6);
-	quaternion.y = ((num2 * num3) * num5) - ((num * num4) * num6);
-	quaternion.z = ((num * num3) * num6) - ((num2 * num4) * num5);
-	quaternion.w = ((num * num3) * num5) + ((num2 * num4) * num6);
-	return quaternion;
 }

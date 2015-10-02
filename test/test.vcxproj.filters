@@ -132,5 +132,8 @@
     <ClInclude Include="src\demos\sprites\Enemy.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
+    <ClInclude Include="src\demos\sprites\MathHelper.hpp">
+      <Filter>demos\sprites</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
