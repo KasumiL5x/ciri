@@ -21,7 +21,7 @@ void PointMass::update() {
 	velocity += acceleration;
 	position += velocity;
 	acceleration = cc::Vec3f::zero();
-	if( velocity.sqrMagnitude() < (0.001f * 0.001f) ) {
+	if( velocity.sqrMagnitude() < 0.000001f ) {
 		velocity = cc::Vec3f::zero();
 	}
 	velocity *= damping;
@@ -38,16 +38,32 @@ Spring::Spring( PointMass* theEnd1, PointMass* theEnd2, float theStiffness, floa
 }
 
 void Spring::update() {
-	cc::Vec3f x = end1->position - end2->position;
-	float length = x.magnitude();
-	if( length <= targetLength ) {
+	// spring forces
+	const cc::Vec3f springDist = end1->position - end2->position;
+	const float springLen = springDist.magnitude();
+	if( springLen <= targetLength ) {
 		return;
 	}
-	x = (x / length) * (length - targetLength);
-	const cc::Vec3f dv = end2->velocity - end1->velocity;
-	const cc::Vec3f force = stiffness * x - dv * damping;
-	end1->applyForce(-force);
-	end2->applyForce(force);
+	const float SPRING_CONSTANT = stiffness;
+	cc::Vec3f force = -SPRING_CONSTANT * (springLen - targetLength) * springDist;
+	if( springLen > 0.0f ) {
+		force /= springLen;
+	}
+	const float SPRING_DAMPING = damping;
+	force -= SPRING_DAMPING * (end1->velocity - end2->velocity);
+	end1->applyForce(force);
+	end2->applyForce(-force);
+
+	//cc::Vec3f x = end1->position - end2->position;
+	//float length = x.magnitude();
+	//if( length <= targetLength ) {
+	//	return;
+	//}
+	//x = (x / length) * (length - targetLength);
+	//const cc::Vec3f dv = end2->velocity - end1->velocity;
+	//const cc::Vec3f force = stiffness * x - dv * damping;
+	//end1->applyForce(-force);
+	//end2->applyForce(force);
 }
 
 DynamicGrid::DynamicGrid()
@@ -87,7 +103,8 @@ DynamicGrid::DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const
 				_springs.push_back(Spring(&_fixedPoints[getPixelCoord(x, y)], &_points[getPixelCoord(x, y)], 0.1f, 0.1f));
 			} else if( 0 == (x % 3) || 0 == (y % 3) ) {
 				// loosely anchor 1/9th of the point masses
-				_springs.push_back(Spring(&_fixedPoints[getPixelCoord(x, y)], &_points[getPixelCoord(x, y)], 0.002f, 0.02f));
+				_springs.push_back(Spring(&_fixedPoints[getPixelCoord(x, y)], &_points[getPixelCoord(x, y)], 0.04f, 0.06f));
+				//_springs.push_back(Spring(&_fixedPoints[getPixelCoord(x, y)], &_points[getPixelCoord(x, y)], 0.002f, 0.02f));
 			}
 
 			const float stiffness = 0.28f;

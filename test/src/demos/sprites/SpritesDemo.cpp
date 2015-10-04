@@ -175,6 +175,9 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 		const cc::Vec2f offset2 = MathHelper::transformVec2Quat(cc::Vec2f(35.0f, 8.0f), aimQuat);
 		addBullet(_player->getPosition() + offset2, vel);
+
+		const cc::Vec2f offset3 = MathHelper::transformVec2Quat(cc::Vec2f(60.0f, 0.0f), aimQuat);
+		addBullet(_player->getPosition() + offset3, vel);
 	}
 
 	if( input()->isMouseButtonDown(ciri::MouseButton::Right) ) {
