@@ -1,7 +1,7 @@
 #include "Entity.hpp"
 
 Entity::Entity()
-	: _position(), _velocity(), _orientation(0.0f), _texture(nullptr), _origin(), _color(1.0f), _isAlive(false) {
+	: _position(), _velocity(), _orientation(0.0f), _texture(nullptr), _origin(), _color(1.0f), _isAlive(false), _collisionRadius(20.0f) {
 }
 
 Entity::~Entity() {
@@ -35,6 +35,10 @@ const cc::Vec4f& Entity::getColor() const {
 	return _color;
 }
 
+const float& Entity::getCollisionRadius() const {
+	return _collisionRadius;
+}
+
 void Entity::setPosition( const cc::Vec2f& position ) {
 	_position = position;
 }
@@ -62,4 +66,8 @@ void Entity::setTexture( const std::shared_ptr<ciri::ITexture2D>& texture ) {
 
 void Entity::setColor( const cc::Vec4f& color ) {
 	_color = color;
+}
+
+void Entity::setCollisionRadius( float radius ) {
+	_collisionRadius = radius;
 }

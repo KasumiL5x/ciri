@@ -88,7 +88,7 @@ void SpritesDemo::onLoadContent() {
 	}
 
 	// load some enemies
-	for( int i = 0; i < _enemies.size(); ++i ) {
+	for( int i = 0; i < static_cast<int>(_enemies.size()); ++i ) {
 		const float x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth()));
 		const float y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight()));
 		_enemies[i] = Enemy::createSeeker(cc::Vec2f(x, y));
@@ -101,7 +101,7 @@ void SpritesDemo::onLoadContent() {
 	ciri::PNG cursorPng;
 	if( cursorPng.loadFromFile("sprites/textures/Pointer.png") && (4 == cursorPng.getBytesPerPixel()) ) {
 		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), ciri::TextureFormat::Color, 0, cursorPng.getPixels());
-		_cursorOrigin = cc::Vec2f(0.0f, _cursorTexture->getHeight());
+		_cursorOrigin = cc::Vec2f(0.0f, static_cast<float>(_cursorTexture->getHeight()));
 	}
 }
 
@@ -133,9 +133,7 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		_cursorPos.y = (_cursorPos.y < _cursorTexture->getHeight()) ? _cursorTexture->getHeight() : _cursorPos.y;
 		_cursorPos.x = (_cursorPos.x > window()->getWidth() - _cursorTexture->getWidth()) ? window()->getWidth() - _cursorTexture->getWidth() : _cursorPos.x;
 		_cursorPos.y = (_cursorPos.y > window()->getHeight()) ? window()->getHeight() : _cursorPos.y;
-
 	}
-
 
 	// update player movement
 	_playerMovement = cc::Vec2f::zero();
@@ -155,7 +153,7 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		_playerMovement.normalize();
 	}
 
-	_fireTimer += deltaTime;
+	_fireTimer += static_cast<float>(deltaTime);
 
 	// firing
 	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && (_fireTimer > FIRE_DELAY) ) {
@@ -180,9 +178,23 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		addBullet(_player->getPosition() + offset3, vel);
 	}
 
-	if( input()->isMouseButtonDown(ciri::MouseButton::Right) ) {
-		_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
-		//_grid.applyExplosiveForce()
+	// check collision of bullets and enemies
+	for( int i = 0; i < static_cast<int>(_bullets.size()); ++i ) {
+		if( !_bullets[i].isAlive() ) {
+			continue;
+		}
+
+		for( int j = 0; j < static_cast<int>(_enemies.size()); ++j ) {
+			if( !_enemies[j].isAlive() ) {
+				continue;
+			}
+
+			if( isColliding(_bullets[i], _enemies[j]) ) {
+				_bullets[i].setIsAlive(false);
+				_enemies[j].setIsAlive(false);
+				continue;
+			}
+		}
 	}
 }
 
@@ -202,7 +214,7 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 	const cc::Vec2f screenSize = cc::Vec2f(static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 	for( auto& curr : _enemies ) {
 		if( !curr.isAlive() ) {
-			return;
+			continue;
 		}
 		curr.update(screenSize);
 	}
@@ -246,7 +258,6 @@ void SpritesDemo::onDraw() {
 		_spritebatch.draw(_cursorTexture, _cursorPos, 0.0f, _cursorOrigin, 1.0f, 1.0f);
 	}
 
-
 	_spritebatch.end();
 
 	device->present();
@@ -267,4 +278,9 @@ void SpritesDemo::addBullet( const cc::Vec2f& position, const cc::Vec2f& velocit
 		curr.setVelocity(velocity);
 		break;
 	}
+}
+
+bool SpritesDemo::isColliding( const Entity& a, const Entity& b ) const {
+	const float radius = a.getCollisionRadius() + b.getCollisionRadius();
+	return a.getPosition().sqrDistance(b.getPosition()) < (radius * radius);
 }

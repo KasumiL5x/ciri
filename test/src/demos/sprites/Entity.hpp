@@ -19,6 +19,7 @@ public:
 	std::shared_ptr<ciri::ITexture2D> getTexture() const;
 	const cc::Vec2f& getOrigin() const;
 	const cc::Vec4f& getColor() const;
+	const float& getCollisionRadius() const;
 
 	void setPosition( const cc::Vec2f& position );
 	void setVelocity( const cc::Vec2f& velocity );
@@ -26,6 +27,7 @@ public:
 	void setIsAlive( const bool alive );
 	void setTexture( const std::shared_ptr<ciri::ITexture2D>& texture );
 	void setColor( const cc::Vec4f& color );
+	void setCollisionRadius( float radius );
 
 protected:
 	cc::Vec2f _position; /**< Position on screen in pixels. */
@@ -36,6 +38,8 @@ protected:
 	std::shared_ptr<ciri::ITexture2D> _texture; /**< Texture to draw. */
 	cc::Vec2f _origin;  /**< Pivot point of the sprite's texture. */
 	cc::Vec4f _color;   /**< Color tint including transparency. */
+
+	float _collisionRadius; /**< Radius from the position used for collision detection. */
 };
 
 #endif /* __entity__ */

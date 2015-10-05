@@ -212,7 +212,7 @@ void DynamicGrid::draw( SpriteBatch& spriteBatch, float scrw, float scrh ) {
 			}
 
 			if( y > 1 ) {
-				up = toVec2(_points[(y-1) * _numColumns + x].position, screenSize);
+				up = toVec2(_points[getPixelCoord(x, (y-1))].position, screenSize);
 				const float thickness = x % 3 == 1 ? 3.0f : 1.0f;
 				const int clampedY = cc::math::minimum<int>(y+1, height-1);
 				const cc::Vec2f mid = cc::math::catmullRom(toVec2(_points[getPixelCoord(x, y-2)].position, screenSize),
