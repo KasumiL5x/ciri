@@ -50,6 +50,12 @@
     <ClCompile Include="src\demos\sprites\Enemy.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\sprites\IParticleSystem.cpp">
+      <Filter>demos\sprites\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\sprites\TestParticleSystem.cpp">
+      <Filter>demos\sprites\particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -66,6 +72,9 @@
     </Filter>
     <Filter Include="demos\sprites">
       <UniqueIdentifier>{a38785e1-2cf9-49af-a023-330851920245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\sprites\particles">
+      <UniqueIdentifier>{e092ebe2-8326-4e3a-bd81-1ab18e70d3b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +143,15 @@
     </ClInclude>
     <ClInclude Include="src\demos\sprites\MathHelper.hpp">
       <Filter>demos\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\Particle.hpp">
+      <Filter>demos\sprites\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\IParticleSystem.hpp">
+      <Filter>demos\sprites\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\TestParticleSystem.hpp">
+      <Filter>demos\sprites\particles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

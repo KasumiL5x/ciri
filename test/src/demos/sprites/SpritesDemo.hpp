@@ -10,6 +10,7 @@
 #include "Bullet.hpp"
 #include <cc/Quaternion.hpp>
 #include "Enemy.hpp"
+#include "TestParticleSystem.hpp"
 
 class SpritesDemo : public IDemo {
 public:
@@ -56,6 +57,9 @@ private:
 	std::shared_ptr<ciri::ITexture2D> _cursorTexture;
 	cc::Vec2f _cursorPos;
 	cc::Vec2f _cursorOrigin;
+
+	TestParticleSystem _psys;
+	std::shared_ptr<ciri::ITexture2D> _testPsysTexture;
 };
 
 #endif /* __spritesdemo__ */

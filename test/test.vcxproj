@@ -94,9 +94,11 @@
     <ClCompile Include="src\demos\sprites\DynamicGrid.cpp" />
     <ClCompile Include="src\demos\sprites\Enemy.cpp" />
     <ClCompile Include="src\demos\sprites\Entity.cpp" />
+    <ClCompile Include="src\demos\sprites\IParticleSystem.cpp" />
     <ClCompile Include="src\demos\sprites\PlayerShip.cpp" />
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
+    <ClCompile Include="src\demos\sprites\TestParticleSystem.cpp" />
     <ClCompile Include="src\demos\terrain\TerrainDemo.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -117,11 +119,14 @@
     <ClInclude Include="src\demos\sprites\Enemy.hpp" />
     <ClInclude Include="src\demos\sprites\Entity.hpp" />
     <ClInclude Include="src\demos\sprites\MathHelper.hpp" />
+    <ClInclude Include="src\demos\sprites\Particle.hpp" />
+    <ClInclude Include="src\demos\sprites\IParticleSystem.hpp" />
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp" />
     <ClInclude Include="src\demos\sprites\SpriteVertex.hpp" />
+    <ClInclude Include="src\demos\sprites\TestParticleSystem.hpp" />
     <ClInclude Include="src\demos\terrain\TerrainDemo.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

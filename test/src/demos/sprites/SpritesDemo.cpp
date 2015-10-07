@@ -103,6 +103,13 @@ void SpritesDemo::onLoadContent() {
 		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), ciri::TextureFormat::Color, 0, cursorPng.getPixels());
 		_cursorOrigin = cc::Vec2f(0.0f, static_cast<float>(_cursorTexture->getHeight()));
 	}
+
+	// load test particle system
+	ciri::PNG glowPng;
+	if( glowPng.loadFromFile("sprites/textures/dot.png") && (4 == glowPng.getBytesPerPixel()) ) {
+		_testPsysTexture = graphicsDevice()->createTexture2D(glowPng.getWidth(), glowPng.getHeight(), ciri::TextureFormat::Color, 0, glowPng.getPixels());
+		_psys.setTexture(_testPsysTexture);
+	}
 }
 
 void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
@@ -192,10 +199,17 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			if( isColliding(_bullets[i], _enemies[j]) ) {
 				_bullets[i].setIsAlive(false);
 				_enemies[j].setIsAlive(false);
-				continue;
+				break;
 			}
 		}
 	}
+
+	if( _player->getVelocity().sqrMagnitude() > 10.0f ) {
+		_psys.setEmitterPosition(_player->getPosition());
+		_psys.setEmitDirection(-_player->getVelocity().normalized());
+		_psys.emitParticles(1);
+	}
+	_psys.update(static_cast<float>(deltaTime));
 }
 
 void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
@@ -252,6 +266,9 @@ void SpritesDemo::onDraw() {
 		}
 		_spritebatch.draw(bullet.getTexture(), bullet.getPosition(), bullet.getOrientation(), bullet.getOrigin(), 1.0f, 1.0f);
 	}
+
+	// test particle system
+	_psys.draw(_spritebatch);
 	
 	// cursor
 	if( _cursorTexture != nullptr ) {
