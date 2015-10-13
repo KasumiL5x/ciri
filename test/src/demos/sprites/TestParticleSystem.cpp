@@ -16,6 +16,7 @@ void TestParticleSystem::emitParticles( unsigned int count ) {
 		p.initialLifetime = generateLifetime();
 		p.lifetime = p.initialLifetime;		
 		p.velocity = generateVelocity();
+		p.orientation = atan2f(p.velocity.normalized().y, p.velocity.normalized().x);
 		p.initialTint = cc::Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 		p.tint = p.initialTint;
 	}
@@ -51,10 +52,9 @@ void TestParticleSystem::draw( SpriteBatch& spritebatch ) {
 		if( !p.isAlive || nullptr == p.texture ) {
 			continue;
 		}
-		const float rotation = 0.0f;
 		const cc::Vec2f origin = cc::Vec2f(static_cast<float>(p.texture->getWidth()) * 0.5f, static_cast<float>(p.texture->getHeight()) * 0.5f);
 		const cc::Vec2f scale = cc::Vec2f(1.0f);
-		spritebatch.draw(p.texture, p.position, rotation, origin, scale, 1.0f, p.tint);
+		spritebatch.draw(p.texture, p.position, p.orientation, origin, scale, 1.0f, p.tint);
 		//spritebatch.draw(p.texture, p.position, rotation, origin, scale, 1.0f);
 	}
 }
@@ -101,7 +101,7 @@ cc::Vec2f TestParticleSystem::generateVelocity() const {
 	const bool EMIT_DIRECTION_FLUX = true;
 
 	if( EMIT_DIRECTION_FLUX ) {
-		const float MIN_ANGLE = 0.0f;
+		const float MIN_ANGLE = static_cast<float>(-cc::math::PI);
 		const float MAX_ANGLE = static_cast<float>(cc::math::PI);
 		const float angle = cc::math::randRange<float>(MIN_ANGLE, MAX_ANGLE);
 		direction.x += cosf(angle);

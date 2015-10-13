@@ -7,7 +7,7 @@
 
 struct Particle {
 	Particle()
-		: texture(nullptr), position(0.0f, 0.0f), velocity(0.0f, 0.0f), isAlive(false), lifetime(1.0f), initialLifetime(lifetime), tint(1.0f), initialTint(tint) {
+		: texture(nullptr), position(0.0f, 0.0f), velocity(0.0f, 0.0f), isAlive(false), lifetime(1.0f), initialLifetime(lifetime), tint(1.0f), initialTint(tint), orientation(0.0f) {
 	}
 	virtual ~Particle() {
 	}
@@ -20,6 +20,7 @@ struct Particle {
 	float initialLifetime;
 	cc::Vec4f tint;
 	cc::Vec4f initialTint;
+	float orientation;
 };
 
 #endif /* __particle__ */
