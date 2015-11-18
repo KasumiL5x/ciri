@@ -53,14 +53,16 @@ void SpritesDemo::onInitialize() {
 
 	// configure grid
 	const ciri::Viewport& vp = graphicsDevice()->getViewport();
-	const int maxGridPoints = 1600;
-	const cc::Vec2f gridSpacing = cc::Vec2f(sqrtf(static_cast<float>(vp.width() * vp.height() / maxGridPoints)));
-	_grid = DynamicGrid(cc::Vec4f(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height())), gridSpacing, graphicsDevice());
+	//const int maxGridPoints = 1600;
+	//const cc::Vec2f gridSpacing = cc::Vec2f(sqrtf(static_cast<float>(vp.width() * vp.height() / maxGridPoints)));
+	//_grid = DynamicGrid(cc::Vec4f(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height())), gridSpacing, graphicsDevice());
+	_grid = new BMGrid(16, 16, vp.width(), vp.height(), graphicsDevice());
+	//_grid->resetAll();
 
 	// configure player and set off initial spawn explosion
 	_player = std::make_shared<PlayerShip>();
 	_player->setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
-	_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
+	//_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
 }
 
 void SpritesDemo::onLoadContent() {
@@ -160,10 +162,24 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		_playerMovement.normalize();
 	}
 
+	const cc::Vec2f& currPlayerPos = _player->getPosition();
+	cc::Vec2f newPlayerPos = currPlayerPos;
+	if( currPlayerPos.x < 0.0f ) {
+		newPlayerPos.x = window()->getWidth();
+	} else if( currPlayerPos.x > window()->getWidth() ) {
+		newPlayerPos.x = 0.0f;
+	}
+	if( currPlayerPos.y < 0.0f ) {
+		newPlayerPos.y = window()->getHeight();
+	} else if( currPlayerPos.y > window()->getHeight() ) {
+		newPlayerPos.y = 0.0f;
+	}
+	_player->setPosition(newPlayerPos);
+
 	_fireTimer += static_cast<float>(deltaTime);
 
 	// firing
-	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && (_fireTimer > FIRE_DELAY) ) {
+	if( (true||input()->isMouseButtonDown(ciri::MouseButton::Left)) && (_fireTimer > FIRE_DELAY) ) {
 		_fireTimer = 0.0f;
 
 		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
@@ -183,6 +199,11 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 		const cc::Vec2f offset3 = MathHelper::transformVec2Quat(cc::Vec2f(60.0f, 0.0f), aimQuat);
 		addBullet(_player->getPosition() + offset3, vel);
+	}
+
+	if( input()->isMouseButtonDown(ciri::MouseButton::Right) && input()->wasMouseButtonUp(ciri::MouseButton::Right) ) {
+		////_grid->shockwave(input()->mouseX(), window()->getHeight() - input()->mouseY());
+		////_grid->push(input()->mouseX(), window()->getHeight() - input()->mouseY(), 4, 1);
 	}
 
 	// check collision of bullets and enemies
@@ -209,7 +230,6 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		_psys.setEmitDirection(-_player->getVelocity().normalized());
 		_psys.emitParticles(1);
 	}
-	_psys.update(static_cast<float>(deltaTime));
 }
 
 void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
@@ -222,7 +242,8 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 			continue;
 		}
 		curr.update(bounds);
-		_grid.applyExplosiveForce(0.5f * curr.getVelocity().magnitude(), curr.getPosition(), 80.0f);
+		//_grid->pull(curr.getPosition().x, curr.getPosition().y, 2, 4);
+		//_grid.applyExplosiveForce(0.5f * curr.getVelocity().magnitude(), curr.getPosition(), 80.0f);
 	}
 
 	const cc::Vec2f screenSize = cc::Vec2f(static_cast<float>(vp.width()), static_cast<float>(vp.height()));
@@ -233,7 +254,10 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 		curr.update(screenSize);
 	}
 
-	_grid.update();
+	_psys.update(static_cast<float>(deltaTime));
+
+	//_grid->updateGrid();
+	//_grid.update();
 }
 
 void SpritesDemo::onDraw() {
@@ -246,7 +270,8 @@ void SpritesDemo::onDraw() {
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
 
 	// grid
-	_grid.draw(_spritebatch, static_cast<float>(vp.width()), static_cast<float>(vp.height()));
+	//_grid->draw(_spritebatch);
+	//_grid.draw(_spritebatch, static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 
 	// enemies
 	for( auto& curr : _enemies ) {
@@ -282,6 +307,10 @@ void SpritesDemo::onDraw() {
 
 void SpritesDemo::onUnloadContent() {
 	_spritebatch.clean();
+	if( _grid != nullptr ) {
+		delete _grid;
+		_grid = nullptr;
+	}
 }
 
 void SpritesDemo::addBullet( const cc::Vec2f& position, const cc::Vec2f& velocity ) {

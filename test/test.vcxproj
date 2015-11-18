@@ -95,6 +95,7 @@
     <ClCompile Include="src\demos\sprites\Enemy.cpp" />
     <ClCompile Include="src\demos\sprites\Entity.cpp" />
     <ClCompile Include="src\demos\sprites\IParticleSystem.cpp" />
+    <ClCompile Include="src\demos\sprites\BMGrid.cpp" />
     <ClCompile Include="src\demos\sprites\PlayerShip.cpp" />
     <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="src\demos\sprites\Enemy.hpp" />
     <ClInclude Include="src\demos\sprites\Entity.hpp" />
     <ClInclude Include="src\demos\sprites\MathHelper.hpp" />
+    <ClInclude Include="src\demos\sprites\BMGrid.hpp" />
     <ClInclude Include="src\demos\sprites\Particle.hpp" />
     <ClInclude Include="src\demos\sprites\IParticleSystem.hpp" />
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp" />

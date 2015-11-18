@@ -5,12 +5,14 @@
 #include <memory>
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
-#include "DynamicGrid.hpp"
+//#include "DynamicGrid.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
 #include <cc/Quaternion.hpp>
 #include "Enemy.hpp"
 #include "TestParticleSystem.hpp"
+
+#include "BMGrid.hpp"
 
 class SpritesDemo : public IDemo {
 public:
@@ -40,7 +42,8 @@ private:
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
 	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 
-	DynamicGrid _grid;
+	//DynamicGrid _grid;
+	BMGrid* _grid;
 
 	std::shared_ptr<ciri::ITexture2D> _playerTexture;
 	std::shared_ptr<PlayerShip> _player;

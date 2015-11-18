@@ -56,6 +56,9 @@
     <ClCompile Include="src\demos\sprites\TestParticleSystem.cpp">
       <Filter>demos\sprites\particles</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\sprites\BMGrid.cpp">
+      <Filter>demos\sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\sprites\TestParticleSystem.hpp">
       <Filter>demos\sprites\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\sprites\BMGrid.hpp">
+      <Filter>demos\sprites</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
