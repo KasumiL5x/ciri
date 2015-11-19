@@ -5,7 +5,6 @@
 #include <memory>
 #include "../IDemo.hpp"
 #include "SpriteBatch.hpp"
-//#include "DynamicGrid.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
 #include <cc/Quaternion.hpp>
@@ -42,7 +41,6 @@ private:
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
 	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 
-	//DynamicGrid _grid;
 	BMGrid* _grid;
 
 	std::shared_ptr<ciri::ITexture2D> _playerTexture;

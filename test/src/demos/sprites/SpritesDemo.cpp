@@ -53,9 +53,6 @@ void SpritesDemo::onInitialize() {
 
 	// configure grid
 	const ciri::Viewport& vp = graphicsDevice()->getViewport();
-	//const int maxGridPoints = 1600;
-	//const cc::Vec2f gridSpacing = cc::Vec2f(sqrtf(static_cast<float>(vp.width() * vp.height() / maxGridPoints)));
-	//_grid = DynamicGrid(cc::Vec4f(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height())), gridSpacing, graphicsDevice());
 	_grid = new BMGrid(16, 16, vp.width(), vp.height(), graphicsDevice());
 	_grid->resetAll();
 
@@ -63,7 +60,6 @@ void SpritesDemo::onInitialize() {
 	_player = std::make_shared<PlayerShip>();
 	_player->setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
 	_grid->push(_player->getPosition().x, _player->getPosition().y, 10, 1);
-	//_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
 }
 
 void SpritesDemo::onLoadContent() {
@@ -202,11 +198,6 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 		addBullet(_player->getPosition() + offset3, vel);
 	}
 
-	if( input()->isMouseButtonDown(ciri::MouseButton::Right) && input()->wasMouseButtonUp(ciri::MouseButton::Right) ) {
-		////_grid->shockwave(input()->mouseX(), window()->getHeight() - input()->mouseY());
-		////_grid->push(input()->mouseX(), window()->getHeight() - input()->mouseY(), 4, 1);
-	}
-
 	// check collision of bullets and enemies
 	for( int i = 0; i < static_cast<int>(_bullets.size()); ++i ) {
 		if( !_bullets[i].isAlive() ) {
@@ -225,12 +216,6 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 			}
 		}
 	}
-
-	if( _player->getVelocity().sqrMagnitude() > 10.0f ) {
-		_psys.setEmitterPosition(_player->getPosition());
-		_psys.setEmitDirection(-_player->getVelocity().normalized());
-		_psys.emitParticles(1);
-	}
 }
 
 void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
@@ -244,7 +229,6 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 		}
 		curr.update(bounds);
 		_grid->pull(curr.getPosition().x, curr.getPosition().y, 2, 4);
-		//_grid.applyExplosiveForce(0.5f * curr.getVelocity().magnitude(), curr.getPosition(), 80.0f);
 	}
 
 	const cc::Vec2f screenSize = cc::Vec2f(static_cast<float>(vp.width()), static_cast<float>(vp.height()));
@@ -255,10 +239,14 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 		curr.update(screenSize);
 	}
 
+	if( _player->getVelocity().sqrMagnitude() > 10.0f ) {
+		_psys.setEmitterPosition(_player->getPosition());
+		_psys.setEmitDirection(-_player->getVelocity().normalized());
+		_psys.emitParticles(1);
+	}
 	_psys.update(static_cast<float>(deltaTime));
 
 	_grid->updateGrid();
-	//_grid.update();
 }
 
 void SpritesDemo::onDraw() {
@@ -272,7 +260,6 @@ void SpritesDemo::onDraw() {
 
 	// grid
 	_grid->draw(_spritebatch);
-	//_grid.draw(_spritebatch, static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 
 	// enemies
 	for( auto& curr : _enemies ) {
