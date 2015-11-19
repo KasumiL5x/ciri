@@ -171,9 +171,9 @@ void BMGrid::pull( const int x1, const int y1, const int size, const int amount 
 	for( int xx = -size; xx < size;  ++xx ) {
 		for( int yy = -size; yy < size; ++yy ) {
 			if( (a+xx) > 0 ) {
-				if( (a+xx) <= _numPointsW ) {
+				if( (a+xx) < _numPointsW ) {
 					if( (b+yy) > 0 ) {
-						if( (b+yy) <= _numPointsH ) {
+						if( (b+yy) < _numPointsH ) {
 							if( (xx*xx + yy*yy) < (size*size) ) {
 								const float diff_x = _grid[getIndex(a+xx, b+yy)].x - static_cast<float>(x1);
 								const float diff_y = _grid[getIndex(a+xx, b+yy)].y - static_cast<float>(y1);
@@ -198,9 +198,9 @@ void BMGrid::push( const int x1, const int y1, const int size, const int amount 
 	for( int xx = -size; xx < size; ++xx ) {
 		for( int yy = -size; yy < size; ++yy ) {
 			if( (a+xx) > 0 ) {
-				if( (a+xx) <= _numPointsW ) {
+				if( (a+xx) < _numPointsW ) {
 					if( (b+yy) > 0 ) {
-						if( (b+yy) <= _numPointsH ) {
+						if( (b+yy) < _numPointsH ) {
 							const float diff_x = _grid[getIndex(a+xx, b+yy)].ox - static_cast<float>(x1);
 							const float diff_y = _grid[getIndex(a+xx, b+yy)].oy - static_cast<float>(y1);
 							const float diff_xo = _grid[getIndex(a+xx, b+yy)].ox - _grid[getIndex(a+xx, b+yy)].x;
@@ -227,9 +227,9 @@ void BMGrid::shockwave( const int x1, const int y1 ) {
 		for( int yy = -3; yy < 3; ++yy ) {
 			if( (xx*xx + yy*yy) < 10 ) {
 				if( (a+xx) > 0 ) {
-					if( (a+xx) <= _numPointsW ) {
+					if( (a+xx) < _numPointsW ) {
 						if( (b+yy) > 0 ) {
-							if( (b+yy) <= _numPointsH ) {
+							if( (b+yy) < _numPointsH ) {
 								_grid[getIndex(a+xx, b+yy)].disrupt(4.0f * (_grid[getIndex(a+xx, b+yy)].x - x1), 4.0f * (_grid[getIndex(a+xx, b+yy)].y - y1));
 							}
 						}
@@ -248,5 +248,21 @@ void BMGrid::drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const c
 }
 
 int BMGrid::getIndex( const int x, const int y ) const {
+
+	if( x < 0 ) {
+		printf("x is less than zero (%d)\n", x);
+		throw;
+	}
+
+	if( y < 0 ) {
+		printf("y is less than zero (%d)\n", y);
+		throw;
+	}
+
+	if( ((y * _numPointsW) + x) >= (_numPointsW * _numPointsH) ) {
+		printf("pixel sum is greater than the number of points (x: %d; y: %d: sum: %d; max: %d)\n", x, y, (y * _numPointsW) + x, _numPointsW*_numPointsH);
+		throw;
+	}
+
 	return (y * _numPointsW) + x;
 }

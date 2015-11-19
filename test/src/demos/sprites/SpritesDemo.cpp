@@ -57,11 +57,12 @@ void SpritesDemo::onInitialize() {
 	//const cc::Vec2f gridSpacing = cc::Vec2f(sqrtf(static_cast<float>(vp.width() * vp.height() / maxGridPoints)));
 	//_grid = DynamicGrid(cc::Vec4f(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height())), gridSpacing, graphicsDevice());
 	_grid = new BMGrid(16, 16, vp.width(), vp.height(), graphicsDevice());
-	//_grid->resetAll();
+	_grid->resetAll();
 
 	// configure player and set off initial spawn explosion
 	_player = std::make_shared<PlayerShip>();
 	_player->setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
+	_grid->push(_player->getPosition().x, _player->getPosition().y, 10, 1);
 	//_grid.applyDirectedForce(cc::Vec3f(0.0f, 0.0f, 5000.0f), cc::Vec3f(_player->getPosition().x, _player->getPosition().y, 0.0f), 50.0f);
 }
 
@@ -179,7 +180,7 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	_fireTimer += static_cast<float>(deltaTime);
 
 	// firing
-	if( (true||input()->isMouseButtonDown(ciri::MouseButton::Left)) && (_fireTimer > FIRE_DELAY) ) {
+	if( (false||input()->isMouseButtonDown(ciri::MouseButton::Left)) && (_fireTimer > FIRE_DELAY) ) {
 		_fireTimer = 0.0f;
 
 		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
@@ -242,7 +243,7 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 			continue;
 		}
 		curr.update(bounds);
-		//_grid->pull(curr.getPosition().x, curr.getPosition().y, 2, 4);
+		_grid->pull(curr.getPosition().x, curr.getPosition().y, 2, 4);
 		//_grid.applyExplosiveForce(0.5f * curr.getVelocity().magnitude(), curr.getPosition(), 80.0f);
 	}
 
@@ -256,7 +257,7 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 
 	_psys.update(static_cast<float>(deltaTime));
 
-	//_grid->updateGrid();
+	_grid->updateGrid();
 	//_grid.update();
 }
 
@@ -270,7 +271,7 @@ void SpritesDemo::onDraw() {
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
 
 	// grid
-	//_grid->draw(_spritebatch);
+	_grid->draw(_spritebatch);
 	//_grid.draw(_spritebatch, static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 
 	// enemies
