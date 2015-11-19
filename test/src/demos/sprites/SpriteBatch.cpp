@@ -20,10 +20,14 @@ struct SpriteSortBackToFront {
 };
 
 SpriteBatch::SpriteBatch()
-	: _beginCalled(false), _sortMode(SpriteSortMode::Deferred) {
+	: _beginCalled(false), _sortMode(SpriteSortMode::Deferred), _vertexArray(nullptr), _vertexArraySize(0) {
 }
 
 SpriteBatch::~SpriteBatch() {
+	if( _vertexArray != nullptr ) {
+		delete[] _vertexArray;
+		_vertexArray = nullptr;
+	}
 }
 
 bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device ) {
@@ -271,7 +275,7 @@ bool SpriteBatch::configure() {
 	}
 
 	// update vertex buffer
-	if( ciri::failed(_spritesBuffer->set(_vertexArray.data(), sizeof(SpriteVertex), _vertexArray.size(), true)) ) {
+	if( ciri::failed(_spritesBuffer->set(_vertexArray, sizeof(SpriteVertex), _vertexArraySize, true)) ) {
 		return false;
 	}
 
@@ -298,8 +302,12 @@ std::shared_ptr<SpriteBatchItem> SpriteBatch::createBatchItem() {
 
 void SpriteBatch::ensureArrayCapacity( int size ) {
 	const int requiredSize = size * 6;
-	if( static_cast<int>(_vertexArray.size()) < requiredSize ) {
-		_vertexArray.resize(requiredSize);
+	if( _vertexArraySize < requiredSize ) {
+		SpriteVertex* newArray = new SpriteVertex[requiredSize];
+		memcpy(newArray, _vertexArray, sizeof(SpriteVertex) * _vertexArraySize);
+		delete[] _vertexArray;
+		_vertexArray = newArray;
+		_vertexArraySize = requiredSize;
 	}
 }
 

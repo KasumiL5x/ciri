@@ -104,7 +104,9 @@ private:
 	std::vector<std::shared_ptr<SpriteBatchItem>> _batchItemList;
 	std::queue<std::shared_ptr<SpriteBatchItem>> _freeBatchItemQueue;
 
-	std::vector<SpriteVertex> _vertexArray;
+	//std::vector<SpriteVertex> _vertexArray;
+	SpriteVertex* _vertexArray;
+	int _vertexArraySize;
 
 	SpriteSortMode _sortMode;
 };
