@@ -22,14 +22,14 @@ public:
 	void* operator new( size_t i );
 	void operator delete( void* p );
 
-	virtual DemoConfig getConfig();
-	virtual void onInitialize();
-	virtual void onLoadContent();
-	virtual void onEvent( ciri::WindowEvent evt );
-	virtual void onUpdate( double deltaTime, double elapsedTime );
+	virtual DemoConfig getConfig() override;
+	virtual void onInitialize() override;
+	virtual void onLoadContent() override;
+	virtual void onEvent( ciri::WindowEvent evt ) override;
+	virtual void onUpdate( double deltaTime, double elapsedTime ) override;
 	virtual void onFixedUpdate( double deltaTime, double elapsedTime ) override;
-	virtual void onDraw();
-	virtual void onUnloadContent();
+	virtual void onDraw() override;
+	virtual void onUnloadContent() override;
 
 private:
 	ciri::MayaCamera _camera;
