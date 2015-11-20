@@ -59,6 +59,9 @@
     <ClCompile Include="src\demos\sprites\BMGrid.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\deferred\DeferredDemo.cpp">
+      <Filter>demos\deferred</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -78,6 +81,9 @@
     </Filter>
     <Filter Include="demos\sprites\particles">
       <UniqueIdentifier>{e092ebe2-8326-4e3a-bd81-1ab18e70d3b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\deferred">
+      <UniqueIdentifier>{9af89ecd-c1b6-4a06-9dc0-4bf36dee413b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\sprites\BMGrid.hpp">
       <Filter>demos\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\deferred\DeferredDemo.hpp">
+      <Filter>demos\deferred</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

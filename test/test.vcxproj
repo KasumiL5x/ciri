@@ -88,6 +88,7 @@
     <ClCompile Include="src\common\Model.cpp" />
     <ClCompile Include="src\common\ShaderPresets.cpp" />
     <ClCompile Include="src\common\Transform.cpp" />
+    <ClCompile Include="src\demos\deferred\DeferredDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="src\demos\sprites\Bullet.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="src\common\ShaderPresets.hpp" />
     <ClInclude Include="src\common\Transform.hpp" />
     <ClInclude Include="src\common\Vertex.hpp" />
+    <ClInclude Include="src\demos\deferred\DeferredDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\IDemo.hpp" />

@@ -7,11 +7,13 @@
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
 #include "demos/terrain/TerrainDemo.hpp"
 #include "demos/sprites/SpritesDemo.hpp"
+#include "demos/deferred/DeferredDemo.hpp"
 
 enum class Demo {
 	Dynvb,
 	Terrain,
-	Sprites
+	Sprites,
+	Deferred
 };
 
 std::unique_ptr<IDemo> createDemo( Demo type ) {
@@ -26,6 +28,10 @@ std::unique_ptr<IDemo> createDemo( Demo type ) {
 
 		case Demo::Sprites: {
 			return std::unique_ptr<IDemo>(new SpritesDemo());
+		}
+
+		case Demo::Deferred: {
+			return std::unique_ptr<IDemo>(new DeferredDemo());
 		}
 
 		default: {
