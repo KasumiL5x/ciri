@@ -2,6 +2,7 @@
 #define __deferreddemo__
 
 #include "../IDemo.hpp"
+#include <ciri/gfx/MayaCamera.hpp>
 
 class DeferredDemo : public IDemo {
 public:
@@ -18,6 +19,8 @@ public:
 	virtual void onFixedUpdate( double deltaTime, double elapsedTime ) override;
 	virtual void onDraw() override;
 	virtual void onUnloadContent() override;
+
+	ciri::MayaCamera _camera;
 };
 
 #endif /* __deferreddemo__ */

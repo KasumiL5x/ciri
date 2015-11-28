@@ -1,14 +1,14 @@
 #ifndef __reflections_demo__
 #define __reflections_demo__
 
-#include "../IDemo.hpp"
+#include "../../framework/Game.hpp"
 #include <ciri/gfx/FPSCamera.hpp>
 #include "../../common/Axis.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"
 #include "../../common/HeightmapTerrain.hpp"
 
-class TerrainDemo : public IDemo {
+class TerrainDemo : public Game {
 private:
 	_declspec(align(16))
 	struct WaterConstants {
@@ -36,12 +36,11 @@ public:
 		_mm_free(p);
 	}
 
-	virtual DemoConfig getConfig() override;
 	virtual void onInitialize() override;
 	virtual void onLoadContent() override;
-	virtual void onEvent( ciri::WindowEvent evt ) override;
-	virtual void onUpdate( double deltaTime, double elapsedTime ) override;
-	virtual void onFixedUpdate( double deltaTime, double elapsedTime ) override;
+	virtual void onEvent( const ciri::WindowEvent& evt ) override;
+	virtual void onUpdate( const double deltaTime, const double elapsedTime ) override;
+	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onDraw() override;
 	virtual void onUnloadContent() override;
 

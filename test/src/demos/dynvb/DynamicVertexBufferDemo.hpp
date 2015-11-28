@@ -2,7 +2,7 @@
 #define __dynamicvertexbufferdemo__
 
 #include <string>
-#include "../IDemo.hpp"
+#include "../../framework/Game.hpp"
 #include <ciri/gfx/MayaCamera.hpp>
 #include "../../common/Grid.hpp"
 #include "../../common/Axis.hpp"
@@ -10,7 +10,7 @@
 #include "../../common/ShaderPresets.hpp"
 #include "OpenCloth.hpp"
 
-class DynamicVertexBufferDemo : public IDemo {
+class DynamicVertexBufferDemo : public Game {
 private:
 	struct FlagVertex {
 		cc::Vec3f position;
@@ -22,12 +22,11 @@ public:
 	void* operator new( size_t i );
 	void operator delete( void* p );
 
-	virtual DemoConfig getConfig() override;
 	virtual void onInitialize() override;
 	virtual void onLoadContent() override;
-	virtual void onEvent( ciri::WindowEvent evt ) override;
-	virtual void onUpdate( double deltaTime, double elapsedTime ) override;
-	virtual void onFixedUpdate( double deltaTime, double elapsedTime ) override;
+	virtual void onEvent( const ciri::WindowEvent& evt ) override;
+	virtual void onUpdate( const double deltaTime, const double elapsedTime ) override;
+	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onDraw() override;
 	virtual void onUnloadContent() override;
 

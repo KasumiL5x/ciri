@@ -9,22 +9,19 @@
 #include <cc/MatrixFunc.hpp>
 
 TerrainDemo::TerrainDemo()
-	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
+	: Game(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
 		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _waterReflectionTarget(nullptr), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr), _elapsedTime(0.0f) {
+	_config.width = 1280;
+	_config.height = 720;
+	_config.title = "ciri : Terrain Demo";
 }
 
 TerrainDemo::~TerrainDemo() {
 }
 
-DemoConfig TerrainDemo::getConfig() {
-	DemoConfig cfg;
-	cfg.windowTitle = "ciri : Terrain Demo";
-	cfg.windowWidth = 1280;
-	cfg.windowHeight = 720;
-	return cfg;
-}
-
 void TerrainDemo::onInitialize() {
+	Game::onInitialize();
+
 	// print info
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
 	printf("API: %s\n", graphicsDevice()->getApiInfo());
@@ -39,6 +36,8 @@ void TerrainDemo::onInitialize() {
 }
 
 void TerrainDemo::onLoadContent() {
+	Game::onLoadContent();
+
 	//// create depth stencil state
 	ciri::DepthStencilDesc depthDesc;
 	_depthStencilState = graphicsDevice()->createDepthStencilState(depthDesc);
@@ -181,7 +180,9 @@ void TerrainDemo::onLoadContent() {
 	_skyboxDepthState = graphicsDevice()->createDepthStencilState(skyboxDepthDesc);
 }
 
-void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
+void TerrainDemo::onEvent( const ciri::WindowEvent& evt ) {
+	Game::onEvent(evt);
+
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
 			graphicsDevice()->resize();
@@ -190,7 +191,9 @@ void TerrainDemo::onEvent( ciri::WindowEvent evt ) {
 	}
 }
 
-void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
+void TerrainDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
+	Game::onUpdate(deltaTime, elapsedTime);
+
 	_elapsedTime = static_cast<float>(elapsedTime);
 
 	if( window()->hasFocus() ) {
@@ -268,11 +271,13 @@ void TerrainDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	//_plane->updateBuffers(true, false);
 }
 
-void TerrainDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
-
+void TerrainDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
+	Game::onFixedUpdate(deltaTime, elapsedTime);
 }
 
 void TerrainDemo::onDraw() {
+	Game::onDraw();
+
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	// frame defaults
@@ -395,6 +400,8 @@ void TerrainDemo::onDraw() {
 }
 
 void TerrainDemo::onUnloadContent() {
+	Game::onUnloadContent();
+
 	_terrain.clean();
 
 	if( _skybox != nullptr ) {

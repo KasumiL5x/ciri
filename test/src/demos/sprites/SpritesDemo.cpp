@@ -6,7 +6,10 @@
 #include "MathHelper.hpp"
 
 SpritesDemo::SpritesDemo()
-	: IDemo() {
+	: Game() {
+	_config.width = 1280;
+	_config.height = 720;
+	_config.title = "ciri : Sprites Demo";
 }
 
 SpritesDemo::~SpritesDemo() {
@@ -20,15 +23,9 @@ void SpritesDemo::operator delete( void* p ) {
 	_mm_free(p);
 }
 
-DemoConfig SpritesDemo::getConfig() {
-	DemoConfig cfg;
-	cfg.windowHeight = 720;
-	cfg.windowWidth = 1280;
-	cfg.windowTitle = "ciri : Sprites Demo";
-	return cfg;
-}
-
 void SpritesDemo::onInitialize() {
+	Game::onInitialize();
+
 	srand(static_cast<unsigned int>(time(0)));
 	rand();
 
@@ -63,6 +60,8 @@ void SpritesDemo::onInitialize() {
 }
 
 void SpritesDemo::onLoadContent() {
+	Game::onLoadContent();
+
 	// load and set player texture
 	ciri::PNG playerPng;
 	if( playerPng.loadFromFile("sprites/textures/Player.png") && (4 == playerPng.getBytesPerPixel()) ) {
@@ -111,7 +110,7 @@ void SpritesDemo::onLoadContent() {
 	}
 }
 
-void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
+void SpritesDemo::onEvent( const ciri::WindowEvent& evt ) {
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
 			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
@@ -122,7 +121,9 @@ void SpritesDemo::onEvent( ciri::WindowEvent evt ) {
 	}
 }
 
-void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
+void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
+	Game::onUpdate(deltaTime, elapsedTime);
+
 	if( !window()->hasFocus() ) {
 		return;
 	}
@@ -218,7 +219,9 @@ void SpritesDemo::onUpdate( double deltaTime, double elapsedTime ) {
 	}
 }
 
-void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
+void SpritesDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
+	Game::onFixedUpdate(deltaTime, elapsedTime);
+
 	_player->update(_playerMovement);
 
 	const ciri::Viewport& vp = graphicsDevice()->getViewport();
@@ -250,6 +253,8 @@ void SpritesDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
 }
 
 void SpritesDemo::onDraw() {
+	Game::onDraw();
+
 	const std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 	const ciri::Viewport& vp = device->getViewport();
 
@@ -294,6 +299,8 @@ void SpritesDemo::onDraw() {
 }
 
 void SpritesDemo::onUnloadContent() {
+	Game::onUnloadContent();
+
 	_spritebatch.clean();
 	if( _grid != nullptr ) {
 		delete _grid;

@@ -62,6 +62,9 @@
     <ClCompile Include="src\demos\deferred\DeferredDemo.cpp">
       <Filter>demos\deferred</Filter>
     </ClCompile>
+    <ClCompile Include="src\framework\Game.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -84,6 +87,9 @@
     </Filter>
     <Filter Include="demos\deferred">
       <UniqueIdentifier>{9af89ecd-c1b6-4a06-9dc0-4bf36dee413b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="framework">
+      <UniqueIdentifier>{55e961ed-0bef-4f64-acf7-d333255a2984}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\deferred\DeferredDemo.hpp">
       <Filter>demos\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="src\framework\Game.hpp">
+      <Filter>framework</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,8 +3,11 @@
 #include <cc/MatrixFunc.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
-	: IDemo(), _depthStencilState(nullptr), _rasterizerState(nullptr),
+	: Game(), _depthStencilState(nullptr), _rasterizerState(nullptr),
 		_clothRunning(true) {
+	_config.width = 1280;
+	_config.height = 720;
+	_config.title = "ciri : Dynamic Vertex Buffer Demo";
 }
 
 DynamicVertexBufferDemo::~DynamicVertexBufferDemo() {
@@ -18,15 +21,9 @@ void DynamicVertexBufferDemo::operator delete( void* p ) {
 	_mm_free(p);
 }
 
-DemoConfig DynamicVertexBufferDemo::getConfig() {
-	DemoConfig cfg;
-	cfg.windowTitle = "ciri : Dynamic Vertex Buffer Demo";
-	cfg.windowWidth = 1280;
-	cfg.windowHeight = 720;
-	return cfg;
-}
-
 void DynamicVertexBufferDemo::onInitialize() {
+	Game::onInitialize();
+
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
 	printf("API: %s\n", graphicsDevice()->getApiInfo());
@@ -44,6 +41,8 @@ void DynamicVertexBufferDemo::onInitialize() {
 }
 
 void DynamicVertexBufferDemo::onLoadContent() {
+	Game::onLoadContent();
+
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	ciri::DepthStencilDesc depthDesc;
@@ -89,7 +88,9 @@ void DynamicVertexBufferDemo::onLoadContent() {
 	_cloth.build(device);
 }
 
-void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
+void DynamicVertexBufferDemo::onEvent( const ciri::WindowEvent& evt ) {
+	Game::onEvent(evt);
+
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
 			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
@@ -100,7 +101,9 @@ void DynamicVertexBufferDemo::onEvent( ciri::WindowEvent evt ) {
 	}
 }
 
-void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
+void DynamicVertexBufferDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
+	Game::onUpdate(deltaTime, elapsedTime);
+
 	// check for close w/ escape
 	if( input()->isKeyDown(ciri::Key::Escape) ) {
 		this->gtfo();
@@ -147,7 +150,9 @@ void DynamicVertexBufferDemo::onUpdate( double deltaTime, double elapsedTime ) {
 
 }
 
-void DynamicVertexBufferDemo::onFixedUpdate( double deltaTime, double elapsedTime ) {
+void DynamicVertexBufferDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
+	Game::onFixedUpdate(deltaTime, elapsedTime);
+
 	_camera.update(static_cast<float>(deltaTime));
 
 	// update cloth
@@ -157,6 +162,8 @@ void DynamicVertexBufferDemo::onFixedUpdate( double deltaTime, double elapsedTim
 }
 
 void DynamicVertexBufferDemo::onDraw() {
+	Game::onDraw();
+
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
@@ -225,6 +232,8 @@ void DynamicVertexBufferDemo::onDraw() {
 }
 
 void DynamicVertexBufferDemo::onUnloadContent() {
+	Game::onUnloadContent();
+
 	_cloth.clean();
 	_grid.clean();
 }
