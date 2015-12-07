@@ -57,6 +57,9 @@ void SpritesDemo::onInitialize() {
 	_player = std::make_shared<PlayerShip>();
 	_player->setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
 	_grid->push(_player->getPosition().x, _player->getPosition().y, 10, 1);
+
+	_enemySpawnDelay = 1.0f;
+	_enemySpawnTimer = _enemySpawnDelay;
 }
 
 void SpritesDemo::onLoadContent() {
@@ -86,14 +89,9 @@ void SpritesDemo::onLoadContent() {
 	}
 
 	// load some enemies
-	for( int i = 0; i < static_cast<int>(_enemies.size()); ++i ) {
-		const float x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth()));
-		const float y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight()));
-		_enemies[i] = Enemy::createSeeker(cc::Vec2f(x, y));
-		_enemies[i].setTexture(_enemySeekerTexture);
-		_enemies[i].setIsAlive(true);
-		_enemies[i].setTarget(_player);
-	}
+	//for( int i = 0; i < static_cast<int>(_enemies.size()); ++i ) {
+	//	spawnEnemy();
+	//}
 
 	// custom cursor texture
 	ciri::PNG cursorPng;
@@ -127,10 +125,21 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	if( !window()->hasFocus() ) {
 		return;
 	}
+
+	// update timers
+	_enemySpawnTimer -= static_cast<float>(deltaTime);
+
 	// check for close w/ escape
 	if( input()->isKeyDown(ciri::Key::Escape) ) {
 		this->gtfo();
 		return;
+	}
+
+	// spawn new enemies
+	if( _enemySpawnTimer < 0.0f ) {
+		if( spawnEnemy() ) {
+			_enemySpawnTimer = _enemySpawnDelay;
+		}
 	}
 
 	// move custom cursor
@@ -324,4 +333,20 @@ void SpritesDemo::addBullet( const cc::Vec2f& position, const cc::Vec2f& velocit
 bool SpritesDemo::isColliding( const Entity& a, const Entity& b ) const {
 	const float radius = a.getCollisionRadius() + b.getCollisionRadius();
 	return a.getPosition().sqrDistance(b.getPosition()) < (radius * radius);
+}
+
+bool SpritesDemo::spawnEnemy() {
+	for( auto& curr : _enemies ) {
+		if( curr.isAlive() ) {
+			continue;
+		}
+		const float x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth()));
+		const float y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight()));
+		curr = Enemy::createSeeker(cc::Vec2f(x, y));
+		curr.setTexture(_enemySeekerTexture);
+		curr.setIsAlive(true);
+		curr.setTarget(_player);
+		return true;
+	}
+	return false;
 }

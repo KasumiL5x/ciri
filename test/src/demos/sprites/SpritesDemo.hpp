@@ -31,6 +31,7 @@ public:
 private:
 	void addBullet( const cc::Vec2f& position, const cc::Vec2f& velocity );
 	bool isColliding( const Entity& a, const Entity& b ) const;
+	bool spawnEnemy();
 
 private:
 	SpriteBatch _spritebatch;
@@ -53,6 +54,8 @@ private:
 
 	std::shared_ptr<ciri::ITexture2D> _enemySeekerTexture;
 	std::array<Enemy, 10> _enemies;
+	float _enemySpawnDelay;
+	float _enemySpawnTimer;
 
 	std::shared_ptr<ciri::ITexture2D> _cursorTexture;
 	cc::Vec2f _cursorPos;
