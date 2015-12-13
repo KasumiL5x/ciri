@@ -72,3 +72,18 @@ bool Axis::updateConstants( const cc::Mat4f& xform ) {
 	_constants.xform = xform;
 	return ciri::success(_constantsBuffer->setData(sizeof(AxisConstants), &_constants));
 }
+
+void Axis::clean() {
+	if( _vertexBuffer != nullptr ) {
+		_vertexBuffer->destroy();
+		_vertexBuffer = nullptr;
+	}
+	if( _shader != nullptr ) {
+		_shader->destroy();
+		_shader = nullptr;
+	}
+	if( _constantsBuffer != nullptr ) {
+		_constantsBuffer->destroy();
+		_constantsBuffer = nullptr;
+	}
+}

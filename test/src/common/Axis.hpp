@@ -34,10 +34,12 @@ public:
 	bool create( float length, std::shared_ptr<ciri::IGraphicsDevice> device );
 	bool updateConstants( const cc::Mat4f& xform );
 
+	void clean();
+
 private:
 	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
 	std::shared_ptr<ciri::IShader> _shader;
-	std::shared_ptr<ciri::IConstantBuffer> _constantsBuffer;;
+	std::shared_ptr<ciri::IConstantBuffer> _constantsBuffer;
 	AxisConstants _constants;
 };
 

@@ -59,11 +59,11 @@
     <ClCompile Include="src\demos\sprites\BMGrid.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\deferred\DeferredDemo.cpp">
-      <Filter>demos\deferred</Filter>
-    </ClCompile>
     <ClCompile Include="src\framework\Game.cpp">
       <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\refract\RefractDemo.cpp">
+      <Filter>demos\refract</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +91,9 @@
     <Filter Include="framework">
       <UniqueIdentifier>{55e961ed-0bef-4f64-acf7-d333255a2984}</UniqueIdentifier>
     </Filter>
+    <Filter Include="demos\refract">
+      <UniqueIdentifier>{2de98518-acd6-4f7c-ac5f-57dd3d102d97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common\Axis.hpp">
@@ -116,9 +119,6 @@
     </ClInclude>
     <ClInclude Include="src\common\ModelGen.hpp">
       <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\demos\IDemo.hpp">
-      <Filter>demos</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp">
       <Filter>demos\dynvb</Filter>
@@ -171,11 +171,11 @@
     <ClInclude Include="src\demos\sprites\BMGrid.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\demos\deferred\DeferredDemo.hpp">
-      <Filter>demos\deferred</Filter>
-    </ClInclude>
     <ClInclude Include="src\framework\Game.hpp">
       <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\refract\RefractDemo.hpp">
+      <Filter>demos\refract</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

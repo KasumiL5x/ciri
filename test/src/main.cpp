@@ -7,12 +7,14 @@
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
 #include "demos/terrain/TerrainDemo.hpp"
 #include "demos/sprites/SpritesDemo.hpp"
+#include "demos/refract/RefractDemo.hpp"
 //#include "demos/deferred/DeferredDemo.hpp"
 
 enum class Demo {
 	Dynvb,
 	Terrain,
 	Sprites,
+	Refract,
 	//Deferred
 };
 
@@ -28,6 +30,10 @@ std::unique_ptr<Game> createGame( Demo type ) {
 
 		case Demo::Sprites: {
 			return std::unique_ptr<Game>(new SpritesDemo());
+		}
+
+		case Demo::Refract: {
+			return std::unique_ptr<Game>(new RefractDemo());
 		}
 
 		//case Demo::Deferred: {
@@ -50,7 +56,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<Game> game = createGame(Demo::Sprites);
+	std::unique_ptr<Game> game = createGame(Demo::Refract);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}

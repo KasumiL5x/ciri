@@ -234,6 +234,7 @@ void DynamicVertexBufferDemo::onDraw() {
 void DynamicVertexBufferDemo::onUnloadContent() {
 	Game::onUnloadContent();
 
+	_axis.clean();
 	_cloth.clean();
 	_grid.clean();
 }
