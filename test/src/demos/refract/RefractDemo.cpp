@@ -1,7 +1,7 @@
 #include "RefractDemo.hpp"
 
 RefractDemo::RefractDemo()
-	: Game() {
+	: Game(), _model(nullptr) {
 	_config.width = 1280;
 	_config.height = 720;
 	_config.title = "ciri : Refraction Demo";
@@ -48,6 +48,35 @@ void RefractDemo::onLoadContent() {
 	// create axis
 	if( !_axis.create(5.0f, graphicsDevice()) ) {
 		printf("Failed to create axis.\n");
+	}
+
+	// load shaders
+	if( !loadShaders() ) {
+		printf("Failed to load shaders.\n");
+	}
+
+	// load model
+	_model = modelgen::createSphere(graphicsDevice(), 32, 10.0f);
+	if( _model != nullptr ) {
+		_model->setShader(_refractShader);
+	} else {
+		printf("Failed to create model.\n");
+	}
+
+	// create depth stencil state
+	ciri::DepthStencilDesc depthDesc;
+	_depthStencilState = graphicsDevice()->createDepthStencilState(depthDesc);
+	if( nullptr == _depthStencilState ) {
+		printf("Failed to create depth stencil state.\n");
+	}
+
+	// create rasterizer state
+	ciri::RasterizerDesc rasterDesc;
+	rasterDesc.cullMode = ciri::CullMode::None;
+	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
+	if( nullptr == _rasterizerState ) {
+		printf("Failed to create rasterizer state.\n");
 	}
 }
 
@@ -125,6 +154,10 @@ void RefractDemo::onDraw() {
 
 	// clear backbuffer
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
+
+	// set depth and raster states
+	device->setDepthStencilState(_depthStencilState);
+	device->setRasterizerState(_rasterizerState);
 	
 	// render grid
 	if( _grid.isValid() ) {
@@ -146,6 +179,26 @@ void RefractDemo::onDraw() {
 		}
 	}
 
+	// render model
+	if( _refractShader != nullptr && _model != nullptr && _model->isValid() ) {
+		// update constant buffer
+		_refractVertexConstants.xform = _model->getXform().getWorld();
+		_refractVertexConstants.xform = cameraViewProj * _refractVertexConstants.world;
+		if( ciri::failed(_refractVertexConstantBuffer->setData(sizeof(RefractVertexConstants), &_refractVertexConstants)) ) {
+			printf("Failed to update constants.\n");
+		}
+		// apply shader
+		device->applyShader(_refractShader);
+		// set vertex and index buffer and draw
+		device->setVertexBuffer(_model->getVertexBuffer());
+		if( _model->getIndexBuffer() != nullptr ) {
+			device->setIndexBuffer(_model->getIndexBuffer());
+			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _model->getIndexBuffer()->getIndexCount());
+		} else {
+			device->drawArrays(ciri::PrimitiveTopology::TriangleList, _model->getVertexBuffer()->getVertexCount(), 0);
+		}
+	}
+
 	// present backbuffer to screen
 	device->present();
 }
@@ -153,9 +206,49 @@ void RefractDemo::onDraw() {
 void RefractDemo::onUnloadContent() {
 	Game::onUnloadContent();
 
+	if( _model != nullptr ) {
+		delete _model;
+		_model = nullptr;
+	}
+
 	// clean grid
 	_grid.clean();
 
 	// clean axis
 	_axis.clean();
+}
+
+bool RefractDemo::loadShaders() {
+	// create shader
+	_refractShader = graphicsDevice()->createShader();
+
+	// add input elements to shader
+	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
+	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+
+	// load shader from file
+	const std::string shaderExt = graphicsDevice()->getShaderExt();
+	const std::string vsFile = ("refract/refract_vs" + shaderExt);
+	const std::string psFile = ("refract/refract_ps" + shaderExt);
+	if( ciri::failed(_refractShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+		printf("Failed to load shader.\n");
+		return false;
+	}
+
+	// create constant buffer
+	_refractVertexConstantBuffer = graphicsDevice()->createConstantBuffer();
+	if( ciri::failed(_refractVertexConstantBuffer->setData(sizeof(RefractVertexConstants), &_refractVertexConstants)) ) {
+		printf("Failed to create constant buffer.\n");
+		return false;
+	}
+
+	// assign constant buffer
+	if( ciri::failed(_refractShader->addConstants(_refractVertexConstantBuffer, "RefractVertexConstants", ciri::ShaderStage::Vertex)) ) {
+		printf("Failed to assign constant buffer to shader.\n");
+		return false;
+	}
+
+	return true;
 }

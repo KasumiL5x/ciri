@@ -6,46 +6,79 @@
 #include "Model.hpp"
 
 namespace modelgen {
+	// http://stackoverflow.com/questions/4405787/generating-vertices-for-a-sphere
+	static Model* createSphere( std::shared_ptr<ciri::IGraphicsDevice> device, int resolution, float scale ) {
+		Model* model = new Model();
+
+		const float PI = 3.14159265359f;
+		std::vector<cc::Vec3f> positions;
+
+		for( int j = 0; j < resolution; ++j ) {
+			const float theta = (PI * j) / resolution;
+			for( int i = 0; i < resolution; ++i ) {
+				const int pos = j * resolution + i;
+				const float phi = (2 * PI * i) / resolution;
+				const float x = sinf(theta) * cosf(phi);
+				const float y = sinf(theta) * sinf(phi);
+				const float z = cosf(theta);
+				positions.emplace_back(cc::Vec3f(x*scale, y*scale, z*scale));
+			}
+		}
+
+		int next = 0;
+		for( int j = 0; j < resolution; ++j ) {
+			for( int i = 0; i < resolution; ++i ) {
+				next = ((resolution-1) == i) ? 0 : i+1;
+				const int pos = (j * resolution * 6) + (i * 6);
+
+				Vertex vtx0;
+				vtx0.position = positions[j * resolution + i];
+				vtx0.normal = vtx0.position.normalized();
+				model->addVertex(vtx0);
+
+				Vertex vtx1;
+				vtx1.position = positions[j * resolution + next];
+				vtx1.normal = vtx1.position.normalized();
+				model->addVertex(vtx1);
+
+				if( (resolution-1) != j ) {
+					Vertex vtx2;
+					vtx2.position = positions[((j+1) * resolution) + i];
+					vtx2.normal = vtx2.position.normalized();
+					model->addVertex(vtx2);
+				} else {
+					Vertex vtx2;
+					vtx2.position = cc::Vec3f(0.0f, 0.0f, -1.0f*scale);
+					vtx2.normal = vtx2.position.normalized();
+					model->addVertex(vtx2);
+				}
+
+				model->addVertex(model->getVertices()[pos + 2]);
+				model->addVertex(model->getVertices()[pos + 1]);
+				if( (resolution-1) != j ) {
+					Vertex vtx3;
+					vtx3.position = positions[((j+1) * resolution) + next];
+					vtx3.normal = vtx3.position.normalized();
+					model->addVertex(vtx3);
+				} else {
+					Vertex vtx3;
+					vtx3.position = cc::Vec3f(0.0f, 0.0f, -1.0f*scale);
+					vtx3.normal = vtx3.position.normalized();
+					model->addVertex(vtx3);
+				}
+			}
+		}
+
+		if( !model->build(device) ) {
+			delete model; model = nullptr;
+			return nullptr;
+		}
+		return model;
+	}
+
 	// width; height; depth; u-scale; v-scale
 	static Model* createCube( std::shared_ptr<ciri::IGraphicsDevice> device, float w, float h, float d, float us, float vs, bool ccw=true ) {
 		Model* model = new Model();
-
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f,  1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, -1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
-		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f,  1.0f), cc::Vec3f(), cc::Vec2f()));
 
 		model->addVertex(Vertex(cc::Vec3f(-0.5f*w, -0.5f*h,  0.5f*d), cc::Vec3f( 1.0f,  0.0f,  0.0f), cc::Vec2f(0.0f * us,  0.0f * vs)));
 		model->addVertex(Vertex(cc::Vec3f( 0.5f*w, -0.5f*h,  0.5f*d), cc::Vec3f( 1.0f,  0.0f,  0.0f), cc::Vec2f(1.0f * us,  0.0f * vs)));

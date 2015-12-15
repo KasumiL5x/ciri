@@ -5,6 +5,14 @@
 #include <ciri/gfx/MayaCamera.hpp>
 #include "../../common/Grid.hpp"
 #include "../../common/Axis.hpp"
+#include "../../common/Model.hpp"
+#include "../../common/ModelGen.hpp"
+
+__declspec(align(16))
+struct RefractVertexConstants {
+	cc::Mat4f world;
+	cc::Mat4f xform;
+};
 
 class RefractDemo : public Game {
 public:
@@ -23,9 +31,18 @@ protected:
 	virtual void onUnloadContent();
 
 private:
+	bool loadShaders();
+
+private:
 	ciri::MayaCamera _camera;
 	Grid _grid;
 	Axis _axis;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::IShader> _refractShader;
+	std::shared_ptr<ciri::IConstantBuffer> _refractVertexConstantBuffer;
+	RefractVertexConstants _refractVertexConstants;
+	Model* _model;
 };
 
 #endif /* __refractdemo__ */
