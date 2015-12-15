@@ -32,6 +32,7 @@ protected:
 
 private:
 	bool loadShaders();
+	void unloadShaders();
 
 private:
 	ciri::MayaCamera _camera;

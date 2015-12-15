@@ -18,6 +18,16 @@ float4 main( Input input ) : SV_Target {
 	float3 L = -LightDirection;
 	float3 N = normalize(input.normal);
 	float3 lighting = AmbientLightColor + lambert(L, N, LightColor, 1.0f);
+
+
+	float Air = 1.0;
+	float Glass = 1.51714;
+	float R0 = ((Air - Glass) * (Air - Glass)) / ((Air + Glass) * (Air + Glass));
+	float fresnel = R0 + (1.0 - R0) * pow((1.0 - dot(-L, N)), 5.0);
+	float3 color0 = float3(0.0f, 0.0f, 0.0f);
+	float3 color1 = float3(1.0f, 1.0f, 1.0f);
+	return float4(lerp(color0, color1, fresnel), 1.0f);
+
 	// final
-	return float4(lighting, 1.0f);
+	//return float4(lighting, 1.0f);
 }

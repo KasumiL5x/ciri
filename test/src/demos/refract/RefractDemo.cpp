@@ -102,6 +102,12 @@ void RefractDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 		return;
 	}
 
+	// reload shaders
+	if( input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
+		unloadShaders();
+		printf("Reloaded shaders: %s\n", loadShaders() ? "success" : "failed");
+	}
+
 	// debug print camera information
 	if( input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
 		const cc::Vec3f& pos = _camera.getPosition();
@@ -220,13 +226,14 @@ void RefractDemo::onUnloadContent() {
 
 bool RefractDemo::loadShaders() {
 	// create shader
-	_refractShader = graphicsDevice()->createShader();
-
-	// add input elements to shader
-	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
-	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
-	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
-	_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	if( nullptr == _refractShader ) {
+		_refractShader = graphicsDevice()->createShader();
+		// add input elements to shader
+		_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+		_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+		_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
+		_refractShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	}
 
 	// load shader from file
 	const std::string shaderExt = graphicsDevice()->getShaderExt();
@@ -238,7 +245,9 @@ bool RefractDemo::loadShaders() {
 	}
 
 	// create constant buffer
-	_refractVertexConstantBuffer = graphicsDevice()->createConstantBuffer();
+	if( nullptr == _refractVertexConstantBuffer ) {
+		_refractVertexConstantBuffer = graphicsDevice()->createConstantBuffer();
+	}
 	if( ciri::failed(_refractVertexConstantBuffer->setData(sizeof(RefractVertexConstants), &_refractVertexConstants)) ) {
 		printf("Failed to create constant buffer.\n");
 		return false;
@@ -251,4 +260,14 @@ bool RefractDemo::loadShaders() {
 	}
 
 	return true;
+}
+
+void RefractDemo::unloadShaders() {
+	if( _refractVertexConstantBuffer != nullptr ) {
+		_refractVertexConstantBuffer->destroy();
+	}
+
+	if( _refractShader != nullptr ) {
+		_refractShader->destroy();
+	}
 }
