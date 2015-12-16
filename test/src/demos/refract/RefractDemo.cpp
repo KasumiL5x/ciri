@@ -78,6 +78,21 @@ void RefractDemo::onLoadContent() {
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
 	}
+
+	// load the cubemap
+	ciri::PNG cubeRight; cubeRight.loadFromFile("refract/skybox/posx.png");
+	ciri::PNG cubeLeft; cubeLeft.loadFromFile("refract/skybox/negx.png");
+	ciri::PNG cubeTop; cubeTop.loadFromFile("refract/skybox/negy.png");
+	ciri::PNG cubeBottom; cubeBottom.loadFromFile("refract/skybox/posy.png");
+	ciri::PNG cubeBack; cubeBack.loadFromFile("refract/skybox/posz.png");
+	ciri::PNG cubeFront; cubeFront.loadFromFile("refract/skybox/negz.png");
+	_cubemap = graphicsDevice()->createTextureCube(cubeRight.getWidth(), cubeRight.getHeight(), cubeRight.getPixels(), cubeLeft.getPixels(), cubeTop.getPixels(), cubeBottom.getPixels(), cubeBack.getPixels(), cubeFront.getPixels());
+
+	// create cubemap sampler
+	ciri::SamplerDesc cubeSamplerDesc;
+	cubeSamplerDesc.filter = ciri::SamplerFilter::Linear;
+	cubeSamplerDesc.wrapU = cubeSamplerDesc.wrapV = cubeSamplerDesc.wrapW = ciri::SamplerWrap::Clamp;
+	_cubemapSampler = graphicsDevice()->createSamplerState(cubeSamplerDesc);
 }
 
 void RefractDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -97,19 +112,19 @@ void RefractDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	Game::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
-	if( input()->isKeyDown(ciri::Key::Escape) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
 		gtfo();
 		return;
 	}
 
 	// reload shaders
-	if( input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
 		unloadShaders();
 		printf("Reloaded shaders: %s\n", loadShaders() ? "success" : "failed");
 	}
 
 	// debug print camera information
-	if( input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
 		const cc::Vec3f& pos = _camera.getPosition();
 		const float yaw = _camera.getYaw();
 		const float pitch = _camera.getPitch();
@@ -119,7 +134,7 @@ void RefractDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	}
 
 	// camera movement
-	if( input()->isKeyDown(ciri::Key::LAlt) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::LAlt) ) {
 		// rotation
 		if( input()->isMouseButtonDown(ciri::MouseButton::Left) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
@@ -186,15 +201,20 @@ void RefractDemo::onDraw() {
 	}
 
 	// render model
-	if( _refractShader != nullptr && _model != nullptr && _model->isValid() ) {
+	if( _refractShader != nullptr && _refractShader->isValid() && _model != nullptr && _model->isValid() && _cubemap != nullptr && _cubemapSampler != nullptr ) {
 		// update constant buffer
-		_refractVertexConstants.xform = _model->getXform().getWorld();
+		_refractVertexConstants.world = _model->getXform().getWorld();
 		_refractVertexConstants.xform = cameraViewProj * _refractVertexConstants.world;
+		_refractVertexConstants.campos = _camera.getPosition();
 		if( ciri::failed(_refractVertexConstantBuffer->setData(sizeof(RefractVertexConstants), &_refractVertexConstants)) ) {
 			printf("Failed to update constants.\n");
 		}
 		// apply shader
 		device->applyShader(_refractShader);
+		// set cubemap texture
+		device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
+		// set cubemap sampler
+		device->setSamplerState(0, _cubemapSampler, ciri::ShaderStage::Pixel);
 		// set vertex and index buffer and draw
 		device->setVertexBuffer(_model->getVertexBuffer());
 		if( _model->getIndexBuffer() != nullptr ) {
@@ -211,6 +231,14 @@ void RefractDemo::onDraw() {
 
 void RefractDemo::onUnloadContent() {
 	Game::onUnloadContent();
+
+	if( _cubemapSampler != nullptr ) {
+		_cubemapSampler->destroy();
+	}
+
+	if( _cubemap != nullptr ) {
+		_cubemap->destroy();
+	}
 
 	if( _model != nullptr ) {
 		delete _model;
@@ -240,7 +268,12 @@ bool RefractDemo::loadShaders() {
 	const std::string vsFile = ("refract/refract_vs" + shaderExt);
 	const std::string psFile = ("refract/refract_ps" + shaderExt);
 	if( ciri::failed(_refractShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
-		printf("Failed to load shader.\n");
+		printf("Shader failed to compile with %d errors:\n", _refractShader->getErrors().size());
+		int idx = 0;
+		for( const auto& err : _refractShader->getErrors() ) {
+			printf("[%d]: %s\n", idx, err.msg.c_str());
+			idx += 1;
+		}
 		return false;
 	}
 

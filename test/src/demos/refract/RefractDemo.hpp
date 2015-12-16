@@ -12,6 +12,7 @@ __declspec(align(16))
 struct RefractVertexConstants {
 	cc::Mat4f world;
 	cc::Mat4f xform;
+	cc::Vec3f campos;
 };
 
 class RefractDemo : public Game {
@@ -44,6 +45,9 @@ private:
 	std::shared_ptr<ciri::IConstantBuffer> _refractVertexConstantBuffer;
 	RefractVertexConstants _refractVertexConstants;
 	Model* _model;
+	//
+	std::shared_ptr<ciri::ITextureCube> _cubemap;
+	std::shared_ptr<ciri::ISamplerState> _cubemapSampler;
 };
 
 #endif /* __refractdemo__ */
