@@ -11,6 +11,7 @@
 #include "DXIndexBuffer.hpp"
 #include "DXConstantBuffer.hpp"
 #include "DXTexture2D.hpp"
+#include "DXTexture3D.hpp"
 #include "DXSamplerState.hpp"
 #include "DXRenderTarget2D.hpp"
 #include "DXRasterizerState.hpp"
@@ -35,6 +36,7 @@ namespace ciri {
 		virtual std::shared_ptr<IIndexBuffer> createIndexBuffer() override;
 		virtual std::shared_ptr<IConstantBuffer> createConstantBuffer() override;
 		virtual std::shared_ptr<ITexture2D> createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
+		virtual std::shared_ptr<ITexture3D> createTexture3D( int width, int height, int depth, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
 		virtual std::shared_ptr<ITextureCube> createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 		virtual std::shared_ptr<ISamplerState> createSamplerState( const SamplerDesc& desc ) override;
 		virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format ) override;
@@ -45,6 +47,7 @@ namespace ciri {
 		virtual void setVertexBuffer( const std::shared_ptr<IVertexBuffer>& buffer ) override;
 		virtual void setIndexBuffer( const std::shared_ptr<IIndexBuffer>& buffer ) override;
 		virtual void setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage ) override;
+		virtual void setTexture3D( int index, const std::shared_ptr<ITexture3D>& texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage ) override;
 		virtual void setSamplerState( int index, const std::shared_ptr<ISamplerState>& state, ShaderStage::Stage shaderStage ) override;
 		virtual void setBlendState( const std::shared_ptr<IBlendState>& state ) override;
@@ -113,6 +116,7 @@ namespace ciri {
 		std::vector<std::shared_ptr<DXConstantBuffer>> _constantBuffers;
 		//
 		std::vector<std::shared_ptr<DXTexture2D>> _texture2Ds;
+		std::vector<std::shared_ptr<DXTexture3D>> _texture3Ds;
 		//
 		std::vector<std::shared_ptr<DXSamplerState>> _samplers;
 		//

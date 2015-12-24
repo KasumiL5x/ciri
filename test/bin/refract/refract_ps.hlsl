@@ -1,4 +1,5 @@
-TextureCube CubemapTexture : register(t0);
+// TextureCube CubemapTexture : register(t0);
+Texture3D CubemapTexture : register(t0);
 SamplerState CubemapSampler : register(s0);
 
 struct Input {
@@ -36,5 +37,7 @@ float4 main( Input input ) : SV_Target {
 	float3 Refract = refract(V, N, RIDX);
 	float3 refractColor = CubemapTexture.Sample(CubemapSampler, Refract);
 
-	return float4(AmbientColor * float4(refractColor, 1.0) + DiffuseColor * diffuseLight);
+	return CubemapTexture.Sample(CubemapSampler, float3(input.Tex, diffuseLight));
+
+	// return float4(AmbientColor * float4(refractColor, 1.0) + DiffuseColor * diffuseLight);
 }

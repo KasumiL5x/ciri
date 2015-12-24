@@ -32,7 +32,8 @@ namespace ciri {
 			glDeleteBuffers(1, &_ubo);
 			_ubo = 0;
 		}
-		_index = 0; // todo: is there ay way to unbind it? according to the docs, using glBindBufferBase w/ 0 is not valid
+		// HACK: Do not reset the index in case the object is reloaded (e.g. reload shaders)
+		//_index = 0; // todo: is there any way to unbind it? according to the docs, using glBindBufferBase w/ 0 is not valid
 	}
 
 	GLuint GLConstantBuffer::getUbo() const {

@@ -93,6 +93,49 @@ void RefractDemo::onLoadContent() {
 	cubeSamplerDesc.filter = ciri::SamplerFilter::Linear;
 	cubeSamplerDesc.wrapU = cubeSamplerDesc.wrapV = cubeSamplerDesc.wrapW = ciri::SamplerWrap::Clamp;
 	_cubemapSampler = graphicsDevice()->createSamplerState(cubeSamplerDesc);
+
+	// create 3d texture
+	const unsigned int T3D_WIDTH = 64;
+	const unsigned int T3D_HEIGHT = 64;
+	const unsigned int T3D_DEPTH = 4;
+	#define LAYER(r) (T3D_WIDTH * T3D_HEIGHT * r * 4)
+	#define TEX2(s, t) (4 * (s * T3D_WIDTH + t))
+	#define TEX3(s, t, r) (TEX2(s, t) + LAYER(r))
+	unsigned char* texels = new unsigned char[T3D_WIDTH * T3D_HEIGHT * T3D_DEPTH * 4];
+	for( int s = 0; s < T3D_WIDTH; ++s ) {
+		for( int t = 0; t < T3D_HEIGHT; ++t ) {
+			texels[TEX3(s, t, 0)] = 0xFF;
+			texels[TEX3(s, t, 0)+1] = 0x00;
+			texels[TEX3(s, t, 0)+2] = 0x00;
+			texels[TEX3(s, t, 0)+3] = 0xFF;
+		}
+	}
+	for( int s = 0; s < T3D_WIDTH; ++s ) {
+		for( int t = 0; t < T3D_HEIGHT; ++t ) {
+			texels[TEX3(s, t, 1)] = 0x00;
+			texels[TEX3(s, t, 1)+1] = 0xFF;
+			texels[TEX3(s, t, 1)+2] = 0x00;
+			texels[TEX3(s, t, 1)+3] = 0xFF;
+		}
+	}
+	for( int s = 0; s < T3D_WIDTH; ++s ) {
+		for( int t = 0; t < T3D_HEIGHT; ++t ) {
+			texels[TEX3(s, t, 2)] = 0x00;
+			texels[TEX3(s, t, 2)+1] = 0x00;
+			texels[TEX3(s, t, 2)+2] = 0xFF;
+			texels[TEX3(s, t, 2)+3] = 0xFF;
+		}
+	}
+	for( int s = 0; s < T3D_WIDTH; ++s ) {
+		for( int t = 0; t < T3D_HEIGHT; ++t ) {
+			texels[TEX3(s, t, 3)] = 0x80;
+			texels[TEX3(s, t, 3)+1] = 0x80;
+			texels[TEX3(s, t, 3)+2] = 0x80;
+			texels[TEX3(s, t, 3)+3] = 0xFF;
+		}
+	}
+	_texture3D = graphicsDevice()->createTexture3D(T3D_WIDTH, T3D_HEIGHT, T3D_DEPTH, ciri::TextureFormat::Color, 0, texels);
+	delete[] texels;
 }
 
 void RefractDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -212,7 +255,8 @@ void RefractDemo::onDraw() {
 		// apply shader
 		device->applyShader(_refractShader);
 		// set cubemap texture
-		device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
+		//device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
+		device->setTexture3D(0, _texture3D, ciri::ShaderStage::Pixel);
 		// set cubemap sampler
 		device->setSamplerState(0, _cubemapSampler, ciri::ShaderStage::Pixel);
 		// set vertex and index buffer and draw

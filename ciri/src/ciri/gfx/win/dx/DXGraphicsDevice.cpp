@@ -85,6 +85,12 @@ namespace ciri {
 		}
 		_rasterizerStates.clear();
 
+		// destroy 3d textures
+		for( auto curr : _texture3Ds ) {
+			curr->destroy();
+		}
+		_texture3Ds.clear();
+
 		// destroy 2d render targets
 		for( auto curr : _renderTarget2Ds ) {
 			curr->destroy();
@@ -223,6 +229,26 @@ namespace ciri {
 		}
 
 		_texture2Ds.push_back(dxTexture);
+		return dxTexture;
+	}
+
+	std::shared_ptr<ITexture3D> DXGraphicsDevice::createTexture3D( int width, int height, int depth, TextureFormat::Format format, int flags, void* pixels ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
+		if( width <= 0 || height <= 0 || depth <= 0 ) {
+			return nullptr;
+		}
+
+		std::shared_ptr<DXTexture3D> dxTexture = std::make_shared<DXTexture3D>(flags, shared_from_this());
+		if( failed(dxTexture->setData(width, height, depth, pixels, format)) ) {
+			dxTexture.reset();
+			dxTexture = nullptr;
+			return nullptr;
+		}
+
+		_texture3Ds.push_back(dxTexture);
 		return dxTexture;
 	}
 
@@ -438,7 +464,37 @@ namespace ciri {
 			return;
 		}
 
+		if( index < 0 ) {
+			return;
+		}
+
 		const std::shared_ptr<DXTexture2D> dxTexture = std::static_pointer_cast<DXTexture2D>(texture);
+
+		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
+		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };
+
+		const bool all = (shaderStage & ShaderStage::All) != 0;
+		if( all || (shaderStage & ShaderStage::Vertex) ) {
+			_context->VSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Geometry) ) {
+			_context->GSSetShaderResources(index, 1, srv);
+		}
+		if( all || (shaderStage & ShaderStage::Pixel) ) {
+			_context->PSSetShaderResources(index, 1, srv);
+		}
+	}
+
+	void DXGraphicsDevice::setTexture3D( int index, const std::shared_ptr<ITexture3D>& texture, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
+		if( index < 0 ) {
+			return;
+		}
+
+		const std::shared_ptr<DXTexture3D> dxTexture = std::static_pointer_cast<DXTexture3D>(texture);
 
 		// has to be an "array" to clear targets (if the input texture is nullptr) or dx shits its pants
 		ID3D11ShaderResourceView* srv[1] = { (texture != nullptr) ? dxTexture->getShaderResourceView() : nullptr };

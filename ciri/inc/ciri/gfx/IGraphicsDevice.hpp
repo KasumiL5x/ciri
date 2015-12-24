@@ -10,6 +10,7 @@
 #include "ClearFlags.hpp"
 #include "IConstantBuffer.hpp"
 #include "ITexture2D.hpp"
+#include "ITexture3D.hpp"
 #include "ShaderStage.hpp"
 #include "ISamplerState.hpp"
 #include "TextureFormat.hpp"
@@ -98,6 +99,18 @@ namespace ciri {
 		virtual std::shared_ptr<ITexture2D> createTexture2D( int width, int height, TextureFormat::Format format, int flags, void* pixels=nullptr )=0;
 
 		/**
+		 * Creates a new 3d texture optionally initialized with data.
+		 * @param width  Width of the textures in pixels.
+		 * @param height Height of the textures in pixels.
+		 * @param depth  Number of textures in the stack.
+		 * @param format Format of the texture.
+		 * @param flags  Bitfield of optional TextureFlags.
+		 * @param pixels Data to initialize the textures with.  If null, no specific data is set.
+		 * @returns A pointer to a new ITexture3D of the given parameters, or nullptr upon error.
+		 */
+		virtual std::shared_ptr<ITexture3D> createTexture3D( int width, int height, int depth, TextureFormat::Format format, int flags, void* pixels=nullptr )=0;
+
+		/**
 		 * Creates a cubemap texture made up of six 2d textures.
 		 * Pixel format is expected to be RGBA with unsigned byte as the data type.
 		 * @param width  Width in pixels of each texture (must all be the same).
@@ -174,6 +187,14 @@ namespace ciri {
 		 * @param shaderStage Stage at which to bind.
 		 */
 		virtual void setTexture2D( int index, const std::shared_ptr<ITexture2D>& texture, ShaderStage::Stage shaderStage )=0;
+
+		/**
+		 * Binds a 3d texture to a slot at a given shader stage.
+		 * @param index       Texture slot to bind to.
+		 * @param texture     Texture to bind.
+		 * @param shaderStage Stage at which to bind.
+		 */
+		virtual void setTexture3D( int index, const std::shared_ptr<ITexture3D>& texture, ShaderStage::Stage shaderStage )=0;
 
 		/**
 		 * Binds a cube texture to a slot at a given shader stage.

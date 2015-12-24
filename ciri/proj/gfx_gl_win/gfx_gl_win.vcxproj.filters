@@ -84,6 +84,9 @@
     <ClInclude Include="..\..\inc\ciri\gfx\Viewport.hpp">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLTexture3D.hpp">
+      <Filter>inc\win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLBlendState.cpp">
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ciri\gfx\Viewport.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLTexture3D.cpp">
+      <Filter>src\win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

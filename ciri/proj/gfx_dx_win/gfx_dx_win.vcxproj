@@ -104,6 +104,7 @@
     <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXSamplerState.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXShader.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXTexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXTexture3D.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXTextureCube.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXVertexBuffer.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\dx\DXVertexDeclaration.hpp" />
@@ -128,6 +129,7 @@
     <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXSamplerState.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXShader.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXTexture2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXTexture3D.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXTextureCube.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXVertexBuffer.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\dx\DXVertexDeclaration.cpp" />

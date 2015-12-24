@@ -126,6 +126,12 @@ namespace ciri {
 		}
 		_samplers.clear();
 
+		// destroy 3d textures
+		for( auto curr : _texture3Ds ) {
+			curr->destroy();
+		}
+		_texture3Ds.clear();
+
 		// destroy 2d textures
 		for( auto curr : _texture2Ds ) {
 			curr->destroy();
@@ -255,6 +261,27 @@ namespace ciri {
 		_texture2Ds.push_back(glTexture);
 		return glTexture;
 	}
+
+	std::shared_ptr<ITexture3D> GLGraphicsDevice::createTexture3D( int width, int height, int depth, TextureFormat::Format format, int flags, void* pixels ) {
+		if( !_isValid ) {
+			return nullptr;
+		}
+
+		if( width <= 0 || height <= 0 || depth <= 0 ) {
+			return nullptr;
+		}
+
+		std::shared_ptr<GLTexture3D> glTexture = std::make_shared<GLTexture3D>(flags);
+		if( failed(glTexture->setData(width, height, depth, pixels, format)) ) {
+			glTexture.reset();
+			glTexture = nullptr;
+			return nullptr;
+		}
+
+		_texture3Ds.push_back(glTexture);
+		return glTexture;
+	}
+
 
 	std::shared_ptr<ITextureCube> GLGraphicsDevice::createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) {
 		if( width <= 0 || height <= 0 ) {
@@ -452,9 +479,27 @@ namespace ciri {
 			return;
 		}
 
+		if( index < 0 ) {
+			return;
+		}
+
 		const std::shared_ptr<GLTexture2D> glTexture = std::static_pointer_cast<GLTexture2D>(texture);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, (texture != nullptr) ? glTexture->getTextureId() : 0);
+	}
+
+	void GLGraphicsDevice::setTexture3D( int index, const std::shared_ptr<ITexture3D>& texture, ShaderStage::Stage shaderStage ) {
+		if( !_isValid ) {
+			return;
+		}
+
+		if( index < 0 ) {
+			return;
+		}
+
+		const std::shared_ptr<GLTexture3D> glTexture = std::static_pointer_cast<GLTexture3D>(texture);
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_3D, (texture != nullptr) ? glTexture->getTextureId() : 0);
 	}
 
 	void GLGraphicsDevice::setTextureCube( int index, const std::shared_ptr<ITextureCube>& texture, ShaderStage::Stage shaderStage ) {
@@ -1116,8 +1161,7 @@ namespace ciri {
 	}
 
 	void APIENTRY GLGraphicsDevice::debugContextCb( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
-		const bool SHOULD_IGNORE_NOTIFICATIONS = true;
-		if( GL_DEBUG_SEVERITY_NOTIFICATION == severity && SHOULD_IGNORE_NOTIFICATIONS ) {
+		if( GL_DEBUG_SEVERITY_NOTIFICATION == severity ) {
 			return;
 		}
 

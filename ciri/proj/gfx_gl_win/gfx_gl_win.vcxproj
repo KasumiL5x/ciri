@@ -108,6 +108,7 @@
     <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLSamplerState.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLShader.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLTexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLTexture3D.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLTextureCube.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLVertexBuffer.hpp" />
     <ClInclude Include="..\..\inc\ciri\gfx\win\gl\GLVertexDeclaration.hpp" />
@@ -131,6 +132,7 @@
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLSamplerState.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLShader.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLTexture2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLTexture3D.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLTextureCube.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLVertexBuffer.cpp" />
     <ClCompile Include="..\..\src\ciri\gfx\win\gl\GLVertexDeclaration.cpp" />
