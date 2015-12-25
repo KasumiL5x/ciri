@@ -72,7 +72,7 @@ void RefractDemo::onLoadContent() {
 
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
-	rasterDesc.cullMode = ciri::CullMode::None;
+	rasterDesc.cullMode = ciri::CullMode::CounterClockwise;
 	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
@@ -136,6 +136,10 @@ void RefractDemo::onLoadContent() {
 	}
 	_texture3D = graphicsDevice()->createTexture3D(T3D_WIDTH, T3D_HEIGHT, T3D_DEPTH, ciri::TextureFormat::Color, 0, texels);
 	delete[] texels;
+
+	// create blend states
+	_alphaBlendState = graphicsDevice()->getDefaultBlendAlpha();
+	_defaultBlendState = graphicsDevice()->getDefaultBlendOpaque();
 }
 
 void RefractDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -222,6 +226,9 @@ void RefractDemo::onDraw() {
 	// set depth and raster states
 	device->setDepthStencilState(_depthStencilState);
 	device->setRasterizerState(_rasterizerState);
+
+	// set default alpha blend
+	device->setBlendState(_defaultBlendState);
 	
 	// render grid
 	if( _grid.isValid() ) {
@@ -245,6 +252,9 @@ void RefractDemo::onDraw() {
 
 	// render model
 	if( _refractShader != nullptr && _refractShader->isValid() && _model != nullptr && _model->isValid() && _cubemap != nullptr && _cubemapSampler != nullptr ) {
+		// set alpha blend state
+		device->setBlendState(_alphaBlendState);
+
 		// update constant buffer
 		_refractVertexConstants.world = _model->getXform().getWorld();
 		_refractVertexConstants.xform = cameraViewProj * _refractVertexConstants.world;
@@ -255,8 +265,8 @@ void RefractDemo::onDraw() {
 		// apply shader
 		device->applyShader(_refractShader);
 		// set cubemap texture
-		//device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
 		device->setTexture3D(0, _texture3D, ciri::ShaderStage::Pixel);
+		device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
 		// set cubemap sampler
 		device->setSamplerState(0, _cubemapSampler, ciri::ShaderStage::Pixel);
 		// set vertex and index buffer and draw

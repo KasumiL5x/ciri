@@ -49,6 +49,9 @@ private:
 	std::shared_ptr<ciri::ITextureCube> _cubemap;
 	std::shared_ptr<ciri::ISamplerState> _cubemapSampler;
 	std::shared_ptr<ciri::ITexture3D> _texture3D;
+	//
+	std::shared_ptr<ciri::IBlendState> _alphaBlendState;
+	std::shared_ptr<ciri::IBlendState> _defaultBlendState;
 };
 
 #endif /* __refractdemo__ */
