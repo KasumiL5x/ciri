@@ -269,6 +269,7 @@ void RefractDemo::onDraw() {
 		device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
 		// set cubemap sampler
 		device->setSamplerState(0, _cubemapSampler, ciri::ShaderStage::Pixel);
+		device->setSamplerState(1, _cubemapSampler, ciri::ShaderStage::Pixel);
 		// set vertex and index buffer and draw
 		device->setVertexBuffer(_model->getVertexBuffer());
 		if( _model->getIndexBuffer() != nullptr ) {
