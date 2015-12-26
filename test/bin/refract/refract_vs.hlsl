@@ -5,19 +5,24 @@ cbuffer RefractVertexConstants : register(b0) {
 };
 
 struct Output {
-	float4 Pos : SV_POSITION;
-	float3 position : TEXCOORD1;
+	float4 hpos : SV_POSITION;
+	float3 position : POSITION0;
 	float3 normal : NORMAL0;
-	float2 Tex : TEXCOORD0;
-	float3 ViewDir : TEXCOORD2;
+	float2 texcoord : TEXCOORD0;
+	float3 tangent : TEXCOORD1;
+	float3 bitangent : TEXCOORD2;
+	float3 viewdir : TEXCOORD3;
 };
 
 Output main( float3 Pos : POSITION, float3 Nrm : NORMAL, float4 Tan : TANGENT, float2 Tex : TEXCOORD ) {
 	Output OUT;
-	OUT.Pos = mul(xform, float4(Pos, 1.0f));
-	OUT.position = mul(world, float4(Pos, 1.0f)).xyz;
-	OUT.normal = mul(world, float4(Nrm, 0.0f)).xyz;
-	OUT.Tex = Tex;
-	OUT.ViewDir = campos - Pos;//OUT.position;
+	OUT.hpos = mul(xform, float4(Pos, 1.0));
+	OUT.position = mul(world, float4(Pos, 1.0)).xyz;
+	OUT.normal = mul(world, float4(Nrm, 0.0)).xyz;
+	OUT.texcoord = Tex;
+	OUT.tangent = mul(world, float4(Tan.xyz, 0.0)).xyz;
+	float3 bt = cross(Nrm, Tan.xyz) * Tan.w;
+	OUT.bitangent = mul(world, float4(bt, 0.0)).xyz;
+	OUT.viewdir = (campos - OUT.position);
 	return OUT;
 }

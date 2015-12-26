@@ -15,6 +15,12 @@ struct RefractVertexConstants {
 	cc::Vec3f campos;
 };
 
+__declspec(align(16))
+struct SkyboxConstants {
+	cc::Mat4f view;
+	cc::Mat4f proj;
+};
+
 class RefractDemo : public Game {
 public:
 	RefractDemo();
@@ -34,6 +40,7 @@ protected:
 private:
 	bool loadShaders();
 	void unloadShaders();
+	void drawSkybox( const cc::Mat4f& view, const cc::Mat4f& proj );
 
 private:
 	ciri::MayaCamera _camera;
@@ -49,9 +56,18 @@ private:
 	std::shared_ptr<ciri::ITextureCube> _cubemap;
 	std::shared_ptr<ciri::ISamplerState> _cubemapSampler;
 	std::shared_ptr<ciri::ITexture3D> _texture3D;
+	std::shared_ptr<ciri::ITexture2D> _diffuseMap;
+	std::shared_ptr<ciri::ITexture2D> _bumpMap;
 	//
 	std::shared_ptr<ciri::IBlendState> _alphaBlendState;
 	std::shared_ptr<ciri::IBlendState> _defaultBlendState;
+	//
+	Model* _skyboxModel;
+	std::shared_ptr<ciri::IShader> _skyboxShader;
+	std::shared_ptr<ciri::IConstantBuffer> _skyboxConstantBuffer;
+	SkyboxConstants _skyboxConstants;
+	std::shared_ptr<ciri::ISamplerState> _skyboxSampler;
+	std::shared_ptr<ciri::IDepthStencilState> _skyboxDepthState;
 };
 
 #endif /* __refractdemo__ */

@@ -56,7 +56,8 @@ void RefractDemo::onLoadContent() {
 	}
 
 	// load model
-	_model = modelgen::createSphere(graphicsDevice(), 32, 10.0f);
+	//_model = modelgen::createCube(graphicsDevice(), 10.0f, 10.0f, 10.0f, 1.0f, 1.0f);
+	_model = modelgen::createPlane(graphicsDevice(), 10.0f, 10.0f, 0, 0, 1.0f, 1.0f, false, false);
 	if( _model != nullptr ) {
 		_model->setShader(_refractShader);
 	} else {
@@ -72,7 +73,7 @@ void RefractDemo::onLoadContent() {
 
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
-	rasterDesc.cullMode = ciri::CullMode::CounterClockwise;
+	rasterDesc.cullMode = ciri::CullMode::None;
 	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
@@ -93,6 +94,12 @@ void RefractDemo::onLoadContent() {
 	cubeSamplerDesc.filter = ciri::SamplerFilter::Linear;
 	cubeSamplerDesc.wrapU = cubeSamplerDesc.wrapV = cubeSamplerDesc.wrapW = ciri::SamplerWrap::Clamp;
 	_cubemapSampler = graphicsDevice()->createSamplerState(cubeSamplerDesc);
+
+	// load bumpmap and diffuse map
+	ciri::PNG bumpMap; bumpMap.loadFromFile("refract/dungeons-and-flagons_n.png");
+	_bumpMap = graphicsDevice()->createTexture2D(bumpMap.getWidth(), bumpMap.getHeight(), ciri::TextureFormat::Color, 0, bumpMap.getPixels());
+	ciri::PNG diffuseMap; diffuseMap.loadFromFile("refract/dungeons-and-flagons_d.png");
+	_diffuseMap = graphicsDevice()->createTexture2D(diffuseMap.getWidth(), diffuseMap.getHeight(), ciri::TextureFormat::Color, 0, diffuseMap.getPixels());
 
 	// create 3d texture
 	const unsigned int T3D_WIDTH = 64;
@@ -140,6 +147,39 @@ void RefractDemo::onLoadContent() {
 	// create blend states
 	_alphaBlendState = graphicsDevice()->getDefaultBlendAlpha();
 	_defaultBlendState = graphicsDevice()->getDefaultBlendOpaque();
+
+	// generate the skybox model
+	_skyboxModel = modelgen::createFullscreenQuad(graphicsDevice());
+	// load the skybox shader
+	_skyboxShader = graphicsDevice()->createShader();
+	_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+	_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
+	_skyboxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	const std::string shaderExt = graphicsDevice()->getShaderExt();
+	const std::string vsFile = ("common/shaders/skybox_vs" + shaderExt);
+	const std::string psFile = ("common/shaders/skybox_ps" + shaderExt);
+	if( ciri::failed(_skyboxShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+		printf("Failed to load skybox shader.\n");
+	} else {
+		_skyboxConstantBuffer = graphicsDevice()->createConstantBuffer();
+		if( ciri::failed(_skyboxConstantBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants)) ) {
+			printf("Failed to create skybox constants.\n");
+		} else {
+			if( ciri::failed(_skyboxShader->addConstants(_skyboxConstantBuffer, "SkyboxConstants", ciri::ShaderStage::Vertex)) ) {
+				printf("Failed to assign constants to skybox shader.\n");
+			}
+		}
+	}
+	// create the skybox sampler
+	ciri::SamplerDesc skySamplerDesc;
+	skySamplerDesc.filter = ciri::SamplerFilter::Linear;
+	skySamplerDesc.wrapU = skySamplerDesc.wrapV = skySamplerDesc.wrapW = ciri::SamplerWrap::Clamp;
+	_skyboxSampler = graphicsDevice()->createSamplerState(skySamplerDesc);
+	// create skybox depth state
+	ciri::DepthStencilDesc skyboxDepthDesc;
+	skyboxDepthDesc.depthWriteMask = false;
+	_skyboxDepthState = graphicsDevice()->createDepthStencilState(skyboxDepthDesc);
 }
 
 void RefractDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -208,6 +248,8 @@ void RefractDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 void RefractDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
 	Game::onFixedUpdate(deltaTime, elapsedTime);
 
+	//_model->getXform().setOrientation(_model->getXform().getOrientation() * cc::Quatf::createFromEulerAngles(0.1f, 0.25f, 0.0f));
+
 	// update camera
 	_camera.update((float)deltaTime);
 }
@@ -225,10 +267,13 @@ void RefractDemo::onDraw() {
 
 	// set depth and raster states
 	device->setDepthStencilState(_depthStencilState);
+	// todo: figure out why some modelgen models are CCW and some are CW by default (sphere vs. plane e.g)
 	device->setRasterizerState(_rasterizerState);
 
 	// set default alpha blend
-	device->setBlendState(_defaultBlendState);
+	//device->setBlendState(_defaultBlendState);
+
+	drawSkybox(_camera.getView(), _camera.getProj());
 	
 	// render grid
 	if( _grid.isValid() ) {
@@ -253,7 +298,7 @@ void RefractDemo::onDraw() {
 	// render model
 	if( _refractShader != nullptr && _refractShader->isValid() && _model != nullptr && _model->isValid() && _cubemap != nullptr && _cubemapSampler != nullptr ) {
 		// set alpha blend state
-		device->setBlendState(_alphaBlendState);
+		//device->setBlendState(_alphaBlendState);
 
 		// update constant buffer
 		_refractVertexConstants.world = _model->getXform().getWorld();
@@ -265,11 +310,14 @@ void RefractDemo::onDraw() {
 		// apply shader
 		device->applyShader(_refractShader);
 		// set cubemap texture
-		device->setTexture3D(0, _texture3D, ciri::ShaderStage::Pixel);
-		device->setTextureCube(1, _cubemap, ciri::ShaderStage::Pixel);
+		device->setTexture2D(0, _diffuseMap, ciri::ShaderStage::Pixel);
+		device->setTexture2D(1, _bumpMap, ciri::ShaderStage::Pixel);
+		device->setTextureCube(2, _cubemap, ciri::ShaderStage::Pixel);
+
 		// set cubemap sampler
 		device->setSamplerState(0, _cubemapSampler, ciri::ShaderStage::Pixel);
 		device->setSamplerState(1, _cubemapSampler, ciri::ShaderStage::Pixel);
+		device->setSamplerState(2, _cubemapSampler, ciri::ShaderStage::Pixel);
 		// set vertex and index buffer and draw
 		device->setVertexBuffer(_model->getVertexBuffer());
 		if( _model->getIndexBuffer() != nullptr ) {
@@ -286,6 +334,11 @@ void RefractDemo::onDraw() {
 
 void RefractDemo::onUnloadContent() {
 	Game::onUnloadContent();
+
+	if( _skyboxModel != nullptr ) {
+		delete _skyboxModel;
+		_skyboxModel = nullptr;
+	}
 
 	if( _cubemapSampler != nullptr ) {
 		_cubemapSampler->destroy();
@@ -358,4 +411,32 @@ void RefractDemo::unloadShaders() {
 	if( _refractShader != nullptr ) {
 		_refractShader->destroy();
 	}
+}
+
+void RefractDemo::drawSkybox( const cc::Mat4f& view, const cc::Mat4f& proj ) {
+	if( !_skyboxModel->isValid() ) {
+		return;
+	}
+
+	// disable depth write
+	graphicsDevice()->setDepthStencilState(_skyboxDepthState);
+	// apply skybox shader
+	graphicsDevice()->applyShader(_skyboxShader);
+	// set skybox constants
+	_skyboxConstants.view = view;
+	_skyboxConstants.proj = proj;
+	_skyboxConstants.proj.invert();
+	_skyboxConstantBuffer->setData(sizeof(SkyboxConstants), &_skyboxConstants);
+	// set skybox texture and sampler
+	graphicsDevice()->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
+	graphicsDevice()->setSamplerState(0, _skyboxSampler, ciri::ShaderStage::Pixel);
+	// set buffers and draw
+	graphicsDevice()->setVertexBuffer(_skyboxModel->getVertexBuffer());
+	graphicsDevice()->setIndexBuffer(_skyboxModel->getIndexBuffer());
+	graphicsDevice()->drawIndexed(ciri::PrimitiveTopology::TriangleList, _skyboxModel->getIndexBuffer()->getIndexCount());
+	// unbind texture and sampler
+	graphicsDevice()->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
+	graphicsDevice()->setTextureCube(0, nullptr, ciri::ShaderStage::Pixel);
+	// restore default depth state
+	graphicsDevice()->setDepthStencilState(_depthStencilState);
 }
