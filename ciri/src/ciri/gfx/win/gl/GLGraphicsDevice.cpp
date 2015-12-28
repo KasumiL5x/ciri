@@ -64,6 +64,9 @@ namespace ciri {
 		// apply a fullsize viewport
 		setViewport(Viewport(0, 0, window->getWidth(), window->getHeight(), 0.0f, 1.0f));
 
+		// set default states
+		restoreDefaultStates();
+
 		return true;
 	}
 
@@ -872,6 +875,25 @@ namespace ciri {
 
 	GraphicsApiType GLGraphicsDevice::getApiType() const {
 		return GraphicsApiType::OpenGL;
+	}
+
+	ErrorCode GLGraphicsDevice::restoreDefaultStates() {
+		// restore blend state
+		ErrorCode status = restoreDefaultBlendState();
+		if( failed(status) ) {
+			return status;
+		}
+		// restore rasterizer state
+		status = restoreDefaultRasterizerState();
+		if( failed(status) ) {
+			return status;
+		}
+		// restore depth stencil state
+		status = restoreDefaultDepthStencilState();
+		if( failed(status) ) {
+			return status;
+		}
+		return ErrorCode::CIRI_OK;
 	}
 
 	ErrorCode GLGraphicsDevice::restoreDefaultBlendState() {

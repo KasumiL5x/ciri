@@ -333,6 +333,12 @@ namespace ciri {
 		virtual GraphicsApiType getApiType() const=0;
 
 		/**
+		 * Restores all default states for the device.
+		 * @returns ErrorCode indicating success or failure.
+		 */
+		virtual ErrorCode restoreDefaultStates()=0;
+
+		/**
 		 * Restores the device's default blending state.
 		 * @returns ErrorCode indicating success or failure.
 		 */

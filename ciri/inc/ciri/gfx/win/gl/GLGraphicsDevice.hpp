@@ -71,6 +71,7 @@ namespace ciri {
 		virtual const char* getGpuName() const override;
 		virtual const char* getApiInfo() const override;
 		virtual GraphicsApiType getApiType() const override;
+		virtual ErrorCode restoreDefaultStates() override;
 		virtual ErrorCode restoreDefaultBlendState() override;
 		virtual ErrorCode restoreDefaultRasterizerState() override;
 		virtual ErrorCode restoreDefaultDepthStencilState() override;

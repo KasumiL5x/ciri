@@ -41,6 +41,9 @@ namespace ciri {
 
 		_isValid = true;
 
+		// set default states
+		restoreDefaultStates();
+
 		return true;
 	}
 
@@ -863,6 +866,25 @@ namespace ciri {
 
 	GraphicsApiType DXGraphicsDevice::getApiType() const {
 		return GraphicsApiType::DirectX11;
+	}
+
+	ErrorCode DXGraphicsDevice::restoreDefaultStates() {
+		// restore blend state
+		ErrorCode status = restoreDefaultBlendState();
+		if( failed(status) ) {
+			return status;
+		}
+		// restore rasterizer state
+		status = restoreDefaultRasterizerState();
+		if( failed(status) ) {
+			return status;
+		}
+		// restore depth stencil state
+		status = restoreDefaultDepthStencilState();
+		if( failed(status) ) {
+			return status;
+		}
+		return ErrorCode::CIRI_OK;
 	}
 
 	ErrorCode DXGraphicsDevice::restoreDefaultBlendState() {
