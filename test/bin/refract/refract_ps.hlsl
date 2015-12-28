@@ -40,8 +40,8 @@ float4 reflectRefract( float3 L, float3 N, float3 V ) {
 	return final;
 }
 
-float3 phong( float3 L, float3 N, float3 V, float3 color, float3 intensity ) {
-	float nDotL = max(dot(N, L), 0.0f);
+float3 phong( float3 L, float3 N, float3 V, float3 color, float intensity ) {
+	float nDotL = max(dot(N, L), 0.0);
 	float3 RL = normalize(2.0 * N * nDotL - L);
 	float rDotV = max(dot(RL, V), 0.0);
 	float SPEC_POW = 32.0;

@@ -14,70 +14,84 @@ in vec3 vo_viewdir;
 out vec4 out_color;
 
 vec3 LightDirection = vec3(-0.641413, -0.420927, -0.641413);
+vec3 LightColor = vec3(1.0, 1.0, 1.0);
+float LightIntensity = 1.0;
+
+vec4 reflectRefract( vec3 L, vec3 N, vec3 V ) {
+	float FresnelBias = 0.0;
+	float FresnelScale = 0.42;
+	float FresnelPow = 0.75;
+	vec3 EtaRatio = vec3(0.66, 0.5, 0.57);
+
+	float reflectionFactor = FresnelBias + FresnelScale * pow(1.0 + dot(V, N), FresnelPow);
+	vec3 R = reflect(V, N);
+	vec3 Red = refract(V, N, EtaRatio.r);
+	vec3 Green = refract(V, N, EtaRatio.g);
+	vec3 Blue = refract(V, N, EtaRatio.b);
+
+	vec4 reflectedColor = texture(CubemapTextureSkybox, R);
+	vec4 refractedColor;
+	refractedColor.r = texture(CubemapTextureSkybox, Red).r;
+	refractedColor.g = texture(CubemapTextureSkybox, Green).g;
+	refractedColor.b = texture(CubemapTextureSkybox, Blue).b;
+	refractedColor.a = 1.0;
+
+	vec4 final = mix(refractedColor, reflectedColor, reflectionFactor);
+	return final;
+}
+
+vec3 phong( vec3 L, vec3 N, vec3 V, vec3 color, float intensity ) {
+	float nDotL = max(dot(N, L), 0.0);
+	vec3 RL = normalize(2.0 * N * nDotL - L);
+	float rDotV = max(dot(RL, V), 0.0);
+	float SPEC_POW = 32.0;
+	vec3 specular;
+	if( SPEC_POW > 0.0 ) {
+		specular = color * pow(rDotV, SPEC_POW);
+	}
+	vec3 diffuse = color * nDotL;
+	return (diffuse + specular) * intensity;
+}
+
+vec3 ward( vec3 L, vec3 N, vec3 V, vec3 color, float intensity, float roughness ) {
+	vec3 H = normalize(L + V);
+	float vDotN = dot(V, N);
+	float lDotN = dot(L, N);
+	float hDotN = dot(H, N);
+	float r_sq = (roughness * roughness) + 1e-5;
+	float exp_a = -pow(tan(acos(hDotN)), 2.0);
+	float spec_num = exp(exp_a / r_sq);
+	float spec_den = 4.0 * 3.14159 * r_sq;
+  spec_den *= sqrt( lDotN * vDotN );
+  vec3 specular = color * max(0.0, (spec_num / spec_den));
+  vec3 diffuse = color;
+  return vec3(lDotN * (diffuse + specular)) * intensity;
+}
 
 void main() {
+	// light direction
 	vec3 L = normalize(-LightDirection);
 
+	// camera view vector
+	vec3 V = normalize(vo_viewdir);
+
+	// extract and convert normal
 	vec3 N = texture(BumpTexture, vo_texcoord).rgb;
 	N = normalize(N * 2.0 - 1.0);
 	N = (N.x * vo_tangent) + (N.y * vo_bitangent) + (N.z * vo_normal);
 	N = normalize(N);
-	// N = normalize(vo_normal);
-
-	float diffuseFactor = max(dot(L, N), 0.0f);
-	vec3 diffuse = vec3(1.0, 1.0, 1.0) * diffuseFactor;
-
-	float SPEC_POW = 32.0;
-	vec3 RL = normalize(2.0 * N * diffuseFactor - L);
-	vec3 V = normalize(vo_viewdir);
-	float rDotV = max(dot(RL, V), 0.0);
-	vec3 specular;
-	if( SPEC_POW > 0.0 ) {
-		specular = vec3(1.0, 1.0, 1.0) * 0.7 * pow(rDotV, SPEC_POW);
-	}
 
 	// sample diffuse texture
 	vec3 albedo = texture(DiffuseTexture, vo_texcoord).rgb;
 
-	vec3 final =
-		// ambient
-		(albedo * vec3(0.1, 0.1, 0.1)) +
-		// diffuse color and lighting
-		(albedo * diffuse) +
-		// specular reflection
-		(specular);
-	out_color = vec4(final, 1.0);
+	// #define PHONG
+	#define WARD
 
-	// out_color = vec4( * diffuse + specular, 1.0);
+	#ifdef PHONG
+	out_color = vec4(albedo * phong(L, N, V, LightColor, LightIntensity), 1.0);
+	#endif
 
-	// // can move into VS:
-	// float FresnelBias = 0.0;
-	// float FresnelScale = 0.42;
-	// float FresnelPow = 0.75;
-	// vec3 EtaRatio = vec3(0.66, 0.5, 0.57);
-	// //
-	// vec3 L = normalize(-LightDirection);
-	// vec3 N = normalize(vo_normal);
-	// vec3 V = normalize(vo_viewdir);
-	// //
-	// vec3 R = reflect(V, N);
-	// vec3 TRed = refract(V, N, EtaRatio.r);
-	// vec3 TGreen = refract(V, N, EtaRatio.g);
-	// vec3 TBlue = refract(V, N, EtaRatio.b);
-	// //
-	// float reflectionFactor = FresnelBias + FresnelScale * pow(1.0 + dot(V, N), FresnelPow);
-
-	// // can stay in ps:
-	// vec4 reflectedColor = texture(CubemapTextureSkybox, R);
-	// vec4 refractedColor;
-	// refractedColor.r = texture(CubemapTextureSkybox, TRed).r;
-	// refractedColor.g = texture(CubemapTextureSkybox, TGreen).g;
-	// refractedColor.b = texture(CubemapTextureSkybox, TBlue).b;
-	// refractedColor.a = 1.0;
-	// vec4 final = mix(refractedColor, reflectedColor, reflectionFactor);
-	// // final.a = reflectionFactor;
-	// out_color = final;
-
-	// // out_color = vec4(vo_texcoord.x, vo_texcoord.x, vo_texcoord.x, 1.0);
-	// // out_color = texture(BumpTexture, vo_texcoord);
+	#ifdef WARD
+	out_color = vec4(albedo * ward(L, N, V, LightColor, LightIntensity, 0.2), 1.0);
+	#endif
 }
