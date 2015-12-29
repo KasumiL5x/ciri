@@ -68,14 +68,14 @@ void SpritesDemo::onLoadContent() {
 	// load and set player texture
 	ciri::PNG playerPng;
 	if( playerPng.loadFromFile("sprites/textures/Player.png") && (4 == playerPng.getBytesPerPixel()) ) {
-		_playerTexture = graphicsDevice()->createTexture2D(playerPng.getWidth(), playerPng.getHeight(), ciri::TextureFormat::Color, 0, playerPng.getPixels());
+		_playerTexture = graphicsDevice()->createTexture2D(playerPng.getWidth(), playerPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, playerPng.getPixels());
 	}
 	_player->setTexture(_playerTexture);
 
 	// load bullet texture
 	ciri::PNG bulletPng;
 	if( bulletPng.loadFromFile("sprites/textures/Bullet.png") && (4 == bulletPng.getBytesPerPixel()) ) {
-		_bulletTexture = graphicsDevice()->createTexture2D(bulletPng.getWidth(), bulletPng.getHeight(), ciri::TextureFormat::Color, 0, bulletPng.getPixels());
+		_bulletTexture = graphicsDevice()->createTexture2D(bulletPng.getWidth(), bulletPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, bulletPng.getPixels());
 	}
 	// assign bullet textures
 	for( auto& bullet : _bullets ) {
@@ -85,7 +85,7 @@ void SpritesDemo::onLoadContent() {
 	// load enemy textures
 	ciri::PNG seekPng;
 	if( seekPng.loadFromFile("sprites/textures/Seeker.png") && (4 == seekPng.getBytesPerPixel()) ) {
-		_enemySeekerTexture = graphicsDevice()->createTexture2D(seekPng.getWidth(), seekPng.getHeight(), ciri::TextureFormat::Color, 0, seekPng.getPixels());
+		_enemySeekerTexture = graphicsDevice()->createTexture2D(seekPng.getWidth(), seekPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, seekPng.getPixels());
 	}
 
 	// load some enemies
@@ -96,14 +96,14 @@ void SpritesDemo::onLoadContent() {
 	// custom cursor texture
 	ciri::PNG cursorPng;
 	if( cursorPng.loadFromFile("sprites/textures/Pointer.png") && (4 == cursorPng.getBytesPerPixel()) ) {
-		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), ciri::TextureFormat::Color, 0, cursorPng.getPixels());
+		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, cursorPng.getPixels());
 		_cursorOrigin = cc::Vec2f(0.0f, static_cast<float>(_cursorTexture->getHeight()));
 	}
 
 	// load test particle system
 	ciri::PNG glowPng;
 	if( glowPng.loadFromFile("sprites/textures/dot.png") && (4 == glowPng.getBytesPerPixel()) ) {
-		_testPsysTexture = graphicsDevice()->createTexture2D(glowPng.getWidth(), glowPng.getHeight(), ciri::TextureFormat::Color, 0, glowPng.getPixels());
+		_testPsysTexture = graphicsDevice()->createTexture2D(glowPng.getWidth(), glowPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, glowPng.getPixels());
 		_psys.setTexture(_testPsysTexture);
 	}
 }

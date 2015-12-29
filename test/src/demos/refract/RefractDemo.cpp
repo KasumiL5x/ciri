@@ -97,9 +97,9 @@ void RefractDemo::onLoadContent() {
 
 	// load bumpmap and diffuse map
 	ciri::PNG bumpMap; bumpMap.loadFromFile("refract/dungeons-and-flagons_n.png");
-	_bumpMap = graphicsDevice()->createTexture2D(bumpMap.getWidth(), bumpMap.getHeight(), ciri::TextureFormat::Color, 0, bumpMap.getPixels());
+	_bumpMap = graphicsDevice()->createTexture2D(bumpMap.getWidth(), bumpMap.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, bumpMap.getPixels());
 	ciri::PNG diffuseMap; diffuseMap.loadFromFile("refract/dungeons-and-flagons_d.png");
-	_diffuseMap = graphicsDevice()->createTexture2D(diffuseMap.getWidth(), diffuseMap.getHeight(), ciri::TextureFormat::Color, 0, diffuseMap.getPixels());
+	_diffuseMap = graphicsDevice()->createTexture2D(diffuseMap.getWidth(), diffuseMap.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, diffuseMap.getPixels());
 
 	// create 3d texture
 	const unsigned int T3D_WIDTH = 64;
@@ -141,7 +141,7 @@ void RefractDemo::onLoadContent() {
 			texels[TEX3(s, t, 3)+3] = 0xFF;
 		}
 	}
-	_texture3D = graphicsDevice()->createTexture3D(T3D_WIDTH, T3D_HEIGHT, T3D_DEPTH, ciri::TextureFormat::Color, 0, texels);
+	_texture3D = graphicsDevice()->createTexture3D(T3D_WIDTH, T3D_HEIGHT, T3D_DEPTH, ciri::TextureFormat::RGBA32_UINT, 0, texels);
 	delete[] texels;
 
 	// create blend states

@@ -167,17 +167,10 @@ namespace ciri {
 		*pixelType = GL_UNSIGNED_BYTE;
 
 		switch( ciriFormat ) {
-			case TextureFormat::Color: {
+			case TextureFormat::RGBA32_UINT: {
 				*internalFormat = GL_RGBA;
 				*pixelFormat = GL_RGBA;
 				*pixelType = GL_UNSIGNED_BYTE;
-				break;
-			}
-
-			case TextureFormat::RGB32_Float: {
-				*internalFormat = GL_RGB32F;
-				*pixelFormat = GL_RGB;
-				*pixelType = GL_FLOAT;
 				break;
 			}
 

@@ -165,12 +165,8 @@ namespace ciri {
 
 	static DXGI_FORMAT ciriToDxTextureFormat( TextureFormat::Format format ) {
 		switch( format ) {
-			case TextureFormat::Color: {
+			case TextureFormat::RGBA32_UINT: {
 				return DXGI_FORMAT_R8G8B8A8_UNORM;
-			}
-
-			case TextureFormat::RGB32_Float: {
-				return DXGI_FORMAT_R32G32B32_FLOAT; // todo: this breaks DX; do not support it (seems non XYZA formats for textures do), or work around it
 			}
 
 			case TextureFormat::RGBA32_Float: {

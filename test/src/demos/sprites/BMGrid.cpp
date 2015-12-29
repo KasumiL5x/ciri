@@ -68,7 +68,7 @@ BMGrid::BMGrid( const int gridWidth, const int gridHeight, const int playfieldWi
 	_grid = new GridPoint[_numPointsW * _numPointsH];
 
 	unsigned char whitePixel[] = {255, 255, 255, 255};
-	_pixel = device->createTexture2D(1, 1, ciri::TextureFormat::Color, 0, whitePixel);
+	_pixel = device->createTexture2D(1, 1, ciri::TextureFormat::RGBA32_UINT, 0, whitePixel);
 }
 
 BMGrid::~BMGrid() {

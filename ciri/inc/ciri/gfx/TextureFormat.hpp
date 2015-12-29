@@ -7,9 +7,8 @@ namespace ciri {
 		 * Pixel format of texture data.
 		 */
 		enum Format {
-			Color = 0,	 /**< Unsigned 32bit ARGB; 8 bits per channel. */
-			RGB32_Float, /**< RGB 32 bit float. */
-			RGBA32_Float /**< RGBA 32 bit float. */
+			RGBA32_UINT=0, /**< RGBA; 8-bit unsigned integer per channel; 32 bits total. */
+			RGBA32_Float   /**< RGBA; 32-bit float per channel; 128 bits total. */
 		};
 
 		/**
@@ -20,17 +19,13 @@ namespace ciri {
 		 */
 		static int bytesPerPixel( Format format ) {
 			switch( format ) {
-				case Color: {
-						return 4;
-				}
-
-				case RGB32_Float: // 3???
+				case RGBA32_UINT:
 				case RGBA32_Float: {
 						return 4;
 				}
 
 				default: {
-					throw; //return 0;
+					throw;
 				}
 			}
 		}
@@ -41,7 +36,7 @@ namespace ciri {
 		 * @return True if the format has alpha.
 		 */
 		static bool hasAlpha( Format format ) {
-			return (Color == format) ||
+			return (RGBA32_UINT == format) ||
 						 (RGBA32_Float == format);
 		}
 	};

@@ -121,7 +121,7 @@ DynamicGrid::DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const
 	}
 
 	unsigned char whitePixel[] = {255, 255, 255, 255};
-	_pixel = device->createTexture2D(1, 1, ciri::TextureFormat::Color, 0, whitePixel);
+	_pixel = device->createTexture2D(1, 1, ciri::TextureFormat::RGBA32_UINT, 0, whitePixel);
 }
 
 void DynamicGrid::applyDirectedForce( const cc::Vec2f& force, const cc::Vec2f& position, float radius ) {
