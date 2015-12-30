@@ -133,6 +133,10 @@ namespace ciri {
 		return _pixels;
 	}
 
+	bool TGA::hasAlpha() const {
+		return (Format::RGBA == _format);
+	}
+
 	bool TGA::writeToFile( const char* file, unsigned int width, unsigned int height, unsigned char* pixels, Format format, bool swap ) {
 		if( nullptr == file || nullptr == pixels ) {
 			return false;

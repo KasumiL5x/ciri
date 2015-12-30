@@ -132,12 +132,12 @@ void TerrainDemo::onLoadContent() {
 	_waterReflectionSampler = graphicsDevice()->createSamplerState(reflSamplerDesc);
 
 	// load the cubemap
-	ciri::PNG cubeRight; cubeRight.loadFromFile("terrain/skybox/posx.png");
-	ciri::PNG cubeLeft; cubeLeft.loadFromFile("terrain/skybox/negx.png");
-	ciri::PNG cubeTop; cubeTop.loadFromFile("terrain/skybox/negy.png");
-	ciri::PNG cubeBottom; cubeBottom.loadFromFile("terrain/skybox/posy.png");
-	ciri::PNG cubeBack; cubeBack.loadFromFile("terrain/skybox/posz.png");
-	ciri::PNG cubeFront; cubeFront.loadFromFile("terrain/skybox/negz.png");
+	ciri::PNG cubeRight; cubeRight.loadFromFile("terrain/skybox/posx.png", true);
+	ciri::PNG cubeLeft; cubeLeft.loadFromFile("terrain/skybox/negx.png", true);
+	ciri::PNG cubeTop; cubeTop.loadFromFile("terrain/skybox/negy.png", true);
+	ciri::PNG cubeBottom; cubeBottom.loadFromFile("terrain/skybox/posy.png", true);
+	ciri::PNG cubeBack; cubeBack.loadFromFile("terrain/skybox/posz.png", true);
+	ciri::PNG cubeFront; cubeFront.loadFromFile("terrain/skybox/negz.png", true);
 	_cubemap = graphicsDevice()->createTextureCube(cubeRight.getWidth(), cubeRight.getHeight(), cubeRight.getPixels(), cubeLeft.getPixels(), cubeTop.getPixels(), cubeBottom.getPixels(), cubeBack.getPixels(), cubeFront.getPixels());
 	// create the skybox model
 	_skybox = modelgen::createFullscreenQuad(graphicsDevice());

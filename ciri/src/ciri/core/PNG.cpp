@@ -11,7 +11,7 @@ namespace ciri {
 		destroy();
 	}
 
-	bool PNG::loadFromFile( const char* file ) {
+	bool PNG::loadFromFile( const char* file, bool forceRGBA ) {
 		if( nullptr == file ) {
 			return false;
 		}
@@ -78,6 +78,23 @@ namespace ciri {
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 		fclose(fp);
 
+		// if rgba was requested but the image is rgb, create a new buffer with an A channel and delete the old one.
+		if( forceRGBA && _channelsPerPixel != 4 ) {
+			// create new pixel array, copy old RGB over and append A
+			unsigned char* newPixels = new unsigned char[_width * _height * 4 * _bytesPerChannel];
+			int newPixelsOffset = 0;
+			for( int i = 0; i < (_width * _height * _channelsPerPixel * _bytesPerChannel); i += (_channelsPerPixel*_bytesPerChannel) ) {
+				memcpy(&newPixels[newPixelsOffset], &_pixels[i], _channelsPerPixel*_bytesPerChannel);
+				newPixels[newPixelsOffset+_channelsPerPixel] = 255; // 100% alpha
+				newPixelsOffset += 4;
+			}
+			// delete old pixels and assign new pixels
+			delete[] _pixels;
+			_pixels = newPixels;
+			// update channel count to 4 (RGBA)
+			_channelsPerPixel = 4;
+		}
+
 		return true;
 	}
 
@@ -103,7 +120,12 @@ namespace ciri {
 	unsigned int PNG::getWidth() const {
 		return _width;
 	}
+
 	unsigned int PNG::getHeight() const {
 		return _height;
+	}
+
+	bool PNG::hasAlpha() const {
+		return (4 == _channelsPerPixel);
 	}
 } // ciri

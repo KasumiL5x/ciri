@@ -81,12 +81,12 @@ void RefractDemo::onLoadContent() {
 	}
 
 	// load the cubemap
-	ciri::PNG cubeRight; cubeRight.loadFromFile("refract/skybox/posx.png");
-	ciri::PNG cubeLeft; cubeLeft.loadFromFile("refract/skybox/negx.png");
-	ciri::PNG cubeTop; cubeTop.loadFromFile("refract/skybox/negy.png");
-	ciri::PNG cubeBottom; cubeBottom.loadFromFile("refract/skybox/posy.png");
-	ciri::PNG cubeBack; cubeBack.loadFromFile("refract/skybox/posz.png");
-	ciri::PNG cubeFront; cubeFront.loadFromFile("refract/skybox/negz.png");
+	ciri::PNG cubeRight; cubeRight.loadFromFile("refract/skybox/posx.png", true);
+	ciri::PNG cubeLeft; cubeLeft.loadFromFile("refract/skybox/negx.png", true);
+	ciri::PNG cubeTop; cubeTop.loadFromFile("refract/skybox/negy.png", true);
+	ciri::PNG cubeBottom; cubeBottom.loadFromFile("refract/skybox/posy.png", true);
+	ciri::PNG cubeBack; cubeBack.loadFromFile("refract/skybox/posz.png", true);
+	ciri::PNG cubeFront; cubeFront.loadFromFile("refract/skybox/negz.png", true);
 	_cubemap = graphicsDevice()->createTextureCube(cubeRight.getWidth(), cubeRight.getHeight(), cubeRight.getPixels(), cubeLeft.getPixels(), cubeTop.getPixels(), cubeBottom.getPixels(), cubeBack.getPixels(), cubeFront.getPixels());
 
 	// create cubemap sampler
@@ -96,9 +96,9 @@ void RefractDemo::onLoadContent() {
 	_cubemapSampler = graphicsDevice()->createSamplerState(cubeSamplerDesc);
 
 	// load bumpmap and diffuse map
-	ciri::PNG bumpMap; bumpMap.loadFromFile("refract/dungeons-and-flagons_n.png");
+	ciri::PNG bumpMap; bumpMap.loadFromFile("refract/dungeons-and-flagons_n.png", true);
 	_bumpMap = graphicsDevice()->createTexture2D(bumpMap.getWidth(), bumpMap.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, bumpMap.getPixels());
-	ciri::PNG diffuseMap; diffuseMap.loadFromFile("refract/dungeons-and-flagons_d.png");
+	ciri::PNG diffuseMap; diffuseMap.loadFromFile("refract/dungeons-and-flagons_d.png", true);
 	_diffuseMap = graphicsDevice()->createTexture2D(diffuseMap.getWidth(), diffuseMap.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, diffuseMap.getPixels());
 
 	// create 3d texture
