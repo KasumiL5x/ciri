@@ -18,7 +18,7 @@ void Model::addIndex( int index ){
 	_indices.push_back(index);
 }
 
-bool Model::addFromObj( const char* file ) {
+bool Model::addFromObj( const char* file, bool outputErrors ) {
 	ciri::ObjModel obj;
 	if( !obj.parse(file) ) {
 		return false;
@@ -38,9 +38,40 @@ bool Model::addFromObj( const char* file ) {
 
 	for( unsigned int i = 0; i < objVertices.size(); ++i ) {
 		Vertex vert;
-		vert.position = positions[objVertices[i].position];
-		vert.normal = normals[objVertices[i].normal];
-		vert.texcoord = texcoords[objVertices[i].texcoord];
+
+		// get position
+		const int posIdx = objVertices[i].position;
+		if( -1 == posIdx ) {
+			if( outputErrors ) {
+				printf("Vertex %d's position index is -1.  Generating zero position.\n", i);
+			}
+			vert.position = cc::Vec3f::zero();
+		} else {
+			vert.position = positions[posIdx];
+		}
+
+		// get normal
+		const int nrmIdx = objVertices[i].normal;
+		if( -1 == nrmIdx ) {
+			if( outputErrors ) {
+				printf("Vertex %d's normal index is -1.  Generating zero normal.\n", i);
+			}
+			vert.normal = cc::Vec3f::zero();
+		} else {
+			vert.normal = normals[nrmIdx];
+		}
+
+		// get texcoord
+		const int texIdx = objVertices[i].texcoord;
+		if( -1 == texIdx ) {
+			if( outputErrors ) {
+				printf("Vertex %d's texcoord index is -1.  Generating zero texcoord.\n", i);
+			}
+			vert.texcoord = cc::Vec2f::zero();
+		} else {
+			vert.texcoord = texcoords[texIdx];
+		}
+
 		_vertices.push_back(vert);
 	}
 

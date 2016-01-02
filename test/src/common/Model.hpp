@@ -13,7 +13,7 @@ public:
 
 	void addVertex( const Vertex& vertex );
 	void addIndex( int index );
-	bool addFromObj( const char* file );
+	bool addFromObj( const char* file, bool outputErrors=false );
 	bool computeTangents();
 	bool build( std::shared_ptr<ciri::IGraphicsDevice> device );
 	bool updateBuffers( bool vertex, bool index );
