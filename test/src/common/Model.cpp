@@ -32,6 +32,8 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 	const std::vector<cc::Vec2f>& texcoords = obj.getTexcoords();
 	const std::vector<ciri::ObjModel::ObjVertex>& objVertices = obj.getVertices();
 
+	//printf("pos: %d; nrm: %d; tex: %d; verts: %d\n", positions.size(), normals.size(), texcoords.size(), objVertices.size());
+
 	if( objVertices.size() == 0 ) {
 		return false;
 	}
@@ -46,6 +48,8 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 				printf("Vertex %d's position index is -1.  Generating zero position.\n", i);
 			}
 			vert.position = cc::Vec3f::zero();
+		} else if( posIdx >= positions.size() ) {
+			printf("Vertex %d's position index is out of bounds (%d->%d).\n", i, posIdx, positions.size());
 		} else {
 			vert.position = positions[posIdx];
 		}
@@ -57,6 +61,9 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 				printf("Vertex %d's normal index is -1.  Generating zero normal.\n", i);
 			}
 			vert.normal = cc::Vec3f::zero();
+		}
+		else if( nrmIdx >= normals.size() ) {
+			printf("Vertex %d's normal index is out of bounds (%d->%d).\n", i, nrmIdx, normals.size());
 		} else {
 			vert.normal = normals[nrmIdx];
 		}
@@ -68,6 +75,8 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 				printf("Vertex %d's texcoord index is -1.  Generating zero texcoord.\n", i);
 			}
 			vert.texcoord = cc::Vec2f::zero();
+		} else if( texIdx >= texcoords.size() ) {
+			printf("Vertex %d's texcoord index is out of bounds (%d->%d).\n", i, texIdx, texcoords.size());
 		} else {
 			vert.texcoord = texcoords[texIdx];
 		}

@@ -120,21 +120,53 @@ namespace ciri {
 			const int totalSlashes = strutil::countCharactersInString(_firstSplit[i].c_str(), '/', 0);
 			if( 0 == totalSlashes ) {
 				// only position
-				vertex.position = atoi(_secondSplit[0].c_str())-1;
+				if( atoi(_secondSplit[0].c_str()) < 0 ) {
+					vertex.position = _positions.size() - abs(atoi(_secondSplit[0].c_str()));
+				} else {
+					vertex.position = atoi(_secondSplit[0].c_str())-1;
+				}
 			} else if( 1 == totalSlashes ) {
 				// position and texcoord
-				vertex.position = atoi(_secondSplit[0].c_str())-1;
-				vertex.texcoord = atoi(_secondSplit[1].c_str())-1;
+				if( atoi(_secondSplit[0].c_str()) < 0 ) {
+					vertex.position = _positions.size() - abs(atoi(_secondSplit[0].c_str()));
+				} else {
+					vertex.position = atoi(_secondSplit[0].c_str())-1;
+				}
+				if( atoi(_secondSplit[1].c_str()) < 0 ) {
+					vertex.texcoord = _texcoords.size() - abs(atoi(_secondSplit[1].c_str()));
+				} else {
+					vertex.texcoord = atoi(_secondSplit[1].c_str())-1;
+				}
 			} else if( 2 == totalSlashes ) {
 				// position and normal
 				if( 0 == _secondSplit[1].size() ) { // [1] is empty in this case
-					vertex.position = atoi(_secondSplit[0].c_str())-1;
-					vertex.normal = atoi(_secondSplit[2].c_str())-1;
+					if( atoi(_secondSplit[0].c_str()) < 0 ) {
+						vertex.position = _positions.size() - abs(atoi(_secondSplit[0].c_str()));
+					} else {
+						vertex.position = atoi(_secondSplit[0].c_str())-1;
+					}
+					if( atoi(_secondSplit[2].c_str()) < 0 ) {
+						vertex.normal = _normals.size() - abs(atoi(_secondSplit[2].c_str()));
+					} else {
+						vertex.normal = atoi(_secondSplit[2].c_str())-1;
+					}
 				} else {
 					// position, texcoord, and normal
-					vertex.position = atoi(_secondSplit[0].c_str())-1;
-					vertex.texcoord = atoi(_secondSplit[1].c_str())-1;
-					vertex.normal = atoi(_secondSplit[2].c_str())-1;
+					if( atoi(_secondSplit[0].c_str()) < 0 ) {
+						vertex.position = _positions.size() - abs(atoi(_secondSplit[0].c_str()));
+					} else {
+						vertex.position = atoi(_secondSplit[0].c_str())-1;
+					}
+					if( atoi(_secondSplit[1].c_str()) < 0 ) {
+						vertex.texcoord = _texcoords.size() - abs(atoi(_secondSplit[1].c_str()));
+					} else {
+						vertex.texcoord = atoi(_secondSplit[1].c_str())-1;
+					}
+					if( atoi(_secondSplit[2].c_str()) < 0 ) {
+						vertex.normal = _normals.size() - abs(atoi(_secondSplit[2].c_str()));
+					} else {
+						vertex.normal = atoi(_secondSplit[2].c_str())-1;
+					}
 				}
 			}
 
