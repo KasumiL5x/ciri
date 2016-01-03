@@ -83,7 +83,7 @@ namespace ciri {
 			// create new pixel array, copy old RGB over and append A
 			unsigned char* newPixels = new unsigned char[_width * _height * 4 * _bytesPerChannel];
 			int newPixelsOffset = 0;
-			for( int i = 0; i < (_width * _height * _channelsPerPixel * _bytesPerChannel); i += (_channelsPerPixel*_bytesPerChannel) ) {
+			for( unsigned int i = 0; i < (_width * _height * _channelsPerPixel * _bytesPerChannel); i += (_channelsPerPixel*_bytesPerChannel) ) {
 				memcpy(&newPixels[newPixelsOffset], &_pixels[i], _channelsPerPixel*_bytesPerChannel);
 				newPixels[newPixelsOffset+_channelsPerPixel] = 255; // 100% alpha
 				newPixelsOffset += 4;
