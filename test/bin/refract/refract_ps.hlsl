@@ -1,6 +1,6 @@
-Texture2D DiffuseTexture : register(t0);
-Texture2D BumpTexture : register(t1);
-TextureCube CubemapTextureSkybox : register(t2);
+// Texture2D DiffuseTexture : register(t0);
+// Texture2D BumpTexture : register(t1);
+TextureCube CubemapTextureSkybox : register(t0);
 SamplerState CubemapSampler : register(s0);
 
 struct Input {
@@ -8,8 +8,8 @@ struct Input {
 	float3 position : POSITION0;
 	float3 normal : NORMAL0;
 	float2 texcoord : TEXCOORD0;
-	float3 tangent : TEXCOORD1;
-	float3 bitangent : TEXCOORD2;
+	// float3 tangent : TEXCOORD1;
+	// float3 bitangent : TEXCOORD2;
 	float3 viewdir : TEXCOORD3;
 };
 
@@ -18,7 +18,7 @@ static float3 LightColor = float3(1.0, 1.0, 1.0);
 static float LightIntensity = 1.0;
 
 float4 reflectRefract( float3 L, float3 N, float3 V ) {
-	float FresnelBias = 0.0;
+	float FresnelBias = 0.05;
 	float FresnelScale = 0.42;
 	float FresnelPow = 0.75;
 	float3 EtaRatio = float3(0.66, 0.5, 0.57);
@@ -34,7 +34,7 @@ float4 reflectRefract( float3 L, float3 N, float3 V ) {
 	refractedColor.r = CubemapTextureSkybox.Sample(CubemapSampler, Red).r;
 	refractedColor.g = CubemapTextureSkybox.Sample(CubemapSampler, Green).g;
 	refractedColor.b = CubemapTextureSkybox.Sample(CubemapSampler, Blue).b;
-	refractedColor.a = 1.0;
+	refractedColor.a = reflectionFactor;
 
 	float4 final = lerp(refractedColor, reflectedColor, reflectionFactor);
 	return final;
@@ -76,27 +76,20 @@ float4 main( Input input ) : SV_Target {
 	float3 V = normalize(input.viewdir);
 
 	// extract and convert normal
-	float3 N = BumpTexture.Sample(CubemapSampler, input.texcoord).rgb;
-	N = normalize(N * 2.0 - 1.0);
-	N = (N.x * input.tangent) + (N.y * input.bitangent) + (N.z * input.normal);
-	N = normalize(N);
-	// N = normalize(input.normal);
-
-	// sample diffuse texture
-	float3 albedo = DiffuseTexture.Sample(CubemapSampler, input.texcoord).rgb;
+	float3 N = normalize(input.normal);
 	
-	#define PHONG
-	#define WARD
+	// #define PHONG
+	// #define WARD
 
-	#ifdef PHONG
-	return float4(albedo * phong(L, N, V, LightColor, LightIntensity), 1.0);
-	#endif
+	// #ifdef PHONG
+	// return float4(albedo * phong(L, N, V, LightColor, LightIntensity), 1.0);
+	// #endif
 
-	#ifdef WARD
-	return float4(albedo * ward(L, N, V, LightColor, LightIntensity, 0.2), 1.0);
-	#endif
+	// #ifdef WARD
+	// return float4(albedo * ward(L, N, V, LightColor, LightIntensity, 0.2), 1.0);
+	// #endif
 
-	// // reflect refract
-	// float4 reflectRefractColor = reflectRefract(L, N, V);
-	// // return reflectRefractColor;
+	float4 reflRefr = reflectRefract(L, N, V);
+	float3 lighting = ward(L, N, V, LightColor, LightIntensity, 0.6);
+	return float4(lighting * reflRefr.rgb, 1.0);//reflRefr.a);
 }

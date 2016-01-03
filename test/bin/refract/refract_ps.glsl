@@ -1,14 +1,14 @@
 #version 420
 
-layout(binding=0) uniform sampler2D DiffuseTexture;
-layout(binding=1) uniform sampler2D BumpTexture;
-layout(binding=2) uniform samplerCube CubemapTextureSkybox;
+// layout(binding=0) uniform sampler2D DiffuseTexture;
+// layout(binding=1) uniform sampler2D BumpTexture;
+layout(binding=0) uniform samplerCube CubemapTextureSkybox;
 
 in vec3 vo_position;
 in vec3 vo_normal;
 in vec2 vo_texcoord;
-in vec3 vo_tangent;
-in vec3 vo_bitangent;
+// in vec3 vo_tangent;
+// in vec3 vo_bitangent;
 in vec3 vo_viewdir;
 
 out vec4 out_color;
@@ -18,7 +18,7 @@ vec3 LightColor = vec3(1.0, 1.0, 1.0);
 float LightIntensity = 1.0;
 
 vec4 reflectRefract( vec3 L, vec3 N, vec3 V ) {
-	float FresnelBias = 0.0;
+	float FresnelBias = 0.05;
 	float FresnelScale = 0.42;
 	float FresnelPow = 0.75;
 	vec3 EtaRatio = vec3(0.66, 0.5, 0.57);
@@ -34,7 +34,7 @@ vec4 reflectRefract( vec3 L, vec3 N, vec3 V ) {
 	refractedColor.r = texture(CubemapTextureSkybox, Red).r;
 	refractedColor.g = texture(CubemapTextureSkybox, Green).g;
 	refractedColor.b = texture(CubemapTextureSkybox, Blue).b;
-	refractedColor.a = 1.0;
+	refractedColor.a = reflectionFactor;
 
 	vec4 final = mix(refractedColor, reflectedColor, reflectionFactor);
 	return final;
@@ -76,22 +76,21 @@ void main() {
 	vec3 V = normalize(vo_viewdir);
 
 	// extract and convert normal
-	vec3 N = texture(BumpTexture, vo_texcoord).rgb;
-	N = normalize(N * 2.0 - 1.0);
-	N = (N.x * vo_tangent) + (N.y * vo_bitangent) + (N.z * vo_normal);
-	N = normalize(N);
-
-	// sample diffuse texture
-	vec3 albedo = texture(DiffuseTexture, vo_texcoord).rgb;
+	vec3 N = normalize(vo_normal);
 
 	// #define PHONG
-	#define WARD
+	// #define WARD
 
-	#ifdef PHONG
-	out_color = vec4(albedo * phong(L, N, V, LightColor, LightIntensity), 1.0);
-	#endif
+	// #ifdef PHONG
+	// out_color = vec4(phong(L, N, V, LightColor, LightIntensity), 1.0);
+	// #endif
 
-	#ifdef WARD
-	out_color = vec4(albedo * ward(L, N, V, LightColor, LightIntensity, 0.2), 1.0);
-	#endif
+	// #ifdef WARD
+	// out_color = vec4(ward(L, N, V, LightColor, LightIntensity, 0.2), 1.0);
+	// #endif
+
+	vec4 reflRefr = reflectRefract(L, N, V);
+	vec3 lighting = ward(L, N, V, LightColor, LightIntensity, 0.6);
+
+	out_color = vec4(lighting * reflRefr.rgb, 1.0);//reflRefr.a);
 }

@@ -56,9 +56,15 @@ void RefractDemo::onLoadContent() {
 	}
 
 	// load model
-	//_model = modelgen::createCube(graphicsDevice(), 10.0f, 10.0f, 10.0f, 1.0f, 1.0f);
-	_model = modelgen::createPlane(graphicsDevice(), 10.0f, 10.0f, 0, 0, 1.0f, 1.0f, false, false);
-	if( _model != nullptr ) {
+	_model = new Model();
+	if( !_model->addFromObj("refract/stanford_dragon/dragon.obj") ) {
+		printf("Failed to load obj model.\n");
+	} else {
+		if( !_model->build(graphicsDevice()) ) {
+			printf("Failed to build model.\n");
+		}
+	}
+	if( _model != nullptr && _model->isValid() ) {
 		_model->setShader(_refractShader);
 	} else {
 		printf("Failed to create model.\n");
@@ -310,14 +316,14 @@ void RefractDemo::onDraw() {
 		// apply shader
 		device->applyShader(_refractShader);
 		// set cubemap texture
-		device->setTexture2D(0, _diffuseMap, ciri::ShaderStage::Pixel);
-		device->setTexture2D(1, _bumpMap, ciri::ShaderStage::Pixel);
-		device->setTextureCube(2, _cubemap, ciri::ShaderStage::Pixel);
+		//device->setTexture2D(0, _diffuseMap, ciri::ShaderStage::Pixel);
+		//device->setTexture2D(1, _bumpMap, ciri::ShaderStage::Pixel);
+		device->setTextureCube(0, _cubemap, ciri::ShaderStage::Pixel);
 
 		// set cubemap sampler
 		device->setSamplerState(0, _cubemapSampler, ciri::ShaderStage::Pixel);
-		device->setSamplerState(1, _cubemapSampler, ciri::ShaderStage::Pixel);
-		device->setSamplerState(2, _cubemapSampler, ciri::ShaderStage::Pixel);
+		//device->setSamplerState(1, _cubemapSampler, ciri::ShaderStage::Pixel);
+		//device->setSamplerState(2, _cubemapSampler, ciri::ShaderStage::Pixel);
 		// set vertex and index buffer and draw
 		device->setVertexBuffer(_model->getVertexBuffer());
 		if( _model->getIndexBuffer() != nullptr ) {
