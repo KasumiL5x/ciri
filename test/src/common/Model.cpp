@@ -2,6 +2,8 @@
 #include <ciri/gfx/IVertexBuffer.hpp>
 #include <ciri/gfx/IIndexBuffer.hpp>
 #include <ciri/gfx/ObjModel.hpp>
+#include <map>
+#include <cc/TriMath.hpp>
 
 Model::Model()
 	: _vertexBuffer(nullptr), _indexBuffer(nullptr), _shader(nullptr), _dynamicVertex(false), _dynamicIndex(false) {
@@ -82,6 +84,22 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 		}
 
 		_vertices.push_back(vert);
+	}
+
+	return true;
+}
+
+bool Model::computeNormals() {
+	const std::vector<Triangle> tris = getTriangles();
+	for( int i = 0; i < tris.size(); ++i ) {
+		const Triangle& currTri = tris[i];
+		const cc::Vec3f normal = cc::math::computeTriangleNormal(_vertices[currTri.idx[0]].position, _vertices[currTri.idx[1]].position, _vertices[currTri.idx[2]].position).normalized();
+		_vertices[currTri.idx[0]].normal += normal;
+		_vertices[currTri.idx[1]].normal += normal;
+		_vertices[currTri.idx[2]].normal += normal;
+	}
+	for( int i = 0; i < _vertices.size(); ++i ) {
+		_vertices[i].normal.normalize();
 	}
 
 	return true;
@@ -278,4 +296,226 @@ std::vector<Vertex>& Model::getVertices() {
 
 std::vector<int>& Model::getIndices() {
 	return _indices;
+}
+
+const std::vector<Model::Triangle>& Model::getTriangles() {
+	if( 0 == _triangles.size() ) {
+		parseExtendedData();
+	}
+	return _triangles;
+
+	//std::vector<Model::Triangle> tris;
+	//if( (_indices.size() % 3 != 0) ) {
+	//	return tris;
+	//}
+	//for( int i = 0; i < _indices.size(); i += 3 ) {
+	//	Triangle t;
+	//	t.idx[0] = _indices[i];
+	//	t.idx[1] = _indices[i+1];
+	//	t.idx[2] = _indices[i+2];
+	//	tris.push_back(t);
+	//}
+	//return tris;
+}
+
+const std::vector<Model::Edge>& Model::getEdges() {
+	if( 0 == _edges.size() ) {
+		parseExtendedData();
+	}
+	return _edges;
+	//std::vector<Model::Edge> edges;
+	//std::vector<Model::Triangle> tris = getTriangles();
+	//for( int i = 0; i < tris.size(); ++i ) {
+	//	const Model::Triangle& t = tris[i];
+	//	Edge e0, e1, e2;
+	//	e0.idx[0] = t.idx[0];
+	//	e0.idx[1] = t.idx[1];
+	//	e1.idx[0] = t.idx[1];
+	//	e1.idx[1] = t.idx[2];
+	//	e2.idx[0] = t.idx[2];
+	//	e2.idx[1] = t.idx[0];
+	//	e0.faces.push_back(i);
+	//	e1.faces.push_back(i);
+	//	e2.faces.push_back(i);
+	//	edges.push_back(e0);
+	//	edges.push_back(e1);
+	//	edges.push_back(e2);
+	//}
+	//return edges;
+
+	//// use map and reverse index checking to ensure only unique edges are stored and appended
+	////std::unordered_map<std::pair<int, int>, Model::Edge> edgeMap;
+	//std::map<std::pair<int, int>, int> edgeMap;
+	//std::vector<Model::Triangle> triangles = getTriangles();
+	//for( int i = 0; i < triangles.size(); ++i ) {
+	//	const Model::Triangle& currTri = triangles[i];
+
+	//	// edge 0->1
+	//	std::pair<int, int> e01(currTri.idx[0], currTri.idx[1]);
+	//	std::pair<int, int> e02(currTri.idx[1], currTri.idx[0]);
+	//	if( edgeMap.find(e02) != edgeMap.end() ) { // if has reversed...
+	//		edges[edgeMap[e02]].faces.push_back(i); // add current face to list
+	//	} else if( edgeMap.find(e01) != edgeMap.end() ) { // if has normal...
+	//		edges[edgeMap[e01]].faces.push_back(i); // add current face to lsit
+	//	} else {
+	//		Edge e;
+	//		e.idx[0] = e01.first;
+	//		e.idx[1] = e01.second;
+	//		e.faces.push_back(i);
+	//		edges.push_back(e);
+	//		edgeMap[e01] = edges.size()-1;
+	//	}
+
+	//	// edge 1->2
+	//	std::pair<int, int> e11(currTri.idx[1], currTri.idx[2]);
+	//	std::pair<int, int> e12(currTri.idx[2], currTri.idx[1]);
+	//	if( edgeMap.find(e12) != edgeMap.end() ) {
+	//		edges[edgeMap[e12]].faces.push_back(i);
+	//	} else if( edgeMap.find(e11) != edgeMap.end() ) {
+	//		edges[edgeMap[e11]].faces.push_back(i);
+	//	} else {
+	//		Edge e;
+	//		e.idx[0] = e11.first;
+	//		e.idx[1] = e11.second;
+	//		e.faces.push_back(i);
+	//		edges.push_back(e);
+	//		edgeMap[e11] = edges.size()-1;
+	//	}
+
+	//	// edge 2->0
+	//	std::pair<int, int> e21(currTri.idx[2], currTri.idx[0]);
+	//	std::pair<int, int> e22(currTri.idx[0], currTri.idx[2]);
+	//	if( edgeMap.find(e22) != edgeMap.end() ) {
+	//		edges[edgeMap[e22]].faces.push_back(i);
+	//	} else if( edgeMap.find(e21) != edgeMap.end() ) {
+	//		edges[edgeMap[e21]].faces.push_back(i);
+	//	} else {
+	//		Edge e;
+	//		e.idx[0] = e21.first;
+	//		e.idx[1] = e21.second;
+	//		e.faces.push_back(i);
+	//		edges.push_back(e);
+	//		edgeMap[e21] = edges.size()-1;
+	//	}
+	//}
+
+	//return edges;
+}
+
+Model Model::copy() const {
+	Model mdl;
+	mdl._vertices = _vertices;
+	mdl._indices = _indices;
+	mdl._vertexBuffer = _vertexBuffer;
+	mdl._indexBuffer =_indexBuffer;
+	mdl._xform = _xform;
+	mdl._shader = _shader;
+	mdl._dynamicVertex = _dynamicVertex;
+	mdl._dynamicIndex = _dynamicIndex;
+	return mdl;
+}
+
+bool Model::parseExtendedData() {
+	// requires triangles
+	if( (_indices.size() % 3) != 0 ) {
+		return false;
+	}
+
+	//
+	// clear any old data
+	//
+	_triangles.clear();
+	_edges.clear();
+
+	//
+	// gather all triangles
+	//
+	for( int i = 0; i < _indices.size(); i += 3 ) {
+		Triangle t;
+		t.idx[0] = _indices[i];
+		t.idx[1] = _indices[i+1];
+		t.idx[2] = _indices[i+2];
+		_triangles.push_back(t);
+	}
+
+	//
+	// gather all unique edges
+	//
+	for( int i = 0; i < _triangles.size(); ++i ) {
+		const Model::Triangle& t = _triangles[i];
+		Edge e0, e1, e2;
+		e0.idx[0] = t.idx[0];
+		e0.idx[1] = t.idx[1];
+		e1.idx[0] = t.idx[1];
+		e1.idx[1] = t.idx[2];
+		e2.idx[0] = t.idx[2];
+		e2.idx[1] = t.idx[0];
+		e0.faces.push_back(i);
+		e1.faces.push_back(i);
+		e2.faces.push_back(i);
+		_edges.push_back(e0);
+		_edges.push_back(e1);
+		_edges.push_back(e2);
+	}
+	//// use map and reverse index checking to ensure only unique edges are stored and appended
+	//std::map<std::pair<int, int>, int> edgeMap;
+	//std::vector<Model::Triangle> triangles = getTriangles();
+	//for( int i = 0; i < triangles.size(); ++i ) {
+	//	const Model::Triangle& currTri = triangles[i];
+	//	// edge 0->1
+	//	std::pair<int, int> e01(currTri.idx[0], currTri.idx[1]);
+	//	std::pair<int, int> e02(currTri.idx[1], currTri.idx[0]);
+	//	if( edgeMap.find(e02) != edgeMap.end() ) { // if has reversed...
+	//		_edges[edgeMap[e02]].faces.push_back(i); // add current face to list
+	//	} else if( edgeMap.find(e01) != edgeMap.end() ) { // if has normal...
+	//		_edges[edgeMap[e01]].faces.push_back(i); // add current face to lsit
+	//	} else {
+	//		Edge e;
+	//		e.idx[0] = e01.first;
+	//		e.idx[1] = e01.second;
+	//		e.faces.push_back(i);
+	//		_edges.push_back(e);
+	//		edgeMap[e01] = _edges.size()-1;
+	//	}
+	//	// edge 1->2
+	//	std::pair<int, int> e11(currTri.idx[1], currTri.idx[2]);
+	//	std::pair<int, int> e12(currTri.idx[2], currTri.idx[1]);
+	//	if( edgeMap.find(e12) != edgeMap.end() ) {
+	//		_edges[edgeMap[e12]].faces.push_back(i);
+	//	} else if( edgeMap.find(e11) != edgeMap.end() ) {
+	//		_edges[edgeMap[e11]].faces.push_back(i);
+	//	} else {
+	//		Edge e;
+	//		e.idx[0] = e11.first;
+	//		e.idx[1] = e11.second;
+	//		e.faces.push_back(i);
+	//		_edges.push_back(e);
+	//		edgeMap[e11] = _edges.size()-1;
+	//	}
+	//	// edge 2->0
+	//	std::pair<int, int> e21(currTri.idx[2], currTri.idx[0]);
+	//	std::pair<int, int> e22(currTri.idx[0], currTri.idx[2]);
+	//	if( edgeMap.find(e22) != edgeMap.end() ) {
+	//		_edges[edgeMap[e22]].faces.push_back(i);
+	//	} else if( edgeMap.find(e21) != edgeMap.end() ) {
+	//		_edges[edgeMap[e21]].faces.push_back(i);
+	//	} else {
+	//		Edge e;
+	//		e.idx[0] = e21.first;
+	//		e.idx[1] = e21.second;
+	//		e.faces.push_back(i);
+	//		_edges.push_back(e);
+	//		edgeMap[e21] = _edges.size()-1;
+	//	}
+	//}
+
+	//
+	// link triangles' edges (edges are already linked to triangles)
+	//
+	for( int i = 0; i < _edges.size(); ++i ) {
+		const Edge& currEdge = _edges[i];
+		for( int j = 0; j < currEdge.faces.size(); ++j ) {
+			_triangles[currEdge.faces[j]].edges.push_back(i);
+		}
+	}
 }
