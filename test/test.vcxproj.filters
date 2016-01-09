@@ -65,6 +65,75 @@
     <ClCompile Include="src\demos\refract\RefractDemo.cpp">
       <Filter>demos\refract</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\clipping\ClippingDemo.cpp">
+      <Filter>demos\clipping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\ClipMesh.cpp">
+      <Filter>demos\clipping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\PartitionMesh.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5APoint.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5Assert.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5AVector.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5HPlane.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5HPoint.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5Math.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5MathematicsPCH.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5Vector3.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\ConvexPolyhedron.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTMesh.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5Vector2.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTIVertex.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTIEdge.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTITriangle.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTVertex.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5Memory.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\Wm5Mutex.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTEdge.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\MTTriangle.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\gt\ConvexClipper.cpp">
+      <Filter>demos\clipping\gt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -93,6 +162,12 @@
     </Filter>
     <Filter Include="demos\refract">
       <UniqueIdentifier>{2de98518-acd6-4f7c-ac5f-57dd3d102d97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\clipping">
+      <UniqueIdentifier>{2ef025e2-8ea6-46f4-804a-004773516ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\clipping\gt">
+      <UniqueIdentifier>{fbecdbf8-edae-407e-9a6d-70464b6e34f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,5 +252,157 @@
     <ClInclude Include="src\demos\refract\RefractDemo.hpp">
       <Filter>demos\refract</Filter>
     </ClInclude>
+    <ClInclude Include="src\demos\clipping\ClippingDemo.hpp">
+      <Filter>demos\clipping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\Plane.hpp">
+      <Filter>demos\clipping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\ClipMesh.hpp">
+      <Filter>demos\clipping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\PartitionMesh.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5EdgeKey.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5MathematicsLIB.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5CoreLIB.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5HPlane.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5APoint.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5AVector.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5HPoint.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Float3.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Tuple.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Vector3.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Math.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Assert.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5MathematicsPCH.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5CorePCH.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\ConvexPolyhedron.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTMesh.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\ConvexClipper.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Plane3.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Vector2.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTIVertex.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTIEdge.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTITriangle.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTVertex.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\UnorderedSet.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Memory.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5Mutex.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\Wm5MutexType.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTEdge.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\gt\MTTriangle.h">
+      <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\demos\clipping\gt\Wm5EdgeKey.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5HPlane.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5APoint.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5AVector.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5HPoint.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Float3.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Tuple.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Vector3.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Math.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\MTMesh.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Plane3.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Vector2.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\MTVertex.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\UnorderedSet.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\Wm5Memory.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\MTEdge.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
+    <None Include="src\demos\clipping\gt\MTTriangle.inl">
+      <Filter>demos\clipping\gt</Filter>
+    </None>
   </ItemGroup>
 </Project>

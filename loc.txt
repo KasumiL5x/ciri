@@ -1,0 +1,4 @@
+framework: 11102 lines in 131 files
+test: 7540 lines in 85 files
+
+total: 18642

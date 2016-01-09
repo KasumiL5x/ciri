@@ -8,6 +8,7 @@
 #include "demos/terrain/TerrainDemo.hpp"
 #include "demos/sprites/SpritesDemo.hpp"
 #include "demos/refract/RefractDemo.hpp"
+#include "demos/clipping/ClippingDemo.hpp"
 //#include "demos/deferred/DeferredDemo.hpp"
 
 enum class Demo {
@@ -15,6 +16,7 @@ enum class Demo {
 	Terrain,
 	Sprites,
 	Refract,
+	Clipping
 	//Deferred
 };
 
@@ -34,6 +36,10 @@ std::unique_ptr<Game> createGame( Demo type ) {
 
 		case Demo::Refract: {
 			return std::unique_ptr<Game>(new RefractDemo());
+		}
+												
+		case Demo::Clipping: {
+			return std::unique_ptr<Game>(new ClippingDemo());
 		}
 
 		//case Demo::Deferred: {
@@ -56,7 +62,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<Game> game = createGame(Demo::Refract);
+	std::unique_ptr<Game> game = createGame(Demo::Clipping);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}
