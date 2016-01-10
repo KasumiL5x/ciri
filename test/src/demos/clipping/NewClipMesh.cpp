@@ -175,6 +175,10 @@ int NewClipMesh::processVertices( const Plane& clippingPlane ) {
 		}
 	}
 
+	printf("Num positive: %d\n", numPositive);
+	printf("Num negative: %d\n", numNegative);
+	printf("Num zero: %d\n", numZero);
+
 	// mesh is in negative halfspace, fully clipped
 	if( 0 == numPositive ) {
 		return -1;
@@ -246,9 +250,9 @@ void NewClipMesh::processFaces( const Plane& clippingPlane ) {
 	// the mesh straddles the plane.  a new convex polygon face will be
 	// generated.  add it now and insert edges when they are visited.
 	const int fNew = _faces.size();
-	_faces.push_back(CFace());
-	CFace& faceNew = _faces[fNew];
-	faceNew.normal = clippingPlane.normal;
+	//_faces.push_back(CFace());
+	//CFace& faceNew = _faces[fNew];
+	//faceNew.normal = clippingPlane.normal;
 
 	// process the faces
 	for( unsigned int currFace = 0; currFace < fNew; ++currFace ) {
@@ -287,7 +291,7 @@ void NewClipMesh::processFaces( const Plane& clippingPlane ) {
 
 			// add new edge to polygons
 			face.edges.insert(eNew);
-			faceNew.edges.insert(eNew);
+			//faceNew.edges.insert(eNew);
 		}
 	}
 
@@ -297,10 +301,10 @@ void NewClipMesh::processFaces( const Plane& clippingPlane ) {
 	// needle-like with a collapse of two edges into a single edge.  this
 	// block guarantees the invariant face is always a simple polygon.
 	//postProcess(fNew, faceNew);
-	if( faceNew.edges.size() < 3 ) {
-		// face is completely degenerate, remote it from mesh
-		_faces.pop_back();
-	}
+	//if( faceNew.edges.size() < 3 ) {
+	//	// face is completely degenerate, remote it from mesh
+	//	_faces.pop_back();
+	//}
 }
 
 bool NewClipMesh::getOpenPolyline( CFace& face, int& vStart, int& vFinal ) {

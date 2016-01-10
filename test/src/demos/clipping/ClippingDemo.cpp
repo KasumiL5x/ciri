@@ -70,7 +70,7 @@ void ClippingDemo::onLoadContent() {
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;
-	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
@@ -96,17 +96,36 @@ void ClippingDemo::onLoadContent() {
 	}
 
 	// create model
-	_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
-	//_model = modelgen::createPlane(graphicsDevice(), 1.0f, 1.0f, 0, 0, 1.0f, 1.0f, false, false);
-	//_model = new Model();
+	//_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
+	//_model = modelgen::createSphere(graphicsDevice(), 32, 0.5f);
+#if 1
+	_model = new Model();
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f,  0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f,  0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f, -0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f, 0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f, 0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
+	_model->addIndex(0); _model->addIndex(1); _model->addIndex(2);
+	_model->addIndex(1); _model->addIndex(3); _model->addIndex(2);
+	_model->addIndex(0); _model->addIndex(1); _model->addIndex(4);
+	_model->addIndex(1); _model->addIndex(5); _model->addIndex(4);
+	_model->addIndex(5); _model->addIndex(6); _model->addIndex(7);
+	_model->addIndex(6); _model->addIndex(4); _model->addIndex(5);
+	_model->build(graphicsDevice());
+#endif
 	//_model->addFromObj("clipping/Plane.obj");
 	//_model->addIndex(0);_model->addIndex(1);_model->addIndex(2);
 	//_model->addIndex(3);_model->addIndex(4);_model->addIndex(5);
-	_model->build(graphicsDevice());
+	//_model->addIndex(6);_model->addIndex(7);_model->addIndex(8);
+	//_model->addIndex(9);_model->addIndex(10);_model->addIndex(11);
+	
 	// clip duplicated model against cutting plane
 	//_clippedModel = clipModelAgainstPlane(*_model, _cuttingPlane);
 
-#if 1
+#if 0
 	// build vertices for clipping
 	std::vector<APoint> clipVertices;
 	for( int i = 0; i < _model->getVertices().size(); ++i ) {
@@ -183,22 +202,22 @@ void ClippingDemo::onLoadContent() {
 #endif
 
 	// create clip mesh
-	//NewClipMesh cm(*_model);
-	//const int result = cm.clip(_cuttingPlane);
-	//printf("Cutting complete with result: %d\n", result);
-	//cm.printDebug(false);
-	//_clippedModel = cm.convert();
-	//_clippedModel.computeNormals();
-	//printf("Vertices (%d):\n", _clippedModel.getVertices().size());
-	//for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
-	//}
-	//printf("Indices (%d):\n", _clippedModel.getIndices().size());
-	//for( int i = 0; i < _clippedModel.getIndices().size(); ++i ) {
-	//	//printf("\t[%d]: %d\n", i, _clippedModel.getIndices()[i]);
-	//}
-	//if( !_clippedModel.build(graphicsDevice()) ) {
-	//	printf("Failed to build clipped model.\n");
-	//}
+	NewClipMesh cm(*_model);
+	const int result = cm.clip(_cuttingPlane);
+	printf("Cutting complete with result: %d\n", result);
+	cm.printDebug(false);
+	_clippedModel = cm.convert();
+	_clippedModel.computeNormals();
+	printf("Vertices (%d):\n", _clippedModel.getVertices().size());
+	for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
+	}
+	printf("Indices (%d):\n", _clippedModel.getIndices().size());
+	for( int i = 0; i < _clippedModel.getIndices().size(); ++i ) {
+		//printf("\t[%d]: %d\n", i, _clippedModel.getIndices()[i]);
+	}
+	if( !_clippedModel.build(graphicsDevice()) ) {
+		printf("Failed to build clipped model.\n");
+	}
 }
 
 void ClippingDemo::onEvent( const ciri::WindowEvent& evt ) {
