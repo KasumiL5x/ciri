@@ -6,7 +6,7 @@
 //        an index in my cube test seems to be minus 3 million or so, but only one!  not sure why yet.
 //        i'm going to rewrite this to copy the ConvexClipper.cpp style completely, and then tweak from there.
 //        all in all, good progress so far.
-gionrgoijrgiorgijog
+//gionrgoijrgiorgijog
 
 ClipMesh::ClipMesh( Model& source ) {
 	// copy vertices over

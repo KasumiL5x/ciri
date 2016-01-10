@@ -134,6 +134,9 @@
     <ClCompile Include="src\demos\clipping\gt\ConvexClipper.cpp">
       <Filter>demos\clipping\gt</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\clipping\NewClipMesh.cpp">
+      <Filter>demos\clipping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\clipping\gt\MTTriangle.h">
       <Filter>demos\clipping\gt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\NewClipMesh.hpp">
+      <Filter>demos\clipping</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

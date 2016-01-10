@@ -111,6 +111,7 @@
     <ClCompile Include="src\demos\clipping\gt\Wm5Mutex.cpp" />
     <ClCompile Include="src\demos\clipping\gt\Wm5Vector2.cpp" />
     <ClCompile Include="src\demos\clipping\gt\Wm5Vector3.cpp" />
+    <ClCompile Include="src\demos\clipping\NewClipMesh.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="src\demos\refract\RefractDemo.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\demos\clipping\gt\Wm5Tuple.h" />
     <ClInclude Include="src\demos\clipping\gt\Wm5Vector2.h" />
     <ClInclude Include="src\demos\clipping\gt\Wm5Vector3.h" />
+    <ClInclude Include="src\demos\clipping\NewClipMesh.hpp" />
     <ClInclude Include="src\demos\clipping\Plane.hpp" />
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />

@@ -2,6 +2,7 @@
 #include "../../common/ModelGen.hpp"
 #include <cc/MatrixFunc.hpp>
 #include "ClipMesh.hpp"
+#include "NewClipMesh.hpp"
 #include "gt/PartitionMesh.h"
 #include "gt/ConvexPolyhedron.h"
 
@@ -69,7 +70,7 @@ void ClippingDemo::onLoadContent() {
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;
-	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
@@ -173,11 +174,11 @@ void ClippingDemo::onLoadContent() {
 	bool killme=true;
 
 	// create clip mesh
-	ClipMesh cm(*_model);
+	NewClipMesh cm(*_model);
 	const int result = cm.clip(_cuttingPlane);
 	printf("Cutting complete with result: %d\n", result);
 	cm.printDebug(false);
-	_clippedModel = cm.convert2();
+	_clippedModel = cm.convert();
 	_clippedModel.computeNormals();
 	printf("Vertices (%d):\n", _clippedModel.getVertices().size());
 	for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
