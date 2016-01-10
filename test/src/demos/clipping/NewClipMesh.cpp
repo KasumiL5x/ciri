@@ -48,7 +48,6 @@ NewClipMesh::NewClipMesh( Model& sourceModel ) {
 		_edges[currEdge].vertex[1] = srcEdges[currEdge].idx[1];
 		for( unsigned int currFace = 0; currFace < srcEdges[currEdge].faces.size(); ++currFace ) {
 			_edges[currEdge].faces.insert(srcEdges[currEdge].faces[currFace]);
-			//_edges[currEdge].faces.push_back(srcEdges[currEdge].faces[currFace]);
 		}
 	}
 
@@ -162,7 +161,8 @@ int NewClipMesh::processVertices( const Plane& clippingPlane ) {
 			continue;
 		}
 
-		vtx.distance = sqrDistPointPlane(clippingPlane, vtx.point);
+		vtx.distance = clippingPlane.normal.dot(vtx.point) - clippingPlane.distance;
+		//vtx.distance = sqrDistPointPlane(clippingPlane, vtx.point);
 		if( vtx.distance > EPSILON ) {
 			++numPositive;
 		} else if( vtx.distance < -EPSILON ) {
@@ -213,13 +213,6 @@ void NewClipMesh::processEdges() {
 					face.visible = false;
 				}
 			}
-			//for( unsigned int currFace = 0; currFace < edge.faces.size(); ++currFace ) {
-			//	CFace& face = _faces[edge.faces[currFace]];
-			//	face.edges.erase(currEdge);
-			//	if( face.edges.empty() ) {
-			//		face.visible = false;
-			//	}
-			//}
 
 			edge.visible = false;
 			continue;
@@ -291,8 +284,6 @@ void NewClipMesh::processFaces( const Plane& clippingPlane ) {
 			edgeNew.vertex[1] = vFinal;
 			edgeNew.faces.insert(currFace);
 			edgeNew.faces.insert(fNew);
-			//edgeNew.faces.push_back(currFace);
-			//edgeNew.faces.push_back(fNew);
 
 			// add new edge to polygons
 			face.edges.insert(eNew);
@@ -385,49 +376,62 @@ bool NewClipMesh::getOpenPolyline( CFace& face, int& vStart, int& vFinal ) {
 }
 
 void NewClipMesh::postProcess( int fNew, CFace& faceNew ) {
-	//const int numEdges = faceNew.edges.size();
-	//std::vector<CEdgePlus> edges(numEdges);
-	//std::set<int>::const_iterator iter = faceNew.edges.begin();
-	//std::set<int>::const_iterator end = faceNew.edges.end();
-	//int counter = 0;
-	//while( iter != end ) {
-	//	const int e = *iter++;
-	//	edges[counter++] = CEdgePlus(e, _edges[e]);
-	//}
-	//std::sort(edges.begin(), edges.end());
+	const int numEdges = faceNew.edges.size();
+	std::vector<CEdgePlus> edges(numEdges);
+	std::set<int>::const_iterator iter = faceNew.edges.begin();
+	std::set<int>::const_iterator end = faceNew.edges.end();
+	int counter = 0;
+	while( iter != end ) {
+		const int e = *iter++;
+		edges[counter++] = CEdgePlus(e, _edges[e]);
+	}
+	std::sort(edges.begin(), edges.end());
 
-	//// process duplicate edges
-	//for( int i0=0, i1=1; i1 < numEdges; i0 = i1++) {
-	//	if( edges[i0] == edges[i1] ) {
-	//		const int i2 = i1 + 1;
-	//		if( i2 < numEdges ) {
-	//			// make sure an edge occurs at most twice.  if not, then the algorithm
-	//			// needs to be modified to handle it.
-	//			assert(edges[i1] != edges[i2]); // unexpected condition
-	//		}
+	// process duplicate edges
+	for( int i0=0, i1=1; i1 < numEdges; i0 = i1++) {
+		if( edges[i0] == edges[i1] ) {
+			const int i2 = i1 + 1;
+			if( i2 < numEdges ) {
+				// make sure an edge occurs at most twice.  if not, then the algorithm
+				// needs to be modified to handle it.
+				assert(edges[i1] != edges[i2]); // unexpected condition
+			}
 
-	//		// edge e0 has vertices v0, v1 and some faces.
-	//		// vertices v0 and v1 have some faces. lol
-	//		const int e0 = edges[i0].E;
-	//		const int e1 = edges[i1].E;
-	//		CEdge& edge0 = _edges[e0];
-	//		CEdge& edge1 = _edges[e1];
+			// todo: figure out what the algorithm does
 
-	//		// remove e0 and e1 from faceNew
-	//		faceNew.edges.erase(e0);
-	//		faceNew.edges.erase(e1);
+			// edge e0 has vertices v0,v1 and faces f0,nf.
+			// edge e1 has vertices v0,v1 and faces f1,nf.
 
-	//		// remove faceNew from e0
-	//		iter = edge0.faces.begin();
-	//		end = edge0.faces.end();
-	//		while( iter != end ) {
-	//			const int idx = *iter++;
-	//			if( idx == fNew ) {
-	//				*iter = 
-	//			}
-	//		}
-	//	}
-	//}
+			// 1. get edges
+			const int e0 = edges[i0].E;
+			const int e1 = edges[i1].E;
+			CEdge& edge0 = _edges[e0];
+			CEdge& edge1 = _edges[e1];
+
+			// 2. remove e0 and e1 from faceNew
+			faceNew.edges.erase(e0);
+			faceNew.edges.erase(e1);
+
+			// 3. remove faceNew from e0
+			edge0.faces.erase(fNew);
+
+			// 4. remove faceNew from e1
+			edge1.faces.erase(fNew);
+
+			// 5. e1 is being booted from the system.  update the face f1 that shares it.
+			// update e1 to share f1.
+			iter = edge1.faces.begin();
+			end = edge1.faces.end();
+			while( iter != end ) {
+				const int idx = *iter++;
+				CFace& face = _faces[idx];
+				face.edges.erase(e1);
+				face.edges.insert(e0);
+				edge0.faces.insert(idx);
+				edge1.visible = false;
+			}
+		}
+	}
 }
 
 void NewClipMesh::getTriangles( std::vector<int>& indices ) {
@@ -449,7 +453,7 @@ void NewClipMesh::getTriangles( std::vector<int>& indices ) {
 		const cc::Vec3f diff1 = _vertices[v1].point - _vertices[v0].point;
 		const cc::Vec3f diff2 = _vertices[v2].point - _vertices[v0].point;
 		const float sgnVolume = face.normal.dot(diff1.cross(diff2));
-		if( sgnVolume > 0.0f ) {
+		if( sgnVolume < 0.0f ) { // feel free to invert this test
 			// clockwise, need to swap
 			for( int i = 1; i + 1 < numEdges; ++i ) {
 				indices.push_back(v0);

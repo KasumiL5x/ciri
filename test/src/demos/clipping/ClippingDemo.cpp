@@ -85,13 +85,13 @@ void ClippingDemo::onLoadContent() {
 	_blendState = graphicsDevice()->getDefaultBlendOpaque();
 
 	// create model
-	_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
+	//_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
 	//_model = modelgen::createPlane(graphicsDevice(), 1.0f, 1.0f, 0, 0, 1.0f, 1.0f, false, false);
-	//_model = new Model();
-	//_model->addFromObj("clipping/Plane.obj");
-	//_model->addIndex(0);_model->addIndex(1);_model->addIndex(2);
-	//_model->addIndex(3);_model->addIndex(4);_model->addIndex(5);
-	//_model->build(graphicsDevice());
+	_model = new Model();
+	_model->addFromObj("clipping/Plane.obj");
+	_model->addIndex(0);_model->addIndex(1);_model->addIndex(2);
+	_model->addIndex(3);_model->addIndex(4);_model->addIndex(5);
+	_model->build(graphicsDevice());
 	// clip duplicated model against cutting plane
 	//_clippedModel = clipModelAgainstPlane(*_model, _cuttingPlane);
 

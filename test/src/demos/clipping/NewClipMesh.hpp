@@ -24,7 +24,6 @@ private:
 	struct CEdge {
 		int vertex[2];
 		std::set<int> faces;
-		//std::vector<int> faces;
 		bool visible;
 
 		CEdge() {
@@ -54,7 +53,6 @@ private:
 		int V0;
 		int V1;
 		std::set<int> faces;
-		//std::vector<int> faces;
 
 		CEdgePlus() {
 		}

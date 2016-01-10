@@ -439,8 +439,10 @@ bool Model::parseExtendedData() {
 	}
 
 	//
-	// gather all unique edges
+	// gather all edges
 	//
+#define MODEL_UNIQUE_EDGES 1
+#ifndef MODEL_UNIQUE_EDGES
 	for( int i = 0; i < _triangles.size(); ++i ) {
 		const Model::Triangle& t = _triangles[i];
 		Edge e0, e1, e2;
@@ -457,57 +459,59 @@ bool Model::parseExtendedData() {
 		_edges.push_back(e1);
 		_edges.push_back(e2);
 	}
-	//// use map and reverse index checking to ensure only unique edges are stored and appended
-	//std::map<std::pair<int, int>, int> edgeMap;
-	//std::vector<Model::Triangle> triangles = getTriangles();
-	//for( int i = 0; i < triangles.size(); ++i ) {
-	//	const Model::Triangle& currTri = triangles[i];
-	//	// edge 0->1
-	//	std::pair<int, int> e01(currTri.idx[0], currTri.idx[1]);
-	//	std::pair<int, int> e02(currTri.idx[1], currTri.idx[0]);
-	//	if( edgeMap.find(e02) != edgeMap.end() ) { // if has reversed...
-	//		_edges[edgeMap[e02]].faces.push_back(i); // add current face to list
-	//	} else if( edgeMap.find(e01) != edgeMap.end() ) { // if has normal...
-	//		_edges[edgeMap[e01]].faces.push_back(i); // add current face to lsit
-	//	} else {
-	//		Edge e;
-	//		e.idx[0] = e01.first;
-	//		e.idx[1] = e01.second;
-	//		e.faces.push_back(i);
-	//		_edges.push_back(e);
-	//		edgeMap[e01] = _edges.size()-1;
-	//	}
-	//	// edge 1->2
-	//	std::pair<int, int> e11(currTri.idx[1], currTri.idx[2]);
-	//	std::pair<int, int> e12(currTri.idx[2], currTri.idx[1]);
-	//	if( edgeMap.find(e12) != edgeMap.end() ) {
-	//		_edges[edgeMap[e12]].faces.push_back(i);
-	//	} else if( edgeMap.find(e11) != edgeMap.end() ) {
-	//		_edges[edgeMap[e11]].faces.push_back(i);
-	//	} else {
-	//		Edge e;
-	//		e.idx[0] = e11.first;
-	//		e.idx[1] = e11.second;
-	//		e.faces.push_back(i);
-	//		_edges.push_back(e);
-	//		edgeMap[e11] = _edges.size()-1;
-	//	}
-	//	// edge 2->0
-	//	std::pair<int, int> e21(currTri.idx[2], currTri.idx[0]);
-	//	std::pair<int, int> e22(currTri.idx[0], currTri.idx[2]);
-	//	if( edgeMap.find(e22) != edgeMap.end() ) {
-	//		_edges[edgeMap[e22]].faces.push_back(i);
-	//	} else if( edgeMap.find(e21) != edgeMap.end() ) {
-	//		_edges[edgeMap[e21]].faces.push_back(i);
-	//	} else {
-	//		Edge e;
-	//		e.idx[0] = e21.first;
-	//		e.idx[1] = e21.second;
-	//		e.faces.push_back(i);
-	//		_edges.push_back(e);
-	//		edgeMap[e21] = _edges.size()-1;
-	//	}
-	//}
+#else
+	// use map and reverse index checking to ensure only unique edges are stored and appended
+	std::map<std::pair<int, int>, int> edgeMap;
+	std::vector<Model::Triangle> triangles = getTriangles();
+	for( int i = 0; i < triangles.size(); ++i ) {
+		const Model::Triangle& currTri = triangles[i];
+		// edge 0->1
+		std::pair<int, int> e01(currTri.idx[0], currTri.idx[1]);
+		std::pair<int, int> e02(currTri.idx[1], currTri.idx[0]);
+		if( edgeMap.find(e02) != edgeMap.end() ) { // if has reversed...
+			_edges[edgeMap[e02]].faces.push_back(i); // add current face to list
+		} else if( edgeMap.find(e01) != edgeMap.end() ) { // if has normal...
+			_edges[edgeMap[e01]].faces.push_back(i); // add current face to lsit
+		} else {
+			Edge e;
+			e.idx[0] = e01.first;
+			e.idx[1] = e01.second;
+			e.faces.push_back(i);
+			_edges.push_back(e);
+			edgeMap[e01] = _edges.size()-1;
+		}
+		// edge 1->2
+		std::pair<int, int> e11(currTri.idx[1], currTri.idx[2]);
+		std::pair<int, int> e12(currTri.idx[2], currTri.idx[1]);
+		if( edgeMap.find(e12) != edgeMap.end() ) {
+			_edges[edgeMap[e12]].faces.push_back(i);
+		} else if( edgeMap.find(e11) != edgeMap.end() ) {
+			_edges[edgeMap[e11]].faces.push_back(i);
+		} else {
+			Edge e;
+			e.idx[0] = e11.first;
+			e.idx[1] = e11.second;
+			e.faces.push_back(i);
+			_edges.push_back(e);
+			edgeMap[e11] = _edges.size()-1;
+		}
+		// edge 2->0
+		std::pair<int, int> e21(currTri.idx[2], currTri.idx[0]);
+		std::pair<int, int> e22(currTri.idx[0], currTri.idx[2]);
+		if( edgeMap.find(e22) != edgeMap.end() ) {
+			_edges[edgeMap[e22]].faces.push_back(i);
+		} else if( edgeMap.find(e21) != edgeMap.end() ) {
+			_edges[edgeMap[e21]].faces.push_back(i);
+		} else {
+			Edge e;
+			e.idx[0] = e21.first;
+			e.idx[1] = e21.second;
+			e.faces.push_back(i);
+			_edges.push_back(e);
+			edgeMap[e21] = _edges.size()-1;
+		}
+	}
+#endif
 
 	//
 	// link triangles' edges (edges are already linked to triangles)
