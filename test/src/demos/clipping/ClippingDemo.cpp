@@ -96,9 +96,9 @@ void ClippingDemo::onLoadContent() {
 	}
 
 	// create model
-	//_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
+	_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
 	//_model = modelgen::createSphere(graphicsDevice(), 32, 0.5f);
-#if 1
+#if 0
 	_model = new Model();
 	_model->addVertex(Vertex(cc::Vec3f(-0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
 	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));

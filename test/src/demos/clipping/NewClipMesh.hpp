@@ -80,6 +80,8 @@ private:
 	//
 	void getTriangles( std::vector<int>& indices );
 	void orderVertices( CFace& face, std::vector<int>& vOrdered );
+	//
+	void swapEdges( std::vector<int>& list, int e0, int e1 );
 
 private:
 	std::vector<CVertex> _vertices;

@@ -351,7 +351,7 @@ bool Model::parseExtendedData() {
 	//
 	// gather all edges
 	//
-//#define MODEL_UNIQUE_EDGES 1
+#define MODEL_UNIQUE_EDGES 1
 #ifndef MODEL_UNIQUE_EDGES
 	for( int i = 0; i < _triangles.size(); ++i ) {
 		const Model::Triangle& t = _triangles[i];

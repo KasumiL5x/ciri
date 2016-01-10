@@ -283,7 +283,6 @@ void NewClipMesh::processFaces( const Plane& clippingPlane ) {
 			const int eNew = _edges.size();
 			_edges.push_back(CEdge());
 			CEdge& edgeNew = _edges[eNew];
-
 			edgeNew.vertex[0] = vStart;
 			edgeNew.vertex[1] = vFinal;
 			edgeNew.faces.insert(currFace);
@@ -486,8 +485,7 @@ void NewClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 		eOrdered[counter++] = *iter++;
 	}
 
-	std::sort(eOrdered.begin(), eOrdered.end());
-	//// bubble sort
+	// bubble sort
 	//for( int i0 = 0, i1 = 1, choice = 1; i1 < numEdges - 1; i0 = i1++ ) {
 	//	CEdge& edgeCurr = _edges[eOrdered[i0]];
 	//	int j, curr = edgeCurr.vertex[choice];
@@ -509,8 +507,32 @@ void NewClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 	//			break;
 	//		}
 	//	}
-	//	assert(j < numEdges); // unexpected condition
+	//	//assert(j < numEdges); // unexpected condition
 	//}
+
+	for( int i0=0, i1=1, choice=1; i1 < numEdges-1; i0=i1, i1++ ) {
+		const int current = _edges[eOrdered[i0]].vertex[choice];
+		int j;
+		for( j = i1; j < numEdges; ++j ) {
+			if( current == _edges[eOrdered[j]].vertex[0] ) {
+				swapEdges(eOrdered, i1, j);
+				choice = 1;
+				break;
+			}
+			if( current == _edges[eOrdered[j]].vertex[1] ) {
+				swapEdges(eOrdered, i1, j);
+				choice = 0;
+				break;
+			}
+		}
+		//assert(j < numEdges);
+	}
+
+	std::vector<int> COMPARE = eOrdered;
+	std::sort(COMPARE.begin(), COMPARE.end());
+	if( COMPARE != eOrdered ) {
+		printf("WARNING: Sort results are different.\n");
+	}
 
 	vOrdered[0] = _edges[eOrdered[0]].vertex[0];
 	vOrdered[1] = _edges[eOrdered[0]].vertex[1];
@@ -522,4 +544,10 @@ void NewClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 			vOrdered[i + 1] = edge.vertex[0];
 		}
 	}
+}
+
+void NewClipMesh::swapEdges( std::vector<int>& list, int e0, int e1 ) {
+	const int tmp = list[e0];
+	list[e0] = list[e1];
+	list[e1] = tmp;
 }
