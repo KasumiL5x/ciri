@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\common\Axis.cpp" />
+    <ClCompile Include="src\common\GeometricPlane.cpp" />
     <ClCompile Include="src\common\Grid.cpp" />
     <ClCompile Include="src\common\HeightmapTerrain.cpp" />
     <ClCompile Include="src\common\Model.cpp" />
@@ -131,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common\Axis.hpp" />
+    <ClInclude Include="src\common\GeometricPlane.hpp" />
     <ClInclude Include="src\common\Grid.hpp" />
     <ClInclude Include="src\common\HeightmapTerrain.hpp" />
     <ClInclude Include="src\common\Model.hpp" />

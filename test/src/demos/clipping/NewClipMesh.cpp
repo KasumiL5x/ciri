@@ -216,7 +216,7 @@ void NewClipMesh::processEdges() {
 
 			edge.visible = false;
 			continue;
-		} //endif
+		}
 
 		// face is on nonnegative side and retains the edge
 		if( d0 >= 0.0f && d1 >= 0.0f ) {
@@ -224,8 +224,8 @@ void NewClipMesh::processEdges() {
 		}
 
 		// the edge is split by the plane.  copmute the point of intersection.
-		// if the old edge is <v0,v1> and currEdge is the intersection point,
-		// the new edge is <v0,currEdge> when d0 > 0, or<currEdge,v1> when d1 > 0.
+		// if the old edge is <v0,v1> and i is the intersection point,
+		// the new edge is <v0,i> when d0 > 0, or<i,v1> when d1 > 0.
 		const int vNew = _vertices.size();
 		_vertices.push_back(CVertex());
 		CVertex& vertexNew = _vertices[vNew];
@@ -296,7 +296,7 @@ void NewClipMesh::processFaces( const Plane& clippingPlane ) {
 	// round-off errors can cause the new face from the last loop to be
 	// needle-like with a collapse of two edges into a single edge.  this
 	// block guarantees the invariant face is always a simple polygon.
-	postProcess(fNew, faceNew);
+	//postProcess(fNew, faceNew);
 	if( faceNew.edges.size() < 3 ) {
 		// face is completely degenerate, remote it from mesh
 		_faces.pop_back();

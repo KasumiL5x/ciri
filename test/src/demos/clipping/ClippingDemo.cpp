@@ -70,7 +70,7 @@ void ClippingDemo::onLoadContent() {
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;
-	rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
@@ -84,18 +84,29 @@ void ClippingDemo::onLoadContent() {
 	// create blend state
 	_blendState = graphicsDevice()->getDefaultBlendOpaque();
 
+	// create geometric plane
+	const float PLANE_SIZE = 2.0f;
+	const cc::Vec3f p0 = cc::Vec3f(-0.5f*PLANE_SIZE, 0.0f,  0.5f*PLANE_SIZE);
+	const cc::Vec3f p1 = cc::Vec3f(-0.5f*PLANE_SIZE, 0.0f, -0.5f*PLANE_SIZE);
+	const cc::Vec3f p2 = cc::Vec3f( 0.5f*PLANE_SIZE, 0.0f, -0.5f*PLANE_SIZE);
+	const cc::Vec3f p3 = cc::Vec3f( 0.5f*PLANE_SIZE, 0.0f,  0.5f*PLANE_SIZE);
+	_geometricPlane = GeometricPlane(p0, p1, p2, p3);
+	if( !_geometricPlane.build(graphicsDevice()) ) {
+		printf("Failed to build geometric plane.\n");
+	}
+
 	// create model
-	//_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
+	_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
 	//_model = modelgen::createPlane(graphicsDevice(), 1.0f, 1.0f, 0, 0, 1.0f, 1.0f, false, false);
-	_model = new Model();
-	_model->addFromObj("clipping/Plane.obj");
-	_model->addIndex(0);_model->addIndex(1);_model->addIndex(2);
-	_model->addIndex(3);_model->addIndex(4);_model->addIndex(5);
+	//_model = new Model();
+	//_model->addFromObj("clipping/Plane.obj");
+	//_model->addIndex(0);_model->addIndex(1);_model->addIndex(2);
+	//_model->addIndex(3);_model->addIndex(4);_model->addIndex(5);
 	_model->build(graphicsDevice());
 	// clip duplicated model against cutting plane
 	//_clippedModel = clipModelAgainstPlane(*_model, _cuttingPlane);
 
-#if 0
+#if 1
 	// build vertices for clipping
 	std::vector<APoint> clipVertices;
 	for( int i = 0; i < _model->getVertices().size(); ++i ) {
@@ -171,25 +182,23 @@ void ClippingDemo::onLoadContent() {
 	}
 #endif
 
-	bool killme=true;
-
 	// create clip mesh
-	NewClipMesh cm(*_model);
-	const int result = cm.clip(_cuttingPlane);
-	printf("Cutting complete with result: %d\n", result);
-	cm.printDebug(false);
-	_clippedModel = cm.convert();
-	_clippedModel.computeNormals();
-	printf("Vertices (%d):\n", _clippedModel.getVertices().size());
-	for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
-	}
-	printf("Indices (%d):\n", _clippedModel.getIndices().size());
-	for( int i = 0; i < _clippedModel.getIndices().size(); ++i ) {
-		//printf("\t[%d]: %d\n", i, _clippedModel.getIndices()[i]);
-	}
-	if( !_clippedModel.build(graphicsDevice()) ) {
-		printf("Failed to build clipped model.\n");
-	}
+	//NewClipMesh cm(*_model);
+	//const int result = cm.clip(_cuttingPlane);
+	//printf("Cutting complete with result: %d\n", result);
+	//cm.printDebug(false);
+	//_clippedModel = cm.convert();
+	//_clippedModel.computeNormals();
+	//printf("Vertices (%d):\n", _clippedModel.getVertices().size());
+	//for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
+	//}
+	//printf("Indices (%d):\n", _clippedModel.getIndices().size());
+	//for( int i = 0; i < _clippedModel.getIndices().size(); ++i ) {
+	//	//printf("\t[%d]: %d\n", i, _clippedModel.getIndices()[i]);
+	//}
+	//if( !_clippedModel.build(graphicsDevice()) ) {
+	//	printf("Failed to build clipped model.\n");
+	//}
 }
 
 void ClippingDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -247,6 +256,47 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 			_camera.pan(dx, -dy);
 		}
 	}
+
+	// move geometric plane
+	cc::Vec3f movement;
+	if( input()->isKeyDown(ciri::Key::I) ) {
+		movement.y += 1.0f * deltaTime;
+	}
+	if( input()->isKeyDown(ciri::Key::K) ) {
+		movement.y -= 1.0f * deltaTime;
+	}
+	if( input()->isKeyDown(ciri::Key::J) ) {
+		movement.x -= 1.0f * deltaTime;
+	}
+	if( input()->isKeyDown(ciri::Key::L) ) {
+		movement.x += 1.0f * deltaTime;
+	}
+	_geometricPlane.getXform().setPosition(_geometricPlane.getXform().getPosition() + movement);
+
+	// rotate geometric plane
+	cc::Quatf rotation;
+	if( input()->isKeyDown(ciri::Key::U) ) {
+		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 45.0f * deltaTime);
+	}
+	if( input()->isKeyDown(ciri::Key::O) ) {
+		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, -45.0f * deltaTime);
+	}
+	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * rotation);
+	
+
+	// rebuild cutting plane from new geometric plane position
+	_cuttingPlane.normal = _geometricPlane.getNormal();
+	_cuttingPlane.distance = _geometricPlane.getConstant();
+	//printf("N(%f, %f, %f); D(%f)\n", _cuttingPlane.normal.x, _cuttingPlane.normal.y, _cuttingPlane.normal.z, _cuttingPlane.distance);
+
+	// rebuild cut mesh based on new cutting plane
+	//NewClipMesh cm(*_model);
+	//const int result = cm.clip(_cuttingPlane);
+	//_clippedModel = cm.convert();
+	//_clippedModel.computeNormals();
+	//if( !_clippedModel.build(graphicsDevice()) ) {
+	//	printf("Failed to build clipped model.\n");
+	//}
 }
 
 void ClippingDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
@@ -292,6 +342,21 @@ void ClippingDemo::onDraw() {
 	//		device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
 	//	}
 	//}
+
+	// render geometric plane
+	if( _simpleShader.getShader() != nullptr && _geometricPlane.getVertexBuffer() != nullptr ) {
+		device->applyShader(_simpleShader.getShader());
+		_simpleShader.getConstants().world = _geometricPlane.getXform().getWorld();
+		_simpleShader.getConstants().xform = cameraViewProj * _simpleShader.getConstants().world;
+		_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
+		_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(1.0f, 0.0f, 1.0f);
+		if( _simpleShader.updateConstants() ) {
+			device->setVertexBuffer(_geometricPlane.getVertexBuffer());
+			device->setIndexBuffer(_geometricPlane.getIndexBuffer());
+			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _geometricPlane.getIndexBuffer()->getIndexCount());
+		}
+	}
+
 
 	// render cube
 	if( _simpleShader.getShader() != nullptr && _model->isValid() ) {

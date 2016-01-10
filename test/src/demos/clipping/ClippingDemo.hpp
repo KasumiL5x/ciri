@@ -9,6 +9,7 @@
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"
 #include "Plane.hpp"
+#include "../../common/GeometricPlane.hpp"
 
 class ClippingDemo : public Game {
 public:
@@ -41,6 +42,7 @@ private:
 	Model _clippedModel2;
 	SimpleShader _simpleShader;
 	Plane _cuttingPlane;
+	GeometricPlane _geometricPlane;
 };
 
 #endif /* __clippingdemo__ */

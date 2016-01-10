@@ -137,6 +137,9 @@
     <ClCompile Include="src\demos\clipping\NewClipMesh.cpp">
       <Filter>demos\clipping</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\GeometricPlane.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -356,6 +359,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\clipping\NewClipMesh.hpp">
       <Filter>demos\clipping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\GeometricPlane.hpp">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
