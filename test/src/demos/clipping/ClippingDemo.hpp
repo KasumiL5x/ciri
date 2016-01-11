@@ -28,9 +28,6 @@ protected:
 	virtual void onUnloadContent();
 
 private:
-	Model clipModelAgainstPlane( Model& source, const Plane& plane );
-
-private:
 	ciri::MayaCamera _camera;
 	Grid _grid;
 	Axis _axis;
@@ -39,7 +36,6 @@ private:
 	std::shared_ptr<ciri::IBlendState> _blendState;
 	Model* _model;
 	Model _clippedModel;
-	Model _clippedModel2;
 	SimpleShader _simpleShader;
 	Plane _cuttingPlane;
 	GeometricPlane _geometricPlane;

@@ -1,641 +1,479 @@
 #include "ClipMesh.hpp"
-#include <cc/TriMath.hpp>
 #include <algorithm>
+#include <cc/TriMath.hpp>
 
-// notes: seems to generate a somewhat usable clip (and fills the hole), although there's some bugs.
-//        an index in my cube test seems to be minus 3 million or so, but only one!  not sure why yet.
-//        i'm going to rewrite this to copy the ConvexClipper.cpp style completely, and then tweak from there.
-//        all in all, good progress so far.
-//gionrgoijrgiorgijog
-
-ClipMesh::ClipMesh( Model& source ) {
-	// copy vertices over
-	const std::vector<Vertex>& srcVertices = source.getVertices();
-	V.resize(srcVertices.size());
-	for( int i = 0; i < srcVertices.size(); ++i ) {
-		V[i].point = srcVertices[i].position;
+ClipMesh::CEdgePlus::CEdgePlus( int e, const CEdge& edge ) {
+	this->E = e;
+	this->F0 = edge.faces[0];
+	this->F1 = edge.faces[1];
+	if( edge.vertex[0] < edge.vertex[1] ) {
+		this->V0 = edge.vertex[0];
+		this->V1 = edge.vertex[1];
+	} else {
+		this->V0 = edge.vertex[1];
+		this->V1 = edge.vertex[0];
 	}
+}
 
+bool ClipMesh::CEdgePlus::operator<( const CEdgePlus& rhs ) const {
+	if( this->V1 < rhs.V1 ) {
+		return true;
+	}
+	if( this->V1 == rhs.V1 ) {
+		return this->V0 < rhs.V0;
+	}
+	return false;
+}
+
+bool ClipMesh::CEdgePlus::operator==( const CEdgePlus& rhs ) const {
+	return (this->V0 == rhs.V0) && (this->V1 == rhs.V1);
+}
+
+bool ClipMesh::CEdgePlus::operator!=( const CEdgePlus& rhs ) const {
+	return (this->V0 != rhs.V0) || (this->V1 != rhs.V1);
+}
+
+ClipMesh::ClipMesh( Model& sourceModel ) {
+	// copy vertices over
+	const std::vector<Vertex>& srcVerts = sourceModel.getVertices();
+	_vertices.resize(srcVerts.size());
+	for( unsigned int i = 0; i < srcVerts.size(); ++i ) {
+		_vertices[i].point = srcVerts[i].position;
+	}
+	
 	// copy edges over
-	std::vector<Model::Edge> srcEdges = source.getEdges();
-	E.resize(srcEdges.size());
-	for( int i = 0; i < srcEdges.size(); ++i ) {
-		E[i].vertex[0] = srcEdges[i].idx[0];
-		E[i].vertex[1] = srcEdges[i].idx[1];
-		for( int j = 0; j < srcEdges[i].faces.size(); ++j ) {
-			E[i].face.push_back(srcEdges[i].faces[j]);
-		}
+	const std::vector<Model::Edge>& srcEdges = sourceModel.getEdges();
+	_edges.resize(srcEdges.size());
+	for( unsigned int currEdge = 0; currEdge < srcEdges.size(); ++currEdge ) {
+		_edges[currEdge].vertex[0] = srcEdges[currEdge].idx[0];
+		_edges[currEdge].vertex[1] = srcEdges[currEdge].idx[1];
+		assert(srcEdges[currEdge].faces.size() >= 2);
+		_edges[currEdge].faces[0] = srcEdges[currEdge].faces[0];
+		_edges[currEdge].faces[1] = srcEdges[currEdge].faces[1];
 	}
 
 	// copy faces over
-	std::vector<Model::Triangle> srcTriangles = source.getTriangles();
-	F.resize(srcTriangles.size());
-	for( int i = 0; i < srcTriangles.size(); ++i ) {
-		const cc::Vec3f& p0 = srcVertices[srcTriangles[i].idx[0]].position;
-		const cc::Vec3f& p1 = srcVertices[srcTriangles[i].idx[1]].position;
-		const cc::Vec3f& p2 = srcVertices[srcTriangles[i].idx[2]].position;
-		F[i].plane = cc::math::computeTriangleNormal(p0, p1, p2).normalized();
-		for( int j = 0; j < srcTriangles[i].edges.size(); ++j ) {
-			F[i].edge.insert(srcTriangles[i].edges[j]);
+	const std::vector<Model::Triangle>& srcTris = sourceModel.getTriangles();
+	_faces.resize(srcTris.size());
+	for( unsigned int currTri = 0; currTri < srcTris.size(); ++currTri ) {
+		const Model::Triangle& tri = srcTris[currTri];
+		const cc::Vec3f& p0 = srcVerts[tri.idx[0]].position;
+		const cc::Vec3f& p1 = srcVerts[tri.idx[1]].position;
+		const cc::Vec3f& p2 = srcVerts[tri.idx[2]].position;
+		_faces[currTri].normal = cc::math::computeTriangleNormal(p0, p1, p2).normalized();
+		for( unsigned int currEdge = 0; currEdge < tri.edges.size(); ++currEdge ) {
+			_faces[currTri].edges.insert(tri.edges[currEdge]);
 		}
 	}
 }
 
 int ClipMesh::clip( const Plane& clipPlane ) {
-	// compute distanecs to plane, set visibility flags
-	const int vertexResult = processVertices(clipPlane);
-
-	// if all vertices are on nonnegative side of the plane (no clipping occurs)
-	if( 1 == vertexResult ) {
+	const int result = processVertices(clipPlane);
+	if( 1 == result ) {
 		return 1;
-	}
-
-	// if all vertices are on nonpositive side of the plane (everything is clipped)
-	if( -1 == vertexResult ) {
+	} else if( -1 == result ) {
 		return -1;
 	}
 
-	// mesh straddles the plane; some on positive side, some on negative side
 	processEdges();
 	processFaces(clipPlane);
 
-	 return 0;
-}
-
-void ClipMesh::printDebug( bool verbose ) {
-	int visibleVertices = 0;
-	for( int i=0; i<V.size(); ++i){if(V[i].visible){visibleVertices+=1;}}
-	printf("CVertex(%d, %d visible)\n", V.size(), visibleVertices);
-	if( verbose ) {
-		for( int i = 0; i < V.size(); ++i ) {
-			printf("\t[%d] (%f, %f, %f); visible: %d\n", i, V[i].point.x, V[i].point.y, V[i].point.z, V[i].visible);
-		}
-	}
-
-	int visibleEdges = 0;
-	for( int i=0; i<E.size(); ++i){if(E[i].visible){visibleEdges+=1;}}
-	printf("CEdge(%d, %d visible)\n", E.size(), visibleEdges);
-	if( verbose ) {
-		for( int i = 0; i < E.size(); ++i ) {
-			printf("\t[%d] (%d, %d) connected to %d faces; visible: %d\n", i, E[i].vertex[0], E[i].vertex[1], E[i].face.size(), E[i].visible);
-		}
-	}
-
-	int visibleFaces = 0;
-	for( int i=0; i<F.size(); ++i){if(F[i].visible){visibleFaces+=1;}}
-	printf("CFace(%d, %d visible)\n", F.size(), visibleFaces);
-	if( verbose ) {
-		for( int i = 0; i < F.size(); ++i ) {
-			printf("\t[%d] has %d edges; visible: %d\n", i, F[i].edge.size(), F[i].visible);
-		}
-	}
+	return 0;
 }
 
 Model ClipMesh::convert() {
-	// create a lookup table for the visible vertices
-	std::vector<Vertex> point;
-	point.reserve(V.size());
-	//std::unordered_map<int, int> vmap;//(V.size());
-	std::vector<int> vmap(V.size());
-
-	// copy visible vertices into the table
-	for( int i = 0; i < V.size(); ++i ) {
-		if( !V[i].visible ) {
-			continue;
-		}
-		vmap[i] = point.size();
-		point.push_back(Vertex(V[i].point, cc::Vec3f::zero(), cc::Vec2f::zero()));
-	}
-
-	// note: i have checked data input on a plane and it seems correct.
-	//       the above vertices also seem correct for the plane.  the
-	//       next function seems to be wrong, though.  it shouldn't return
-	//       eight elements with a plane; it should be 6.
-
-	// order the vertices for all the faces.  the output array has a sequence
-	// of subarrays, each subarray having first element storing the number of
-	// vertices in the face, the remaining elements storing the vertex indices
-	// for that face in the correct order.  the indices are relative to V[].
-	std::vector<int> faces = getOrderedFaces();
-
-	// for some reason the last vertex is wrong (getting 303 instead of 301 etc.)
-	//grniogriogfriomgrimo
-
-	// reorder the indices
-	for( int c = 0; c < faces.size(); ++c ) {
-		const int oldC = faces[c];
-		const int newC = vmap[oldC];
-		faces[c] = newC;
-	}
-
-	// map the vertex indices to those of the new table
-	//for( int i = 0; i < faces.size(); ) {
-	//	const int numIndices = faces[i];
-	//	i++;
-	//	for( int j = 0; j < numIndices; ++j ) {
-	//		faces[i] = vmap[faces[i]];
-	//		i++;
-	//	}
-	//}
-
-	Model mdl;
-	// copy vertices to model
-	for( int i = 0; i < point.size(); ++i ) {
-		mdl.addVertex(point[i]);
-	}
-	// copy indices to model
-	for( int i = 0; i < faces.size(); ++i ) {
-		mdl.addIndex(faces[i]);
-	}
-	return mdl;
-}
-
-Model ClipMesh::convert2() {
-	const int numVertices = V.size();
+	// get visible vertices
+	const unsigned int numVertices = _vertices.size();
 	std::vector<Vertex> points;
 	int* vMap = new int[numVertices];
 	memset(vMap, 0xFF, numVertices * sizeof(int));
-	for( int v = 0; v < numVertices; ++v ) {
-		const CVertex& vtx = V[v];
+	for( unsigned int currVtx = 0; currVtx < numVertices; ++currVtx ) {
+		const CVertex& vtx = _vertices[currVtx];
 		if( !vtx.visible ) {
 			continue;
 		}
-		vMap[v] = points.size();
+		vMap[currVtx] = points.size();
 		points.push_back(Vertex(vtx.point, cc::Vec3f(), cc::Vec2f()));
 	}
 
 	std::vector<int> indices;
 	getTriangles(indices);
 
-	for( int c = 0; c < indices.size(); ++c ) {
-		const int oldC = indices[c];
-		int newC = vMap[oldC];
-		indices[c] = newC;
+	// reorder the indices
+	for( unsigned int currIdx = 0; currIdx < indices.size(); ++currIdx ) {
+		const int oldIdx = indices[currIdx];
+		assert(0 <= oldIdx && oldIdx < numVertices); // index out of range
+		const int newIdx = vMap[oldIdx];
+		assert(0 <= newIdx && newIdx < points.size()); // index out of range
+		indices[currIdx] = newIdx;
 	}
-
-	delete[] vMap; vMap = nullptr;
+	delete[] vMap;
 
 	Model mdl;
-	for( int i = 0; i < points.size(); ++i ) {
+	for( unsigned int i = 0; i < points.size(); ++i ) {
 		mdl.addVertex(points[i]);
 	}
-	for( int i = 0; i < indices.size(); ++i ) {
+	for( unsigned int i = 0; i < indices.size(); ++i ) {
 		mdl.addIndex(indices[i]);
 	}
-
 	return mdl;
 }
 
-int ClipMesh::processVertices( const Plane& clipPlane ) {
-	// compute signed distances from vertices to plane
-	int positive = 0;
-	int negative = 0;
-	for( int i = 0; i < V.size(); ++i ) {
-		CVertex& vtx = V[i];
+void ClipMesh::printDebug( bool verbose ) {
+	int visibleVertices = 0;
+	for( unsigned int i=0; i<_vertices.size(); ++i){if(_vertices[i].visible){visibleVertices+=1;}}
+	printf("CVertex(%d, %d visible)\n", _vertices.size(), visibleVertices);
+	if( verbose ) {
+		for( unsigned int i = 0; i < _vertices.size(); ++i ) {
+			printf("\t[%d] (%f, %f, %f); visible: %d\n", i, _vertices[i].point.x, _vertices[i].point.y, _vertices[i].point.z, _vertices[i].visible);
+		}
+	}
+
+	int visibleEdges = 0;
+	for( unsigned int i=0; i<_edges.size(); ++i){if(_edges[i].visible){visibleEdges+=1;}}
+	printf("CEdge(%d, %d visible)\n", _edges.size(), visibleEdges);
+	if( verbose ) {
+		for( unsigned int i = 0; i < _edges.size(); ++i ) {
+			printf("\t[%d] (%d, %d) connected to face %d and %d; visible: %d\n", i, _edges[i].vertex[0], _edges[i].vertex[1], _edges[i].faces[0], _edges[i].faces[1], _edges[i].visible);
+		}
+	}
+
+	int visibleFaces = 0;
+	for( unsigned int i=0; i<_faces.size(); ++i){if(_faces[i].visible){visibleFaces+=1;}}
+	printf("CFace(%d, %d visible)\n", _faces.size(), visibleFaces);
+	if( verbose ) {
+		for( unsigned int i = 0; i < _faces.size(); ++i ) {
+			printf("\t[%d] has %d edges; visible: %d\n", i, _faces[i].edges.size(), _faces[i].visible);
+		}
+	}
+}
+
+int ClipMesh::processVertices( const Plane& clippingPlane ) {
+	const float EPSILON = 0.00001f;
+	int numPositive = 0;
+	int numNegative = 0;
+	int numZero = 0;
+	
+	// compute signed distance from vertices to plane
+	const unsigned int numVertices = _vertices.size();
+	for( unsigned int currVert = 0; currVert < numVertices; ++currVert ) {
+		CVertex& vtx = _vertices[currVert];
 		if( !vtx.visible ) {
 			continue;
 		}
 
-		vtx.distance = sqrDistPointPlane(clipPlane, vtx.point);
-		if( vtx.distance >= 0.00001f ) {
-			positive++;
-		} else if( vtx.distance <= -0.00001f ) {
-			negative++;
+		vtx.distance = clippingPlane.normal.dot(vtx.point) - clippingPlane.distance;
+		//vtx.distance = sqrDistPointPlane(clippingPlane, vtx.point);
+		if( vtx.distance > EPSILON ) {
+			++numPositive;
+		} else if( vtx.distance < -EPSILON ) {
+			++numNegative;
 			vtx.visible = false;
 		} else {
-			// point on the plane within floating point tolerance
+			// point is on plane within tolerance
+			++numZero;
 			vtx.distance = 0.0f;
 		}
 	}
 
-	// all vertices on nonnegative side, no clipping
-	if( 0 == negative ) {
-		return 1;
-	}
+	printf("Num positive: %d\n", numPositive);
+	printf("Num negative: %d\n", numNegative);
+	printf("Num zero: %d\n", numZero);
 
-	// all vertices on nonpositive side; everything clipped
-	if( 0 == positive ) {
+	// mesh is in negative halfspace, fully clipped
+	if( 0 == numPositive ) {
 		return -1;
 	}
 
+	// mesh is in positive halfspace, fully visible
+	if( 0 == numNegative ) {
+		return 1;
+	}
+
+	// clipped
 	return 0;
 }
 
 void ClipMesh::processEdges() {
-	for( int i = 0; i < E.size(); ++i ) {
-		CEdge& edge = E[i];
+	const unsigned int numEdges = _edges.size();
+	for( unsigned int currEdge = 0; currEdge < numEdges; ++currEdge ) {
+		CEdge& edge = _edges[currEdge];
 		if( !edge.visible ) {
 			continue;
 		}
 
-		const float d0 = V[edge.vertex[0]].distance;
-		const float d1 = V[edge.vertex[1]].distance;
-		if( d0 <= 0.0f && d1 <= 0.0f ) {
-			// edge is culled, remove edge from faces sharing it
-			for( int j = 0; j < edge.face.size(); ++j ) {
-				CFace& currFace = F[edge.face[j]];
-				// remove edge
-				currFace.edge.erase(i);
-				// make invisibubble
-				if( currFace.edge.empty() ) {
-					currFace.visible = false;
-				}
-				//break;
-				// todo: erase from edge too
-			}
-			//for( int j = 0; j < edge.face.size(); ++j ) {
-			//	CFace& currFace = F[edge.face[j]];
-			//	// remove specific edge using find
-			//	for( int currEdge = 0; currEdge < F[edge.face[j]].edge.size(); ++currEdge ) {
-			//		if( !(E[F[edge.face[j]].edge[currEdge]] == edge) ) {
-			//			continue;
-			//		}
-			//		F[edge.face[j]].edge.erase(F[edge.face[j]].edge.begin() + currEdge);
-			//		break;
-			//	}
+		const int v0 = edge.vertex[0];
+		const int v1 = edge.vertex[1];
+		const int f0 = edge.faces[0];
+		const int f1 = edge.faces[1];
+		CFace& face0 = _faces[f0];
+		CFace& face1 = _faces[f1];
+		const float d0 = _vertices[v0].distance;
+		const float d1 = _vertices[v1].distance;
 
-			//	if( F[edge.face[j]].edge.empty() ) {
-			//		F[edge.face[j]].visible = false;
-			//	}
-			//}
+		if( d0 <= 0.0f && d1 <= 0.0f ) {
+			face0.edges.erase(currEdge);
+			if( face0.edges.empty() ) {
+				face0.visible = false;
+			}
+
+			face1.edges.erase(currEdge);
+			if( face1.edges.empty() ) {
+				face1.visible = false;
+			}
+
 			edge.visible = false;
 			continue;
 		}
 
-		// edge is on nonnegative side, faces retain the edge
+		// face is on nonnegative side and retains the edge
 		if( d0 >= 0.0f && d1 >= 0.0f ) {
 			continue;
 		}
-		
-		const int vNew = V.size();
-		V.push_back(CVertex());
-		CVertex& vertexNew = V[vNew];
-		const cc::Vec3f& point0 = V[edge.vertex[0]].point;
-		const cc::Vec3f& point1 = V[edge.vertex[1]].point;
-		vertexNew.point = point0 + (d0 / (d0 - d1))*(point1 - point0);
+
+		// the edge is split by the plane.  copmute the point of intersection.
+		// if the old edge is <v0,v1> and i is the intersection point,
+		// the new edge is <v0,i> when d0 > 0, or<i,v1> when d1 > 0.
+		const unsigned int vNew = _vertices.size();
+		_vertices.push_back(CVertex());
+		CVertex& vertexNew = _vertices[vNew];
+
+		const cc::Vec3f p0 = _vertices[edge.vertex[0]].point;
+		const cc::Vec3f p1 = _vertices[edge.vertex[1]].point;
+		vertexNew.point = p0 + (d0/(d0 - d1))*(p1 - p0);
+
 		if( d0 > 0.0f ) {
 			edge.vertex[1] = vNew;
 		} else {
 			edge.vertex[0] = vNew;
 		}
-
-		// the edge is split by the plane.  compute the point of intersection.
-		// if the old edge is <v0, v1>and i is the intersection point, the new
-		// edge is <v0, i> when d0 > 0 or <i, v1> when d1 > 0.
-		//const float t = d0 / (d0 - d1);
-		//const cc::Vec3f intersect = (1.0f - t) * V[edge.vertex[0]].point + t * V[edge.vertex[1]].point;
-		//const int index = V.size();
-		//CVertex intersectVertex;
-		//intersectVertex.point = intersect;
-		//V.push_back(intersectVertex);
-
-		//if( d0 > 0.0f ) {
-		//	edge.vertex[1] = index;
-		//} else {
-		//	edge.vertex[0] = index;
-		//}
 	}
 }
 
-void ClipMesh::processFaces( const Plane& clipPlane ) {
-	const int fNew = F.size();
-	F.push_back(CFace());
-	CFace& faceNew = F[fNew];
-	faceNew.plane = clipPlane.normal;
+void ClipMesh::processFaces( const Plane& clippingPlane ) {
+	// the mesh straddles the plane.  a new convex polygon face will be
+	// generated.  add it now and insert edges when they are visited.
+	const unsigned int fNew = _faces.size();
+	_faces.push_back(CFace());
+	CFace& faceNew = _faces[fNew];
+	faceNew.normal = -clippingPlane.normal;
 
-	for( int currFace = 0; currFace < fNew; ++currFace ) {
-		CFace& face = F[currFace];
+	// process the faces
+	for( unsigned int currFace = 0; currFace < fNew; ++currFace ) {
+		CFace& face = _faces[currFace];
 		if( !face.visible ) {
 			continue;
 		}
 
-		std::set<int>::iterator iter = face.edge.begin();
-		std::set<int>::iterator end = face.edge.end();
+		// determine if the face is on the negative side, the positive side,
+		// or split by the clipping plane.  the occurs members are set to zero
+		// to help find the end points of the polyline that results from clipping
+		// a face.
+		assert(face.edges.size() >= 2 ); // unexpected condition
+		std::set<int>::const_iterator iter = face.edges.begin();
+		const std::set<int>::const_iterator end = face.edges.end();
 		while( iter != end ) {
 			const int e = *iter++;
-			CEdge& edge = E[e];
-			V[edge.vertex[0]].occurs = 0;
-			V[edge.vertex[1]].occurs = 0;
+			CEdge& edge = _edges[e];
+			assert(edge.visible); // unexpected condition
+			_vertices[edge.vertex[0]].occurs = 0;
+			_vertices[edge.vertex[1]].occurs = 0;
 		}
 
-		int start, final;
-		if( getOpenPolyline(face, start, final) ) {
-			const int eNew = E.size();
-			E.push_back(CEdge());
-			CEdge& edgeNew = E[eNew];
+		int vStart;
+		int vFinal;
+		if( getOpenPolyline(face, vStart, vFinal) ) {
+			// polyline is open, close it up
+			const unsigned int eNew = _edges.size();
+			_edges.push_back(CEdge());
+			CEdge& edgeNew = _edges[eNew];
+			edgeNew.vertex[0] = vStart;
+			edgeNew.vertex[1] = vFinal;
+			edgeNew.faces[0] = currFace;
+			edgeNew.faces[1] = fNew;
 
-			edgeNew.vertex[0] = start;
-			edgeNew.vertex[1] = final;
-			edgeNew.face.push_back(currFace);
-			edgeNew.face.push_back(fNew);
-
-			face.edge.insert(eNew);
-			faceNew.edge.insert(eNew);
+			// add new edge to polygons
+			face.edges.insert(eNew);
+			faceNew.edges.insert(eNew);
 		}
 	}
 
-	if( faceNew.edge.size() < 3 ) {
-		F.pop_back();
+	// process 'faceNew' to make sure it is a simple polygon (theoretically
+	// convex, but numerically may be slightly not convex).  floating-point
+	// round-off errors can cause the new face from the last loop to be
+	// needle-like with a collapse of two edges into a single edge.  this
+	// block guarantees the invariant face is always a simple polygon.
+	postProcess(fNew, faceNew);
+	if( faceNew.edges.size() < 3 ) {
+		// face is completely degenerate, remote it from mesh
+		_faces.pop_back();
 	}
-
-	////const int findex = F.size();
-	////CFace tmpCloseFace;
-	////tmpCloseFace.plane = clipPlane.normal;
-	////F.push_back(tmpCloseFace);
-	////CFace* closeFace = &F[F.size()-1]; // ptr to tmpCloseFace
-
-	//for( int i = 0; i < F.size(); ++i ) {
-	//	if( !F[i].visible ) {
-	//		continue;
-	//	}
-
-	//	// the edge is culled.  if the edge is exactly on the clip plane,
-	//	// it is possible that a visible triangle shares it.
-	//	// the edge will be re-added during the face loop
-	//	for( int j = 0; j < F[i].edge.size(); ++j ) {
-	//		V[E[j].vertex[0]].occurs = 0;
-	//		V[E[j].vertex[1]].occurs = 0;
-	//	}
-
-	//	int start, final;
-	//	if( getOpenPolyline(F[i], start, final) ) {
-	//		// polyline is open, close it
-	//		int eIndex = E.size();
-	//		F[i].edge.insert(eIndex);
-	//		//closeFace->edge.push_back(eIndex);
-
-	//		CEdge closeEdge;
-	//		closeEdge.vertex[0] = start;
-	//		closeEdge.vertex[1] = final;
-	//		closeEdge.face.push_back(i);
-	//		//closeEdge.face.push_back(findex);
-	//		E.push_back(closeEdge);
-	//	}
-
-	//	//int start, final;
-	//	//if( getOpenPolyline(F[i], start, final) ) {
-	//	//	// polyline is open, close it
-	//	//	int eIndex = E.size();
-
-	//	//	CEdge closeEdge;
-	//	//	closeEdge.vertex[0] = start;
-	//	//	closeEdge.vertex[1] = final;
-	//	//	closeEdge.face.push_back(i);
-	//	//	E.push_back(closeEdge);
-
-	//	//	F[i].edge.push_back(eIndex);
-	//	//}
-	//}
 }
 
-bool ClipMesh::getOpenPolyline( CFace f, int& start, int& final ) {
+bool ClipMesh::getOpenPolyline( CFace& face, int& vStart, int& vFinal ) {
+	// count the number of occurrences of each vertex in the polyline
 	bool okay = true;
-	std::set<int>::iterator iter = f.edge.begin();
-	std::set<int>::iterator end = f.edge.end();
+	std::set<int>::const_iterator iter = face.edges.begin();
+	std::set<int>::const_iterator end = face.edges.end();
 	while( iter != end ) {
 		const int e = *iter++;
-		CEdge& edge = E[e];
+		CEdge& edge = _edges[e];
 
 		const int v0 = edge.vertex[0];
-		++V[v0].occurs;
-		if( V[v0].occurs > 2 ) {
+		++_vertices[v0].occurs;
+		if( _vertices[v0].occurs > 2 ) {
 			okay = false;
 		}
 
 		const int v1 = edge.vertex[1];
-		++V[v1].occurs;
-		if( V[v1].occurs > 2 ) {
+		++_vertices[v1].occurs;
+		if( _vertices[v1].occurs > 2 ) {
 			okay = false;
 		}
 	}
 
 	if( !okay ) {
-		throw;
+		// if you reach this block, there is a good chance that floating point
+		// round-off error had caused this face to be needle-like and what was
+		// theoretically a narrow V-shaped portion (a vertex shared by two edges
+		// forming a small angle) has collapsed into a single line segment.
+		// note that after adding post-processing, this hasn't happened.
+		assert(false);
+		// todo: print out error data for analysis
+		return false;
 	}
 
-	iter = f.edge.begin();
-	end = f.edge.end();
-	start = -1;
-	final = -1;
+	iter = face.edges.begin();
+	end = face.edges.end();
+	vStart = -1;
+	vFinal = -1;
 	while( iter != end ) {
 		const int e = *iter++;
-		CEdge& edge = E[e];
+		CEdge& edge = _edges[e];
 
 		const int v0 = edge.vertex[0];
-		if( 1 == V[0].occurs ) {
-			if( -1 == start ) {
-				start = v0;
-			} else if( -1 == final ) {
-				final = v0;
+		if( 1 == _vertices[v0].occurs ) {
+			if( -1 == vStart ) {
+				vStart = v0;
+			} else if( -1 == vFinal ) {
+				vFinal = v0;
 			} else {
-				//throw; // error
+				// if you reach this assert,  there is a good chance that the polyhedron
+				// is not convex.
+				assert(false); // polyhedron might not be convex
 			}
 		}
 
 		const int v1 = edge.vertex[1];
-		if( 1 == V[v1].occurs ) {
-			if( -1 == start ) {
-				start = v1;
-			} else if( -1 == final ) {
-				final = v1;
+		if( 1 == _vertices[v1].occurs ) {
+			if( -1 == vStart ) {
+				vStart = v1;
+			} else if( -1 == vFinal ) {
+				vFinal = v1;
 			} else {
-				//throw; // error
+				// if you reach this assert, there is a good chance that the polyhedron
+				// is not convex.
+				assert(false); // polyhedron might not be convex
 			}
 		}
 	}
 
-	return start != -1;
-
-	//// count the number of occurrences of each vertex in the polyline.
-	//// resulting 'occurs' values must be 1 or 2
-	//for( int j = 0; j < f.edge.size(); ++j ) {
-	//	V[E[f.edge[j]].vertex[0]].occurs++;
-	//	V[E[f.edge[j]].vertex[1]].occurs++;
-	//}
-
-	//// determine if the polyline is open
-	//start = -1;
-	//final = -1;
-	//for( int j = 0; j < f.edge.size(); ++j ) {
-	//	const int i0 = E[f.edge[j]].vertex[0];
-	//	const int i1 = E[f.edge[j]].vertex[1];
-	//	if( 1 == V[i0].occurs ) {
-	//		if( -1 == start ) {
-	//			start = i0;
-	//		} else if( -1 == final ) {
-	//			final = i0;
-	//		}
-	//	}
-	//	if( 1 == V[i1].occurs ) {
-	//		if( -1 == start ) {
-	//			start = i1;
-	//		} else if( -1 == final ) {
-	//			final = i1;
-	//		}
-	//	}
-	//}
-	//return start != -1;
+	assert((-1==vStart && -1==vFinal) || (-1 != vStart && -1 != vFinal)); // unexpected condition
+	return vStart != -1;
 }
 
-std::vector<int> ClipMesh::getOrderedFaces() {
-	std::vector<int> faces;
-	for( int i = 0; i < F.size(); ++i ) {
-		if( !F[i].visible ) {
-			continue;
-		}
-
-		const int numEdges = F[i].edge.size();
-		const std::vector<int> vertices = getOrderedVertices(F[i]);
-
-		const int v0 = vertices[0];
-		const int v1 = vertices[(numEdges-1)>>1];
-		const int v2 = vertices[numEdges-1];
-		const cc::Vec3f diff1 = V[v1].point - V[v0].point;
-		const cc::Vec3f diff2 = V[v2].point - V[v0].point;
-		const float dp = F[i].plane.dot(diff1.cross(diff2));
-		if( dp < 0.0f ) {
-			for( int i = 1; i+1 < numEdges; ++i ) {
-				faces.push_back(v0);
-				faces.push_back(vertices[i+1]);
-				faces.push_back(vertices[i]);
-			}
-		} else {
-			for( int i = 1; i+1 < numEdges; ++i ) {
-				faces.push_back(v0);
-				faces.push_back(vertices[i]);
-				faces.push_back(vertices[i+1]);
-			}
-		}
-	}
-	return faces;
-
-	//std::vector<int> faces;
-	//for( int i = 0; i < F.size(); ++i ) {
-	//	if( !F[i].visible ) {
-	//		continue;
-	//	}
-
-	//	// get the ordered vertices of the face.  the frist and last element
-	//	// of the array are the same since the polyline is closed.
-	//	const std::vector<int> vertices = getOrderedVertices(F[i]);
-	//	faces.push_back(vertices.size()-1);
-
-	//	// the convention is that the vertices should be ccw ordered when viewed
-	//	// from the negative side of the plane of the face.  if you need the
-	//	// opposite convention, switch the inequality in the if-else statement.
-	//	if( F[i].plane.dot(getNormal(vertices)) > 0.0f ) {
-	//		// clockwise, need to swap
-	//		for( int j = vertices.size()-2; j >= 0; --j ) {
-	//			faces.push_back(vertices[j]);
-	//		}
-	//	} else {
-	//		// counterclockwise
-	//		for( int j = 0; j <= vertices.size()-2; ++j ) {
-	//			faces.push_back(vertices[j]);
-	//		}
-	//	}
-	//}
-	//return faces;
-}
-
-std::vector<int> ClipMesh::getOrderedVertices( CFace f ) {
-	// copy edge indices into contiguous memory
-	const int numEdges = f.edge.size();
-	std::vector<int> eOrdered(numEdges);
-	std::set<int>::iterator iter = f.edge.begin();
-	std::set<int>::iterator end = f.edge.end();
+void ClipMesh::postProcess( int fNew, CFace& faceNew ) {
+	const int numEdges = faceNew.edges.size();
+	std::vector<CEdgePlus> edges(numEdges);
+	std::set<int>::const_iterator iter = faceNew.edges.begin();
+	std::set<int>::const_iterator end = faceNew.edges.end();
 	int counter = 0;
 	while( iter != end ) {
-		eOrdered[counter++] = *iter++;
+		const int e = *iter++;
+		edges[counter++] = CEdgePlus(e, _edges[e]);
 	}
+	std::sort(edges.begin(), edges.end());
 
-	// sort
-	std::sort(eOrdered.begin(), eOrdered.end());
+	// process duplicate edges
+	for( int i0 = 0, i1 = 1; i1 < numEdges; i0 = i1++ ) {
+		if( edges[i0] == edges[i1] ) {
+			printf("Processing duplicate edge (%d, %d)\n", edges[i0], edges[i1]);
 
-	// 
-	std::vector<int> vOrdered(numEdges+1);
-	vOrdered[0] = E[eOrdered[0]].vertex[0];
-	vOrdered[1] = E[eOrdered[0]].vertex[1];
-	for( int i = 1; i < numEdges; ++i ) {
-		CEdge& edge = E[eOrdered[i]];
-		if( edge.vertex[0] == vOrdered[i] ) {
-			vOrdered[i+1] = edge.vertex[1];
-		} else {
-			vOrdered[i+1] = edge.vertex[0];
+			const int i2 = i1+1;
+			if( i2 < numEdges ) {
+				// make sure an edge occurs at most twice.  if not, then
+				// the algorithm needs to be modified to handle it.
+				assert(edges[i1] != edges[i2]); // unexpected condition
+			}
+
+			// edge e0 hsa vertices v0, v1 and faces f0, nf.  edge 1 has
+			// vertices v0, v1 and faces f1, nf.
+			const int e0 = edges[i0].E;
+			const int e1 = edges[i1].E;
+			CEdge& edge0 = _edges[e0];
+			CEdge& edge1 = _edges[e1];
+
+			// remove e0 and e1 from faceNew
+			faceNew.edges.erase(e0);
+			faceNew.edges.erase(e1);
+
+			// remove faceNew from e0
+			if( edge0.faces[0] == fNew ) {
+				edge0.faces[0] = edge0.faces[1];
+			} else {
+				assert(edge0.faces[1] == fNew); // unexpected condition
+			}
+			edge0.faces[1] = -1;
+
+			// remove faceNew from e1
+			if( edge1.faces[0] == fNew ) {
+				edge1.faces[0] = edge1.faces[1];
+			} else {
+				assert(edge1.faces[1] == fNew); // unexpected condition
+			}
+			edge1.faces[1] = -1;
+
+			// e1 is being booted from the system.  update the face f1 that shares it
+			// update e1 to share f1.
+			const int f1 = edge1.faces[0];
+			CFace& face1 = _faces[f1];
+			face1.edges.erase(e1);
+			face1.edges.insert(e0);
+			edge0.faces[1] = f1;
+			edge1.visible = false;
 		}
 	}
-	return vOrdered;
-
-	//// copy edge indices into contiguous memory for sorting
-	//std::vector<int> edges;
-	//edges.resize(f.edge.size());
-	//int counter = 0;
-	//for( int j = 0; j < f.edge.size(); ++j ) {
-	//	edges[counter++] = f.edge[j];
-	//}
-
-	//std::sort(edges.begin(), edges.end());
-
-	//std::vector<int> vertices;
-	//vertices.resize(edges.size()+1);
-
-	//// add the first two vertices
-	//vertices[0] = E[edges[0]].vertex[0];
-	//vertices[1] = E[edges[0]].vertex[1];
-
-	//// add the remaining vertices
-	//for( int i = 1; i < f.edge.size(); ++i ) {
-	//	if( E[edges[i]].vertex[0] == vertices[i] ) {
-	//		vertices[i+1] = E[edges[i]].vertex[1];
-	//	} else {
-	//		vertices[i+1] = E[edges[i]].vertex[0];
-	//	}
-	//}
-
-	//return vertices;
-}
-
-cc::Vec3f ClipMesh::getNormal( const std::vector<int>& vertices ) const {
-	cc::Vec3f normal(0.0f, 0.0f, 0.0f);
-	for( int i = 0; i <= vertices.size()-2; ++i ) {
-		normal += V[vertices[i]].point.cross(V[vertices[i+1]].point);
-	}
-	normal.normalize();
-	return normal;
-}
-
-void ClipMesh::swap( int a, int b ) {
-	CEdge tmp = E[a];
-	E[a] = E[b];
-	E[b] = tmp;
 }
 
 void ClipMesh::getTriangles( std::vector<int>& indices ) {
-	const int numFaces = F.size();
-	for( int f = 0; f < numFaces; ++f ) {
-		CFace& face = F[f];
+	const unsigned int numFaces = _faces.size();
+	for( int currFace = 0; currFace < numFaces; ++currFace ) {
+		CFace& face = _faces[currFace];
 		if( !face.visible ) {
 			continue;
 		}
 
-		const int numEdges = face.edge.size();
+		const unsigned int numEdges = face.edges.size();
+		assert(numEdges >= 3); // unexpected condition
 		std::vector<int> vOrdered(numEdges+1);
 		orderVertices(face, vOrdered);
 
 		const int v0 = vOrdered[0];
 		const int v2 = vOrdered[numEdges - 1];
 		const int v1 = vOrdered[(numEdges - 1) >> 1];
-		const cc::Vec3f diff1 = V[v1].point - V[v0].point;
-		const cc::Vec3f diff2 = V[v2].point - V[v0].point;
-		const float sgnVolume = face.plane.dot(diff1.cross(diff2));
-		if( sgnVolume > 0.0f ) {
-			for (int i = 1; i + 1 < numEdges; ++i) {
+		const cc::Vec3f diff1 = _vertices[v1].point - _vertices[v0].point;
+		const cc::Vec3f diff2 = _vertices[v2].point - _vertices[v0].point;
+		const float sgnVolume = face.normal.dot(diff1.cross(diff2));
+		if( sgnVolume < 0.0f ) { // feel free to invert this test
+			// clockwise, need to swap
+			for( int i = 1; i + 1 < numEdges; ++i ) {
 				indices.push_back(v0);
 				indices.push_back(vOrdered[i + 1]);
 				indices.push_back(vOrdered[i]);
 			}
 		} else {
-			for (int i = 1; i + 1 < numEdges; ++i) {
+			// counterclockwise
+			for( int i = 1; i + 1 < numEdges; ++i ) {
 				indices.push_back(v0);
 				indices.push_back(vOrdered[i]);
 				indices.push_back(vOrdered[i + 1]);
@@ -645,31 +483,33 @@ void ClipMesh::getTriangles( std::vector<int>& indices ) {
 }
 
 void ClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
-	const int numEdges = (int)face.edge.size();
+	// copy edge indices into contiguous memory
+	const unsigned int numEdges = face.edges.size();
 	std::vector<int> eOrdered(numEdges);
-	std::set<int>::iterator iter = face.edge.begin();
-	std::set<int>::iterator end = face.edge.end();
-	int i = 0;
-	while (iter != end)
-	{
-		eOrdered[i++] = *iter++;
+	std::set<int>::const_iterator iter = face.edges.begin();
+	std::set<int>::const_iterator end = face.edges.end();
+	int counter = 0;
+	while( iter != end ) {
+		eOrdered[counter++] = *iter++;
 	}
 
-	for (int i0 = 0, i1 = 1, choice = 1; i1 < numEdges - 1; i0 = i1++)
-	{
-		CEdge& edgeCurr = E[eOrdered[i0]];
+	//std::sort(eOrdered.begin(), eOrdered.end());
+
+	// bubble sort
+	for( int i0 = 0, i1 = 1, choice = 1; i1 < numEdges - 1; i0 = i1++ ) {
+		CEdge& edgeCurr = _edges[eOrdered[i0]];
 		int j, curr = edgeCurr.vertex[choice];
-		for (j = i1; j < numEdges; ++j) {
-			CEdge& edgeTemp = E[eOrdered[j]];
+		for( j = i1; j < numEdges; ++j ) {
+			CEdge& edgeTemp = _edges[eOrdered[j]];
 			int save;
-			if (edgeTemp.vertex[0] == curr) {
+			if( edgeTemp.vertex[0] == curr ) {
 				save = eOrdered[i1];
 				eOrdered[i1] = eOrdered[j];
 				eOrdered[j] = save;
 				choice = 1;
 				break;
 			}
-			if (edgeTemp.vertex[1] == curr) {
+			if( edgeTemp.vertex[1] == curr ) {
 				save = eOrdered[i1];
 				eOrdered[i1] = eOrdered[j];
 				eOrdered[j] = save;
@@ -677,16 +517,47 @@ void ClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 				break;
 			}
 		}
+		assert(j < numEdges); // unexpected condition
 	}
 
-	vOrdered[0] = E[eOrdered[0]].vertex[0];
-	vOrdered[1] = E[eOrdered[0]].vertex[1];
-	for (i = 1; i < numEdges; ++i) {
-		CEdge& edge = E[eOrdered[i]];
-		if (edge.vertex[0] == vOrdered[i]) {
+	//for( int i0=0, i1=1, choice=1; i1 < numEdges-1; i0=i1, i1++ ) {
+	//	const int current = _edges[eOrdered[i0]].vertex[choice];
+	//	int j;
+	//	for( j = i1; j < numEdges; ++j ) {
+	//		if( current == _edges[eOrdered[j]].vertex[0] ) {
+	//			swapEdges(eOrdered, i1, j);
+	//			choice = 1;
+	//			break;
+	//		}
+	//		if( current == _edges[eOrdered[j]].vertex[1] ) {
+	//			swapEdges(eOrdered, i1, j);
+	//			choice = 0;
+	//			break;
+	//		}
+	//	}
+	//	//assert(j < numEdges);
+	//}
+
+	std::vector<int> COMPARE = eOrdered;
+	std::sort(COMPARE.begin(), COMPARE.end());
+	if( COMPARE != eOrdered ) {
+		printf("WARNING: Sort results are different.\n");
+	}
+
+	vOrdered[0] = _edges[eOrdered[0]].vertex[0];
+	vOrdered[1] = _edges[eOrdered[0]].vertex[1];
+	for( int i = 1; i < numEdges; ++i ) {
+		CEdge& edge = _edges[eOrdered[i]];
+		if( edge.vertex[0] == vOrdered[i] ) {
 			vOrdered[i + 1] = edge.vertex[1];
 		} else {
 			vOrdered[i + 1] = edge.vertex[0];
 		}
 	}
+}
+
+void ClipMesh::swapEdges( std::vector<int>& list, int e0, int e1 ) {
+	const int tmp = list[e0];
+	list[e0] = list[e1];
+	list[e1] = tmp;
 }

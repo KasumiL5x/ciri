@@ -2,9 +2,6 @@
 #include "../../common/ModelGen.hpp"
 #include <cc/MatrixFunc.hpp>
 #include "ClipMesh.hpp"
-#include "NewClipMesh.hpp"
-#include "gt/PartitionMesh.h"
-#include "gt/ConvexPolyhedron.h"
 
 ClippingDemo::ClippingDemo()
 	: Game(), _model(nullptr) {
@@ -70,7 +67,7 @@ void ClippingDemo::onLoadContent() {
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;
-	rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
@@ -94,11 +91,14 @@ void ClippingDemo::onLoadContent() {
 	if( !_geometricPlane.build(graphicsDevice()) ) {
 		printf("Failed to build geometric plane.\n");
 	}
+	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(45.0f, 0.0f, 0.0f));
+	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 20.0f));
 
-	// create model
-	_model = modelgen::createCube(graphicsDevice(), 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, true);
-	//_model = modelgen::createSphere(graphicsDevice(), 32, 0.5f);
-#if 0
+	// get cut plane from geometric plane
+	_cuttingPlane.normal = _geometricPlane.getNormal();
+	_cuttingPlane.distance = _geometricPlane.getConstant();
+
+	// create closed convex polyhedron
 	_model = new Model();
 	_model->addVertex(Vertex(cc::Vec3f(-0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
 	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
@@ -108,101 +108,23 @@ void ClippingDemo::onLoadContent() {
 	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
 	_model->addVertex(Vertex(cc::Vec3f(-0.5f, 0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
 	_model->addVertex(Vertex(cc::Vec3f( 0.5f, 0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
-	_model->addIndex(0); _model->addIndex(1); _model->addIndex(2);
-	_model->addIndex(1); _model->addIndex(3); _model->addIndex(2);
-	_model->addIndex(0); _model->addIndex(1); _model->addIndex(4);
-	_model->addIndex(1); _model->addIndex(5); _model->addIndex(4);
-	_model->addIndex(5); _model->addIndex(6); _model->addIndex(7);
-	_model->addIndex(6); _model->addIndex(4); _model->addIndex(5);
+	_model->addIndex(0); _model->addIndex(1); _model->addIndex(2);//front
+	_model->addIndex(1); _model->addIndex(3); _model->addIndex(2);//front
+	_model->addIndex(0); _model->addIndex(1); _model->addIndex(4);//bottom
+	_model->addIndex(1); _model->addIndex(5); _model->addIndex(4);//bottom
+	_model->addIndex(5); _model->addIndex(7); _model->addIndex(6);//back
+	_model->addIndex(6); _model->addIndex(4); _model->addIndex(5);//back
+	_model->addIndex(0); _model->addIndex(2); _model->addIndex(4);//left
+	_model->addIndex(2); _model->addIndex(6); _model->addIndex(4);//left
+	_model->addIndex(1); _model->addIndex(5); _model->addIndex(3);//right
+	_model->addIndex(5); _model->addIndex(7); _model->addIndex(3);//right
+	_model->addIndex(3); _model->addIndex(7); _model->addIndex(6);//top
+	_model->addIndex(2); _model->addIndex(3); _model->addIndex(6);//top
+	_model->computeNormals();
 	_model->build(graphicsDevice());
-#endif
-	//_model->addFromObj("clipping/Plane.obj");
-	//_model->addIndex(0);_model->addIndex(1);_model->addIndex(2);
-	//_model->addIndex(3);_model->addIndex(4);_model->addIndex(5);
-	//_model->addIndex(6);_model->addIndex(7);_model->addIndex(8);
-	//_model->addIndex(9);_model->addIndex(10);_model->addIndex(11);
-	
-	// clip duplicated model against cutting plane
-	//_clippedModel = clipModelAgainstPlane(*_model, _cuttingPlane);
-
-#if 0
-	// build vertices for clipping
-	std::vector<APoint> clipVertices;
-	for( int i = 0; i < _model->getVertices().size(); ++i ) {
-		const Vertex& currVert = _model->getVertices()[i];
-		clipVertices.push_back(APoint(currVert.position.x, currVert.position.y, currVert.position.z));
-	}
-	// build indices for clipping
-	std::vector<int> clipIndices;
-	for( int i = 0; i < _model->getIndices().size(); ++i ) {
-		clipIndices.push_back(_model->getIndices()[i]);
-	}
-	// convert cutting plane
-	HPlane hClipPlane(_cuttingPlane.normal.x, _cuttingPlane.normal.y, _cuttingPlane.normal.z, _cuttingPlane.distance);
-	// output points
-	std::vector<APoint> outClipVertices;
-	std::vector<int> outClipIndicesNeg;
-	std::vector<int> outClipIndicesPos;
-	PartitionMesh(clipVertices, clipIndices, hClipPlane, outClipVertices, outClipIndicesNeg, outClipIndicesPos);
-	// rebuild only up side
-	for( int i = 0; i < outClipIndicesPos.size(); ++i ) {
-		const APoint& currPoint = outClipVertices[outClipIndicesPos[i]];
-		_clippedModel.addVertex(Vertex(cc::Vec3f(currPoint.X(), currPoint.Y(), currPoint.Z()), cc::Vec3f(), cc::Vec2f()));
-	}
-	for( int i = 0; i < outClipIndicesPos.size(); ++i ) {
-		_clippedModel.addIndex(i);
-	}
-	_clippedModel.computeNormals();
-	if( !_clippedModel.build(graphicsDevice()) ) {
-		printf("Failed to build clipped model.\n");
-	}
-	//// rebuild clipped models
-	//for( int i = 0; i < outClipVertices.size(); ++i ) {
-	//	const cc::Vec3f pos(outClipVertices[i].X(), outClipVertices[i].Y(), outClipVertices[i].Z());
-	//	_clippedModel.addVertex(Vertex(pos, cc::Vec3f(0.0f), cc::Vec2f(0.0f)));
-	//	_clippedModel2.addVertex(Vertex(pos, cc::Vec3f(0.0f), cc::Vec2f(0.0f)));
-	//}
-	//for( int i = 0; i < outClipIndicesNeg.size(); ++i ) {
-	//	_clippedModel.addIndex(outClipIndicesNeg[i]);
-	//}
-	//for( int i = 0; i< outClipIndicesPos.size(); ++i ) {
-	//	_clippedModel2.addIndex(outClipIndicesPos[i]);
-	//}
-	//if( !_clippedModel.build(graphicsDevice()) || !_clippedModel2.build(graphicsDevice()) ) {
-	//	printf("Failed to build clipped model.\n");
-	//}
-#endif
-
-#if 0
-	std::vector<Wm5::Vector3f> clipPoints;
-	std::vector<int> clipIndices;
-	for( int i = 0; i < _model->getVertices().size(); ++i ) {
-		const Vertex& currVert = _model->getVertices()[i];
-		clipPoints.push_back(Wm5::Vector3f(currVert.position.x, currVert.position.y, currVert.position.z));
-	}
-	for( int i = 0; i < _model->getIndices().size(); ++i ) {
-		clipIndices.push_back(_model->getIndices()[i]);
-	}
-	ConvexPolyhedronf clipPoly(clipPoints, clipIndices);
-	ConvexPolyhedronf clipIntersection;
-	Wm5::Plane3f clipPlane(Wm5::Vector3f(_cuttingPlane.normal.x, _cuttingPlane.normal.y, _cuttingPlane.normal.z), _cuttingPlane.distance);
- 	clipPoly.Clip(clipPlane, clipIntersection);
-	for( int i = 0; i < clipIntersection.GetNumVertices(); ++i ) {
-		const Wm5::Vector3f& v = clipIntersection.GetPoint(i);
-		_clippedModel.addVertex(Vertex(cc::Vec3f(v.X(), v.Y(), v.Z()), cc::Vec3f(), cc::Vec2f()));
-	}
-	for( int i = 0; i < clipIntersection.GetNumTriangles(); ++i ) {
-		for( int j = 0; j < 3; ++j ) {
-			_clippedModel.addIndex(clipIntersection.GetTriangle(i).GetVertex(j));
-		}
-	}
-	if( !_clippedModel.build(graphicsDevice()) ) {
-		printf("Failed to build clipped model.\n");
-	}
-#endif
 
 	// create clip mesh
-	NewClipMesh cm(*_model);
+	ClipMesh cm(*_model);
 	const int result = cm.clip(_cuttingPlane);
 	printf("Cutting complete with result: %d\n", result);
 	cm.printDebug(false);
@@ -250,6 +172,12 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 		const float dolly = _camera.getOffset();
 		const cc::Vec3f& target = _camera.getTarget();
 		printf("pos(%f/%f/%f); yaw(%f); pitch(%f); dolly(%f); target(%f/%f/%f)\n", pos.x, pos.y, pos.z, yaw, pitch, dolly, target.x, target.y, target.z);
+	}
+
+	// print obj data
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
+		printf("Outputting OBJ model: %s\n", _clippedModel.exportToObj("clipped.obj") ? "success" : "failed");
+		printf("Outputting OBJ model: %s\n", _model->exportToObj("source.obj") ? "success" : "failed");
 	}
 
 	// camera movement
@@ -307,15 +235,6 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	_cuttingPlane.normal = _geometricPlane.getNormal();
 	_cuttingPlane.distance = _geometricPlane.getConstant();
 	//printf("N(%f, %f, %f); D(%f)\n", _cuttingPlane.normal.x, _cuttingPlane.normal.y, _cuttingPlane.normal.z, _cuttingPlane.distance);
-
-	// rebuild cut mesh based on new cutting plane
-	//NewClipMesh cm(*_model);
-	//const int result = cm.clip(_cuttingPlane);
-	//_clippedModel = cm.convert();
-	//_clippedModel.computeNormals();
-	//if( !_clippedModel.build(graphicsDevice()) ) {
-	//	printf("Failed to build clipped model.\n");
-	//}
 }
 
 void ClippingDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
@@ -334,7 +253,7 @@ void ClippingDemo::onDraw() {
 	const cc::Mat4f cameraViewProj = _camera.getProj() * _camera.getView();
 
 	// clear backbuffer
-	device->setClearColor(1.0f, 1.0f, 1.0f, 1.0f);//0.05f, 0.05f, 0.05f, 1.0f);
+	device->setClearColor(0.15f, 0.16f, 0.13f, 1.0f);
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	// set default states
@@ -342,25 +261,25 @@ void ClippingDemo::onDraw() {
 	device->setRasterizerState(_rasterizerState);
 	device->setBlendState(_blendState);
 
-	//// render grid
-	//if( _grid.isValid() ) {
-	//	const cc::Mat4f gridXform = cameraViewProj * cc::Mat4f(1.0f);
-	//	if( _grid.updateConstants(gridXform) ) {
-	//		device->applyShader(_grid.getShader());
-	//		device->setVertexBuffer(_grid.getVertexBuffer());
-	//		device->drawArrays(ciri::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
-	//	}
-	//}
+	// render grid
+	if( _grid.isValid() ) {
+		const cc::Mat4f gridXform = cameraViewProj * cc::Mat4f(1.0f);
+		if( _grid.updateConstants(gridXform) ) {
+			device->applyShader(_grid.getShader());
+			device->setVertexBuffer(_grid.getVertexBuffer());
+			device->drawArrays(ciri::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
+		}
+	}
 
-	// render axis
-	//if( _axis.isValid() ) {
-	//	const cc::Mat4f axisXform = cameraViewProj * cc::Mat4f(1.0f);
-	//	if( _axis.updateConstants(axisXform) ) {
-	//		device->applyShader(_axis.getShader());
-	//		device->setVertexBuffer(_axis.getVertexBuffer());
-	//		device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
-	//	}
-	//}
+	 //render axis
+	if( _axis.isValid() ) {
+		const cc::Mat4f axisXform = cameraViewProj * cc::Mat4f(1.0f);
+		if( _axis.updateConstants(axisXform) ) {
+			device->applyShader(_axis.getShader());
+			device->setVertexBuffer(_axis.getVertexBuffer());
+			device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
+		}
+	}
 
 	// render geometric plane
 	if( _simpleShader.getShader() != nullptr && _geometricPlane.getVertexBuffer() != nullptr ) {
@@ -412,23 +331,6 @@ void ClippingDemo::onDraw() {
 			}
 		}
 	}
-	// and the second
-	if( _simpleShader.getShader() != nullptr && _clippedModel2.isValid() ) {
-		device->applyShader(_simpleShader.getShader());
-		_simpleShader.getConstants().world = cc::math::translate<float>(cc::Vec3f(0.0f, 1.5f, 0.0f));
-		_simpleShader.getConstants().xform = cameraViewProj * _simpleShader.getConstants().world;
-		_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
-		_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(1.0f, 0.0f, 0.0f);
-		if( _simpleShader.updateConstants() ) {
-			device->setVertexBuffer(_clippedModel2.getVertexBuffer());
-			if( _clippedModel2.getIndexBuffer() != nullptr ) {
-				device->setIndexBuffer(_clippedModel2.getIndexBuffer());
-				device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _clippedModel2.getIndexBuffer()->getIndexCount());
-			} else {
-				device->drawArrays(ciri::PrimitiveTopology::TriangleList, _clippedModel2.getVertexBuffer()->getVertexCount(), 0);
-			}
-		}
-	}
 
 	// present backbuffer to screen
 	device->present();
@@ -445,84 +347,4 @@ void ClippingDemo::onUnloadContent() {
 
 	// clean axis
 	_axis.clean();
-}
-
-Model ClippingDemo::clipModelAgainstPlane( Model& source, const Plane& plane ) {
-	Model out;
-
-	std::vector<Model::Triangle> triangles = source.getTriangles();
-	// for each polygon...
-	for( Model::Triangle& currTri : triangles ) {
-		// output initialized to the starting polygon (current triangle)
-		std::vector<Vertex> output;
-		for( int i = 0; i < 3; ++i ) {
-			output.push_back(source.getVertices()[currTri.idx[i]]);
-		}
-
-		// input vector initialized to output
-		std::vector<Vertex> input = output;
-
-		// clear output
-		output.clear();
-
-		// get the starting point (last element in input list)
-		Vertex& startingPoint = input[input.size()-1];
-
-		// for all points in the input...
-		//for( const Vertex& endPoint : input ) {
-		for( int i = 0; i < input.size(); ++i ) {
-			const Vertex& endPoint = input[i];
-			// https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
-			if( isPointInFrontOfPlane(_cuttingPlane, endPoint.position) ) {
-				if( !isPointInFrontOfPlane(_cuttingPlane, startingPoint.position) ) {
-					float t; cc::Vec3f p;
-					if( intersectSegmentPlane(startingPoint.position, endPoint.position, _cuttingPlane, t, p) ) {
-					Vertex v(p, cc::Vec3f::up(), cc::Vec2f::zero());
-					output.push_back(v);
-					}
-				}
-				output.push_back(endPoint);
-			} else if( isPointInFrontOfPlane(_cuttingPlane, startingPoint.position) ) {
-					float t; cc::Vec3f p;
-					if( intersectSegmentPlane(startingPoint.position, endPoint.position, _cuttingPlane, t, p) ) {
-					Vertex v(p, cc::Vec3f::up(), cc::Vec2f::zero());
-					output.push_back(v);
-					}
-			}
-
-			// http://gamedevelopment.tutsplus.com/tutorials/understanding-sutherland-hodgman-clipping-for-physics-engines--gamedev-11917
-			//if( isPointInFrontOfPlane(_cuttingPlane, startingPoint.position) && isPointInFrontOfPlane(_cuttingPlane, endPoint.position) ) {
-			//	output.push_back(endPoint);
-			//} else if( isPointInFrontOfPlane(_cuttingPlane, startingPoint.position) && !isPointInFrontOfPlane(_cuttingPlane, endPoint.position) ) {
-			//	float t; cc::Vec3f p;
-			//	if( intersectSegmentPlane(startingPoint.position, endPoint.position, _cuttingPlane, t, p) ) {
-			//	Vertex v(p, cc::Vec3f::up(), cc::Vec2f::zero());
-			//	output.push_back(v);
-			//	}
-			//} else if( !isPointInFrontOfPlane(_cuttingPlane, startingPoint.position) && isPointInFrontOfPlane(_cuttingPlane, endPoint.position) ) {
-			//	float t; cc::Vec3f p;
-			//	if( intersectSegmentPlane(startingPoint.position, endPoint.position, _cuttingPlane, t, p) ) {
-			//	Vertex v(p, cc::Vec3f::up(), cc::Vec2f::zero());
-			//	output.push_back(v);
-			//	}
-
-			//	output.push_back(endPoint);
-			//}
-			startingPoint = endPoint;
-			//endPoint = startingPoint;
-		}
-
-		printf("Adding %d vertices\n", output.size());
-		for( const auto& curr : output ) {
-			printf("\t(%f, %f, %f)\n", curr.position.x, curr.position.y, curr.position.z);
-			out.addVertex(curr);
-		}
-
-		//todo: clip
-		// todo: add resulting polygon to out model
-	}
-
-	out.build(graphicsDevice());
-
-	return out;
 }
