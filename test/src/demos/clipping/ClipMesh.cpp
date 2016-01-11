@@ -81,7 +81,6 @@ int ClipMesh::clip( const Plane& clipPlane ) {
 	return 0;
 }
 
-//Model ClipMesh::convert() {
 bool ClipMesh::convert( Model* outModel ) {
 	// get visible vertices
 	const unsigned int numVertices = _vertices.size();
@@ -97,6 +96,12 @@ bool ClipMesh::convert( Model* outModel ) {
 		points.push_back(Vertex(vtx.point, cc::Vec3f(), cc::Vec2f()));
 	}
 
+	// check for all culled
+	if( points.empty() ) {
+		return false;
+	}
+
+	// get the triangles
 	std::vector<int> indices;
 	getTriangles(indices);
 
@@ -110,7 +115,6 @@ bool ClipMesh::convert( Model* outModel ) {
 	}
 	delete[] vMap;
 
-	//Model mdl;
 	for( unsigned int i = 0; i < points.size(); ++i ) {
 		outModel->addVertex(points[i]);
 	}
@@ -118,7 +122,6 @@ bool ClipMesh::convert( Model* outModel ) {
 		outModel->addIndex(indices[i]);
 	}
 	return true;
-	//return mdl;
 }
 
 void ClipMesh::printDebug( bool verbose ) {

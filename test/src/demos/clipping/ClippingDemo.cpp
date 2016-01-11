@@ -124,23 +124,7 @@ void ClippingDemo::onLoadContent() {
 	_model->build(graphicsDevice());
 
 	// create clip mesh
-	ClipMesh cm(*_model);
-	const int result = cm.clip(_cuttingPlane);
-	printf("Cutting complete with result: %d\n", result);
-	cm.printDebug(false);
-	cm.convert(&_clippedModel);
-	//_clippedModel = cm.convert();
-	_clippedModel.computeNormals();
-	printf("Vertices (%d):\n", _clippedModel.getVertices().size());
-	for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
-	}
-	printf("Indices (%d):\n", _clippedModel.getIndices().size());
-	for( int i = 0; i < _clippedModel.getIndices().size(); ++i ) {
-		//printf("\t[%d]: %d\n", i, _clippedModel.getIndices()[i]);
-	}
-	if( !_clippedModel.build(graphicsDevice()) ) {
-		printf("Failed to build clipped model.\n");
-	}
+	cutMesh();
 }
 
 void ClippingDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -239,18 +223,7 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 
 	// if there's any movement, rebuild the cut mesh
 	if( movement.sqrMagnitude() > 0.0f || rotation.length() != 1.0f ) {
-		ClipMesh cm(*_model);
-		const int result = cm.clip(_cuttingPlane);
-		printf("Cutting complete with result: %d\n", result);
-		_clippedModel = Model();
-		cm.convert(&_clippedModel);
-		//_clippedModel = cm.convert();
-		_clippedModel.computeNormals();
-		printf("Vertices (%d)\n", _clippedModel.getVertices().size());
-		printf("Indices (%d)\n", _clippedModel.getIndices().size());
-		if( !_clippedModel.build(graphicsDevice()) ) {
-			printf("Failed to build clipped model.\n");
-		}
+		cutMesh();
 	}
 }
 
@@ -364,4 +337,31 @@ void ClippingDemo::onUnloadContent() {
 
 	// clean axis
 	_axis.clean();
+}
+
+void ClippingDemo::cutMesh() {
+	if( nullptr == _model ) {
+		return;
+	}
+
+	// parse the input model
+	ClipMesh cm(*_model);
+
+	// perform the clip
+	const int result = cm.clip(_cuttingPlane);
+	printf("Cutting complete with result: %d\n", result);
+
+	// create a new empty model
+	_clippedModel = Model();
+	// convert the clipped mesh into a model
+	if( cm.convert(&_clippedModel) ) {
+		printf("Vertices (%d)\n", _clippedModel.getVertices().size());
+		printf("Indices (%d)\n", _clippedModel.getIndices().size());
+		_clippedModel.computeNormals();
+		if( !_clippedModel.build(graphicsDevice()) ) {
+			printf("Failed to build clipped model.\n");
+		}
+	} else {
+		printf("Failed to convert model, possibly due to being fully clipped.\n");
+	}
 }

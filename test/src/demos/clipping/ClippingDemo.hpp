@@ -27,6 +27,8 @@ protected:
 	virtual void onDraw();
 	virtual void onUnloadContent();
 
+	void cutMesh();
+
 private:
 	ciri::MayaCamera _camera;
 	Grid _grid;
