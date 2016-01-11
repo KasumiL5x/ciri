@@ -55,6 +55,8 @@ public:
 
 	bool parseExtendedData();
 
+	bool exportToObj( const char* file );
+
 private:
 	std::vector<Vertex> _vertices;
 	std::vector<int> _indices;

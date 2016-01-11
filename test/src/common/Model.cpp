@@ -4,6 +4,7 @@
 #include <ciri/gfx/ObjModel.hpp>
 #include <map>
 #include <cc/TriMath.hpp>
+#include <fstream>
 
 Model::Model()
 	: _vertexBuffer(nullptr), _indexBuffer(nullptr), _shader(nullptr), _dynamicVertex(false), _dynamicIndex(false) {
@@ -91,6 +92,10 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 
 bool Model::computeNormals() {
 	const std::vector<Triangle> tris = getTriangles();
+	for( int i = 0; i < _vertices.size(); ++i ) {
+		_vertices[i].normal = cc::Vec3f::zero();
+	}
+
 	for( int i = 0; i < tris.size(); ++i ) {
 		const Triangle& currTri = tris[i];
 		const cc::Vec3f normal = cc::math::computeTriangleNormal(_vertices[currTri.idx[0]].position, _vertices[currTri.idx[1]].position, _vertices[currTri.idx[2]].position).normalized();
@@ -432,4 +437,55 @@ bool Model::parseExtendedData() {
 			_triangles[currEdge.faces[j]].edges.push_back(i);
 		}
 	}
+}
+
+bool Model::exportToObj( const char* file ) {
+	std::ofstream out(file);
+	if( !out.is_open() ) {
+		return false;
+	}
+
+	// write comment
+	out << "# Exported from ciri." << std::endl;
+
+	// export vertex positions
+	for( unsigned int i = 0; i < _vertices.size(); ++i ) {
+		const Vertex& vtx = _vertices[i];
+		const cc::Vec3f wpos = (_xform.getWorld() * cc::Vec4f(vtx.position, 1.0f)).truncated();
+		out << "v " << wpos.x << " " << wpos.y << " " << wpos.z << std::endl;
+	}
+
+	// export vertex normals
+	for( unsigned int i = 0; i < _vertices.size(); ++i ) {
+		const Vertex& vtx = _vertices[i];
+		out << "vn " << vtx.normal.x << " " << vtx.normal.y << " " << vtx.normal.z << std::endl;
+	}
+
+	// export vertex texcoords
+	for( unsigned int i = 0; i < _vertices.size(); ++i ) {
+		const Vertex& vtx = _vertices[i];
+		out << "vt " << vtx.texcoord.x << " " << vtx.texcoord.y << std::endl;
+	}
+
+	// write indices
+	for( unsigned int i = 0; i < _indices.size(); i += 3 ) {
+
+		const int i0 = _indices[i+0];
+		const int i1 = _indices[i+1];
+		const int i2 = _indices[i+2];
+		if( i0 >= _vertices.size() || i1 >= _vertices.size() || i2 >= _vertices.size() ) {
+			printf("ERROR: Index out of range.\n");
+		}
+		if( i0==i1 || i0==i2 || i1==i2 ) {
+			printf("ERROR: Triangle has same indices for two elements.\n");
+		}
+
+		out << "f " << (_indices[i+0]+1) << "/" << (_indices[i+0]+1) << "/" << (_indices[i+0]+1) << " "
+			          << (_indices[i+1]+1) << "/" << (_indices[i+1]+1) << "/" << (_indices[i+1]+1) << " "
+								<< (_indices[i+2]+1) << "/" << (_indices[i+2]+1) << "/" << (_indices[i+2]+1) << std::endl;
+	}
+
+
+	out.close();
+	return true;
 }
