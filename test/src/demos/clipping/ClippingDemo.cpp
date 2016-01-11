@@ -67,7 +67,7 @@ void ClippingDemo::onLoadContent() {
 	// create rasterizer state
 	ciri::RasterizerDesc rasterDesc;
 	rasterDesc.cullMode = ciri::CullMode::None;
-	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
@@ -348,15 +348,27 @@ void ClippingDemo::cutMesh() {
 	ClipMesh cm(*_model);
 
 	// perform the clip
-	const int result = cm.clip(_cuttingPlane);
-	printf("Cutting complete with result: %d\n", result);
+	// test: can i clip with multiple planes? yes! yes i can! :D
+	//cm.clip(Plane(cc::Vec3f(0.1f, 1.0f, 0.25f).normalized(), -0.5f));
+	const ClipMesh::Result result = cm.clip(_cuttingPlane);
+	if( ClipMesh::Result::Dissected == result ) {
+		printf("Dissected\n");
+	}
+	if( ClipMesh::Result::Invisibubble == result ) {
+		printf("Invisibubble\n");
+	}
+	if( ClipMesh::Result::Visible == result ) {
+		printf("Visible\n");
+	}
+	
+	//printf("Cutting complete with result: %d\n", result);
 
 	// create a new empty model
 	_clippedModel = Model();
 	// convert the clipped mesh into a model
 	if( cm.convert(&_clippedModel) ) {
-		printf("Vertices (%d)\n", _clippedModel.getVertices().size());
-		printf("Indices (%d)\n", _clippedModel.getIndices().size());
+		//printf("Vertices (%d)\n", _clippedModel.getVertices().size());
+		//printf("Indices (%d)\n", _clippedModel.getIndices().size());
 		_clippedModel.computeNormals();
 		if( !_clippedModel.build(graphicsDevice()) ) {
 			printf("Failed to build clipped model.\n");

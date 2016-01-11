@@ -67,18 +67,18 @@ ClipMesh::ClipMesh( Model& sourceModel ) {
 	}
 }
 
-int ClipMesh::clip( const Plane& clipPlane ) {
-	const int result = processVertices(clipPlane);
-	if( 1 == result ) {
-		return 1;
-	} else if( -1 == result ) {
-		return -1;
+ClipMesh::Result ClipMesh::clip( const Plane& clipPlane ) {
+	const Result result = processVertices(clipPlane);
+
+	// no more processing required if the mesh isn't clipped
+	if( result != Result::Dissected ) {
+		return result;
 	}
 
 	processEdges();
 	processFaces(clipPlane);
 
-	return 0;
+	return Result::Dissected;
 }
 
 bool ClipMesh::convert( Model* outModel ) {
@@ -153,7 +153,7 @@ void ClipMesh::printDebug( bool verbose ) {
 	}
 }
 
-int ClipMesh::processVertices( const Plane& clippingPlane ) {
+ClipMesh::Result ClipMesh::processVertices( const Plane& clippingPlane ) {
 	const float EPSILON = 0.00001f;
 	int numPositive = 0;
 	int numNegative = 0;
@@ -168,7 +168,6 @@ int ClipMesh::processVertices( const Plane& clippingPlane ) {
 		}
 
 		vtx.distance = clippingPlane.normal.dot(vtx.point) - clippingPlane.distance;
-		//vtx.distance = sqrDistPointPlane(clippingPlane, vtx.point);
 		if( vtx.distance > EPSILON ) {
 			++numPositive;
 		} else if( vtx.distance < -EPSILON ) {
@@ -181,22 +180,18 @@ int ClipMesh::processVertices( const Plane& clippingPlane ) {
 		}
 	}
 
-	printf("Num positive: %d\n", numPositive);
-	printf("Num negative: %d\n", numNegative);
-	printf("Num zero: %d\n", numZero);
-
 	// mesh is in negative halfspace, fully clipped
 	if( 0 == numPositive ) {
-		return -1;
+		return Result::Invisibubble;
 	}
 
 	// mesh is in positive halfspace, fully visible
 	if( 0 == numNegative ) {
-		return 1;
+		return Result::Visible;
 	}
 
 	// clipped
-	return 0;
+	return Result::Dissected;
 }
 
 void ClipMesh::processEdges() {
@@ -500,7 +495,7 @@ void ClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 
 	//std::sort(eOrdered.begin(), eOrdered.end());
 
-	// bubble sort
+	// BROKEN bubble sort, but the broken part makes this work...
 	for( int i0 = 0, i1 = 1, choice = 1; i1 < numEdges - 1; i0 = i1++ ) {
 		CEdge& edgeCurr = _edges[eOrdered[i0]];
 		int j, curr = edgeCurr.vertex[choice];
@@ -524,30 +519,6 @@ void ClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 		}
 		assert(j < numEdges); // unexpected condition
 	}
-
-	//for( int i0=0, i1=1, choice=1; i1 < numEdges-1; i0=i1, i1++ ) {
-	//	const int current = _edges[eOrdered[i0]].vertex[choice];
-	//	int j;
-	//	for( j = i1; j < numEdges; ++j ) {
-	//		if( current == _edges[eOrdered[j]].vertex[0] ) {
-	//			swapEdges(eOrdered, i1, j);
-	//			choice = 1;
-	//			break;
-	//		}
-	//		if( current == _edges[eOrdered[j]].vertex[1] ) {
-	//			swapEdges(eOrdered, i1, j);
-	//			choice = 0;
-	//			break;
-	//		}
-	//	}
-	//	//assert(j < numEdges);
-	//}
-
-	//std::vector<int> COMPARE = eOrdered;
-	//std::sort(COMPARE.begin(), COMPARE.end());
-	//if( COMPARE != eOrdered ) {
-	//	printf("WARNING: Sort results are different.\n");
-	//}
 
 	vOrdered[0] = _edges[eOrdered[0]].vertex[0];
 	vOrdered[1] = _edges[eOrdered[0]].vertex[1];

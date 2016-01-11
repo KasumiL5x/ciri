@@ -1,12 +1,30 @@
 #ifndef __clipmesh__
 #define __clipmesh__
 
+// NOTE THAT THIS IS HEAVILY BASED OFF GEOMETRIC TOOLS' CLIPMESH.PDF DOCUMENT AND CONVEXCLIPPER.
+
+// Usage:
+//    1. Provide an input Model that is already populated with vertices and indices.
+//    2. Clip as many times as desired.
+//    3. Convert to another Model.
+
+// Notes:
+//    - The input mesh MUST be a CLOSED convex polyhedron.  Anything else has undefined behavior.
+//      As a result, all edges must have two and only two faces associated with them.
+
 #include <set>
 #include <cc/Vec3.hpp>
 #include "../../common/Model.hpp"
 #include "Plane.hpp"
 
 class ClipMesh {
+public:
+	enum class Result {
+		Dissected, /**< The mesh intersects the cutting plane.  New geometry will be created. */
+		Visible,   /**< The mesh is entirely above the cutting plane.  The geometry will not change. */
+		Invisibubble /**<  The mesh is entirely below the cutting plane.  The geometry will be discarded. */
+	};
+
 private:
 	struct CVertex {
 		cc::Vec3f point;
@@ -23,7 +41,6 @@ private:
 	struct CEdge {
 		int vertex[2];
 		int faces[2];
-		//////std::set<int> faces;
 		bool visible;
 
 		CEdge() {
@@ -34,7 +51,6 @@ private:
 			this->vertex[1] = rhs.vertex[1];
 			this->faces[0] = rhs.faces[0];
 			this->faces[1] = rhs.faces[1];
-			//////this->faces = rhs.faces;
 			this->visible = rhs.visible;
 			return *this;
 		}
@@ -69,12 +85,12 @@ private:
 public:
 	ClipMesh( Model& sourceModel );
 
-	int clip( const Plane& clipPlane );
+	Result clip( const Plane& clipPlane );
 	bool convert( Model* outModel );
 	void printDebug( bool verbose );
 
 private:
-	int processVertices( const Plane& clippingPlane );
+	Result processVertices( const Plane& clippingPlane );
 	void processEdges();
 	void processFaces( const Plane& clippingPlane );
 	//
