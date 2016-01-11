@@ -91,8 +91,8 @@ void ClippingDemo::onLoadContent() {
 	if( !_geometricPlane.build(graphicsDevice()) ) {
 		printf("Failed to build geometric plane.\n");
 	}
-	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(45.0f, 0.0f, 0.0f));
-	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 20.0f));
+	//_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(45.0f, 0.0f, 0.0f));
+	//_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 20.0f));
 
 	// get cut plane from geometric plane
 	_cuttingPlane.normal = _geometricPlane.getNormal();
@@ -128,7 +128,8 @@ void ClippingDemo::onLoadContent() {
 	const int result = cm.clip(_cuttingPlane);
 	printf("Cutting complete with result: %d\n", result);
 	cm.printDebug(false);
-	_clippedModel = cm.convert();
+	cm.convert(&_clippedModel);
+	//_clippedModel = cm.convert();
 	_clippedModel.computeNormals();
 	printf("Vertices (%d):\n", _clippedModel.getVertices().size());
 	for( int i = 0 ; i < _clippedModel.getVertices().size(); ++i ) {
@@ -235,6 +236,22 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	_cuttingPlane.normal = _geometricPlane.getNormal();
 	_cuttingPlane.distance = _geometricPlane.getConstant();
 	//printf("N(%f, %f, %f); D(%f)\n", _cuttingPlane.normal.x, _cuttingPlane.normal.y, _cuttingPlane.normal.z, _cuttingPlane.distance);
+
+	// if there's any movement, rebuild the cut mesh
+	if( movement.sqrMagnitude() > 0.0f || rotation.length() != 1.0f ) {
+		ClipMesh cm(*_model);
+		const int result = cm.clip(_cuttingPlane);
+		printf("Cutting complete with result: %d\n", result);
+		_clippedModel = Model();
+		cm.convert(&_clippedModel);
+		//_clippedModel = cm.convert();
+		_clippedModel.computeNormals();
+		printf("Vertices (%d)\n", _clippedModel.getVertices().size());
+		printf("Indices (%d)\n", _clippedModel.getIndices().size());
+		if( !_clippedModel.build(graphicsDevice()) ) {
+			printf("Failed to build clipped model.\n");
+		}
+	}
 }
 
 void ClippingDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {

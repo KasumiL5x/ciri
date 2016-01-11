@@ -70,7 +70,8 @@ public:
 	ClipMesh( Model& sourceModel );
 
 	int clip( const Plane& clipPlane );
-	Model convert();
+	//Model convert();
+	bool convert( Model* outModel );
 	void printDebug( bool verbose );
 
 private:

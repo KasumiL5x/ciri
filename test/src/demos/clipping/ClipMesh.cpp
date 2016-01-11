@@ -81,7 +81,8 @@ int ClipMesh::clip( const Plane& clipPlane ) {
 	return 0;
 }
 
-Model ClipMesh::convert() {
+//Model ClipMesh::convert() {
+bool ClipMesh::convert( Model* outModel ) {
 	// get visible vertices
 	const unsigned int numVertices = _vertices.size();
 	std::vector<Vertex> points;
@@ -109,14 +110,15 @@ Model ClipMesh::convert() {
 	}
 	delete[] vMap;
 
-	Model mdl;
+	//Model mdl;
 	for( unsigned int i = 0; i < points.size(); ++i ) {
-		mdl.addVertex(points[i]);
+		outModel->addVertex(points[i]);
 	}
 	for( unsigned int i = 0; i < indices.size(); ++i ) {
-		mdl.addIndex(indices[i]);
+		outModel->addIndex(indices[i]);
 	}
-	return mdl;
+	return true;
+	//return mdl;
 }
 
 void ClipMesh::printDebug( bool verbose ) {
@@ -538,11 +540,11 @@ void ClipMesh::orderVertices( CFace& face, std::vector<int>& vOrdered ) {
 	//	//assert(j < numEdges);
 	//}
 
-	std::vector<int> COMPARE = eOrdered;
-	std::sort(COMPARE.begin(), COMPARE.end());
-	if( COMPARE != eOrdered ) {
-		printf("WARNING: Sort results are different.\n");
-	}
+	//std::vector<int> COMPARE = eOrdered;
+	//std::sort(COMPARE.begin(), COMPARE.end());
+	//if( COMPARE != eOrdered ) {
+	//	printf("WARNING: Sort results are different.\n");
+	//}
 
 	vOrdered[0] = _edges[eOrdered[0]].vertex[0];
 	vOrdered[1] = _edges[eOrdered[0]].vertex[1];
