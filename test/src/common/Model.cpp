@@ -13,6 +13,33 @@ Model::Model()
 Model::~Model() {
 }
 
+Model::Model( const Model& rhs ) {
+	this->_vertices = rhs._vertices;
+	this->_indices = rhs._indices;
+	this->_vertexBuffer = rhs._vertexBuffer;
+	this->_indexBuffer = rhs._indexBuffer;
+	this->_xform = rhs._xform;
+	this->_shader = rhs._shader;
+	this->_dynamicVertex = rhs._dynamicVertex;
+	this->_dynamicIndex = rhs._dynamicIndex;
+	this->_triangles = rhs._triangles;
+	this->_edges = rhs._edges;
+}
+
+Model Model::operator=( const Model& rhs ) {
+	this->_vertices = rhs._vertices;
+	this->_indices = rhs._indices;
+	this->_vertexBuffer = rhs._vertexBuffer;
+	this->_indexBuffer = rhs._indexBuffer;
+	this->_xform = rhs._xform;
+	this->_shader = rhs._shader;
+	this->_dynamicVertex = rhs._dynamicVertex;
+	this->_dynamicIndex = rhs._dynamicIndex;
+	this->_triangles = rhs._triangles;
+	this->_edges = rhs._edges;
+	return *this;
+}
+
 void Model::addVertex( const Vertex& vertex ) {
 	_vertices.push_back(vertex);
 }

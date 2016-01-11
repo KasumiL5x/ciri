@@ -26,6 +26,8 @@ public:
 public:
 	Model();
 	~Model();
+	Model( const Model& rhs );
+	Model operator=( const Model& rhs );
 
 	void addVertex( const Vertex& vertex );
 	void addIndex( int index );
