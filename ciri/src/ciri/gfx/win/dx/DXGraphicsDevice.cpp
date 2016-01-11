@@ -64,78 +64,6 @@ namespace ciri {
 		_defaultDepthStencilDepthRead = nullptr;
 		_defaultDepthStencilNone = nullptr;
 
-		// clean texture cubes
-		for( auto curr : _textureCubes ) {
-			curr->destroy();
-		}
-		_textureCubes.clear();
-
-		// clean blend states
-		for( auto curr : _blendStates ) {
-			curr->destroy();
-		}
-		_blendStates.clear();
-
-		// clean depth stencil states
-		for( auto curr : _depthStencilStates ) {
-			curr->destroy();
-		}
-		_depthStencilStates.clear();
-
-		// clean rasterizer states
-		for( auto curr : _rasterizerStates ) {
-			curr->destroy();
-		}
-		_rasterizerStates.clear();
-
-		// destroy 3d textures
-		for( auto curr : _texture3Ds ) {
-			curr->destroy();
-		}
-		_texture3Ds.clear();
-
-		// destroy 2d render targets
-		for( auto curr : _renderTarget2Ds ) {
-			curr->destroy();
-		}
-		_renderTarget2Ds.clear();
-
-		// destroy samplers
-		for( auto curr : _samplers ) {
-			curr->destroy();
-		}
-		_samplers.clear();
-
-		// destroy 2d textures
-		for( auto curr : _texture2Ds ) {
-			curr->destroy();
-		}
-		_texture2Ds.clear();
-
-		// destroy constant buffers
-		for( auto curr : _constantBuffers ) {
-			curr->destroy();
-		}
-		_constantBuffers.clear();
-
-		// destroy index buffers
-		for( auto curr : _indexBuffers ) {
-			curr->destroy();
-		}
-		_indexBuffers.clear();
-
-		// destroy all vertex buffers
-		for( auto curr : _vertexBuffers ) {
-			curr->destroy();
-		}
-		_vertexBuffers.clear();
-
-		// destroy all shaders
-		for( auto curr : _shaders ) {
-			curr->destroy();
-		}
-		_shaders.clear();
-
 		if( _depthStencil != nullptr ) { _depthStencil->Release(); _depthStencil = nullptr; }
 		if( _depthStencilView != nullptr ) { _depthStencilView->Release(); _depthStencilView = nullptr; }
 		if( _backbuffer ) { _backbuffer->Release(); _backbuffer = nullptr; }
@@ -181,7 +109,6 @@ namespace ciri {
 		}
 
 		std::shared_ptr<DXShader> shader = std::make_shared<DXShader>(shared_from_this());
-		_shaders.push_back(shader);
 		return shader;
 	}
 
@@ -191,7 +118,6 @@ namespace ciri {
 		}
 
 		std::shared_ptr<DXVertexBuffer> buffer = std::make_shared<DXVertexBuffer>(shared_from_this());
-		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
@@ -201,7 +127,6 @@ namespace ciri {
 		}
 
 		std::shared_ptr<DXIndexBuffer> buffer = std::make_shared<DXIndexBuffer>(shared_from_this());
-		_indexBuffers.push_back(buffer);
 		return buffer;
 	}
 
@@ -211,7 +136,6 @@ namespace ciri {
 		}
 
 		std::shared_ptr<DXConstantBuffer> buffer = std::make_shared<DXConstantBuffer>(shared_from_this());
-		_constantBuffers.push_back(buffer);
 		return buffer;
 	}
 
@@ -231,7 +155,6 @@ namespace ciri {
 			return nullptr;
 		}
 
-		_texture2Ds.push_back(dxTexture);
 		return dxTexture;
 	}
 
@@ -251,7 +174,6 @@ namespace ciri {
 			return nullptr;
 		}
 
-		_texture3Ds.push_back(dxTexture);
 		return dxTexture;
 	}
 
@@ -271,7 +193,6 @@ namespace ciri {
 			return nullptr;
 		}
 
-		_textureCubes.push_back(dxCube);
 		return dxCube;
 	}
 
@@ -286,7 +207,6 @@ namespace ciri {
 			dxSampler = nullptr;
 			return nullptr;
 		}
-		_samplers.push_back(dxSampler);
 		return dxSampler;
 	}
 
@@ -304,11 +224,9 @@ namespace ciri {
 			texture->destroy();
 			texture.reset();
 			texture = nullptr;
-			_texture2Ds.pop_back();
 			dxTarget.reset();
 			dxTarget = nullptr;
 		}
-		_renderTarget2Ds.push_back(dxTarget);
 		return dxTarget;
 	}
 
@@ -323,7 +241,6 @@ namespace ciri {
 			dxRaster = nullptr;
 			return nullptr;
 		}
-		_rasterizerStates.push_back(dxRaster);
 		return dxRaster;
 	}
 
@@ -338,7 +255,6 @@ namespace ciri {
 			dxState = nullptr;
 			return nullptr;
 		}
-		_depthStencilStates.push_back(dxState);
 		return dxState;
 	}
 
@@ -353,7 +269,6 @@ namespace ciri {
 			dxState = nullptr;
 			return nullptr;
 		}
-		_blendStates.push_back(dxState);
 		return dxState;
 	}
 

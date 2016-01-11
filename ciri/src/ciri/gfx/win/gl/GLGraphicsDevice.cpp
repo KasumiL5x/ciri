@@ -28,7 +28,7 @@
 namespace ciri {
 	GLGraphicsDevice::GLGraphicsDevice()
 		: IGraphicsDevice(), _isValid(false), _window(nullptr), _hdc(0), _hglrc(0), _defaultWidth(0), _defaultHeight(0),
-			_currentFbo(0), _shaderExt(".glsl"), _dummyVao(0) {
+			_currentFbo(0), _shaderExt(".glsl"), _dummyVao(0), _constantBufferCount(0) {
 		// configure mrt draw buffers
 		for( int i = 0; i < MAX_MRTS; ++i ) {
 			_drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
@@ -87,83 +87,11 @@ namespace ciri {
 		_defaultDepthStencilDepthRead = nullptr;
 		_defaultDepthStencilNone = nullptr;
 
-		// clean texture cubes
-		for( auto curr : _textureCubes ) {
-			curr->destroy();
-		}
-		_textureCubes.clear();
-
-		// clean blend states
-		for( auto curr : _blendStates ) {
-			curr->destroy();
-		}
-		_blendStates.clear();
-
-		// clean depth stencil states
-		for( auto curr : _depthStencilStates ) {
-			curr->destroy();
-		}
-		_depthStencilStates.clear();
-
-		// clean rasterizer states
-		for( auto curr : _rasterizerStates ) {
-			curr->destroy();
-		}
-		_rasterizerStates.clear();
-
 		// clean fbo
 		if( 0 != _currentFbo ) {
 			glDeleteFramebuffers(1, &_currentFbo);
 			_currentFbo = 0;
 		}
-
-		// destroy 2d render targets
-		for( auto curr : _renderTarget2Ds ) {
-			curr->destroy();
-		}
-		_renderTarget2Ds.clear();
-
-		// destroy samplers
-		for( auto curr : _samplers ) {
-			curr->destroy();
-		}
-		_samplers.clear();
-
-		// destroy 3d textures
-		for( auto curr : _texture3Ds ) {
-			curr->destroy();
-		}
-		_texture3Ds.clear();
-
-		// destroy 2d textures
-		for( auto curr : _texture2Ds ) {
-			curr->destroy();
-		}
-		_texture2Ds.clear();
-
-		// destroy constant buffers
-		for( auto curr : _constantBuffers ) {
-			curr->destroy();
-		}
-		_constantBuffers.clear();
-
-		// destroy index buffers
-		for( auto curr : _indexBuffers ) {
-			curr->destroy();
-		}
-		_indexBuffers.clear();
-
-		// destroy vertex buffers
-		for( auto curr : _vertexBuffers ) {
-			curr->destroy();
-		}
-		_vertexBuffers.clear();
-
-		// destroy shaders
-		for( auto curr : _shaders ) {
-			curr->destroy();
-		}
-		_shaders.clear();
 
 		// delete dummy vao
 		if( _dummyVao != 0 ) {
@@ -210,7 +138,6 @@ namespace ciri {
 		}
 
 		std::shared_ptr<GLShader> shader = std::make_shared<GLShader>();
-		_shaders.push_back(shader);
 		return shader;
 	}
 
@@ -219,7 +146,6 @@ namespace ciri {
 			return nullptr;
 		}
 		std::shared_ptr<GLVertexBuffer> buffer = std::make_shared<GLVertexBuffer>();
-		_vertexBuffers.push_back(buffer);
 		return buffer;
 	}
 
@@ -229,7 +155,6 @@ namespace ciri {
 		}
 
 		std::shared_ptr<GLIndexBuffer> buffer = std::make_shared<GLIndexBuffer>();
-		_indexBuffers.push_back(buffer);
 		return buffer;
 	}
 
@@ -238,10 +163,12 @@ namespace ciri {
 			return nullptr;
 		}
 
-		// note: using the size of a vector as the index means they can't be removed.
-		// todo: update the index to a smarter system that allows for reuse of deleted buffer indices
-		std::shared_ptr<GLConstantBuffer> buffer = std::make_shared<GLConstantBuffer>(_constantBuffers.size());
-		_constantBuffers.push_back(buffer);
+		// note: using a hardcoded index means they cannot be removed.
+		// todo: implement a better system that allows for reuse of deleted indices
+		//       such as some kind of lookup table to see if a buffer is dead upon request.
+		//       e.g. .....(getNextFreeConstantBufferIndex())...
+		std::shared_ptr<GLConstantBuffer> buffer = std::make_shared<GLConstantBuffer>(_constantBufferCount);
+		_constantBufferCount += 1;
 		return buffer;
 	}
 
@@ -261,7 +188,6 @@ namespace ciri {
 			return nullptr;
 		}
 
-		_texture2Ds.push_back(glTexture);
 		return glTexture;
 	}
 
@@ -281,7 +207,6 @@ namespace ciri {
 			return nullptr;
 		}
 
-		_texture3Ds.push_back(glTexture);
 		return glTexture;
 	}
 
@@ -302,7 +227,6 @@ namespace ciri {
 			return nullptr;
 		}
 
-		_textureCubes.push_back(glCube);
 		return glCube;
 	}
 
@@ -317,7 +241,6 @@ namespace ciri {
 			glSampler = nullptr;
 			return nullptr;
 		}
-		_samplers.push_back(glSampler);
 		return glSampler;
 	}
 
@@ -335,7 +258,6 @@ namespace ciri {
 			texture.reset();
 			return nullptr;
 		}
-		_renderTarget2Ds.push_back(glTarget);
 		return glTarget;
 	}
 
@@ -350,7 +272,6 @@ namespace ciri {
 			glRaster = nullptr;
 			return nullptr;
 		}
-		_rasterizerStates.push_back(glRaster);
 		return glRaster;
 	}
 
@@ -365,7 +286,6 @@ namespace ciri {
 			glState = nullptr;
 			return nullptr;
 		}
-		_depthStencilStates.push_back(glState);
 		return glState;
 	}
 
@@ -380,7 +300,6 @@ namespace ciri {
 			glState = nullptr;
 			return nullptr;
 		}
-		_blendStates.push_back(glState);
 		return glState;
 	}
 

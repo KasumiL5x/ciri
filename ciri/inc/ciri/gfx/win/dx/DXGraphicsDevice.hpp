@@ -106,27 +106,12 @@ namespace ciri {
 		//
 		float _clearColor[4];
 		//
-		std::vector<std::shared_ptr<DXShader>> _shaders;
-		std::vector<std::shared_ptr<DXVertexBuffer>> _vertexBuffers;
-		std::vector<std::shared_ptr<DXIndexBuffer>> _indexBuffers;
-		//
 		std::weak_ptr<DXShader> _activeShader;
 		std::weak_ptr<DXVertexBuffer> _activeVertexBuffer;
 		std::weak_ptr<DXIndexBuffer> _activeIndexBuffer;
 		//
-		std::vector<std::shared_ptr<DXConstantBuffer>> _constantBuffers;
-		//
-		std::vector<std::shared_ptr<DXTexture2D>> _texture2Ds;
-		std::vector<std::shared_ptr<DXTexture3D>> _texture3Ds;
-		//
-		std::vector<std::shared_ptr<DXSamplerState>> _samplers;
-		//
-		std::vector<std::shared_ptr<DXRenderTarget2D>> _renderTarget2Ds;
-		//
-		std::vector<std::shared_ptr<DXRasterizerState>> _rasterizerStates;
 		std::weak_ptr<DXRasterizerState> _activeRasterizerState;
 		//
-		std::vector<std::shared_ptr<DXDepthStencilState>> _depthStencilStates;
 		std::weak_ptr<DXDepthStencilState> _activeDepthStencilState;
 		ID3D11Texture2D* _depthStencil;
 		ID3D11DepthStencilView* _depthStencilView;
@@ -136,10 +121,6 @@ namespace ciri {
 		//
 		std::string _gpuName;
 		std::string _apiInfo;
-		//
-		std::vector<std::shared_ptr<DXBlendState>> _blendStates;
-		//
-		std::vector<std::shared_ptr<DXTextureCube>> _textureCubes;
 
 		// default blend states
 		std::shared_ptr<IBlendState> _defaultBlendAdditive;

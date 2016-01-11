@@ -106,31 +106,16 @@ namespace ciri {
 		//
 		Viewport _activeViewport;
 		//
-		std::vector<std::shared_ptr<GLShader>> _shaders;
-		std::vector<std::shared_ptr<GLVertexBuffer>> _vertexBuffers;
-		std::vector<std::shared_ptr<GLIndexBuffer>> _indexBuffers;
-		//
 		std::weak_ptr<GLShader> _activeShader;
 		std::weak_ptr<GLVertexBuffer> _activeVertexBuffer;
 		std::weak_ptr<GLIndexBuffer> _activeIndexBuffer;
-		//
-		std::vector<std::shared_ptr<GLConstantBuffer>> _constantBuffers;
-		//
-		std::vector<std::shared_ptr<GLTexture2D>> _texture2Ds;
-		std::vector<std::shared_ptr<GLTexture3D>> _texture3Ds;
-		//
-		std::vector<std::shared_ptr<GLSamplerState>> _samplers;
-		//
-		std::vector<std::shared_ptr<GLRenderTarget2D>> _renderTarget2Ds;
 		//
 		GLuint _currentFbo;
 		const static int MAX_MRTS{8};
 		GLenum _drawBuffers[MAX_MRTS];
 		//
-		std::vector<std::shared_ptr<GLRasterizerState>> _rasterizerStates;
 		std::weak_ptr<GLRasterizerState> _activeRasterizerState;
 		//
-		std::vector<std::shared_ptr<GLDepthStencilState>> _depthStencilStates;
 		std::weak_ptr<GLDepthStencilState> _activeDepthStencilState;
 		//
 		std::string _shaderExt;
@@ -138,11 +123,9 @@ namespace ciri {
 		std::string _gpuName;
 		std::string _apiInfo;
 		//
-		std::vector<std::shared_ptr<GLBlendState>> _blendStates;
-		//
-		std::vector<std::shared_ptr<GLTextureCube>> _textureCubes;
-		//
 		GLuint _dummyVao;
+		//
+		int _constantBufferCount;
 
 		// default blend states
 		std::shared_ptr<IBlendState> _defaultBlendAdditive;
