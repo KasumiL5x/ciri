@@ -98,26 +98,27 @@ void ClippingDemo::onLoadContent() {
 
 	// create closed convex polyhedron
 	_model = new Model();
-	_model->addVertex(Vertex(cc::Vec3f(-0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f(-0.5f,  0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f( 0.5f,  0.5f, 0.0f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f(-0.5f, -0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f( 0.5f, -0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f(-0.5f, 0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
-	_model->addVertex(Vertex(cc::Vec3f( 0.5f, 0.5f, -0.5f), cc::Vec3f(), cc::Vec2f()));
-	_model->addIndex(0); _model->addIndex(1); _model->addIndex(2);//front
-	_model->addIndex(1); _model->addIndex(3); _model->addIndex(2);//front
-	_model->addIndex(0); _model->addIndex(1); _model->addIndex(4);//bottom
-	_model->addIndex(1); _model->addIndex(5); _model->addIndex(4);//bottom
-	_model->addIndex(5); _model->addIndex(7); _model->addIndex(6);//back
-	_model->addIndex(6); _model->addIndex(4); _model->addIndex(5);//back
-	_model->addIndex(0); _model->addIndex(2); _model->addIndex(4);//left
-	_model->addIndex(2); _model->addIndex(6); _model->addIndex(4);//left
-	_model->addIndex(1); _model->addIndex(5); _model->addIndex(3);//right
-	_model->addIndex(5); _model->addIndex(7); _model->addIndex(3);//right
-	_model->addIndex(3); _model->addIndex(7); _model->addIndex(6);//top
-	_model->addIndex(2); _model->addIndex(3); _model->addIndex(6);//top
+	const float SIZE = 1.0f;
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f*SIZE, -0.5f*SIZE,  0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f*SIZE, -0.5f*SIZE,  0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f*SIZE,  0.5f*SIZE,  0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f*SIZE,  0.5f*SIZE,  0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f*SIZE, -0.5f*SIZE, -0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f*SIZE, -0.5f*SIZE, -0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f( 0.5f*SIZE,  0.5f*SIZE, -0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addVertex(Vertex(cc::Vec3f(-0.5f*SIZE,  0.5f*SIZE, -0.5f*SIZE), cc::Vec3f(), cc::Vec2f()));
+	_model->addIndex(0); _model->addIndex(1); _model->addIndex(2); // front
+	_model->addIndex(2); _model->addIndex(3); _model->addIndex(0);
+	_model->addIndex(1); _model->addIndex(5); _model->addIndex(6); // top
+	_model->addIndex(6); _model->addIndex(2); _model->addIndex(1);
+	_model->addIndex(7); _model->addIndex(6); _model->addIndex(5); // back
+	_model->addIndex(5); _model->addIndex(4); _model->addIndex(7);
+	_model->addIndex(4); _model->addIndex(0); _model->addIndex(3); // bottom
+	_model->addIndex(3); _model->addIndex(7); _model->addIndex(4);
+	_model->addIndex(4); _model->addIndex(5); _model->addIndex(1); // left
+	_model->addIndex(1); _model->addIndex(0); _model->addIndex(4);
+	_model->addIndex(3); _model->addIndex(2); _model->addIndex(6); // right
+	_model->addIndex(6); _model->addIndex(7); _model->addIndex(3);
 	_model->computeNormals();
 	_model->build(graphicsDevice());
 
