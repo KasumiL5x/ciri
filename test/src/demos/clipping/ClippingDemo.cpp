@@ -38,10 +38,6 @@ void ClippingDemo::onInitialize() {
 	_camera.setLerpStrength(10.0f);
 	_camera.setTarget(cc::Vec3f(0.0f, 0.0f, 0.0f));
 	_camera.resetPosition();
-
-	// configure the cutting plane
-	_cuttingPlane.normal = cc::Vec3f(0.0f, 1.0f, 0.0f).normalized();
-	_cuttingPlane.distance = 0.0f;
 }
 
 void ClippingDemo::onLoadContent() {
@@ -81,22 +77,24 @@ void ClippingDemo::onLoadContent() {
 	// create blend state
 	_blendState = graphicsDevice()->getDefaultBlendOpaque();
 
-	// create geometric plane
+	// create geometric planes
 	const float PLANE_SIZE = 2.0f;
 	const cc::Vec3f p0 = cc::Vec3f(-0.5f*PLANE_SIZE, 0.0f,  0.5f*PLANE_SIZE);
 	const cc::Vec3f p1 = cc::Vec3f(-0.5f*PLANE_SIZE, 0.0f, -0.5f*PLANE_SIZE);
 	const cc::Vec3f p2 = cc::Vec3f( 0.5f*PLANE_SIZE, 0.0f, -0.5f*PLANE_SIZE);
 	const cc::Vec3f p3 = cc::Vec3f( 0.5f*PLANE_SIZE, 0.0f,  0.5f*PLANE_SIZE);
 	_geometricPlane = GeometricPlane(p0, p1, p2, p3);
+	_geometricPlane.getXform().setPosition(cc::Vec3f(0.0f, 0.4f, 0.0f));
+	_geometricPlane.getXform().setOrientation(cc::Quatf::createFromEulerAngles(0.0f, 10.0f, -15.0f));
 	if( !_geometricPlane.build(graphicsDevice()) ) {
 		printf("Failed to build geometric plane.\n");
 	}
-	//_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(45.0f, 0.0f, 0.0f));
-	//_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 20.0f));
-
-	// get cut plane from geometric plane
-	_cuttingPlane.normal = _geometricPlane.getNormal();
-	_cuttingPlane.distance = _geometricPlane.getConstant();
+	_geometricPlane2 = GeometricPlane(p0, p1, p2, p3);
+	_geometricPlane2.getXform().setPosition(cc::Vec3f(0.0f, -0.25f, 0.0f));
+	_geometricPlane2.getXform().setOrientation(cc::Quatf::createFromEulerAngles(25.0f, 10.0f, 0.0f));
+	if( !_geometricPlane2.build(graphicsDevice()) ) {
+		printf("Failed to build second geometric plane.\n");
+	}
 
 	// create closed convex polyhedron
 	_model = new Model();
@@ -214,12 +212,6 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, -45.0f * deltaTime);
 	}
 	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * rotation);
-	
-
-	// rebuild cutting plane from new geometric plane position
-	_cuttingPlane.normal = _geometricPlane.getNormal();
-	_cuttingPlane.distance = _geometricPlane.getConstant();
-	//printf("N(%f, %f, %f); D(%f)\n", _cuttingPlane.normal.x, _cuttingPlane.normal.y, _cuttingPlane.normal.z, _cuttingPlane.distance);
 
 	// if there's any movement, rebuild the cut mesh
 	if( movement.sqrMagnitude() > 0.0f || rotation.length() != 1.0f ) {
@@ -261,15 +253,15 @@ void ClippingDemo::onDraw() {
 		}
 	}
 
-	 //render axis
-	if( _axis.isValid() ) {
-		const cc::Mat4f axisXform = cameraViewProj * cc::Mat4f(1.0f);
-		if( _axis.updateConstants(axisXform) ) {
-			device->applyShader(_axis.getShader());
-			device->setVertexBuffer(_axis.getVertexBuffer());
-			device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
-		}
-	}
+	// //render axis
+	//if( _axis.isValid() ) {
+	//	const cc::Mat4f axisXform = cameraViewProj * cc::Mat4f(1.0f);
+	//	if( _axis.updateConstants(axisXform) ) {
+	//		device->applyShader(_axis.getShader());
+	//		device->setVertexBuffer(_axis.getVertexBuffer());
+	//		device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
+	//	}
+	//}
 
 	// render geometric plane
 	if( _simpleShader.getShader() != nullptr && _geometricPlane.getVertexBuffer() != nullptr ) {
@@ -282,6 +274,19 @@ void ClippingDemo::onDraw() {
 			device->setVertexBuffer(_geometricPlane.getVertexBuffer());
 			device->setIndexBuffer(_geometricPlane.getIndexBuffer());
 			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _geometricPlane.getIndexBuffer()->getIndexCount());
+		}
+	}
+	//
+	if( _simpleShader.getShader() != nullptr && _geometricPlane2.getVertexBuffer() != nullptr ) {
+		device->applyShader(_simpleShader.getShader());
+		_simpleShader.getConstants().world = _geometricPlane2.getXform().getWorld();
+		_simpleShader.getConstants().xform = cameraViewProj * _simpleShader.getConstants().world;
+		_simpleShader.getMaterialConstants().hasDiffuseTexture = 0;
+		_simpleShader.getMaterialConstants().diffuseColor = cc::Vec3f(1.0f, 0.0f, 1.0f);
+		if( _simpleShader.updateConstants() ) {
+			device->setVertexBuffer(_geometricPlane2.getVertexBuffer());
+			device->setIndexBuffer(_geometricPlane2.getIndexBuffer());
+			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _geometricPlane2.getIndexBuffer()->getIndexCount());
 		}
 	}
 
@@ -349,8 +354,8 @@ void ClippingDemo::cutMesh() {
 
 	// perform the clip
 	// test: can i clip with multiple planes? yes! yes i can! :D
-	//cm.clip(Plane(cc::Vec3f(0.1f, 1.0f, 0.25f).normalized(), -0.5f));
-	const ClipMesh::Result result = cm.clip(_cuttingPlane);
+	cm.clip(Plane(-_geometricPlane2.getNormal(), _geometricPlane2.getConstant()));
+	const ClipMesh::Result result = cm.clip(Plane(_geometricPlane.getNormal(), _geometricPlane.getConstant()));
 	if( ClipMesh::Result::Dissected == result ) {
 		printf("Dissected\n");
 	}

@@ -39,8 +39,8 @@ private:
 	Model* _model;
 	Model _clippedModel;
 	SimpleShader _simpleShader;
-	Plane _cuttingPlane;
 	GeometricPlane _geometricPlane;
+	GeometricPlane _geometricPlane2;
 };
 
 #endif /* __clippingdemo__ */
