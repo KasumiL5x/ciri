@@ -9,6 +9,14 @@
 #include <ciri/gfx/MayaCamera.hpp>
 #include "../../common/Grid.hpp"
 #include "../../common/Axis.hpp"
+#include "../../common/Model.hpp"
+
+__declspec(align(16))
+struct ParallaxVertexConstants {
+	cc::Mat4f world;
+	cc::Mat4f xform;
+	cc::Vec3f campos;
+};
 
 class ParallaxDemo : public Game {
 public:
@@ -36,6 +44,14 @@ private:
 	Axis _axis;
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
 	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
+	Model* _model;
+	std::shared_ptr<ciri::IShader> _parallaxShader;
+	std::shared_ptr<ciri::IConstantBuffer> _parallaxVertexConstantBuffer;
+	ParallaxVertexConstants _parallaxVertexConstants;
+	std::shared_ptr<ciri::ITexture2D> _diffuseTexture;
+	std::shared_ptr<ciri::ITexture2D> _normalTexture;
+	std::shared_ptr<ciri::ITexture2D> _parallaxTexture;
+	std::shared_ptr<ciri::ISamplerState> _parallaxSampler;
 };
 
 #endif /* __parallax_demo__ */
