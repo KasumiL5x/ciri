@@ -74,6 +74,9 @@
     <ClCompile Include="src\demos\clipping\ClipMesh.cpp">
       <Filter>demos\clipping</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp">
+      <Filter>demos\parallax</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -105,6 +108,9 @@
     </Filter>
     <Filter Include="demos\clipping">
       <UniqueIdentifier>{2ef025e2-8ea6-46f4-804a-004773516ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\parallax">
+      <UniqueIdentifier>{87387e10-a472-4ed5-8739-20aefac7d2b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\clipping\ClipMesh.hpp">
       <Filter>demos\clipping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp">
+      <Filter>demos\parallax</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
