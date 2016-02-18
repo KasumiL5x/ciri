@@ -86,7 +86,18 @@ vec2 SteepParallaxMapping( vec2 texcoords, vec3 viewdir ) {
 		currentLayerDepth += layerDepth;
 	}
 
-	return currentTexcoords;
+	// get texture coordinates before collision (reverse operations)
+	vec2 prevTexcoords = currentTexcoords + deltaTexcoords;
+
+	// get depth before and after collision for lerping
+	float afterDepth = currentDepthMapValue - currentLayerDepth;
+	float beforeDepth = texture(ParallaxTexture, prevTexcoords).r - currentLayerDepth + layerDepth;
+
+	// interpolation of texture coordinates
+	float weight = afterDepth / (afterDepth - beforeDepth);
+	vec2 finalTexcoords = prevTexcoords * weight + currentTexcoords * (1.0 - weight);
+
+	return finalTexcoords;
 }
 
 void main() {
