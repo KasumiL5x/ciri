@@ -30,9 +30,9 @@ void ParallaxDemo::onInitialize() {
 	// configure camera
 	_camera.setAspect((float)window()->getWidth() / (float)window()->getHeight());
 	_camera.setPlanes(0.1f, 1000.0f);
-	_camera.setYaw(59.0f);
-	_camera.setPitch(18.f);
-	_camera.setOffset(53.0f);
+	_camera.setYaw(54.0f);
+	_camera.setPitch(36.0f);
+	_camera.setOffset(62.0f);
 	_camera.setSensitivity(1.0f, 1.0f, 0.25f);
 	_camera.setLerpStrength(100.0f);
 	_camera.setTarget(cc::Vec3f(0.0f, 0.0f, 0.0f));
@@ -82,17 +82,17 @@ void ParallaxDemo::onLoadContent() {
 
 	// load diffuse texture
 	ciri::PNG diffuse;
-	diffuse.loadFromFile("parallax/metal.png", true);
+	diffuse.loadFromFile("parallax/diffuse.png", true);
 	_diffuseTexture = graphicsDevice()->createTexture2D(diffuse.getWidth(), diffuse.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, diffuse.getPixels());
 
 	// load normal texture
 	ciri::PNG normal;
-	normal.loadFromFile("parallax/metal_n.png", true);
+	normal.loadFromFile("parallax/normal.png", true);
 	_normalTexture = graphicsDevice()->createTexture2D(normal.getWidth(), normal.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, normal.getPixels());
 
 	// load parallax texture
 	ciri::PNG png;
-	png.loadFromFile("parallax/bricks.png", true);
+	png.loadFromFile("parallax/height.png", true);
 	_parallaxTexture = graphicsDevice()->createTexture2D(png.getWidth(), png.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, png.getPixels());
 
 	// create parallax texture sampler

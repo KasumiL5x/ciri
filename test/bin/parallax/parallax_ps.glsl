@@ -52,21 +52,48 @@ vec3 phong( vec3 L, vec3 N, vec3 V, vec3 lightColor, float lightIntensity, float
 }
 
 vec2 ParallaxMapping( vec2 texcoords, vec3 viewdir ) {
-	float height_scale = 0.02;
-	// float initialHeight = texture(ParallaxTexture, texcoords).r;
-	// vec2 texCoordOffset = height_scale * viewdir.xy / viewdir.z * initialHeight;
-	// texCoordOffset = height_scale * viewdir.xy * initialHeight;
-	// return texcoords - texCoordOffset;
-
+	// standard parallax
+	float height_scale = 0.04;
 	float height = texture(ParallaxTexture, texcoords).r;
 	return texcoords - (viewdir.xy / viewdir.z * (height * height_scale));
+}
+
+vec2 SteepParallaxMapping( vec2 texcoords, vec3 viewdir ) {
+	float height_scale = 0.04;
+
+	// number of depth layers
+	const float minLayers = 10.0;
+	const float maxLayers = 20.0;
+	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewdir)));
+	// calculate size of each layer
+	float layerDepth = 1.0 / numLayers;
+	// depth of current layer
+	float currentLayerDepth = 0.0;
+	// amount to shift the texture coordinates by per layer (from vector P)
+	vec2 P = viewdir.xy / viewdir.z * height_scale;
+	vec2 deltaTexcoords = P / numLayers;
+
+	// get initial values
+	vec2 currentTexcoords = texcoords;
+	float currentDepthMapValue = texture(ParallaxTexture, currentTexcoords).r;
+
+	while( currentLayerDepth < currentDepthMapValue ) {
+		// shift texture coordinates along direction of P
+		currentTexcoords -= deltaTexcoords;
+		// get depth map value at current texture coordinates
+		currentDepthMapValue = texture(ParallaxTexture, currentTexcoords).r;
+		// get depth of next layer
+		currentLayerDepth += layerDepth;
+	}
+
+	return currentTexcoords;
 }
 
 void main() {
 	vec3 ViewDir = normalize(vo_tangentCamPos - vo_tangentFragPos);
 	vec2 TexCoords = vo_texcoord;
 	if( true ) {
-		TexCoords = ParallaxMapping(vo_texcoord, ViewDir);
+		TexCoords = SteepParallaxMapping(vo_texcoord, ViewDir);
 	}
 	vec3 Normal = texture(NormalTexture, TexCoords).rgb;
 	Normal = normalize(Normal * 2.0 - 1.0);
@@ -78,8 +105,8 @@ void main() {
 	vec3 Diffuse = Diff * Color;
 	vec3 ReflectDir = reflect(-LightDir, Normal);
 	vec3 HalfDir = normalize(LightDir + ViewDir);
-	float Spec = pow(max(dot(Normal, HalfDir), 0.0), 32.0);
-	vec3 Specular = vec3(0.2) * Spec;
+	float Spec = pow(max(dot(Normal, HalfDir), 0.0), 64.0);
+	vec3 Specular = vec3(0.5) * Spec;
 	out_color = vec4(Ambient + Diffuse + Specular, 1.0);
 	return;
 
