@@ -21,3 +21,7 @@ docs/html
 
 # texture comparison file I want to keep but not upload
 texture_comparisons.psd
+
+# kasmdl stuff
+tools/KasMdl/KasMdl/bin
+tools/KasMdl/KasMdl/obj

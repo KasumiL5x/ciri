@@ -2,6 +2,7 @@
 #include "../../common/ModelGen.hpp"
 #include <cc/MatrixFunc.hpp>
 #include "ClipMesh.hpp"
+#include "../../common/KScene.hpp"
 
 ClippingDemo::ClippingDemo()
 	: Game(), _model(nullptr) {
@@ -122,6 +123,14 @@ void ClippingDemo::onLoadContent() {
 	_model->computeNormals();
 	_model->build(graphicsDevice());
 
+	// testing loading kscene
+	KScene kScene;
+	if( !kScene.readBinaryFile("C:\\Users\\daniel\\Desktop\\cube.kmdl") ) {
+		printf("Failed to read binary KScene.\n");
+	} else {
+		kScene.printDebugInfo(false);
+	}
+
 	// create clip mesh
 	cutMesh();
 }
@@ -191,26 +200,26 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	// move geometric plane
 	cc::Vec3f movement;
 	if( input()->isKeyDown(ciri::Key::I) ) {
-		movement.y += 1.0f * deltaTime;
+		movement.y += 1.0f * static_cast<float>(deltaTime);
 	}
 	if( input()->isKeyDown(ciri::Key::K) ) {
-		movement.y -= 1.0f * deltaTime;
+		movement.y -= 1.0f * static_cast<float>(deltaTime);
 	}
 	if( input()->isKeyDown(ciri::Key::J) ) {
-		movement.x -= 1.0f * deltaTime;
+		movement.x -= 1.0f * static_cast<float>(deltaTime);
 	}
 	if( input()->isKeyDown(ciri::Key::L) ) {
-		movement.x += 1.0f * deltaTime;
+		movement.x += 1.0f * static_cast<float>(deltaTime);
 	}
 	_geometricPlane.getXform().setPosition(_geometricPlane.getXform().getPosition() + movement);
 
 	// rotate geometric plane
 	cc::Quatf rotation;
 	if( input()->isKeyDown(ciri::Key::U) ) {
-		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 45.0f * deltaTime);
+		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 45.0f * static_cast<float>(deltaTime));
 	}
 	if( input()->isKeyDown(ciri::Key::O) ) {
-		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, -45.0f * deltaTime);
+		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, -45.0f * static_cast<float>(deltaTime));
 	}
 	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * rotation);
 

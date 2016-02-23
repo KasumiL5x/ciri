@@ -86,11 +86,13 @@
     <ClCompile Include="src\common\GeometricPlane.cpp" />
     <ClCompile Include="src\common\Grid.cpp" />
     <ClCompile Include="src\common\HeightmapTerrain.cpp" />
+    <ClCompile Include="src\common\KScene.cpp" />
     <ClCompile Include="src\common\Model.cpp" />
     <ClCompile Include="src\common\ShaderPresets.cpp" />
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\clipping\ClippingDemo.cpp" />
     <ClCompile Include="src\demos\clipping\ClipMesh.cpp" />
+    <ClCompile Include="src\demos\clipping\Plane.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp" />
@@ -114,6 +116,7 @@
     <ClInclude Include="src\common\GeometricPlane.hpp" />
     <ClInclude Include="src\common\Grid.hpp" />
     <ClInclude Include="src\common\HeightmapTerrain.hpp" />
+    <ClInclude Include="src\common\KScene.hpp" />
     <ClInclude Include="src\common\Leb128.hpp" />
     <ClInclude Include="src\common\Model.hpp" />
     <ClInclude Include="src\common\ModelGen.hpp" />

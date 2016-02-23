@@ -77,6 +77,12 @@
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp">
       <Filter>demos\parallax</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\clipping\Plane.cpp">
+      <Filter>demos\clipping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\KScene.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -209,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp">
       <Filter>demos\parallax</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\KScene.hpp">
+      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="src\common\Leb128.hpp">
       <Filter>common</Filter>
