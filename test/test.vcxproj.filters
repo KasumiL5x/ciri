@@ -210,5 +210,8 @@
     <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp">
       <Filter>demos\parallax</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\Leb128.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -114,6 +114,7 @@
     <ClInclude Include="src\common\GeometricPlane.hpp" />
     <ClInclude Include="src\common\Grid.hpp" />
     <ClInclude Include="src\common\HeightmapTerrain.hpp" />
+    <ClInclude Include="src\common\Leb128.hpp" />
     <ClInclude Include="src\common\Model.hpp" />
     <ClInclude Include="src\common\ModelGen.hpp" />
     <ClInclude Include="src\common\ShaderPresets.hpp" />
