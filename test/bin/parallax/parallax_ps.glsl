@@ -25,6 +25,10 @@ vec3 LightColor = vec3(1.0, 1.0, 1.0);
 float LightIntensity = 1.0;
 float LightPower = 32.0;
 
+float ParallaxHeight = 0.04;
+float MinLayers = 15.0;
+float MaxLayers = 30.0;
+
 float attenuate( vec3 p, vec3 l, float range )
 {
 	float dist = length(p - l);
@@ -53,24 +57,19 @@ vec3 phong( vec3 L, vec3 N, vec3 V, vec3 lightColor, float lightIntensity, float
 
 vec2 ParallaxMapping( vec2 texcoords, vec3 viewdir ) {
 	// standard parallax
-	float height_scale = 0.04;
 	float height = texture(ParallaxTexture, texcoords).r;
-	return texcoords - (viewdir.xy / viewdir.z * (height * height_scale));
+	return texcoords - (viewdir.xy / viewdir.z * (height * ParallaxHeight));
 }
 
-vec2 SteepParallaxMapping( vec2 texcoords, vec3 viewdir ) {
-	float height_scale = 0.04;
-
+vec2 SteepParallaxMapping( in vec2 texcoords, in vec3 viewdir, out float parallaxHeight ) {
 	// number of depth layers
-	const float minLayers = 10.0;
-	const float maxLayers = 20.0;
-	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewdir)));
+	float numLayers = mix(MaxLayers, MinLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewdir)));
 	// calculate size of each layer
 	float layerDepth = 1.0 / numLayers;
 	// depth of current layer
 	float currentLayerDepth = 0.0;
 	// amount to shift the texture coordinates by per layer (from vector P)
-	vec2 P = viewdir.xy / viewdir.z * height_scale;
+	vec2 P = viewdir.xy / viewdir.z * ParallaxHeight;
 	vec2 deltaTexcoords = P / numLayers;
 
 	// get initial values
@@ -97,15 +96,74 @@ vec2 SteepParallaxMapping( vec2 texcoords, vec3 viewdir ) {
 	float weight = afterDepth / (afterDepth - beforeDepth);
 	vec2 finalTexcoords = prevTexcoords * weight + currentTexcoords * (1.0 - weight);
 
+	// output actual height
+	parallaxHeight = currentLayerDepth;
+
 	return finalTexcoords;
 }
 
+float ParallaxShadow( vec3 L, vec2 texcoords, float initialHeight ) {
+	float shadowMultiplier = 1.0;
+
+	// calculate lighting only for surfaces oriented to the light source
+	if( dot(vec3(0.0, 0.0, 1.0), L) > 0.0 ) {
+		// calculate initial parameters
+		float numSamplesUnderSurface = 0.0;
+		shadowMultiplier = 0.0;
+		float numLayers = mix(MaxLayers, MinLayers, abs(dot(vec3(0.0, 0.0, 1.0), L)));
+		float layerHeight = initialHeight / numLayers;
+		vec2 texStep = ParallaxHeight * L.xy / L.z / numLayers;
+
+		// current parameters
+		float currentLayerHeight = initialHeight - layerHeight;
+		vec2 currentTexcoords = texcoords + texStep;
+		float heightFromTexture = texture(ParallaxTexture, currentTexcoords).r;
+		int stepIndex = 1;
+
+		// while point of below depth 0.0
+		while( currentLayerHeight > 0.0 ) {
+			// if point is under surface
+			if( heightFromTexture < currentLayerHeight ) {
+				// calculate partial shadowing factor
+				numSamplesUnderSurface += 1;
+				float newShadowMultiplier = (currentLayerHeight - heightFromTexture) * (1.0 - stepIndex / numLayers);
+				shadowMultiplier = max(shadowMultiplier, newShadowMultiplier);
+			}
+
+			// offset to the next layer
+			stepIndex += 1;
+			currentLayerHeight -= layerHeight;
+			currentTexcoords += texStep;
+			heightFromTexture = texture(ParallaxTexture, currentTexcoords).r;
+		}
+
+		// shadow factor should be 1 if there were no points under the surface
+		if( numSamplesUnderSurface < 1 ) {
+			shadowMultiplier = 1.0;
+		} else {
+			shadowMultiplier = 1.0 - shadowMultiplier;
+		}
+	}
+	return shadowMultiplier;
+}
+
 void main() {
+	// out_color = texture(DiffuseTexture, vo_texcoord);
+	// return;
+
 	vec3 ViewDir = normalize(vo_tangentCamPos - vo_tangentFragPos);
 	vec2 TexCoords = vo_texcoord;
+	float selfShadowModifier = 1.0;
 	if( true ) {
-		TexCoords = SteepParallaxMapping(vo_texcoord, ViewDir);
+		float parallaxHeight = 0.0;
+		TexCoords = SteepParallaxMapping(vo_texcoord, ViewDir, parallaxHeight);
+		selfShadowModifier = ParallaxShadow(normalize(vo_tangentLightPos - vo_tangentFragPos), TexCoords, parallaxHeight - 0.05);
 	}
+
+	if( TexCoords.x > 1.0 || TexCoords.y > 1.0 || TexCoords.x < 0.0 || TexCoords.y < 0.0 ) {
+		discard;
+	}
+
 	vec3 Normal = texture(NormalTexture, TexCoords).rgb;
 	Normal = normalize(Normal * 2.0 - 1.0);
 
@@ -118,73 +176,5 @@ void main() {
 	vec3 HalfDir = normalize(LightDir + ViewDir);
 	float Spec = pow(max(dot(Normal, HalfDir), 0.0), 64.0);
 	vec3 Specular = vec3(0.5) * Spec;
-	out_color = vec4(Ambient + Diffuse + Specular, 1.0);
-	return;
-
-
-	// light vector
-	vec3 L = normalize(LightPosition - vo_position);
-	// vec3 L = normalize(-LightDirection);
-
-	// view direction
-	vec3 V = normalize(vo_viewdir);
-
-	// texcoords
-	vec2 UV = vo_texcoord;
-	if( true ) {
-		UV = ParallaxMapping(vo_texcoord, V);
-	}
-
-	// normal
-	vec3 N = normalize(vo_normal);
-	if( true ) {
-		N = normalize(texture(NormalTexture, UV).xyz * 2.0 - 1.0);
-		N = normalize(vo_tbn * N);
-	}
-
-	float atten = 1.0;//attenuate(vo_position, LightPosition, 10.0);
-	vec3 lighting = phong(L, N, V, LightColor, LightIntensity, LightPower) * atten;
-	// vec3 lighting = lambert(L, N, LightColor, intensity) * atten;
-
-	vec3 albedo = texture(DiffuseTexture, UV).xyz;
-
-	out_color = vec4(albedo * lighting, 1.0);
-
-	// out_color = texture(ParallaxTexture, UV);
+	out_color = vec4(Ambient + Diffuse * selfShadowModifier + Specular, 1.0);
 }
-
-// old camera/eye space stuff
-//
-////// INPUTS
-//
-// in vec3 vo_position_ws;
-// in vec3 vo_eye_cs;
-// in vec3 vo_lightdir_cs;
-// in vec3 vo_normal_cs;
-// in vec2 vo_texcoord;
-//
-////// SHADER
-//
-// // light stuff
-// vec3 LightColor = vec3(1.0, 1.0, 1.0);
-// float LightPower = 50.0;
-// // distance to light
-// float distance = length(vo_position_ws - LightPosition);
-// // normal of computed fragment in camera space
-// vec3 N = normalize(vo_normal_cs);
-// // direction of light (from fragment to the light)
-// vec3 L = normalize(vo_lightdir_cs);
-// // cos of angle between normal and light dir
-// float cosTheta = clamp(dot(N, L), 0.0, 1.0);
-// // eye vector (towards camera)
-// vec3 E = normalize(vo_eye_cs);
-// // direction triangle reflects light
-// vec3 R = reflect(-L, N);
-// // cos of angle between eye vector and reflect vector
-// float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
-// // diffuse result
-// vec3 diffuse = vec3(1.0, 1.0, 1.0) * LightColor * LightPower * cosTheta / (distance * distance);
-// // specular result
-// vec3 specular = vec3(1.0, 1.0, 1.0) * LightColor * LightPower * pow(cosAlpha, 5.0) / (distance * distance);
-// // final result
-// out_color = vec4(diffuse + specular, 1.0);
