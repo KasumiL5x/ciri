@@ -48,7 +48,7 @@ namespace modelgen {
 		//btmVtx.texcoord = cc::Vec2f(atan2f(btmVtx.position.x, btmVtx.position.z), atan2f(btmVtx.position.y, sqrt(btmVtx.position.x*btmVtx.position.x+btmVtx.position.z*btmVtx.position.z)));
 		model->addVertex(btmVtx);
 
-		for( int i = 0; i < model->getVertices().size(); ++i ) {
+		for( unsigned int i = 0; i < model->getVertices().size(); ++i ) {
 			const cc::Vec3f pos = model->getVertices()[i].position / scale;
 			const cc::Vec3f nrm = model->getVertices()[i].normal;
 			//const float rn = 2.0f * sqrt(pos.x*pos.x + pos.y*pos.y + ((pos.z+1.0f)*(pos.z+1.0f)));
@@ -280,7 +280,7 @@ namespace modelgen {
 				const float y = 0.0f;
 				const float z = ((float(j) / (v-1)) * 2.0f - 1.0f) * height * 0.5f;
 
-				const float tx = (static_cast<float>(i) / static_cast<float>(divsX)) * uScale;
+				const float tx = 1.0f-(static_cast<float>(i) / static_cast<float>(divsX)) * uScale;
 				const float ty = (static_cast<float>(j) / static_cast<float>(divsY)) * vScale;
 
 				model->addVertex(Vertex(cc::Vec3f(x, y, z), cc::Vec3f::up(), cc::Vec2f(tx, ty)));
