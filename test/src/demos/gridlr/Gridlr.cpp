@@ -87,8 +87,34 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 	const int mouseCellX = (input()->mouseX() - static_cast<int>(_gridOffset.x)) / _cellTexture->getWidth();
 	const int mouseCellY = (input()->mouseY() - static_cast<int>(_gridOffset.y)) / _cellTexture->getHeight();
 	//printf("X: %d; Y: %d\n", mouseCellX, mouseCellY);
-	//printf("%d\n", input()->mouseY());
 
+	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && !_isDragging ) {
+		// start dragging
+
+		auto mouseCell = _grid->getCell(mouseCellX, mouseCellY);
+		if( mouseCell != nullptr ) {
+			_isDragging = true;
+			_lastDragState = mouseCell->state();
+			_startDragBlock = cc::Vec2i(mouseCellX, mouseCellY);
+		}
+	} else if( input()->isMouseButtonDown(ciri::MouseButton::Left) && _isDragging ) {
+		// continue dragging
+
+		auto mouseCell = _grid->getCell(mouseCellX, mouseCellY);
+
+		// stop at source drag block
+		if( mouseCellX == _startDragBlock.x && mouseCellY == _startDragBlock.y ) {
+			// nothing for now
+		} else if( mouseCell != nullptr && (mouseCell->state() != CellState::Empty && mouseCell->state() != _lastDragState) ) {
+			// hit another block that's not empty
+			_isDragging = false;
+		} else if( mouseCell != nullptr ) {
+			// otherwise overwrite cell under mouse
+			mouseCell->setState(_lastDragState);
+		}
+	} else if( input()->isMouseButtonUp(ciri::MouseButton::Left) ) {
+		_isDragging = false;
+	}
 }
 
 void Gridlr::onFixedUpdate(const double deltaTime, const double elapsedTime) {
