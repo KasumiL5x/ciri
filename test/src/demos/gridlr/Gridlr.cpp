@@ -101,7 +101,6 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 		// continue dragging
 
 		auto mouseCell = _grid->getCell(mouseCellX, mouseCellY);
-
 		// stop at source drag block
 		if( mouseCellX == _startDragBlock.x && mouseCellY == _startDragBlock.y ) {
 			// nothing for now
@@ -110,7 +109,10 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 			_isDragging = false;
 		} else if( mouseCell != nullptr ) {
 			// otherwise overwrite cell under mouse
-			mouseCell->setState(_lastDragState);
+			auto lastCell = _grid->getCell(_startDragBlock.x, _startDragBlock.y);
+			if( _grid->getNorthOf(*lastCell) == mouseCell || _grid->getSouthOf(*lastCell) == mouseCell || _grid->getEastOf(*lastCell) == mouseCell || _grid->getWestOf(*lastCell) == mouseCell ) {
+				mouseCell->setState(_lastDragState);
+			}
 		}
 	} else if( input()->isMouseButtonUp(ciri::MouseButton::Left) ) {
 		_isDragging = false;
