@@ -78,7 +78,7 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 				printf("Vertex %d's position index is -1.  Generating zero position.\n", i);
 			}
 			vert.position = cc::Vec3f::zero();
-		} else if( posIdx >= positions.size() ) {
+		} else if( posIdx >= static_cast<int>(positions.size()) ) {
 			printf("Vertex %d's position index is out of bounds (%d->%d).\n", i, posIdx, positions.size());
 		} else {
 			vert.position = positions[posIdx];
@@ -92,7 +92,7 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 			}
 			vert.normal = cc::Vec3f::zero();
 		}
-		else if( nrmIdx >= normals.size() ) {
+		else if( nrmIdx >= static_cast<int>(normals.size()) ) {
 			printf("Vertex %d's normal index is out of bounds (%d->%d).\n", i, nrmIdx, normals.size());
 		} else {
 			vert.normal = normals[nrmIdx];
@@ -105,7 +105,7 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 				printf("Vertex %d's texcoord index is -1.  Generating zero texcoord.\n", i);
 			}
 			vert.texcoord = cc::Vec2f::zero();
-		} else if( texIdx >= texcoords.size() ) {
+		} else if( texIdx >= static_cast<int>(texcoords.size()) ) {
 			printf("Vertex %d's texcoord index is out of bounds (%d->%d).\n", i, texIdx, texcoords.size());
 		} else {
 			vert.texcoord = texcoords[texIdx];
@@ -119,18 +119,18 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 
 bool Model::computeNormals() {
 	const std::vector<Triangle> tris = getTriangles();
-	for( int i = 0; i < _vertices.size(); ++i ) {
+	for( size_t i = 0; i < _vertices.size(); ++i ) {
 		_vertices[i].normal = cc::Vec3f::zero();
 	}
 
-	for( int i = 0; i < tris.size(); ++i ) {
+	for( size_t i = 0; i < tris.size(); ++i ) {
 		const Triangle& currTri = tris[i];
 		const cc::Vec3f normal = cc::math::computeTriangleNormal(_vertices[currTri.idx[0]].position, _vertices[currTri.idx[1]].position, _vertices[currTri.idx[2]].position).normalized();
 		_vertices[currTri.idx[0]].normal += normal;
 		_vertices[currTri.idx[1]].normal += normal;
 		_vertices[currTri.idx[2]].normal += normal;
 	}
-	for( int i = 0; i < _vertices.size(); ++i ) {
+	for( size_t i = 0; i < _vertices.size(); ++i ) {
 		_vertices[i].normal.normalize();
 	}
 
@@ -372,7 +372,7 @@ bool Model::parseExtendedData() {
 	//
 	// gather all triangles
 	//
-	for( int i = 0; i < _indices.size(); i += 3 ) {
+	for( size_t i = 0; i < _indices.size(); i += 3 ) {
 		Triangle t;
 		t.idx[0] = _indices[i];
 		t.idx[1] = _indices[i+1];
@@ -405,7 +405,7 @@ bool Model::parseExtendedData() {
 	// use map and reverse index checking to ensure only unique edges are stored and appended
 	std::map<std::pair<int, int>, int> edgeMap;
 	std::vector<Model::Triangle> triangles = getTriangles();
-	for( int i = 0; i < triangles.size(); ++i ) {
+	for( size_t i = 0; i < triangles.size(); ++i ) {
 		const Model::Triangle& currTri = triangles[i];
 		// edge 0->1
 		std::pair<int, int> e01(currTri.idx[0], currTri.idx[1]);
@@ -458,12 +458,14 @@ bool Model::parseExtendedData() {
 	//
 	// link triangles' edges (edges are already linked to triangles)
 	//
-	for( int i = 0; i < _edges.size(); ++i ) {
+	for( size_t i = 0; i < _edges.size(); ++i ) {
 		const Edge& currEdge = _edges[i];
-		for( int j = 0; j < currEdge.faces.size(); ++j ) {
+		for( size_t j = 0; j < currEdge.faces.size(); ++j ) {
 			_triangles[currEdge.faces[j]].edges.push_back(i);
 		}
 	}
+
+	return true;
 }
 
 bool Model::exportToObj( const char* file ) {
@@ -500,7 +502,7 @@ bool Model::exportToObj( const char* file ) {
 		const int i0 = _indices[i+0];
 		const int i1 = _indices[i+1];
 		const int i2 = _indices[i+2];
-		if( i0 >= _vertices.size() || i1 >= _vertices.size() || i2 >= _vertices.size() ) {
+		if( i0 >= static_cast<int>(_vertices.size()) || i1 >= static_cast<int>(_vertices.size()) || i2 >= static_cast<int>(_vertices.size()) ) {
 			printf("ERROR: Index out of range.\n");
 		}
 		if( i0==i1 || i0==i2 || i1==i2 ) {

@@ -152,14 +152,14 @@ void BMGrid::draw( SpriteBatch& spritebatch ) {
 
 	for( int a = gw_low; a < (gw_hi-1); ++a ) {
 		for( int b = (gh_low + bold_h); b < (gh_hi-1); b += GRID_HILITE ) {
-			const int start_x = _grid[getIndex(a, b)].x;
-			const int start_y = _grid[getIndex(a, b)].y;
+			const int start_x = static_cast<int>(_grid[getIndex(a, b)].x);
+			const int start_y = static_cast<int>(_grid[getIndex(a, b)].y);
 			const float width = 3.0f;
 			const float height = 3.0f;
 			const float end_x = start_x + width;
 			const float end_y = start_y + height;
 
-			drawLine(spritebatch, cc::Vec2f(start_x, start_y), cc::Vec2f(end_x, end_y), cc::Vec4f(1.0f, 0.2f, 0.2f, 1.0f), 2.0f);
+			drawLine(spritebatch, cc::Vec2f(static_cast<float>(start_x), static_cast<float>(start_y)), cc::Vec2f(static_cast<float>(end_x), static_cast<float>(end_y)), cc::Vec4f(1.0f, 0.2f, 0.2f, 1.0f), 2.0f);
 		}
 	}
 }

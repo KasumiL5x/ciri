@@ -56,7 +56,7 @@ void SpritesDemo::onInitialize() {
 	// configure player and set off initial spawn explosion
 	_player = std::make_shared<PlayerShip>();
 	_player->setPosition(cc::Vec2f(vp.width() * 0.5f, vp.height() * 0.5f));
-	_grid->push(_player->getPosition().x, _player->getPosition().y, 10, 1);
+	_grid->push(static_cast<int>(_player->getPosition().x), static_cast<int>(_player->getPosition().y), 10, 1);
 
 	_enemySpawnDelay = 1.0f;
 	_enemySpawnTimer = _enemySpawnDelay;
@@ -172,12 +172,12 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	const cc::Vec2f& currPlayerPos = _player->getPosition();
 	cc::Vec2f newPlayerPos = currPlayerPos;
 	if( currPlayerPos.x < 0.0f ) {
-		newPlayerPos.x = window()->getWidth();
+		newPlayerPos.x = static_cast<float>(window()->getWidth());
 	} else if( currPlayerPos.x > window()->getWidth() ) {
 		newPlayerPos.x = 0.0f;
 	}
 	if( currPlayerPos.y < 0.0f ) {
-		newPlayerPos.y = window()->getHeight();
+		newPlayerPos.y = static_cast<float>(window()->getHeight());
 	} else if( currPlayerPos.y > window()->getHeight() ) {
 		newPlayerPos.y = 0.0f;
 	}
@@ -240,7 +240,7 @@ void SpritesDemo::onFixedUpdate( const double deltaTime, const double elapsedTim
 			continue;
 		}
 		curr.update(bounds);
-		_grid->pull(curr.getPosition().x, curr.getPosition().y, 2, 4);
+		_grid->pull(static_cast<int>(curr.getPosition().x), static_cast<int>(curr.getPosition().y), 2, 4);
 	}
 
 	const cc::Vec2f screenSize = cc::Vec2f(static_cast<float>(vp.width()), static_cast<float>(vp.height()));

@@ -111,7 +111,7 @@ bool ClipMesh::convert( Model* outModel ) {
 		const int oldIdx = indices[currIdx];
 		assert(0 <= oldIdx && oldIdx < static_cast<int>(numVertices)); // index out of range
 		const int newIdx = vMap[oldIdx];
-		assert(0 <= newIdx && newIdx < points.size()); // index out of range
+		assert(0 <= newIdx && newIdx < static_cast<int>(points.size())); // index out of range
 		indices[currIdx] = newIdx;
 	}
 	delete[] vMap;
