@@ -107,7 +107,6 @@
     <ClCompile Include="src\demos\sprites\IParticleSystem.cpp" />
     <ClCompile Include="src\demos\sprites\BMGrid.cpp" />
     <ClCompile Include="src\demos\sprites\PlayerShip.cpp" />
-    <ClCompile Include="src\demos\sprites\SpriteBatch.cpp" />
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
     <ClCompile Include="src\demos\sprites\TestParticleSystem.cpp" />
     <ClCompile Include="src\demos\terrain\TerrainDemo.cpp" />

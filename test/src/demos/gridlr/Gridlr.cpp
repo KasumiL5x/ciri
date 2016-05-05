@@ -17,7 +17,7 @@ void Gridlr::onInitialize() {
 
 	// make new empty grid
 	_grid = std::make_unique<GridlrGrid>();
-	_grid->create(8,8);
+	_grid->create(8, 8);
 
 	//
 	// test intersecting path truncation
@@ -113,7 +113,10 @@ void Gridlr::onDraw() {
 			// vp to invert positions
 			auto& vp = device->getViewport();
 
-			const cc::Vec2f position = _gridOffset + cc::Vec2f(static_cast<float>(_cellTexture->getWidth() * x), static_cast<float>(_cellTexture->getHeight() * y));
+			cc::Vec2f position = {
+				_gridOffset.x + static_cast<float>(_cellTexture->getWidth() * x),
+				(vp.height() - _gridOffset.y - _cellTexture->getHeight()) - (_cellTexture->getHeight() * y) // subtract from top of screen to invert the grid so it displays right; sub cell tex height is b/c of the pivot being at the top left (need to fix this)
+			};
 			const cc::Vec2f origin(0.0f, 0.0f);
 			const cc::Vec2f scale(1.0f, 1.0f);
 			cc::Vec4f color;
