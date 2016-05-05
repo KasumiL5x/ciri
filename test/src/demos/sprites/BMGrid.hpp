@@ -2,7 +2,7 @@
 #define __grid__
 
 #include <cc/Vec2.hpp>
-#include "SpriteBatch.hpp"
+#include "../../common/SpriteBatch.hpp"
 #include <ciri/Graphics.hpp>
 
 struct GridPoint {

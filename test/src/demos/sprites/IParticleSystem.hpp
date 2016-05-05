@@ -2,7 +2,7 @@
 #define __particle_system__
 
 #include "Particle.hpp"
-#include "SpriteBatch.hpp"
+#include "../../common/SpriteBatch.hpp"
 #include <cc/Vec2.hpp>
 
 class IParticleSystem {

@@ -11,6 +11,7 @@
 #include "demos/clipping/ClippingDemo.hpp"
 #include "demos/parallax/ParallaxDemo.hpp"
 //#include "demos/deferred/DeferredDemo.hpp"
+#include "demos\gridlr\Gridlr.hpp"
 
 enum class Demo {
 	Dynvb,
@@ -18,8 +19,9 @@ enum class Demo {
 	Sprites,
 	Refract,
 	Clipping,
-	Parallax
+	Parallax,
 	//Deferred
+	Gridlr
 };
 
 std::unique_ptr<Game> createGame( Demo type ) {
@@ -51,6 +53,10 @@ std::unique_ptr<Game> createGame( Demo type ) {
 		//case Demo::Deferred: {
 		//	return std::unique_ptr<IDemo>(new DeferredDemo());
 		//}
+
+		case Demo::Gridlr: {
+			return std::unique_ptr<Game>(new Gridlr());
+		}
 
 		default: {
 			return nullptr;

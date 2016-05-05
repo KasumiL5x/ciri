@@ -44,9 +44,9 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Color, 0));
 	const std::string shaderExt = device->getShaderExt();
-	const std::string vsFile = ("sprites/shaders/SpriteBatch_vs" + shaderExt);
-	//const std::string gsFile = ("sprites/shaders/SpriteBatch_gs" + shaderExt);
-	const std::string psFile = ("sprites/shaders/SpriteBatch_ps" + shaderExt);
+	const std::string vsFile = ("common/shaders/SpriteBatch_vs" + shaderExt);
+	//const std::string gsFile = ("common/shaders/SpriteBatch_gs" + shaderExt);
+	const std::string psFile = ("common/shaders/SpriteBatch_ps" + shaderExt);
 	if( ciri::failed(_defaultShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to load SpriteBatch shader:\n");
 		for( auto err : _defaultShader->getErrors() ) {

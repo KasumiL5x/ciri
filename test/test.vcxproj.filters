@@ -32,9 +32,6 @@
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\sprites\SpriteBatch.cpp">
-      <Filter>demos\sprites</Filter>
-    </ClCompile>
     <ClCompile Include="src\demos\sprites\DynamicGrid.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
@@ -83,6 +80,15 @@
     <ClCompile Include="src\common\KScene.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\gridlr\Gridlr.cpp">
+      <Filter>demos\gridlr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\gridlr\GridlrGrid.cpp">
+      <Filter>demos\gridlr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\SpriteBatch.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -117,6 +123,9 @@
     </Filter>
     <Filter Include="demos\parallax">
       <UniqueIdentifier>{87387e10-a472-4ed5-8739-20aefac7d2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\gridlr">
+      <UniqueIdentifier>{5b1a7620-a180-4501-92ca-c77b5920bfd5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -154,15 +163,6 @@
       <Filter>demos\terrain</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp">
-      <Filter>demos\sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="src\demos\sprites\SpriteBatch.hpp">
-      <Filter>demos\sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="src\demos\sprites\SpriteVertex.hpp">
-      <Filter>demos\sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\sprites\DynamicGrid.hpp">
@@ -220,6 +220,27 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="src\common\Leb128.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\gridlr\Gridlr.hpp">
+      <Filter>demos\gridlr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\gridlr\CellState.hpp">
+      <Filter>demos\gridlr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\gridlr\Cell.hpp">
+      <Filter>demos\gridlr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\gridlr\GridlrGrid.hpp">
+      <Filter>demos\gridlr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\SpriteBatch.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\SpriteBatchItem.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\SpriteVertex.hpp">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

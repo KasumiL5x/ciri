@@ -4,7 +4,7 @@
 #include <array>
 #include <memory>
 #include "../../framework/Game.hpp"
-#include "SpriteBatch.hpp"
+#include "../../common/SpriteBatch.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
 #include <cc/Quaternion.hpp>

@@ -8,7 +8,7 @@
 #include <cc/Vec3.hpp>
 #include <cc/Vec4.hpp>
 #include <ciri/Graphics.hpp>
-#include "SpriteBatch.hpp"
+#include "../../common/SpriteBatch.hpp"
 
 struct PointMass {
 	cc::Vec3f position;

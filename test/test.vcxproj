@@ -89,12 +89,15 @@
     <ClCompile Include="src\common\KScene.cpp" />
     <ClCompile Include="src\common\Model.cpp" />
     <ClCompile Include="src\common\ShaderPresets.cpp" />
+    <ClCompile Include="src\common\SpriteBatch.cpp" />
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\clipping\ClippingDemo.cpp" />
     <ClCompile Include="src\demos\clipping\ClipMesh.cpp" />
     <ClCompile Include="src\demos\clipping\Plane.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
+    <ClCompile Include="src\demos\gridlr\GridlrGrid.cpp" />
+    <ClCompile Include="src\demos\gridlr\Gridlr.cpp" />
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp" />
     <ClCompile Include="src\demos\refract\RefractDemo.cpp" />
     <ClCompile Include="src\demos\sprites\Bullet.cpp" />
@@ -121,6 +124,9 @@
     <ClInclude Include="src\common\Model.hpp" />
     <ClInclude Include="src\common\ModelGen.hpp" />
     <ClInclude Include="src\common\ShaderPresets.hpp" />
+    <ClInclude Include="src\common\SpriteBatch.hpp" />
+    <ClInclude Include="src\common\SpriteBatchItem.hpp" />
+    <ClInclude Include="src\common\SpriteVertex.hpp" />
     <ClInclude Include="src\common\Transform.hpp" />
     <ClInclude Include="src\common\Vertex.hpp" />
     <ClInclude Include="src\demos\clipping\ClippingDemo.hpp" />
@@ -128,6 +134,10 @@
     <ClInclude Include="src\demos\clipping\Plane.hpp" />
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
+    <ClInclude Include="src\demos\gridlr\Cell.hpp" />
+    <ClInclude Include="src\demos\gridlr\CellState.hpp" />
+    <ClInclude Include="src\demos\gridlr\GridlrGrid.hpp" />
+    <ClInclude Include="src\demos\gridlr\Gridlr.hpp" />
     <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp" />
     <ClInclude Include="src\demos\refract\RefractDemo.hpp" />
     <ClInclude Include="src\demos\sprites\Bullet.hpp" />
@@ -139,10 +149,7 @@
     <ClInclude Include="src\demos\sprites\Particle.hpp" />
     <ClInclude Include="src\demos\sprites\IParticleSystem.hpp" />
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp" />
-    <ClInclude Include="src\demos\sprites\SpriteBatch.hpp" />
-    <ClInclude Include="src\demos\sprites\SpriteBatchItem.hpp" />
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp" />
-    <ClInclude Include="src\demos\sprites\SpriteVertex.hpp" />
     <ClInclude Include="src\demos\sprites\TestParticleSystem.hpp" />
     <ClInclude Include="src\demos\terrain\TerrainDemo.hpp" />
     <ClInclude Include="src\framework\Game.hpp" />
