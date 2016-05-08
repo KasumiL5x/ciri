@@ -96,7 +96,8 @@
     <ClCompile Include="src\demos\clipping\Plane.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
-    <ClCompile Include="src\demos\gridlr\GridlrGrid.cpp" />
+    <ClCompile Include="src\demos\gridlr\BlockChain.cpp" />
+    <ClCompile Include="src\demos\gridlr\BlockGrid.cpp" />
     <ClCompile Include="src\demos\gridlr\Gridlr.cpp" />
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp" />
     <ClCompile Include="src\demos\refract\RefractDemo.cpp" />
@@ -133,9 +134,11 @@
     <ClInclude Include="src\demos\clipping\Plane.hpp" />
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
-    <ClInclude Include="src\demos\gridlr\Cell.hpp" />
-    <ClInclude Include="src\demos\gridlr\CellState.hpp" />
-    <ClInclude Include="src\demos\gridlr\GridlrGrid.hpp" />
+    <ClInclude Include="src\demos\gridlr\Block.hpp" />
+    <ClInclude Include="src\demos\gridlr\BlockChain.hpp" />
+    <ClInclude Include="src\demos\gridlr\BlockGrid.hpp" />
+    <ClInclude Include="src\demos\gridlr\BlockState.hpp" />
+    <ClInclude Include="src\demos\gridlr\BlockType.hpp" />
     <ClInclude Include="src\demos\gridlr\Gridlr.hpp" />
     <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp" />
     <ClInclude Include="src\demos\refract\RefractDemo.hpp" />

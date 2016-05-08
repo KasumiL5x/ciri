@@ -3,8 +3,8 @@
 
 #include <memory>
 #include "../../framework/Game.hpp"
-#include "GridlrGrid.hpp"
 #include "../../common/SpriteBatch.hpp"
+#include "BlockGrid.hpp"
 
 class Gridlr : public Game {
 public:
@@ -21,7 +21,7 @@ protected:
 	virtual void onUnloadContent();
 
 private:
-	std::unique_ptr<GridlrGrid> _grid;
+	std::unique_ptr<gridlr::BlockGrid> _grid;
 	SpriteBatch _spriteBatch;
 	std::shared_ptr<ciri::IBlendState> _blendState;
 	std::shared_ptr<ciri::ISamplerState> _samplerState;
@@ -30,8 +30,7 @@ private:
 	std::shared_ptr<ciri::ITexture2D> _cellTexture;
 	cc::Vec2f _gridOffset;
 	bool _isDragging;
-	cc::Vec2i _startDragBlock;
-	CellState _lastDragState;
+	cc::Vec2i _lastMouseCell;
 };
 
 #endif /* __gridlr__ */
