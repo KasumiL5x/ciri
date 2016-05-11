@@ -4,7 +4,7 @@
 using namespace gridlr;
 
 BlockGrid::BlockGrid()
-	: _width(0), _height(0), _blocks(nullptr) {
+	: _width(0), _height(0), _blocks(nullptr), _isDragging(false), _dragState(BlockState::Empty) {
 }
 
 BlockGrid::~BlockGrid() {
@@ -121,6 +121,144 @@ bool BlockGrid::disableChain( BlockState state ) {
 	return true;
 }
 
+bool BlockGrid::startDrag( const Block& block ) {
+	// fail if already dragging
+	if( _isDragging ) {
+		return false;
+	}
+
+	// cannot start on empty block
+	if( BlockState::Empty == block.state() ) {
+		return false;
+	}
+
+	//get block's chain
+	auto chain = getChain(block.state());
+	if( nullptr == chain ) {
+		return false;
+	}
+
+	// ensure block is in the chain
+	if( !chain->contains(&block) ) {
+		return false;
+	}
+
+	switch( block.type() ) {
+		case BlockType::Normal: {
+				chain->truncateTo(&block);
+			break;
+		}
+		case BlockType::Start: {
+			chain->clear();
+			chain->setLastActive(true);
+			break;
+		}
+		case BlockType::End: {
+			chain->clear();
+			chain->setLastActive(false);
+			break;
+		}
+	}
+
+	// update states
+	_isDragging = true;
+	_dragState = block.state();
+
+	return true;
+}
+
+bool BlockGrid::dragMove( Block& block ) {
+	// fail if not dragging
+	if( !_isDragging ) {
+		return false;
+	}
+
+	// cannot drag on empty state
+	if( BlockState::Empty == _dragState ) {
+		return false;
+	}
+
+	// current chain
+	auto chain = getChain(_dragState);
+	if( nullptr == chain ) {
+		return false;
+	}
+
+	// todo: drag onto source/end
+	if( block.type() != BlockType::Normal ) {
+		if( block.state() == _dragState && &block != chain->setLastActive() ) {
+			// chain complete
+			chain->setComplete(true);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// last dragged block
+	auto last = chain->getLastPlaced();
+
+	// if going back along chain...
+	if( last != nullptr && last == &block ) {
+		chain->truncateTo(last); // truncate backwards
+	} else if( last != nullptr ) {
+		// check for valid move
+		if( !isValidMove(*last, block) ) {
+			return false;
+		}
+	}
+
+	// if not epmty, break other chain at this block
+	if( block.state() != BlockState::Empty ) {
+		auto otherChain = getChain(block.state());
+		otherChain->truncateTo(&block);
+		otherChain->remove(&block);
+	}
+
+	// update block's state
+	block.setState(_dragState);
+
+	// add block to chain
+	chain->add(&block);
+
+
+
+	// - if drag state is empty, return
+	// - check if block is a valid move
+	// - if block is in another chain, split the chain at that point
+	// - cannot go into another of its own state
+	// - if going back along the chain, truncate backwards
+	// - replace block state and add to own new chain
+	// - update any states
+
+	return true;
+}
+
+bool BlockGrid::stopDrag( const Block& block ) {
+	// fail if not dragging
+	if( !_isDragging ) {
+		return false;
+	}
+
+	// TEMP CODE: REMOVE ME!
+	_dragState = BlockState::Empty;
+
+	// todo: block operations
+	// todo: internal states
+	
+	// no longer dragging
+	_isDragging = false;
+
+	return true;
+}
+
+bool BlockGrid::isValidMove( const Block& from, const Block& to ) const {
+	if( getNorth(from)==&to || getSouth(from)==&to || getEast(from)==&to || getWest(from)==&to ) {
+		return true;
+	}
+	return false;
+}
+
 void BlockGrid::print() {
 	for( int y = 0; y < _height; ++y ) {
 		for( int x = 0; x < _width; ++x ) {
@@ -145,6 +283,23 @@ void BlockGrid::print() {
 	}
 }
 
+bool BlockGrid::isComplete() const {
+	for( auto chain : _chains ) {
+		if( !chain.second.complete() ) {
+			return false;
+		}
+	}
+	return true;
+}
+
 int BlockGrid::getIndex( int x, int y ) const {
 	return y  * _width + x;
+}
+
+BlockChain* BlockGrid::getChain( BlockState state ) {
+	auto existing = _chains.find(state);
+	if( _chains.end() == existing ) {
+		return nullptr;
+	}
+	return &existing->second;
 }

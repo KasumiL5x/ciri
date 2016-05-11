@@ -24,21 +24,39 @@ namespace gridlr {
 		bool enableChain( BlockState state, Block& start, Block& end );
 		bool disableChain( BlockState state );
 
-		// void startDrag(...); => handles initial clicks and can prepare for dragging
-		// void dragMove(...);  => handles cells when dragging is true
-		// void stopDrag(...);  => handles post-drag state (clearing states etc.)
+		/**
+		 * Call when starting to drag to configure internal states.
+		 */
+		bool startDrag( const Block& block );
 
+		/**
+		 * Call when already dragging to update blocks.
+		 */
+		bool dragMove( Block& block );
+
+		/**
+		 * Call when stopping dragging to clear internal states.
+		 */
+		bool stopDrag( const Block& block );
+
+		bool isValidMove( const Block& from, const Block& to ) const;
 
 		void print();
 
+		bool isComplete() const;
+
 	private:
 		int getIndex( int x, int y ) const;
+		BlockChain* getChain( BlockState state );
 
 	private:
 		int _width;
 		int _height;
 		Block* _blocks;
 		std::unordered_map<BlockState, BlockChain> _chains;
+		//
+		bool _isDragging;
+		BlockState _dragState;
 	};
 }
 

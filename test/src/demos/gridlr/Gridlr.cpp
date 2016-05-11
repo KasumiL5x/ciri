@@ -80,17 +80,38 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 		_isDragging = true;
 		_lastMouseCell.x = mouseCellX;
 		_lastMouseCell.y = mouseCellY;
-
 		// start drag
+		auto mouseBlock = _grid->get(mouseCellX, mouseCellY);
+		if( mouseBlock != nullptr ) {
+			if( !_grid->startDrag(*mouseBlock) ) {
+				printf("BlockGrid::startDrag() failed.\n");
+			}
+		}
 	} else if( input()->isMouseButtonDown(ciri::MouseButton::Left) && _isDragging && (_lastMouseCell.x != mouseCellX || _lastMouseCell.y != mouseCellY) ) {
 		_lastMouseCell.x = mouseCellX;
 		_lastMouseCell.y = mouseCellY;
 
 		// on drag
+		auto mouseBlock = _grid->get(mouseCellX, mouseCellY);
+		if( mouseBlock != nullptr ) {
+			if( !_grid->dragMove(*mouseBlock) ) {
+				printf("BlockGrid::dragMove() failed.\n");
+			}
+		}
 	} else if( input()->isMouseButtonUp(ciri::MouseButton::Left) && _isDragging ) {
 		_isDragging = false;
 
 		// stop drag
+		auto mouseBlock = _grid->get(mouseCellX, mouseCellY);
+		if( mouseBlock != nullptr ) {
+			if( !_grid->stopDrag(*mouseBlock) ) {
+				printf("BlockGrid::stopDrag() failed.\n");
+			}
+		}
+	}
+
+	if( _grid->isComplete() ) {
+		printf("Complete!\n");
 	}
 }
 

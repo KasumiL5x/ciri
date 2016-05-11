@@ -11,6 +11,10 @@ namespace gridlr {
 			: _x(-1), _y(-1), _state(BlockState::Empty), _type(BlockType::Normal) {
 		}
 
+		bool operator==( const Block& rhs ) const {
+			return (_x==rhs._x) && (_y==rhs._y) && (_state==rhs._state) && (_type==rhs._type);
+		}
+
 		int x() const {
 			return _x;
 		}
