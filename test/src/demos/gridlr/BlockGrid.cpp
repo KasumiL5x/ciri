@@ -186,9 +186,14 @@ bool BlockGrid::dragMove( Block& block ) {
 
 	// todo: drag onto source/end
 	if( block.type() != BlockType::Normal ) {
-		if( block.state() == _dragState && &block != chain->setLastActive() ) {
-			// chain complete
-			chain->setComplete(true);
+		if( block.state() == _dragState ) {
+			if( &block != chain->getLastActive() ) {
+				// chain complete
+				chain->setComplete(true);
+			} else {
+				// reset chain
+				chain->clear();
+			}
 			return true;
 		} else {
 			return false;

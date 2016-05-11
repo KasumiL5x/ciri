@@ -74,7 +74,7 @@ void BlockChain::setLastActive( bool wasItHead ) {
 	_headLastActive = wasItHead;
 }
 
-Block* BlockChain::setLastActive() const {
+Block* BlockChain::getLastActive() const {
 	return _headLastActive ? head() : tail();
 }
 

@@ -19,7 +19,7 @@ namespace gridlr {
 		bool contains( const Block* block ) const;
 		void clear();
 		void setLastActive( bool wasItHead );
-		Block* setLastActive() const;
+		Block* getLastActive() const;
 		void truncateTo( const Block* block );
 		bool remove( Block* block );
 		void add( Block* block );
