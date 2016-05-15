@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cc/Quaternion.hpp>
 #include "MathHelper.hpp"
+#include <cc/Random.hpp>
 
 SpritesDemo::SpritesDemo()
 	: Game() {
@@ -195,7 +196,7 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 		const float aimAngle = atan2f(diff.y, diff.x);
 		const cc::Quatf aimQuat = MathHelper::quatYawPitchRoll(0.0f, 0.0f, aimAngle);
 
-		const float randomSpread = cc::math::randRange<float>(-0.04f, 0.04f) + cc::math::randRange<float>(-0.04f, 0.04f);
+		const float randomSpread = cc::math::Random<float, int>::rangedReal(-0.04f, 0.04f) + cc::math::Random<float, int>::rangedReal(-0.04f, 0.04f);
 		const cc::Vec2f vel = MathHelper::fromPolar(aimAngle + randomSpread, 11.0f);
 
 		const cc::Vec2f offset1 = MathHelper::transformVec2Quat(cc::Vec2f(35.0f, -8.0f), aimQuat);
@@ -340,8 +341,8 @@ bool SpritesDemo::spawnEnemy() {
 		if( curr.isAlive() ) {
 			continue;
 		}
-		const float x = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getWidth()));
-		const float y = cc::math::randRange<float>(0.0f, static_cast<float>(window()->getHeight()));
+		const float x = cc::math::Random<float, int>::rangedReal(0.0f, static_cast<float>(window()->getWidth()));
+		const float y = cc::math::Random<float, int>::rangedReal(0.0f, static_cast<float>(window()->getHeight()));
 		curr = Enemy::createSeeker(cc::Vec2f(x, y));
 		curr.setTexture(_enemySeekerTexture);
 		curr.setIsAlive(true);

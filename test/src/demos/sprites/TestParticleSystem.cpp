@@ -1,4 +1,5 @@
 #include "TestParticleSystem.hpp"
+#include <cc/Random.hpp>
 
 TestParticleSystem::TestParticleSystem()
 	: IParticleSystem(), _emitterPosition(), _texture(nullptr), _emitDirection() {
@@ -92,7 +93,7 @@ cc::Vec2f TestParticleSystem::generateSpawnPosition() const {
 
 float TestParticleSystem::generateLifetime() const {
 	//return cc::math::randRange<float>(5.0f, 5.0f);
-	return cc::math::randRange<float>(0.25f, 1.0f);
+	return cc::math::Random<float, int>::rangedReal(0.25f, 1.0f);
 }
 
 cc::Vec2f TestParticleSystem::generateVelocity() const {
@@ -103,7 +104,7 @@ cc::Vec2f TestParticleSystem::generateVelocity() const {
 	if( EMIT_DIRECTION_FLUX ) {
 		const float MIN_ANGLE = static_cast<float>(-cc::math::PI);
 		const float MAX_ANGLE = static_cast<float>(cc::math::PI);
-		const float angle = cc::math::randRange<float>(MIN_ANGLE, MAX_ANGLE);
+		const float angle = cc::math::Random<float, int>::rangedReal(MIN_ANGLE, MAX_ANGLE);
 		direction.x += cosf(angle);
 		direction.y += sinf(angle);
 	}
@@ -124,6 +125,6 @@ cc::Vec2f TestParticleSystem::generateVelocity() const {
 	//}
 	direction.normalize();
 
-	const float magnitude = cc::math::randRange<float>(0.75f, 2.0f);
+	const float magnitude = cc::math::Random<float, int>::rangedReal(0.75f, 2.0f);
 	return direction * magnitude;
 }
