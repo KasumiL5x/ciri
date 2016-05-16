@@ -8,7 +8,8 @@ namespace ciri {
 		 */
 		enum Format {
 			RGBA32_UINT=0, /**< RGBA; 8-bit unsigned integer per channel; 32 bits total. */
-			RGBA32_Float   /**< RGBA; 32-bit float per channel; 128 bits total. */
+			RGBA32_Float,  /**< RGBA; 32-bit float per channel; 128 bits total. */
+			R32_UINT       /**< R; 32-bit unsigned integer; 32 bits total. */
 		};
 
 		/**
@@ -21,7 +22,11 @@ namespace ciri {
 			switch( format ) {
 				case RGBA32_UINT:
 				case RGBA32_Float: {
-						return 4;
+					return 4;
+				}
+
+				case R32_UINT: {
+					return 1;
 				}
 
 				default: {

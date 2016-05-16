@@ -173,6 +173,10 @@ namespace ciri {
 				return DXGI_FORMAT_R32G32B32A32_FLOAT;
 			}
 
+			case TextureFormat::R32_UINT: {
+				return DXGI_FORMAT_R32_UINT;
+			}
+
 			default: {
 				throw; //return DXGI_FORMAT_UNKNOWN;
 			}

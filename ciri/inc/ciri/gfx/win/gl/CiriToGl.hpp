@@ -162,9 +162,9 @@ namespace ciri {
 
 		// http://www.opentk.com/files/doc/namespace_open_t_k_1_1_graphics_1_1_open_g_l.html#ae0f3f1e7b978e4937984b34fdebabf62a8f0fb883eb5a52838534191513e365a2
 		// MonoGame.Framework.Graphics.GraphicsExtensions.cs: GetGLFormat
-		*internalFormat = GL_RGBA;
-		*pixelFormat = GL_RGBA;
-		*pixelType = GL_UNSIGNED_BYTE;
+		//*internalFormat = GL_RGBA;
+		//*pixelFormat = GL_RGBA;
+		//*pixelType = GL_UNSIGNED_BYTE;
 
 		switch( ciriFormat ) {
 			case TextureFormat::RGBA32_UINT: {
@@ -178,6 +178,18 @@ namespace ciri {
 				*internalFormat = GL_RGBA32F;
 				*pixelFormat = GL_RGBA;
 				*pixelType = GL_FLOAT;
+				break;
+			}
+
+			case TextureFormat::R32_UINT: {
+				*internalFormat = GL_RED;
+				*pixelFormat = GL_RED;
+				*pixelType = GL_UNSIGNED_BYTE;
+				break;
+			}
+
+			default: {
+				throw; // oh nooooooooooooooo! that's jeffry's dog!
 			}
 		}
 	}
