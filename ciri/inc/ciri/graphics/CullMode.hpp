@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_CullMode__
 #define __ciri_graphics_CullMode__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Triangle winding order cull mode.
@@ -12,6 +12,6 @@ enum class CullMode {
 	CounterClockwise /**< Cull triangles with counter-clockwise vertex ordering. */
 };
 
-}}
+}
 
 #endif

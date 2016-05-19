@@ -1,9 +1,6 @@
 #include "ParallaxDemo.hpp"
 #include "../../common/ModelGen.hpp"
 
-namespace core = ciri::core;
-namespace gfx = ciri::graphics;
-
 ParallaxDemo::ParallaxDemo()
 	: Game(), _depthStencilState(nullptr), _rasterizerState(nullptr), _model(nullptr), _parallaxShader(nullptr),
 		_parallaxVertexConstantBuffer(nullptr), _parallaxTexture(nullptr), _parallaxSampler(nullptr) {
@@ -46,15 +43,15 @@ void ParallaxDemo::onLoadContent() {
 	Game::onLoadContent();
 
 	// create depth stencil state
-	gfx::DepthStencilDesc depthDesc;
+	ciri::DepthStencilDesc depthDesc;
 	_depthStencilState = graphicsDevice()->createDepthStencilState(depthDesc);
 	if( nullptr == _depthStencilState ) {
 		printf("Failed to create depth stencil state.\n");
 	}
 
 	// create rasterizer state
-	gfx::RasterizerDesc rasterDesc;
-	rasterDesc.cullMode = gfx::CullMode::None;
+	ciri::RasterizerDesc rasterDesc;
+	rasterDesc.cullMode = ciri::CullMode::None;
 	//rasterDesc.fillMode = ciri::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
@@ -84,34 +81,34 @@ void ParallaxDemo::onLoadContent() {
 	}
 
 	// load diffuse texture
-	core::PNG diffuse;
+	ciri::PNG diffuse;
 	diffuse.loadFromFile("parallax/diffuse.png", true);
-	_diffuseTexture = graphicsDevice()->createTexture2D(diffuse.getWidth(), diffuse.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, diffuse.getPixels());
+	_diffuseTexture = graphicsDevice()->createTexture2D(diffuse.getWidth(), diffuse.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, diffuse.getPixels());
 
 	// load normal texture
-	core::PNG normal;
+	ciri::PNG normal;
 	normal.loadFromFile("parallax/normal.png", true);
-	_normalTexture = graphicsDevice()->createTexture2D(normal.getWidth(), normal.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, normal.getPixels());
+	_normalTexture = graphicsDevice()->createTexture2D(normal.getWidth(), normal.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, normal.getPixels());
 
 	// load parallax texture
-	core::PNG png;
+	ciri::PNG png;
 	png.loadFromFile("parallax/height.png", true);
-	_parallaxTexture = graphicsDevice()->createTexture2D(png.getWidth(), png.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, png.getPixels());
+	_parallaxTexture = graphicsDevice()->createTexture2D(png.getWidth(), png.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, png.getPixels());
 
 	// create parallax texture sampler
-	gfx::SamplerDesc samplerDesc;
-	samplerDesc.wrapU = samplerDesc.wrapV = samplerDesc.wrapW = gfx::SamplerWrap::Wrap;
-	samplerDesc.filter = gfx::SamplerFilter::Anisotropic;
+	ciri::SamplerDesc samplerDesc;
+	samplerDesc.wrapU = samplerDesc.wrapV = samplerDesc.wrapW = ciri::SamplerWrap::Wrap;
+	samplerDesc.filter = ciri::SamplerFilter::Anisotropic;
 	samplerDesc.maxAnisotropy = 16;
 	_parallaxSampler = graphicsDevice()->createSamplerState(samplerDesc);
 }
 
-void ParallaxDemo::onEvent( const core::WindowEvent& evt ) {
+void ParallaxDemo::onEvent( const ciri::WindowEvent& evt ) {
 	Game::onEvent(evt);
 
 	switch( evt.type ) {
-		case core::WindowEvent::Resized: {
-			if( graphicsDevice()->resize() != core::ErrorCode::CIRI_OK ) {
+		case ciri::WindowEvent::Resized: {
+			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
 				printf("Failed to resize backbuffer.\n");
 			}
 			break;
@@ -123,19 +120,19 @@ void ParallaxDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	Game::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
-	if( window()->hasFocus() && input()->isKeyDown(core::Key::Escape) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
 		gtfo();
 		return;
 	}
 
 	// reload shaders
-	if( window()->hasFocus() && input()->isKeyDown(core::Key::F5) && input()->wasKeyUp(core::Key::F5) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
 		unloadShaders();
 		printf("Reloaded shaders: %s\n", loadShaders() ? "success" : "failed");
 	}
 
 	// debug print camera information
-	if( window()->hasFocus() && input()->isKeyDown(core::Key::F9) && input()->wasKeyUp(core::Key::F9) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
 		const cc::Vec3f& pos = _camera.getPosition();
 		const float yaw = _camera.getYaw();
 		const float pitch = _camera.getPitch();
@@ -145,23 +142,23 @@ void ParallaxDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	}
 
 	// camera movement
-	if( window()->hasFocus() && input()->isKeyDown(core::Key::LAlt) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::LAlt) ) {
 		// rotation
-		if( input()->isMouseButtonDown(core::MouseButton::Left) ) {
+		if( input()->isMouseButtonDown(ciri::MouseButton::Left) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
 			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			_camera.rotateYaw(-dx);
 			_camera.rotatePitch(-dy);
 		}
 		// dolly
-		if( input()->isMouseButtonDown(core::MouseButton::Right) ) {
+		if( input()->isMouseButtonDown(ciri::MouseButton::Right) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
 			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			const float val = (fabsf(dx) > fabsf(dy)) ? dx : dy;
 			_camera.dolly(val);
 		}
 		// pan
-		if( input()->isMouseButtonDown(core::MouseButton::Middle) ) {
+		if( input()->isMouseButtonDown(ciri::MouseButton::Middle) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
 			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			_camera.pan(dx, -dy);
@@ -179,14 +176,14 @@ void ParallaxDemo::onFixedUpdate( const double deltaTime, const double elapsedTi
 void ParallaxDemo::onDraw() {
 	Game::onDraw();
 
-	std::shared_ptr<gfx::IGraphicsDevice> device = graphicsDevice();
+	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
 	// camera's viewproj
 	const cc::Mat4f cameraViewProj = _camera.getProj() * _camera.getView();
 
 	// clear backbuffer
 	device->setClearColor(0.16f, 0.16f, 0.16f, 1.0f);
-	device->clear(gfx::ClearFlags::Color | gfx::ClearFlags::Depth);
+	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	// set depth and raster states
 	device->setDepthStencilState(_depthStencilState);
@@ -198,7 +195,7 @@ void ParallaxDemo::onDraw() {
 		if( _grid.updateConstants(gridXform) ) {
 			device->applyShader(_grid.getShader());
 			device->setVertexBuffer(_grid.getVertexBuffer());
-			device->drawArrays(gfx::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
+			device->drawArrays(ciri::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
@@ -208,7 +205,7 @@ void ParallaxDemo::onDraw() {
 		if( _axis.updateConstants(axisXform) ) {
 			device->applyShader(_axis.getShader());
 			device->setVertexBuffer(_axis.getVertexBuffer());
-			device->drawArrays(gfx::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
+			device->drawArrays(ciri::PrimitiveTopology::LineList, _axis.getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
@@ -218,7 +215,7 @@ void ParallaxDemo::onDraw() {
 		_parallaxVertexConstants.world = _model->getXform().getWorld();
 		_parallaxVertexConstants.xform = cameraViewProj * _parallaxVertexConstants.world;
 		_parallaxVertexConstants.campos = _camera.getPosition();
-		if( core::failed(_parallaxVertexConstantBuffer->setData(sizeof(ParallaxVertexConstants), &_parallaxVertexConstants)) ) {
+		if( ciri::failed(_parallaxVertexConstantBuffer->setData(sizeof(ParallaxVertexConstants), &_parallaxVertexConstants)) ) {
 			printf("Failed to update constant buffer.\n");
 		}
 
@@ -226,20 +223,20 @@ void ParallaxDemo::onDraw() {
 		device->applyShader(_parallaxShader);
 
 		// set textures and samplers
-		device->setTexture2D(0, _diffuseTexture, gfx::ShaderStage::Pixel);
-		device->setTexture2D(1, _normalTexture, gfx::ShaderStage::Pixel);
-		device->setTexture2D(2, _parallaxTexture, gfx::ShaderStage::Pixel);
-		device->setSamplerState(0, _parallaxSampler, gfx::ShaderStage::Pixel);
-		device->setSamplerState(1, _parallaxSampler, gfx::ShaderStage::Pixel);
-		device->setSamplerState(2, _parallaxSampler, gfx::ShaderStage::Pixel);
+		device->setTexture2D(0, _diffuseTexture, ciri::ShaderStage::Pixel);
+		device->setTexture2D(1, _normalTexture, ciri::ShaderStage::Pixel);
+		device->setTexture2D(2, _parallaxTexture, ciri::ShaderStage::Pixel);
+		device->setSamplerState(0, _parallaxSampler, ciri::ShaderStage::Pixel);
+		device->setSamplerState(1, _parallaxSampler, ciri::ShaderStage::Pixel);
+		device->setSamplerState(2, _parallaxSampler, ciri::ShaderStage::Pixel);
 
 		// set buffers and draw
 		device->setVertexBuffer(_model->getVertexBuffer());
 		if( _model->getIndexBuffer() != nullptr ) {
 			device->setIndexBuffer(_model->getIndexBuffer());
-			device->drawIndexed(gfx::PrimitiveTopology::TriangleList, _model->getIndexBuffer()->getIndexCount());
+			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _model->getIndexBuffer()->getIndexCount());
 		} else {
-			device->drawArrays(gfx::PrimitiveTopology::TriangleList, _model->getVertexBuffer()->getVertexCount(), 0);
+			device->drawArrays(ciri::PrimitiveTopology::TriangleList, _model->getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
@@ -268,17 +265,17 @@ bool ParallaxDemo::loadShaders() {
 	if( nullptr == _parallaxShader ) {
 		_parallaxShader = graphicsDevice()->createShader();
 		// add input elements
-		_parallaxShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Position, 0));
-		_parallaxShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Normal, 0));
-		_parallaxShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float4, gfx::VertexUsage::Tangent, 0));
-		_parallaxShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float2, gfx::VertexUsage::Texcoord, 0));
+		_parallaxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+		_parallaxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
+		_parallaxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
+		_parallaxShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
 	}
 
 	// load shader from file
 	const std::string shaderExt = graphicsDevice()->getShaderExt();
 	const std::string vsFile = ("parallax/parallax_vs" + shaderExt);
 	const std::string psFile = ("parallax/parallax_ps" + shaderExt);
-	if( core::failed(_parallaxShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_parallaxShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Shader failed to compile with %d errors:\n", _parallaxShader->getErrors().size());
 		unsigned int idx = 0;
 		for( const auto& err : _parallaxShader->getErrors() ) {
@@ -293,13 +290,13 @@ bool ParallaxDemo::loadShaders() {
 		_parallaxVertexConstantBuffer = graphicsDevice()->createConstantBuffer();
 	}
 	// set constant buffer data
-	if( core::failed(_parallaxVertexConstantBuffer->setData(sizeof(ParallaxVertexConstants), &_parallaxVertexConstants)) ) {
+	if( ciri::failed(_parallaxVertexConstantBuffer->setData(sizeof(ParallaxVertexConstants), &_parallaxVertexConstants)) ) {
 		printf("Failed to assign data to constant buffer.\n");
 		return false;
 	}
 
 	// assign constant buffer to shader
-	if( core::failed(_parallaxShader->addConstants(_parallaxVertexConstantBuffer, "ParallaxVertexConstants", gfx::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_parallaxShader->addConstants(_parallaxVertexConstantBuffer, "ParallaxVertexConstants", ciri::ShaderStage::Vertex)) ) {
 		printf("Failed to assign constant buffer to shader.\n");
 		return false;
 	}

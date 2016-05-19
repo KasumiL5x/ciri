@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_SamplerWrap__
 #define __ciri_graphics_SamplerWrap__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Behaviors for texture coordinates that are out of texture boundaries.
@@ -14,6 +14,6 @@ enum class SamplerWrap {
 	MirrorOnce /**< Mirrors one time and then clamps. */
 };
 
-}}
+}
 
 #endif

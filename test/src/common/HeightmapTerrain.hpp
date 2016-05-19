@@ -37,11 +37,11 @@ public:
 	HeightmapTerrain();
 	~HeightmapTerrain();
 
-	bool generate( const ciri::core::TGA& heightmap, std::shared_ptr<ciri::graphics::IGraphicsDevice> device );
-	void setTextures( const std::shared_ptr<ciri::graphics::ITexture2D>& tex0, const std::shared_ptr<ciri::graphics::ITexture2D>& tex1, const std::shared_ptr<ciri::graphics::ITexture2D>& tex2, const std::shared_ptr<ciri::graphics::ITexture2D>& tex3 );
+	bool generate( const ciri::TGA& heightmap, std::shared_ptr<ciri::IGraphicsDevice> device );
+	void setTextures( const std::shared_ptr<ciri::ITexture2D>& tex0, const std::shared_ptr<ciri::ITexture2D>& tex1, const std::shared_ptr<ciri::ITexture2D>& tex2, const std::shared_ptr<ciri::ITexture2D>& tex3 );
 	void setClippingPlaneActive( bool active );
 	void setClippingPlaneParams( float height, const cc::Mat4f& viewProj, bool flip );
-	void draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::graphics::IGraphicsDevice> device );
+	void draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::IGraphicsDevice> device );
 	void clean();
 	
 private:
@@ -51,7 +51,7 @@ private:
 	std::string getVertexShaderDx() const;
 	std::string getPixelShaderGl() const;
 	std::string getPixelShaderDx() const;
-	ciri::graphics::Plane createClippingPlane( float height, const cc::Vec3f& normal, const cc::Mat4f& viewProj, bool flip ) const;
+	ciri::Plane createClippingPlane( float height, const cc::Vec3f& normal, const cc::Mat4f& viewProj, bool flip ) const;
 
 private:
 	bool _generated;
@@ -62,19 +62,19 @@ private:
 	int* _indices;
 
 	// gpu buffers
-	std::shared_ptr<ciri::graphics::IVertexBuffer> _vertexBuffer;
-	std::shared_ptr<ciri::graphics::IIndexBuffer> _indexBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::IIndexBuffer> _indexBuffer;
 
 	// shader
-	std::shared_ptr<ciri::graphics::IShader> _shader;
+	std::shared_ptr<ciri::IShader> _shader;
 
 	// constant buffers
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _perFrameConstantBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _perFrameConstantBuffer;
 	PerFrameConstants _perFrameConstants;
 
 	// textures
-	std::shared_ptr<ciri::graphics::ITexture2D> _textures[4];
-	std::shared_ptr<ciri::graphics::ISamplerState> _sampler;
+	std::shared_ptr<ciri::ITexture2D> _textures[4];
+	std::shared_ptr<ciri::ISamplerState> _sampler;
 };
 
 #endif /* __heightmap_terrain__ */

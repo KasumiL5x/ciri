@@ -4,7 +4,7 @@
 #include <cc/Vec3.hpp>
 #include "Camera.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class FPSCamera : public Camera {
 public:
@@ -48,6 +48,6 @@ private:
 	cc::Vec3f _right;
 };
 
-}}
+}
 
 #endif

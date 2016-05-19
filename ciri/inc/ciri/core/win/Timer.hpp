@@ -4,7 +4,7 @@
 #include <ciri/core/ITimer.hpp>
 #include <Windows.h>
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class Timer : public ITimer {
 public:
@@ -26,6 +26,6 @@ private:
 	bool _isPaused;
 };
 
-}}
+}
 
 #endif

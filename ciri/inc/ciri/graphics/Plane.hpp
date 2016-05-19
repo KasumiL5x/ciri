@@ -4,7 +4,7 @@
 #include <cc/Vec3.hpp>
 #include <cc/Vec4.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class Plane {
 public:
@@ -25,6 +25,6 @@ private:
 	float _d;
 };
 
-}}
+}
 
 #endif

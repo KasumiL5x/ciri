@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/IDepthStencilState.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -26,6 +26,6 @@ private:
 	DepthStencilDesc _desc;
 };
 
-}}
+}
 
 #endif

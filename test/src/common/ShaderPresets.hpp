@@ -30,18 +30,18 @@ public:
 	void* operator new( size_t i );
 	void operator delete( void* p );
 
-	bool create( std::shared_ptr<ciri::graphics::IGraphicsDevice> device );
+	bool create( std::shared_ptr<ciri::IGraphicsDevice> device );
 
-	const std::shared_ptr<ciri::graphics::IShader>& getShader() const;
+	const std::shared_ptr<ciri::IShader>& getShader() const;
 	Constants& getConstants();
 	MaterialConstants& getMaterialConstants();
 	bool updateConstants();
 
 private:
-	std::shared_ptr<ciri::graphics::IShader> _shader;
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _constantBuffer;
+	std::shared_ptr<ciri::IShader> _shader;
+	std::shared_ptr<ciri::IConstantBuffer> _constantBuffer;
 	Constants _constants;
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _materialConstantsBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _materialConstantsBuffer;
 	MaterialConstants _materialConstants;
 };
 

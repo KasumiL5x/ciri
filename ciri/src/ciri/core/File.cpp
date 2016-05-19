@@ -1,7 +1,7 @@
 #include <ciri/core/File.hpp>
 #include <sstream>
 
-using namespace ciri::core;
+using namespace ciri;
 
 File::File()
 	: _flags(Flags::None) {

@@ -2,7 +2,7 @@
 #include <ciri/graphics/win/dx/DXGraphicsDevice.hpp>
 #include <ciri/graphics/win/dx/DXTexture2D.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 DXRenderTarget2D::DXRenderTarget2D( const std::shared_ptr<DXGraphicsDevice>& device )
 	: IRenderTarget2D(), _device(device), _texture(nullptr), _renderTargetView(nullptr) {

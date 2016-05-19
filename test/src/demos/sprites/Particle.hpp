@@ -12,7 +12,7 @@ struct Particle {
 	virtual ~Particle() {
 	}
 
-	std::shared_ptr<ciri::graphics::ITexture2D> texture;
+	std::shared_ptr<ciri::ITexture2D> texture;
 	cc::Vec2f position;
 	cc::Vec2f velocity;
 	bool isAlive;

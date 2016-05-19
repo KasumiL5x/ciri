@@ -1,8 +1,5 @@
 #include "Game.hpp"
 
-using namespace ciri::graphics;
-using namespace ciri::core;
-
 Game::Game()
 	: _isRunning(false), _isInitialized(false), _shouldGtfo(false), _window(nullptr), _input(nullptr),
 		_graphicsDevice(nullptr), _gameTimer(nullptr) {
@@ -25,7 +22,7 @@ bool Game::run() {
 	}
 
 	// create window
-	_window = createWindow();
+	_window = ciri::createWindow();
 	if( !_window->create(_config.width, _config.height) ) {
 		printf("ciri error: Failed to run because window creation failed.\n");
 		return false;
@@ -33,21 +30,21 @@ bool Game::run() {
 	_window->setWindowText(_config.title.c_str());
 
 	// create input
-	_input = createInput();
+	_input = ciri::createInput();
 	if( !_input->create(_window) ) {
 		printf("ciri error: Failed to run because input creation failed.\n");
 		return false;
 	}
 
 	// create graphics device
-	_graphicsDevice = createGraphicsDevice();
+	_graphicsDevice = ciri::createGraphicsDevice();
 	if( !_graphicsDevice->create(_window) ) {
 		printf("ciri error: Failed to run because graphics device creation failed.\n");
 		return false;
 	}
 
 	// create game timer
-	_gameTimer = ciri::core::createTimer();
+	_gameTimer = ciri::createTimer();
 
 	onInitialize();
 	onLoadContent();
@@ -61,7 +58,7 @@ bool Game::run() {
 	double lag = 0.0;
 	_isRunning = true;
 	while( _isRunning && !_shouldGtfo ) {
-		WindowEvent evt;
+		ciri::WindowEvent evt;
 		while( _window->pollEvent(evt) ) {
 			onEvent(evt);
 		}
@@ -109,9 +106,9 @@ void Game::onInitialize() {
 void Game::onLoadContent() {
 }
 
-void Game::onEvent( const WindowEvent& evt ) {
+void Game::onEvent( const ciri::WindowEvent& evt ) {
 	// window closed event check
-	if( WindowEvent::Closed == evt.type ) {
+	if( ciri::WindowEvent::Closed == evt.type ) {
 		gtfo();
 		return;
 	}
@@ -133,18 +130,18 @@ void Game::gtfo() {
 	_shouldGtfo = true;
 }
 
-std::shared_ptr<IWindow> Game::window() const {
+std::shared_ptr<ciri::IWindow> Game::window() const {
 	return _window;
 }
 
-std::shared_ptr<IInput> Game::input() const {
+std::shared_ptr<ciri::IInput> Game::input() const {
 	return _input;
 }
 
-std::shared_ptr<IGraphicsDevice> Game::graphicsDevice() const {
+std::shared_ptr<ciri::IGraphicsDevice> Game::graphicsDevice() const {
 	return _graphicsDevice;
 }
 
-std::shared_ptr<ITimer> Game::gameTimer() const {
+std::shared_ptr<ciri::ITimer> Game::gameTimer() const {
 	return _gameTimer;
 }

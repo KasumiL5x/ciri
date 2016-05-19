@@ -1,7 +1,7 @@
 #include <ciri/core/window/win/Window.hpp>
 #include <memory>
 
-using namespace ciri::core;
+using namespace ciri;
 
 Window::Window()
 	: IWindow(), _hwnd(0), _isResizing(false), _lastWidth(0), _lastHeight(0), _keyRepeatEnabled(true), _isCursorVisible(true) {
@@ -287,8 +287,8 @@ LRESULT CALLBACK Window::WndProc( HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-namespace ciri { namespace core {
+namespace ciri {
 std::shared_ptr<IWindow> createWindow() {
 	return std::shared_ptr<IWindow>(new Window());
 }
-}}
+}

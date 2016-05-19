@@ -2,8 +2,7 @@
 #include <ciri/graphics/win/gl/GLConstantBuffer.hpp>
 #include <ciri/core/File.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 GLShader::GLShader()
 	: IShader(), _vertexShader(0), _geometryShader(0), _pixelShader(0), _program(0) {

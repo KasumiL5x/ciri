@@ -4,7 +4,7 @@
 #include <memory>
 #include <ciri/graphics/IRenderTarget2D.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLTexture2D;
 
@@ -23,6 +23,6 @@ private:
 	std::shared_ptr<GLTexture2D> _texture;
 };
 
-}}
+}
 
 #endif

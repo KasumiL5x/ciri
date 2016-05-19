@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_VertexUsage__
 #define __ciri_graphics_VertexUsage__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Defines how a VertexElement is used.
@@ -15,6 +15,6 @@ enum class VertexUsage {
 	Tangent   /**< Treat as tangent. */
 };
 
-}}
+}
 
 #endif

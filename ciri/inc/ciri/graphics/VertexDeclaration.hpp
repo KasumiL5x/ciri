@@ -4,7 +4,7 @@
 #include <vector>
 #include "VertexElement.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class VertexDeclaration {
 public:
@@ -34,6 +34,6 @@ protected:
 	int _stride;
 };
 
-}}
+}
 
 #endif

@@ -5,19 +5,19 @@
 #include <ciri/core/ErrorCodes.hpp>
 #include "VertexElement.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class IConstantBuffer;
 
 class IShader {
 public:
 	struct ShaderError {
-		core::ErrorCode code;
+		ErrorCode code;
 		std::string msg;
 
 		ShaderError() {
 		}
-		ShaderError( core::ErrorCode theCode, const std::string& theMsg )
+		ShaderError( ErrorCode theCode, const std::string& theMsg )
 			: code(theCode), msg(theMsg) {
 		}
 	};
@@ -43,7 +43,7 @@ public:
 		* @param ps Pixel shader file.  This must not be null.
 		* @returns ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
 		*/
-	virtual core::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps )=0;
+	virtual ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps )=0;
 
 	/**
 		* Builds the shader from memory.  Both the vertex shader and pixel shader must be valid, but the geometry shader is optional.
@@ -52,7 +52,7 @@ public:
 		* @param ps Pixel shader string.  This must not be null.
 		* @returns ErrorCode indicating success or failure.  If multiple errors exist, the first to happen will be returned.
 		*/
-	virtual core::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps )=0;
+	virtual ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps )=0;
 
 	/**
 		* Attaches a constant buffer to the shader at a specific stage.
@@ -62,7 +62,7 @@ public:
 		* @param shaderTypeFlags Bitflag of ShaderStage to define which stage(s) the constant buffer is bound to.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags )=0;
+	virtual ErrorCode addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags )=0;
 
 	/**
 		* Uninitializes the shader.
@@ -83,6 +83,6 @@ public:
 	virtual bool isValid() const=0;
 };
 
-}}
+}
 
 #endif

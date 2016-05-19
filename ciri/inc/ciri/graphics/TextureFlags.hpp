@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_TextureFlags__
 #define __ciri_graphics_TextureFlags__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct TextureFlags {
 	/**
@@ -13,6 +13,6 @@ struct TextureFlags {
 	};
 };
 
-}}
+}
 
 #endif

@@ -3,9 +3,6 @@
 #include <array>
 #include <cc/Random.hpp>
 
-namespace core = ciri::core;
-namespace gfx = ciri::graphics;
-
 //
 // random note about spritefonts!  the idea is something like the following:
 //
@@ -61,7 +58,7 @@ void Gridlr::onInitialize() {
 
 	// create states
 	_blendState = graphicsDevice()->getDefaultBlendAlpha();
-	_samplerState = graphicsDevice()->createSamplerState(gfx::SamplerDesc());
+	_samplerState = graphicsDevice()->createSamplerState(ciri::SamplerDesc());
 	_depthStencilState = graphicsDevice()->getDefaultDepthStencilNone();
 	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise();
 }
@@ -70,9 +67,9 @@ void Gridlr::onLoadContent() {
 	Game::onLoadContent();
 
 	// load grid texture
-	core::PNG cellPng;
+	ciri::PNG cellPng;
 	if( cellPng.loadFromFile("gridlr/grid_empty.png", true) && cellPng.hasAlpha() ) {
-		_cellTexture = graphicsDevice()->createTexture2D(cellPng.getWidth(), cellPng.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, cellPng.getPixels());
+		_cellTexture = graphicsDevice()->createTexture2D(cellPng.getWidth(), cellPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, cellPng.getPixels());
 		const auto& vp = graphicsDevice()->getViewport();
 		_gridOffset.x = static_cast<float>((vp.width()  / 2) - (_cellTexture->getWidth()  * _grid->width()  / 2));
 		_gridOffset.y = static_cast<float>((vp.height() / 2) - (_cellTexture->getHeight() * _grid->height() / 2));
@@ -88,11 +85,11 @@ void Gridlr::onLoadContent() {
 		}
 	}
 	//RED_DATA.fill	(255);
-	_redTextureTest = graphicsDevice()->createTexture2D(RED_SIZE, RED_SIZE, gfx::TextureFormat::R32_UINT, 0, RED_DATA.data());
-	_redSampler = graphicsDevice()->createSamplerState(gfx::SamplerDesc());
+	_redTextureTest = graphicsDevice()->createTexture2D(RED_SIZE, RED_SIZE, ciri::TextureFormat::R32_UINT, 0, RED_DATA.data());
+	_redSampler = graphicsDevice()->createSamplerState(ciri::SamplerDesc());
 	// DEBUG - load dummy red shader
 	_redShader = graphicsDevice()->createShader();
-	_redShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float2, gfx::VertexUsage::Position, 0));
+	_redShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Position, 0));
 	const std::string RED_VS = "#version 440\n"
 														 "layout ( location = 0 ) in vec2 in_position;\n"
 														 "void main() {\n"
@@ -127,7 +124,7 @@ void Gridlr::onLoadContent() {
 														 "void main() {\n"
 														 "  out_color = vec4(texture(TheTexture, go_texcoord).r, 0.0, 0.0, 1.0);\n"
 														 "}\n";
-	if( core::failed(_redShader->loadFromMemory(RED_VS.c_str(), RED_GS.c_str(), RED_PS.c_str())) ) {
+	if( ciri::failed(_redShader->loadFromMemory(RED_VS.c_str(), RED_GS.c_str(), RED_PS.c_str())) ) {
 		printf("Failed to load RED shader!\n");
 		for( auto err : _redShader->getErrors() ) {
 			printf("Error: %s\n", err.msg.c_str());
@@ -145,7 +142,7 @@ void Gridlr::onLoadContent() {
 	_redVb->set(RED_VERTS.data(), sizeof(cc::Vec2f), RED_VERTS_COUNT, false);
 }
 
-void Gridlr::onEvent(const core::WindowEvent& evt) {
+void Gridlr::onEvent(const ciri::WindowEvent& evt) {
 	Game::onEvent(evt);
 }
 
@@ -153,7 +150,7 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 	Game::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
-	if( window()->hasFocus() && input()->isKeyDown(core::Key::Escape) ) {
+	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
 		gtfo();
 		return;
 	}
@@ -163,7 +160,7 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 	const int mouseCellY = (input()->mouseY() - static_cast<int>(_gridOffset.y)) / _cellTexture->getHeight();
 	//printf("X: %d; Y: %d\n", mouseCellX, mouseCellY);
 
-	if( input()->isMouseButtonDown(core::MouseButton::Left) && !_isDragging ) {
+	if( input()->isMouseButtonDown(ciri::MouseButton::Left) && !_isDragging ) {
 		_isDragging = true;
 		_lastMouseCell.x = mouseCellX;
 		_lastMouseCell.y = mouseCellY;
@@ -174,7 +171,7 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 				printf("BlockGrid::startDrag() failed.\n");
 			}
 		}
-	} else if( input()->isMouseButtonDown(core::MouseButton::Left) && _isDragging && (_lastMouseCell.x != mouseCellX || _lastMouseCell.y != mouseCellY) ) {
+	} else if( input()->isMouseButtonDown(ciri::MouseButton::Left) && _isDragging && (_lastMouseCell.x != mouseCellX || _lastMouseCell.y != mouseCellY) ) {
 		_lastMouseCell.x = mouseCellX;
 		_lastMouseCell.y = mouseCellY;
 
@@ -185,7 +182,7 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 				printf("BlockGrid::dragMove() failed.\n");
 			}
 		}
-	} else if( input()->isMouseButtonUp(core::MouseButton::Left) && _isDragging ) {
+	} else if( input()->isMouseButtonUp(ciri::MouseButton::Left) && _isDragging ) {
 		_isDragging = false;
 
 		// stop drag
@@ -213,14 +210,14 @@ void Gridlr::onDraw() {
 
 	// clear screen
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	device->clear(gfx::ClearFlags::Color | gfx::ClearFlags::Depth);
+	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	// DEBUG - draw red things
 	graphicsDevice()->applyShader(_redShader);
 	graphicsDevice()->setVertexBuffer(_redVb);
-	graphicsDevice()->setTexture2D(0, _redTextureTest, gfx::ShaderStage::Pixel);
-	graphicsDevice()->setSamplerState(0, _redSampler, gfx::ShaderStage::Pixel);
-	graphicsDevice()->drawArrays(gfx::PrimitiveTopology::PointList, 4, 0);
+	graphicsDevice()->setTexture2D(0, _redTextureTest, ciri::ShaderStage::Pixel);
+	graphicsDevice()->setSamplerState(0, _redSampler, ciri::ShaderStage::Pixel);
+	graphicsDevice()->drawArrays(ciri::PrimitiveTopology::PointList, 4, 0);
 
 	/*
 	_spriteBatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);

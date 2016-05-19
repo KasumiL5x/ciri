@@ -3,7 +3,7 @@
 
 #include <ciri/graphics/VertexDeclaration.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXVertexDeclaration : public VertexDeclaration {
 public:
@@ -11,6 +11,6 @@ public:
 	virtual ~DXVertexDeclaration();
 };
 
-}}
+}
 
 #endif

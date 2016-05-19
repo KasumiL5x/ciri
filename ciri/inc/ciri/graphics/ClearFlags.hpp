@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_ClearFlags__
 #define __ciri_graphics_ClearFlags__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct ClearFlags {
 	/**
@@ -14,6 +14,6 @@ struct ClearFlags {
 	};
 };
 
-}}
+}
 
 #endif

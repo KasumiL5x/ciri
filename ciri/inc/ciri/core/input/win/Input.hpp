@@ -4,7 +4,7 @@
 #include <ciri/core/input/IInput.hpp>
 #include <Windows.h>
 
-namespace ciri { namespace core {
+namespace ciri {
 
 struct KeyboardState {
 	const static int KEY_ARRAY_SIZE = 256;
@@ -56,6 +56,6 @@ private:
 	std::shared_ptr<IWindow> _window;
 };
 
-}}
+}
 
 #endif

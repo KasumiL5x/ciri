@@ -1,6 +1,6 @@
 #include <ciri/graphics/win/gl/GLVertexDeclaration.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 GLVertexDeclaration::GLVertexDeclaration()
 	: VertexDeclaration() {

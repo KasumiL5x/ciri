@@ -3,7 +3,7 @@
 
 #include <ciri/graphics/IRasterizerState.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLRasterizerState : public IRasterizerState {
 public:
@@ -19,6 +19,6 @@ private:
 	RasterizerDesc _desc;
 };
 
-}}
+}
 
 #endif

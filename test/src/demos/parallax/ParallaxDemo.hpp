@@ -28,7 +28,7 @@ public:
 protected:
 	virtual void onInitialize();
 	virtual void onLoadContent();
-	virtual void onEvent( const ciri::core::WindowEvent& evt );
+	virtual void onEvent( const ciri::WindowEvent& evt );
 	virtual void onUpdate( const double deltaTime, const double elapsedTime );
 	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime );
 	virtual void onDraw();
@@ -39,19 +39,19 @@ private:
 	void unloadShaders();
 
 private:
-	ciri::graphics::MayaCamera _camera;
+	ciri::MayaCamera _camera;
 	AxisGrid _grid;
 	AxisWidget _axis;
-	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 	Model* _model;
-	std::shared_ptr<ciri::graphics::IShader> _parallaxShader;
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _parallaxVertexConstantBuffer;
+	std::shared_ptr<ciri::IShader> _parallaxShader;
+	std::shared_ptr<ciri::IConstantBuffer> _parallaxVertexConstantBuffer;
 	ParallaxVertexConstants _parallaxVertexConstants;
-	std::shared_ptr<ciri::graphics::ITexture2D> _diffuseTexture;
-	std::shared_ptr<ciri::graphics::ITexture2D> _normalTexture;
-	std::shared_ptr<ciri::graphics::ITexture2D> _parallaxTexture;
-	std::shared_ptr<ciri::graphics::ISamplerState> _parallaxSampler;
+	std::shared_ptr<ciri::ITexture2D> _diffuseTexture;
+	std::shared_ptr<ciri::ITexture2D> _normalTexture;
+	std::shared_ptr<ciri::ITexture2D> _parallaxTexture;
+	std::shared_ptr<ciri::ISamplerState> _parallaxSampler;
 };
 
 #endif /* __parallax_demo__ */

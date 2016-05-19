@@ -1,7 +1,7 @@
 #include <ciri/core/input/win/Input.hpp>
 #include <ciri/core/window/IWindow.hpp>
 
-using namespace ciri::core;
+using namespace ciri;
 
 unsigned char KeyboardState::_keyBuffer[KeyboardState::KEY_ARRAY_SIZE];
 static int ciriKeyToWinKey( Key key ) {
@@ -232,8 +232,8 @@ int Input::lastMouseY() const {
 	return _prevMouseState.y;
 }
 
-namespace ciri { namespace core {
+namespace ciri {
 std::shared_ptr<IInput> createInput() {
 	return std::shared_ptr<IInput>(new Input());
 }
-}}
+}

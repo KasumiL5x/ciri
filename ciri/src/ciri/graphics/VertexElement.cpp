@@ -1,6 +1,6 @@
 #include <ciri/graphics/VertexElement.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 VertexElement::VertexElement()
 	: _format(VertexFormat::Float3), _usage(VertexUsage::Position), _usageIndex(0) {

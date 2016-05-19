@@ -1,7 +1,7 @@
 #include <ciri/core/TGA.hpp>
 #include <fstream>
 
-using namespace ciri::core;
+using namespace ciri;
 
 TGA::TGA()
 	: _format(RGB), _width(0), _height(0), _pixels(nullptr) {

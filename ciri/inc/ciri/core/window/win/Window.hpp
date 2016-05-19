@@ -5,7 +5,7 @@
 #include <Windows.h>
 #include <ciri/core/window/IWindow.hpp>
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class Window : public IWindow {
 public:
@@ -40,6 +40,6 @@ private:
 	bool _isCursorVisible;
 };
 
-}}
+}
 
 #endif

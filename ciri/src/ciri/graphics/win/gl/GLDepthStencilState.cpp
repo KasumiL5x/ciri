@@ -1,6 +1,6 @@
 #include <ciri/graphics/win/gl/GLDepthStencilState.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 GLDepthStencilState::GLDepthStencilState()
 	: IDepthStencilState() {

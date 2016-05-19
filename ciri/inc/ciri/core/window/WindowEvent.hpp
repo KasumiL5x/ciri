@@ -1,7 +1,7 @@
 #ifndef __ciri_core_WindowEvent__
 #define __ciri_core_WindowEvent__
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class WindowEvent {
 public:
@@ -36,6 +36,6 @@ public:
 	};
 };
 
-}}
+}
 
 #endif

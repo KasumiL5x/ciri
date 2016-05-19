@@ -4,7 +4,7 @@
 #include "CompareFunction.hpp"
 #include "StencilOperation.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct DepthStencilDesc {
 	bool depthEnable;                    /**< Enable or disable depth testing. */
@@ -67,6 +67,6 @@ public:
 	virtual void destroy()=0;
 };
 
-}}
+}
 
 #endif

@@ -15,14 +15,14 @@
 #include "GLRasterizerState.hpp"
 #include "GLDepthStencilState.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLGraphicsDevice : public IGraphicsDevice {
 public:
 	GLGraphicsDevice();
 	virtual ~GLGraphicsDevice();
 
-	virtual bool create( const std::shared_ptr<core::IWindow>& window ) override;
+	virtual bool create( const std::shared_ptr<IWindow>& window ) override;
 	virtual void destroy() override;
 	virtual void present() override;
 
@@ -52,23 +52,23 @@ public:
 	virtual void drawIndexed( PrimitiveTopology topology, int indexCount ) override;
 	virtual void setRenderTargets( IRenderTarget2D** renderTargets, int numRenderTargets ) override;
 	virtual void restoreDefaultRenderTargets() override;
-	virtual core::ErrorCode resize() override;
-	virtual core::ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height ) override;
-	virtual core::ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height ) override;
+	virtual ErrorCode resize() override;
+	virtual ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height ) override;
+	virtual ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height ) override;
 	virtual void setClearColor( float r, float g, float b, float a ) override;
 	virtual void clear( int flags) override;
 	virtual void setRasterizerState( const std::shared_ptr<IRasterizerState>& state ) override;
 	virtual void setDepthStencilState( const std::shared_ptr<IDepthStencilState>& state ) override;
 	virtual void setShaderExt( const char* ext ) override;
 	virtual const char* getShaderExt() const override;
-	virtual std::shared_ptr<core::IWindow> getWindow() const override;
+	virtual std::shared_ptr<IWindow> getWindow() const override;
 	virtual const char* getGpuName() const override;
 	virtual const char* getApiInfo() const override;
 	virtual GraphicsApiType getApiType() const override;
-	virtual core::ErrorCode restoreDefaultStates() override;
-	virtual core::ErrorCode restoreDefaultBlendState() override;
-	virtual core::ErrorCode restoreDefaultRasterizerState() override;
-	virtual core::ErrorCode restoreDefaultDepthStencilState() override;
+	virtual ErrorCode restoreDefaultStates() override;
+	virtual ErrorCode restoreDefaultBlendState() override;
+	virtual ErrorCode restoreDefaultRasterizerState() override;
+	virtual ErrorCode restoreDefaultDepthStencilState() override;
 	virtual std::shared_ptr<IBlendState> getDefaultBlendAdditive() override;
 	virtual std::shared_ptr<IBlendState> getDefaultBlendAlpha() override;
 	virtual std::shared_ptr<IBlendState> getDefaultBlendNonPremul() override;
@@ -91,7 +91,7 @@ private:
 
 private:
 	bool _isValid;
-	std::shared_ptr<core::IWindow> _window;
+	std::shared_ptr<IWindow> _window;
 	//
 	HDC _hdc;
 	HGLRC _hglrc;
@@ -136,6 +136,6 @@ private:
 	std::shared_ptr<IDepthStencilState> _defaultDepthStencilNone;
 };
 
-}}
+}
 
 #endif

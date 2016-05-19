@@ -5,7 +5,7 @@
 #include <vector>
 #include <codecvt>
 
-namespace ciri { namespace core { namespace strutil {
+namespace ciri { namespace strutil {
 
 	static std::wstring str2wstr_utf8( const std::string& str ) {
 		typedef std::codecvt_utf8<wchar_t> convert_typeX;
@@ -46,6 +46,6 @@ namespace ciri { namespace core { namespace strutil {
 		return count;
 	}
 
-}}}
+}}
 
 #endif

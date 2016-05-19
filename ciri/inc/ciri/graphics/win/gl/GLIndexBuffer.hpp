@@ -4,14 +4,14 @@
 #include <GL/glew.h>
 #include <ciri/graphics/IIndexBuffer.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLIndexBuffer : public IIndexBuffer {
 public:
 	GLIndexBuffer();
 	virtual ~GLIndexBuffer();
 
-	virtual core::ErrorCode set( int* indices, int indexCount, bool dynamic ) override;
+	virtual ErrorCode set( int* indices, int indexCount, bool dynamic ) override;
 	virtual void destroy() override;
 	virtual int getIndexCount() const override;
 
@@ -22,6 +22,6 @@ private:
 	int _indexCount;
 };
 
-}}
+}
 
 #endif

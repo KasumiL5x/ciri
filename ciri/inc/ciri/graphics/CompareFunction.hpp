@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_CompareFunction__
 #define __ciri_graphics_CompareFunction__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Comparison functions.
@@ -17,6 +17,6 @@ enum class CompareFunction {
 	NotEqual      /**< Pass if the source data is not equal to the destination data. */
 };
 
-}}
+}
 
 #endif

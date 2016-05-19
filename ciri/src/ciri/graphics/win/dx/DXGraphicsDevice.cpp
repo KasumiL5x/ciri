@@ -11,8 +11,7 @@
 #include <ciri/core/StrUtil.hpp>
 #include <ciri/graphics/win/dx/CiriToDx.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 DXGraphicsDevice::DXGraphicsDevice()
 	: IGraphicsDevice(), _isValid(false), _window(nullptr), _swapchain(nullptr), _device(nullptr), _context(nullptr), _backbuffer(nullptr),
@@ -1126,8 +1125,8 @@ bool DXGraphicsDevice::createDepthStencilView() {
 	return true;
 }
 
-namespace ciri { namespace graphics {
+namespace ciri {
 std::shared_ptr<IGraphicsDevice> createGraphicsDevice() {
 	return std::shared_ptr<IGraphicsDevice>(new DXGraphicsDevice());
 }
-}}
+}

@@ -2,7 +2,7 @@
 #include <ciri/graphics/win/gl/CiriToGl.hpp>
 #include <cc/Common.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 GLSamplerState::GLSamplerState()
 	: ISamplerState(), _samplerId(0) {

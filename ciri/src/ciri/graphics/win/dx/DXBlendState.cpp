@@ -2,7 +2,7 @@
 #include <ciri/graphics/win/dx/DXGraphicsDevice.hpp>
 #include <ciri/graphics/win/dx/CiriToDx.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 DXBlendState::DXBlendState( const std::shared_ptr<DXGraphicsDevice>& device )
 	: IBlendState(), _device(device), _blendState(nullptr) {

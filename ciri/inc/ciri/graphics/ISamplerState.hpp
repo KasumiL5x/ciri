@@ -5,7 +5,7 @@
 #include "SamplerWrap.hpp"
 #include "SamplerFilter.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct SamplerDesc {
 	SamplerWrap wrapU;                  /**< Wrapping method for U texture coordinates that are out of the 0..1 range. */
@@ -48,6 +48,6 @@ public:
 	virtual void destroy()=0;
 };
 
-}}
+}
 
 #endif

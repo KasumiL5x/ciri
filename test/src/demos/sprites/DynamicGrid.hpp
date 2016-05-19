@@ -39,7 +39,7 @@ struct Spring {
 class DynamicGrid {
 public:
 	DynamicGrid();
-	DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const std::shared_ptr<ciri::graphics::IGraphicsDevice>& device );
+	DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const std::shared_ptr<ciri::IGraphicsDevice>& device );
 
 	void applyDirectedForce( const cc::Vec2f& force, const cc::Vec2f& position, float radius );
 	void applyDirectedForce( const cc::Vec3f& force, const cc::Vec3f& position, float radius );
@@ -61,7 +61,7 @@ private:
 	std::vector<PointMass> _fixedPoints;
 	int _numColumns;
 	int _numRows;
-	std::shared_ptr<ciri::graphics::ITexture2D> _pixel;
+	std::shared_ptr<ciri::ITexture2D> _pixel;
 };
 
 #endif /* __grid__ */

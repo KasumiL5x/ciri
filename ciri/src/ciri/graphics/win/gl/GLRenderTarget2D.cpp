@@ -1,7 +1,7 @@
 #include <ciri/graphics/win/gl/GLRenderTarget2D.hpp>
 #include <ciri/graphics/win/gl/GLTexture2D.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 GLRenderTarget2D::GLRenderTarget2D()
 	:IRenderTarget2D(), _texture(nullptr) {

@@ -1,6 +1,6 @@
 #include <ciri/graphics/win/gl/GLBlendState.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 GLBlendState::GLBlendState()
 	: IBlendState() {

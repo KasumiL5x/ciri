@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_FillMode__
 #define __ciri_graphics_FillMode__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Fill mode used when rendering.
@@ -11,6 +11,6 @@ enum class FillMode {
 	Wireframe /**< Draws lines connecting vertices. */
 };
 
-}}
+}
 
 #endif

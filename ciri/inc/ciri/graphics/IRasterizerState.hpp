@@ -4,7 +4,7 @@
 #include "CullMode.hpp"
 #include "FillMode.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct RasterizerDesc {
 	CullMode cullMode;   /**< Culls certain a vertex winding order. */
@@ -36,6 +36,6 @@ public:
 	virtual void destroy()=0;
 };
 
-}}
+}
 
 #endif

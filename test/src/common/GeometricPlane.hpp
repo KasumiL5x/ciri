@@ -15,16 +15,16 @@ public:
 	float getConstant();
 	Transform& getXform();
 
-	bool build( std::shared_ptr<ciri::graphics::IGraphicsDevice>& device );
-	std::shared_ptr<ciri::graphics::IVertexBuffer> getVertexBuffer() const;
-	std::shared_ptr<ciri::graphics::IIndexBuffer> getIndexBuffer() const;
+	bool build( std::shared_ptr<ciri::IGraphicsDevice>& device );
+	std::shared_ptr<ciri::IVertexBuffer> getVertexBuffer() const;
+	std::shared_ptr<ciri::IIndexBuffer> getIndexBuffer() const;
 
 
 
 private:
 	Vertex _verts[4];
-	std::shared_ptr<ciri::graphics::IVertexBuffer> _vb;
-	std::shared_ptr<ciri::graphics::IIndexBuffer> _ib;
+	std::shared_ptr<ciri::IVertexBuffer> _vb;
+	std::shared_ptr<ciri::IIndexBuffer> _ib;
 	Transform _xform;
 };
 

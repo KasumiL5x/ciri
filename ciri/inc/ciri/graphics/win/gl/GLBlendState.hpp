@@ -3,7 +3,7 @@
 
 #include <ciri/graphics/IBlendState.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLBlendState : public IBlendState {
 public:
@@ -19,6 +19,6 @@ private:
 	BlendDesc _desc;
 };
 
-}}
+}
 
 #endif

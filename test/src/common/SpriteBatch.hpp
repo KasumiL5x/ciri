@@ -28,8 +28,8 @@ public:
 	SpriteBatch();
 	~SpriteBatch();
 
-	bool create( const std::shared_ptr<ciri::graphics::IGraphicsDevice>& device );
-	bool begin( const std::shared_ptr<ciri::graphics::IBlendState>& blendState, const std::shared_ptr<ciri::graphics::ISamplerState>& samplerState, const std::shared_ptr<ciri::graphics::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::graphics::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<ciri::graphics::IShader>& shader );
+	bool create( const std::shared_ptr<ciri::IGraphicsDevice>& device );
+	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<ciri::IShader>& shader );
 
 	/**
 	 * Draws a sprite.
@@ -39,7 +39,7 @@ public:
 	 * @param origin   Pivot point where {0, 0} is the bottom left.
 	 * @param depth     Depth used for rendering and sorting of sprites.
 	 */
-	void draw( const std::shared_ptr<ciri::graphics::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth );
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth );
 
 	/**
 	 * Draws a sprite.
@@ -50,7 +50,7 @@ public:
 	 * @param scale     Scaling factor.
 	 * @param depth     Depth used for rendering and sorting of sprites.
 	 */
-	void draw( const std::shared_ptr<ciri::graphics::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth );
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth );
 
 	/**
 	 * Draws a sprite.
@@ -61,7 +61,7 @@ public:
 	 * @param scale     Uniform scaling factor.
 	 * @param depth     Depth used for rendering and sorting of sprites.
 	 */
-	void draw( const std::shared_ptr<ciri::graphics::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth );
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth );
 
 	/**
 	 * Draws a sprite.
@@ -73,7 +73,7 @@ public:
 	 * @param depth     Depth used for rendering and sorting of sprites.
 	 * @param color     Color (including alpha) to multiply the texture by.
 	 */
-	void draw( const std::shared_ptr<ciri::graphics::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color );
+	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color );
 	
 	bool end();
 	void clean();
@@ -82,24 +82,24 @@ private:
 	bool configure();
 	std::shared_ptr<SpriteBatchItem> createBatchItem();
 	void ensureArrayCapacity( int size );
-	void flush( int start, int end, const std::shared_ptr<ciri::graphics::ITexture2D>& texture );
+	void flush( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture );
 
 private:
-	std::shared_ptr<ciri::graphics::IGraphicsDevice> _device; // external
+	std::shared_ptr<ciri::IGraphicsDevice> _device; // external
 
-	std::shared_ptr<ciri::graphics::IBlendState> _blendState; // external
-	std::shared_ptr<ciri::graphics::ISamplerState> _samplerState; // external
-	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState; // external
-	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState; // external
-	std::shared_ptr<ciri::graphics::IShader> _defaultShader; // default sprite shader loaded within the spritebatch
-	std::shared_ptr<ciri::graphics::IShader> _shader; // shader to actually use for drawing (can be external or internal)
+	std::shared_ptr<ciri::IBlendState> _blendState; // external
+	std::shared_ptr<ciri::ISamplerState> _samplerState; // external
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState; // external
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState; // external
+	std::shared_ptr<ciri::IShader> _defaultShader; // default sprite shader loaded within the spritebatch
+	std::shared_ptr<ciri::IShader> _shader; // shader to actually use for drawing (can be external or internal)
 
 	SpriteConstants _constants;
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _constantBuffer;
+	std::shared_ptr<ciri::IConstantBuffer> _constantBuffer;
 
 	bool _beginCalled;
 
-	std::shared_ptr<ciri::graphics::IVertexBuffer> _spritesBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _spritesBuffer;
 
 	std::vector<std::shared_ptr<SpriteBatchItem>> _batchItemList;
 	std::queue<std::shared_ptr<SpriteBatchItem>> _freeBatchItemQueue;

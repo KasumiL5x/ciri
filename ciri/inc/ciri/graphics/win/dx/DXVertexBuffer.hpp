@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/IVertexBuffer.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -14,7 +14,7 @@ public:
 	DXVertexBuffer( const std::shared_ptr<DXGraphicsDevice>& device );
 	virtual ~DXVertexBuffer();
 
-	virtual core::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) override;
+	virtual ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) override;
 	virtual void destroy() override;
 	virtual int getStride() const override;
 	virtual int getVertexCount() override;
@@ -22,8 +22,8 @@ public:
 	ID3D11Buffer* getVertexBuffer() const;
 
 private:
-	core::ErrorCode createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic );
-	core::ErrorCode updateBuffer( void* vertices, int vertexStride, int vertexCount );
+	ErrorCode createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic );
+	ErrorCode updateBuffer( void* vertices, int vertexStride, int vertexCount );
 
 private:
 	std::shared_ptr<DXGraphicsDevice> _device;
@@ -33,6 +33,6 @@ private:
 	bool _isDynamic;
 };
 
-}}
+}
 
 #endif

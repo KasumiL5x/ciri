@@ -3,8 +3,7 @@
 #include <cmath>
 #include <ciri/core/StrUtil.hpp>
 
-using namespace ciri::core;
-using namespace ciri::graphics;
+using namespace ciri;
 
 ObjModel::ObjModel() {
 }

@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <ciri/core/Log.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 static __forceinline bool checkGlError() {
 #ifdef _DEBUG
@@ -20,6 +20,6 @@ static __forceinline bool checkGlError() {
 #endif
 }
 
-}}
+}
 
 #endif

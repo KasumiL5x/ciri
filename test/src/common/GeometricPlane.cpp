@@ -1,8 +1,5 @@
 #include "GeometricPlane.hpp"
 
-namespace core = ciri::core;
-namespace gfx = ciri::graphics;
-
 GeometricPlane::GeometricPlane() {
 }
 
@@ -44,9 +41,9 @@ Transform& GeometricPlane::getXform() {
 	return _xform;
 }
 
-bool GeometricPlane::build( std::shared_ptr<gfx::IGraphicsDevice>& device ) {
+bool GeometricPlane::build( std::shared_ptr<ciri::IGraphicsDevice>& device ) {
 	_vb = device->createVertexBuffer();
-	if( core::failed(_vb->set(_verts, sizeof(Vertex), 4, false)) ) {
+	if( ciri::failed(_vb->set(_verts, sizeof(Vertex), 4, false)) ) {
 		_vb->destroy();
 		_vb = nullptr;
 		return false;
@@ -54,7 +51,7 @@ bool GeometricPlane::build( std::shared_ptr<gfx::IGraphicsDevice>& device ) {
 
 	int indices[6] = {0, 1, 2, 2, 0, 3};
 	_ib = device->createIndexBuffer();
-	if( core::failed(_ib->set(indices, 6, false)) ) {
+	if( ciri::failed(_ib->set(indices, 6, false)) ) {
 		_vb->destroy();
 		_vb = nullptr;
 		_ib->destroy();
@@ -66,10 +63,10 @@ bool GeometricPlane::build( std::shared_ptr<gfx::IGraphicsDevice>& device ) {
 }
 
 
-std::shared_ptr<gfx::IVertexBuffer> GeometricPlane::getVertexBuffer() const {
+std::shared_ptr<ciri::IVertexBuffer> GeometricPlane::getVertexBuffer() const {
 	return _vb;
 }
 
-std::shared_ptr<gfx::IIndexBuffer> GeometricPlane::getIndexBuffer() const {
+std::shared_ptr<ciri::IIndexBuffer> GeometricPlane::getIndexBuffer() const {
 	return _ib;
 }

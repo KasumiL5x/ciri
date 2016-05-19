@@ -1,7 +1,7 @@
 #include <ciri/graphics/FPSCamera.hpp>
 #include <cc/MatrixFunc.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 FPSCamera::FPSCamera()
 	: Camera(), _yaw(0.0f), _pitch(0.0f), _moveSpeed(1.0f), _rotateSensitivity(1.0f) {

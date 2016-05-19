@@ -73,7 +73,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<Game> game = createGame(Demo::Clipping);
+	std::unique_ptr<Game> game = createGame(Demo::Sprites);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}

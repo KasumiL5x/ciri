@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class ITexture2D;
 
@@ -28,6 +28,6 @@ public:
 	virtual std::shared_ptr<ITexture2D> getTexture2D() const=0;
 };
 
-}}
+}
 
 #endif

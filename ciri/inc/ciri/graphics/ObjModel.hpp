@@ -6,7 +6,7 @@
 #include <cc/Vec2.hpp>
 #include <cc/Vec3.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class ObjModel {
 public:
@@ -50,6 +50,6 @@ private:
 	std::vector<std::string> _split;
 };
 
-}}
+}
 
 #endif

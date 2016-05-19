@@ -5,7 +5,7 @@
 #include "TextureFlags.hpp"
 #include "TextureFormat.hpp"
 
-namespace ciri { namespace graphics{
+namespace ciri {
 
 class ITexture2D {
 protected:
@@ -31,7 +31,7 @@ public:
 		* @param format  Format of the data to set; must match the format of the provided data pointer.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format )=0;
+	virtual ErrorCode setData( int xOffset, int yOffset, int width, int height, void* data, TextureFormat::Format format )=0;
 
 	/**
 		* Gets the width of the texture
@@ -56,16 +56,16 @@ public:
 		* @param file TGA file to write to.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode writeToTGA( const char* file )=0;
+	virtual ErrorCode writeToTGA( const char* file )=0;
 
 	/**
 		* Writes the texture's contents to a DDS file.
 		* @param file DDS file to write to.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode writeToDDS( const char* file )=0;
+	virtual ErrorCode writeToDDS( const char* file )=0;
 };
 
-}}
+}
 
 #endif

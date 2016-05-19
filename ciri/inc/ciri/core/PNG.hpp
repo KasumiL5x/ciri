@@ -1,7 +1,7 @@
 #ifndef __ciri_core_PNG__
 #define __ciri_core_PNG__
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class PNG {
 public:
@@ -66,6 +66,6 @@ private:
 	unsigned int _channelsPerPixel;
 };
 
-}}
+}
 
 #endif

@@ -1,7 +1,7 @@
 #include <ciri/core/win/Timer.hpp>
 #include <memory>
 
-using namespace ciri::core;
+using namespace ciri;
 
 	Timer::Timer()
 		: ITimer() {
@@ -50,8 +50,8 @@ using namespace ciri::core;
 		return getElapsedMicrosecs() * 0.000001;
 	}
 
-	namespace ciri { namespace core {
+	namespace ciri {
 	std::shared_ptr<ITimer> createTimer() {
 		return std::shared_ptr<ITimer>(new Timer());
 	}
-	}}
+	}

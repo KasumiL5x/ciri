@@ -1,6 +1,6 @@
 #include <ciri/graphics/win/gl/GLRasterizerState.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 GLRasterizerState::GLRasterizerState()
 	: IRasterizerState() {

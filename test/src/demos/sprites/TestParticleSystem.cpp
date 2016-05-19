@@ -1,7 +1,7 @@
 #include "TestParticleSystem.hpp"
 #include <cc/Random.hpp>
 
-namespace gfx = ciri::graphics;
+namespace gfx = ciri;
 
 TestParticleSystem::TestParticleSystem()
 	: IParticleSystem(), _emitterPosition(), _texture(nullptr), _emitDirection() {
@@ -66,7 +66,7 @@ void TestParticleSystem::setEmitterPosition( const cc::Vec2f& position ) {
 	_emitterPosition = position;
 }
 
-void TestParticleSystem::setTexture( const std::shared_ptr<gfx::ITexture2D>& texture ) {
+void TestParticleSystem::setTexture( const std::shared_ptr<ciri::ITexture2D>& texture ) {
 	_texture = texture;
 	for( auto& p : _particles ) {
 		p.texture = texture;

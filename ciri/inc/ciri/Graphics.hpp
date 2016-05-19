@@ -41,8 +41,7 @@
 #include <ciri/graphics/VertexUsage.hpp>
 #include <ciri/graphics/Viewport.hpp>
 
-
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Creates a new graphics device.
@@ -51,6 +50,6 @@ namespace ciri { namespace graphics {
 	*/
 std::shared_ptr<IGraphicsDevice> createGraphicsDevice();
 
-}}
+}
 
 #endif

@@ -1,7 +1,6 @@
 #include <ciri/graphics/win/gl/GLVertexBuffer.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 GLVertexBuffer::GLVertexBuffer()
 	: IVertexBuffer(), _vbo(0), _vertexStride(0), _vertexCount(0), _isDynamic(false) {

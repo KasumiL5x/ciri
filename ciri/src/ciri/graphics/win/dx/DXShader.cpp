@@ -5,8 +5,7 @@
 #include <ciri/core/File.hpp>
 #include <d3dcompiler.h>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 DXShader::DXShader( const std::shared_ptr<DXGraphicsDevice>& device )
 	: IShader(), _device(device), _vertexShader(nullptr), _geometryShader(nullptr), _pixelShader(nullptr), _inputLayout(nullptr) {

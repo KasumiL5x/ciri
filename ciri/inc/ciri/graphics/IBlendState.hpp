@@ -5,7 +5,7 @@
 #include "BlendMode.hpp"
 #include "BlendColorMask.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct BlendDesc {
 	BlendMode srcColorBlend;
@@ -51,6 +51,6 @@ public:
 	virtual void destroy()=0;
 };
 
-}}
+}
 
 #endif

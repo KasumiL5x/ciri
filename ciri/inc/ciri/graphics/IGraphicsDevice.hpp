@@ -20,9 +20,9 @@
 #include "PrimitiveTopology.hpp"
 #include "GraphicsApiType.hpp"
 
-namespace ciri { namespace core { class IWindow; }}
+namespace ciri {
 
-namespace ciri { namespace graphics {
+class IWindow;
 
 class IGraphicsDevice {
 protected:
@@ -38,7 +38,7 @@ public:
 		* @param window IWindow to render to.
 		* @returns TODO
 		*/
-	virtual bool create( const std::shared_ptr<core::IWindow>& window )=0;
+	virtual bool create( const std::shared_ptr<IWindow>& window )=0;
 
 	/**
 		* Uninitializes the graphics device and all of its managed resources that have not yet been freed.
@@ -249,7 +249,7 @@ public:
 		* Resizes the backbuffer and depth stencil to the bound IWindow's size.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode resize()=0;
+	virtual ErrorCode resize()=0;
 
 	/**
 		* Resizes a given 2d texture to the given dimensions.
@@ -258,7 +258,7 @@ public:
 		* @param height  New height in pixels.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height )=0;
+	virtual ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height )=0;
 
 	/**
 		* Resizes a given 2d render target to the given dimensions.
@@ -267,7 +267,7 @@ public:
 		* @param height  New height in pixels.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height )=0;
+	virtual ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height )=0;
 
 	/**
 		* Sets the color that will be applied to the active render targets when the clear function is called.
@@ -314,7 +314,7 @@ public:
 		* Gets the IWindow this device is rendering to.
 		* @returns Pointer to the attached window.
 		*/
-	virtual std::shared_ptr<core::IWindow> getWindow() const=0;
+	virtual std::shared_ptr<IWindow> getWindow() const=0;
 
 	/**
 		* Gets the name of the GPU being used.
@@ -335,25 +335,25 @@ public:
 		* Restores all default states for the device.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode restoreDefaultStates()=0;
+	virtual ErrorCode restoreDefaultStates()=0;
 
 	/**
 		* Restores the device's default blending state.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode restoreDefaultBlendState()=0;
+	virtual ErrorCode restoreDefaultBlendState()=0;
 
 	/**
 		* Restores the device's default rasterizer state.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode restoreDefaultRasterizerState()=0;
+	virtual ErrorCode restoreDefaultRasterizerState()=0;
 
 	/**
 		* Restores the device's default depth stencil state.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode restoreDefaultDepthStencilState()=0;
+	virtual ErrorCode restoreDefaultDepthStencilState()=0;
 
 	virtual std::shared_ptr<IBlendState> getDefaultBlendAdditive()=0;
 	virtual std::shared_ptr<IBlendState> getDefaultBlendAlpha()=0;
@@ -367,6 +367,6 @@ public:
 	virtual std::shared_ptr<IDepthStencilState> getDefaultDepthStencilNone()=0;
 };
 
-}}
+}
 
 #endif

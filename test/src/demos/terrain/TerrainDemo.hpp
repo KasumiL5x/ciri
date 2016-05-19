@@ -38,7 +38,7 @@ public:
 
 	virtual void onInitialize() override;
 	virtual void onLoadContent() override;
-	virtual void onEvent( const ciri::core::WindowEvent& evt ) override;
+	virtual void onEvent( const ciri::WindowEvent& evt ) override;
 	virtual void onUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onDraw() override;
@@ -48,35 +48,35 @@ private:
 	void drawSkybox( const cc::Mat4f& view, const cc::Mat4f& proj );
 
 private:
-	ciri::graphics::FPSCamera _camera;
+	ciri::FPSCamera _camera;
 	//
-	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
 	//
 	AxisWidget _axis;
 	HeightmapTerrain _terrain;
 
 	// water stuff
 	Model* _waterPlane; /**< Plane model for water. */
-	std::shared_ptr<ciri::graphics::IShader> _waterShader; /**< Shader to render the water. */
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _waterConstantsBuffer; /**< Constant buffer for water shader. */
+	std::shared_ptr<ciri::IShader> _waterShader; /**< Shader to render the water. */
+	std::shared_ptr<ciri::IConstantBuffer> _waterConstantsBuffer; /**< Constant buffer for water shader. */
 	WaterConstants _waterConstants; /**< Acutual constants for above buffer. */
-	std::shared_ptr<ciri::graphics::ITexture2D> _waterNormalMap; /**< Normal map for water surface. */
-	std::shared_ptr<ciri::graphics::ISamplerState> _waterSampler; /**< Sampler for water normal texture. */
-	std::shared_ptr<ciri::graphics::IBlendState> _alphaBlendState; /**< Alpha blend state for water transparency. */
+	std::shared_ptr<ciri::ITexture2D> _waterNormalMap; /**< Normal map for water surface. */
+	std::shared_ptr<ciri::ISamplerState> _waterSampler; /**< Sampler for water normal texture. */
+	std::shared_ptr<ciri::IBlendState> _alphaBlendState; /**< Alpha blend state for water transparency. */
 	const float WATER_HEIGHT; /**< Height of water (used for plane and for clipping). */
-	std::shared_ptr<ciri::graphics::IRenderTarget2D> _waterReflectionTarget;
-	std::shared_ptr<ciri::graphics::ISamplerState> _waterReflectionSampler;
-	std::shared_ptr<ciri::graphics::IRenderTarget2D> _waterRefractionTarget;
+	std::shared_ptr<ciri::IRenderTarget2D> _waterReflectionTarget;
+	std::shared_ptr<ciri::ISamplerState> _waterReflectionSampler;
+	std::shared_ptr<ciri::IRenderTarget2D> _waterRefractionTarget;
 
 	// cubemap test
-	std::shared_ptr<ciri::graphics::ITextureCube> _cubemap;
+	std::shared_ptr<ciri::ITextureCube> _cubemap;
 	Model* _skybox;
-	std::shared_ptr<ciri::graphics::IShader> _skyboxShader;
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _skyboxConstantsBuffer;
+	std::shared_ptr<ciri::IShader> _skyboxShader;
+	std::shared_ptr<ciri::IConstantBuffer> _skyboxConstantsBuffer;
 	SkyboxConstants _skyboxConstants;
-	std::shared_ptr<ciri::graphics::ISamplerState> _skyboxSampler;
-	std::shared_ptr<ciri::graphics::IDepthStencilState> _skyboxDepthState;
+	std::shared_ptr<ciri::ISamplerState> _skyboxSampler;
+	std::shared_ptr<ciri::IDepthStencilState> _skyboxDepthState;
 	//
 	float _elapsedTime;
 

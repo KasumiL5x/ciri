@@ -3,7 +3,7 @@
 
 #include <ciri/core/ErrorCodes.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class IIndexBuffer {
 protected:
@@ -21,7 +21,7 @@ public:
 		* @param dynamic    True if the buffer is dynamic; i.e. will be updated.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode set( int* indices, int indexCount, bool dynamic )=0;
+	virtual ErrorCode set( int* indices, int indexCount, bool dynamic )=0;
 
 	/**
 		* Uninitializes the index buffer.
@@ -35,6 +35,6 @@ public:
 	virtual int getIndexCount() const=0;
 };
 
-}}
+}
 
 #endif

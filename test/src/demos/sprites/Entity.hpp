@@ -16,7 +16,7 @@ public:
 	const cc::Vec2f& getVelocity() const;
 	const float& getOrientation() const;
 	const bool& isAlive() const;
-	std::shared_ptr<ciri::graphics::ITexture2D> getTexture() const;
+	std::shared_ptr<ciri::ITexture2D> getTexture() const;
 	const cc::Vec2f& getOrigin() const;
 	const cc::Vec4f& getColor() const;
 	const float& getCollisionRadius() const;
@@ -25,7 +25,7 @@ public:
 	void setVelocity( const cc::Vec2f& velocity );
 	void setOrientation( const float orientation );
 	void setIsAlive( const bool alive );
-	void setTexture( const std::shared_ptr<ciri::graphics::ITexture2D>& texture );
+	void setTexture( const std::shared_ptr<ciri::ITexture2D>& texture );
 	void setColor( const cc::Vec4f& color );
 	void setCollisionRadius( float radius );
 
@@ -35,7 +35,7 @@ protected:
 	float _orientation; /**< Rotation. */
 	bool _isAlive; /**< Is the Entity alive or not? */
 
-	std::shared_ptr<ciri::graphics::ITexture2D> _texture; /**< Texture to draw. */
+	std::shared_ptr<ciri::ITexture2D> _texture; /**< Texture to draw. */
 	cc::Vec2f _origin;  /**< Pivot point of the sprite's texture. */
 	cc::Vec4f _color;   /**< Color tint including transparency. */
 

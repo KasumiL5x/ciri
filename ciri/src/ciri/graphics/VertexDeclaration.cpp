@@ -1,6 +1,6 @@
 #include <ciri/graphics/VertexDeclaration.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 VertexDeclaration::VertexDeclaration()
 	: _stride(0) {

@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_BlendFunction__
 #define __ciri_graphics_BlendFunction__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Blend functions.
@@ -14,6 +14,6 @@ enum class BlendFunction {
 	Max              /**< Uses maximum of source and destination: max((srcColor * srcBlend), (dstColor * dstBlend)) */
 };
 
-}}
+}
 
 #endif

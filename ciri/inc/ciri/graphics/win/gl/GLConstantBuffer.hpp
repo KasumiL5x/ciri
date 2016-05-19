@@ -4,14 +4,14 @@
 #include <GL/glew.h>
 #include <ciri/graphics/IConstantBuffer.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLConstantBuffer : public IConstantBuffer {
 public:
 	GLConstantBuffer( GLuint index );
 	virtual ~GLConstantBuffer();
 
-	virtual core::ErrorCode setData( int dataSize, void* data ) override;
+	virtual ErrorCode setData( int dataSize, void* data ) override;
 	virtual void destroy() override;
 
 	GLuint getUbo() const;
@@ -22,6 +22,6 @@ private:
 	GLuint _index;
 };
 
-}}
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include <ciri/graphics/Viewport.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 Viewport::Viewport()
 	: _x(0), _y(0), _width(1280), _height(720), _minDepth(0.0f), _maxDepth(1.0f) {

@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_StencilOperation__
 #define __ciri_graphics_StencilOperation__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Stencil testing operations.
@@ -17,6 +17,6 @@ enum class StencilOperation {
 	Invert               /**< Invert the stencil data. */
 };
 
-}}
+}
 
 #endif

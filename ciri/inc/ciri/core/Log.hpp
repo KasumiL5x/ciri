@@ -5,7 +5,7 @@
 #include <string>
 #include "File.hpp"
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class Log {
 public:
@@ -100,6 +100,6 @@ private:
 	static std::unordered_map<Channel, Log> _logs;
 };
 
-}}
+}
 
 #endif

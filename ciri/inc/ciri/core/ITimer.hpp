@@ -1,7 +1,7 @@
 #ifndef __ciri_core_ITimer__
 #define __ciri_core_ITimer__
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class ITimer {
 public:
@@ -51,6 +51,6 @@ public:
 	virtual double getElapsedSecs()=0;
 };
 
-}}
+}
 
 #endif

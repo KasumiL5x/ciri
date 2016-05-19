@@ -3,7 +3,7 @@
 #include <ciri/graphics/win/dx/CiriToDx.hpp>
 #include <cc/Common.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 DXSamplerState::DXSamplerState( const std::shared_ptr<DXGraphicsDevice>& device )
 	: ISamplerState(), _device(device), _samplerState(nullptr) {

@@ -1,7 +1,7 @@
 #include <ciri/graphics/Camera.hpp>
 #include <cc/MatrixFunc.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 Camera::Camera()
 	: _view(1.0f), _viewDirty(true), _useViewOverride(false), _position(0.0f), _target(0.0f), _up(0.0f, 1.0f, 0.0f),

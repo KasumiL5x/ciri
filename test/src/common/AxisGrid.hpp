@@ -20,7 +20,7 @@ public:
 	AxisGrid();
 	~AxisGrid();
 
-	bool create( std::shared_ptr<ciri::graphics::IGraphicsDevice> device );
+	bool create( std::shared_ptr<ciri::IGraphicsDevice> device );
 	bool updateConstants( const cc::Mat4f& xform );
 	void clean();
 	bool isValid() const;
@@ -33,8 +33,8 @@ public:
 	void setGridColor( const cc::Vec3f& val );
 	void setMajorColor( const cc::Vec3f& val );
 
-	const std::shared_ptr<ciri::graphics::IVertexBuffer>& getVertexBuffer() const;
-	const std::shared_ptr<ciri::graphics::IShader>& getShader() const;
+	const std::shared_ptr<ciri::IVertexBuffer>& getVertexBuffer() const;
+	const std::shared_ptr<ciri::IShader>& getShader() const;
 
 private:
 	void createVertices();
@@ -42,13 +42,13 @@ private:
 	bool loadShader();
 
 private:
-	std::shared_ptr<ciri::graphics::IGraphicsDevice> _device;
+	std::shared_ptr<ciri::IGraphicsDevice> _device;
 	//
 	bool _initialized;
 	//
-	std::shared_ptr<ciri::graphics::IVertexBuffer> _vertexBuffer;
-	std::shared_ptr<ciri::graphics::IShader> _shader;
-	std::shared_ptr<ciri::graphics::IConstantBuffer> _constantBuffer;
+	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::IShader> _shader;
+	std::shared_ptr<ciri::IConstantBuffer> _constantBuffer;
 	GridConstants _constants;
 	//
 	float _gridSpacing;

@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/ITexture3D.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -15,15 +15,15 @@ public:
 	virtual ~DXTexture3D();
 
 	virtual void destroy() override;
-	virtual core::ErrorCode setData( int width, int height, int depth, void* data, TextureFormat::Format format ) override;
+	virtual ErrorCode setData( int width, int height, int depth, void* data, TextureFormat::Format format ) override;
 
 	virtual int getWidth() const override;
 	virtual int getHeight() const override;
 	virtual int getDepth() const override;
 	virtual TextureFormat::Format getFormat() const override;
 
-	virtual core::ErrorCode writeToTGA( const char* file ) override;
-	virtual core::ErrorCode writeToDDS( const char* file ) override;
+	virtual ErrorCode writeToTGA( const char* file ) override;
+	virtual ErrorCode writeToDDS( const char* file ) override;
 
 	ID3D11Texture3D* getTexture() const;
 	ID3D11ShaderResourceView* getShaderResourceView() const;
@@ -46,6 +46,6 @@ private:
 	int _depth;
 };
 
-}}
+}
 
 #endif

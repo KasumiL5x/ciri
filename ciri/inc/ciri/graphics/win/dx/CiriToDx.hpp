@@ -13,7 +13,7 @@
 #include <ciri/graphics/BlendFunction.hpp>
 #include <ciri/graphics/BlendColorMask.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 static D3D11_COMPARISON_FUNC ciriToDxComparisonFunc( CompareFunction func ) {
 	switch( func ) {
@@ -345,6 +345,6 @@ static UINT8 ciriToDxBlendColorMask( int mask ) {
 	return val;
 }
 
-}}
+}
 
 #endif

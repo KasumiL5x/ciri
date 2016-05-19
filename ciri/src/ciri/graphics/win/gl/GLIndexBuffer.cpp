@@ -1,7 +1,6 @@
 #include <ciri/graphics/win/gl/GLIndexBuffer.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 GLIndexBuffer::GLIndexBuffer()
 	: IIndexBuffer(), _evbo(0), _indexCount(0) {

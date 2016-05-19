@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_BlendColorMask__
 #define __ciri_graphics_BlendColorMask__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Bitflags for color channel write mask for blending operations.
@@ -17,6 +17,6 @@ struct BlendColorMask {
 	};
 };
 
-}}
+}
 
 #endif

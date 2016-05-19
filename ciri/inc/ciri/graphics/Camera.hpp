@@ -4,7 +4,7 @@
 #include <cc/Mat4.hpp>
 #include <cc/Vec3.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class Camera {
 public:
@@ -57,6 +57,6 @@ protected:
 	float _farPlane;
 };
 
-}}
+}
 
 #endif

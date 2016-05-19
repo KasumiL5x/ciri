@@ -1,7 +1,6 @@
 #include <ciri/graphics/win/gl/GLConstantBuffer.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 GLConstantBuffer::GLConstantBuffer( GLuint index )
 	: IConstantBuffer(), _ubo(0), _index(index) {

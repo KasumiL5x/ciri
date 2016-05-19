@@ -2,7 +2,7 @@
 #include <iostream>
 #include <png.h>
 
-using namespace ciri::core;
+using namespace ciri;
 
 PNG::PNG()
 	: _pixels(nullptr), _width(0), _height(0), _bitsPerChannel(0), _bytesPerChannel(0), _channelsPerPixel(0) {

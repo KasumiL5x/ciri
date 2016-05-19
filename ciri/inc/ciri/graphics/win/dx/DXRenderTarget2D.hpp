@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/IRenderTarget2D.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 class DXTexture2D;
@@ -28,6 +28,6 @@ private:
 	ID3D11RenderTargetView* _renderTargetView;
 };
 
-}}
+}
 
 #endif

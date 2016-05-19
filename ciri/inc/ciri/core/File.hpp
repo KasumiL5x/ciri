@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class File {
 public:
@@ -62,5 +62,5 @@ private:
 	int _flags;
 };
 
-}} // ciri::core
+}
 #endif

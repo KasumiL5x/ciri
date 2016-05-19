@@ -2,7 +2,7 @@
 #include <chrono>
 #include <ctime>
 
-using namespace ciri::core;
+using namespace ciri;
 
 Log::Log()
 	: _appendNewLine(true), _prefixTimestamp(true), _logToStd(true) {

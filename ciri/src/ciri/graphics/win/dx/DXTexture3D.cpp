@@ -2,8 +2,7 @@
 #include <ciri/graphics/win/dx/DXGraphicsDevice.hpp>
 #include <ciri/graphics/win/dx/CiriToDx.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 DXTexture3D::DXTexture3D( int flags, const std::shared_ptr<DXGraphicsDevice>& device )
 	: ITexture3D(flags), _device(device), _flags(flags), _format(TextureFormat::RGBA32_UINT), _texture3D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0), _depth(0) {

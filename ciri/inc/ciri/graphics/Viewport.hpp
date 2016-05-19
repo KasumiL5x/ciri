@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_Viewport__
 #define __ciri_graphics_Viewport__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class Viewport {
 public:
@@ -29,6 +29,6 @@ private:
 	float _maxDepth;
 };
 
-}}
+}
 
 #endif

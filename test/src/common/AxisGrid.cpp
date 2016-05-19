@@ -1,8 +1,5 @@
 #include "AxisGrid.hpp"
 
-namespace gfx = ciri::graphics;
-namespace core = ciri::core;
-
 AxisGrid::AxisGrid()
 	: _device(nullptr), _initialized(false), _vertexBuffer(nullptr), _shader(nullptr), _constantBuffer(nullptr), _gridSpacing(8.0f),
 		_gridExtents(10), _majorSpacing(2), _axisColor(0.0f), _borderColor(0.2f), _gridColor(0.6f), _majorColor(0.5f) {
@@ -11,7 +8,7 @@ AxisGrid::AxisGrid()
 AxisGrid::~AxisGrid() {
 }
 
-bool AxisGrid::create( std::shared_ptr<gfx::IGraphicsDevice> device ) {
+bool AxisGrid::create( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	if( _initialized ) {
 		return false;
 	}
@@ -36,7 +33,7 @@ bool AxisGrid::updateConstants( const cc::Mat4f& xform ) {
 	}
 
 	_constants.xform = xform;
-	return core::success(_constantBuffer->setData(sizeof(GridConstants), &_constants));
+	return ciri::success(_constantBuffer->setData(sizeof(GridConstants), &_constants));
 }
 
 void AxisGrid::clean() {
@@ -110,11 +107,11 @@ void AxisGrid::setMajorColor( const cc::Vec3f& val ) {
 	_majorColor = val;
 }
 
-const std::shared_ptr<gfx::IVertexBuffer>& AxisGrid::getVertexBuffer() const {
+const std::shared_ptr<ciri::IVertexBuffer>& AxisGrid::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-const std::shared_ptr<gfx::IShader>& AxisGrid::getShader() const {
+const std::shared_ptr<ciri::IShader>& AxisGrid::getShader() const {
 	return _shader;
 }
 
@@ -164,17 +161,17 @@ void AxisGrid::createVertices() {
 
 bool AxisGrid::createBuffers() {
 	_vertexBuffer = _device->createVertexBuffer();
-	return core::success(_vertexBuffer->set(_gridVertices.data(), sizeof(GridVertex), _gridVertices.size(), false));
+	return ciri::success(_vertexBuffer->set(_gridVertices.data(), sizeof(GridVertex), _gridVertices.size(), false));
 }
 
 bool AxisGrid::loadShader() {
 	_shader = _device->createShader();
-	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Position, 0));
-	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Color, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Color, 0));
 		const std::string shaderExt = _device->getShaderExt();
 	const std::string vsFile = ("data/shaders/grid_vs" + shaderExt);
 	const std::string psFile = ("data/shaders/grid_ps" + shaderExt);
-	if( core::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to build the Grid shader:\n");
 		for( unsigned int i = 0; i < _shader->getErrors().size(); ++i ) {
 			printf("%s\n", _shader->getErrors()[i].msg.c_str());
@@ -183,11 +180,11 @@ bool AxisGrid::loadShader() {
 	}
 
 	_constantBuffer = _device->createConstantBuffer();
-	if( core::failed(_constantBuffer->setData(sizeof(GridConstants), &_constants)) ) {
+	if( ciri::failed(_constantBuffer->setData(sizeof(GridConstants), &_constants)) ) {
 		return false;
 	}
 
-	if( core::failed(_shader->addConstants(_constantBuffer, "GridConstants", gfx::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_shader->addConstants(_constantBuffer, "GridConstants", ciri::ShaderStage::Vertex)) ) {
 		return false;
 	}
 

@@ -20,7 +20,7 @@ public:
 protected:
 	virtual void onInitialize();
 	virtual void onLoadContent();
-	virtual void onEvent( const ciri::core::WindowEvent& evt );
+	virtual void onEvent( const ciri::WindowEvent& evt );
 	virtual void onUpdate( const double deltaTime, const double elapsedTime );
 	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime );
 	virtual void onDraw();
@@ -29,12 +29,12 @@ protected:
 	void cutMesh();
 
 private:
-	ciri::graphics::MayaCamera _camera;
+	ciri::MayaCamera _camera;
 	AxisGrid _grid;
 	AxisWidget _axis;
-	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
-	std::shared_ptr<ciri::graphics::IBlendState> _blendState;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::IBlendState> _blendState;
 	Model* _model;
 	Model _clippedModel;
 	SimpleShader _simpleShader;

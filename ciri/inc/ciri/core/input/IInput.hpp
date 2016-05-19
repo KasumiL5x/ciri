@@ -5,7 +5,7 @@
 #include "Keyboard.hpp"
 #include "Mouse.hpp"
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class IWindow;
 
@@ -124,6 +124,6 @@ public:
 	virtual int lastMouseY() const=0;
 };
 
-}}
+}
 
 #endif

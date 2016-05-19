@@ -4,14 +4,14 @@
 #include <GL/glew.h>
 #include <ciri/graphics/IVertexBuffer.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLVertexBuffer : public IVertexBuffer {
 public:
 	GLVertexBuffer();
 	virtual ~GLVertexBuffer();
 
-	virtual core::ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) override;
+	virtual ErrorCode set( void* vertices, int vertexStride, int vertexCount, bool dynamic ) override;
 	virtual void destroy() override;
 	virtual int getStride() const override;
 	virtual int getVertexCount() override;
@@ -19,8 +19,8 @@ public:
 	GLuint getVbo() const;
 
 private:
-	core::ErrorCode createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic );
-	core::ErrorCode updateBuffer( void* vertices, int vertexStride, int vertexCount );
+	ErrorCode createBuffer( void* vertices, int vertexStride, int vertexCount, bool dynamic );
+	ErrorCode updateBuffer( void* vertices, int vertexStride, int vertexCount );
 
 private:
 	GLuint _vbo;
@@ -29,6 +29,6 @@ private:
 	bool _isDynamic;
 };
 
-}}
+}
 
 #endif

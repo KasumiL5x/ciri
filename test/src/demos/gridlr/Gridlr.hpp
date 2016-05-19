@@ -14,7 +14,7 @@ public:
 protected:
 	virtual void onInitialize();
 	virtual void onLoadContent();
-	virtual void onEvent(const ciri::core::WindowEvent& evt);
+	virtual void onEvent(const ciri::WindowEvent& evt);
 	virtual void onUpdate(const double deltaTime, const double elapsedTime);
 	virtual void onFixedUpdate(const double deltaTime, const double elapsedTime);
 	virtual void onDraw();
@@ -23,19 +23,19 @@ protected:
 private:
 	std::unique_ptr<gridlr::BlockGrid> _grid;
 	SpriteBatch _spriteBatch;
-	std::shared_ptr<ciri::graphics::IBlendState> _blendState;
-	std::shared_ptr<ciri::graphics::ISamplerState> _samplerState;
-	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
-	std::shared_ptr<ciri::graphics::ITexture2D> _cellTexture;
+	std::shared_ptr<ciri::IBlendState> _blendState;
+	std::shared_ptr<ciri::ISamplerState> _samplerState;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::ITexture2D> _cellTexture;
 	cc::Vec2f _gridOffset;
 	bool _isDragging;
 	cc::Vec2i _lastMouseCell;
 	//
-	std::shared_ptr<ciri::graphics::ITexture2D> _redTextureTest;
-	std::shared_ptr<ciri::graphics::IShader> _redShader;
-	std::shared_ptr<ciri::graphics::IVertexBuffer> _redVb;
-	std::shared_ptr<ciri::graphics::ISamplerState> _redSampler;
+	std::shared_ptr<ciri::ITexture2D> _redTextureTest;
+	std::shared_ptr<ciri::IShader> _redShader;
+	std::shared_ptr<ciri::IVertexBuffer> _redVb;
+	std::shared_ptr<ciri::ISamplerState> _redSampler;
 };
 
 #endif /* __gridlr__ */

@@ -3,7 +3,7 @@
 
 #include <ciri/core/ErrorCodes.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class IConstantBuffer {
 protected:
@@ -20,7 +20,7 @@ public:
 		* @param data     Pointer to the data to set.
 		* @returns ErrorCode indicating success or failure.
 		*/
-	virtual core::ErrorCode setData( int dataSize, void* data )=0;
+	virtual ErrorCode setData( int dataSize, void* data )=0;
 
 	/**
 		* Uninitializes the constant buffer.
@@ -28,6 +28,6 @@ public:
 	virtual void destroy()=0;
 };
 
-}}
+}
 
 #endif

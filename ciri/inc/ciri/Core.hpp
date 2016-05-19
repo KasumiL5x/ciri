@@ -16,7 +16,7 @@
 #include <ciri/core/input/Keyboard.hpp>
 #include <ciri/core/input/Mouse.hpp>
 
-namespace ciri { namespace core {
+namespace ciri {
 
 /**
  * Creates a new timer.
@@ -39,6 +39,6 @@ std::shared_ptr<IWindow> createWindow();
  */
 std::shared_ptr<IInput> createInput();
 
-}}
+}
 
 #endif

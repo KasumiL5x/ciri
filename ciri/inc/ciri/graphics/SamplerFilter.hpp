@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_SamplerFilter__
 #define __ciri_graphics_SamplerFilter__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Filtering options for texture sampling.
@@ -25,6 +25,6 @@ enum class SamplerFilter {
 	MinPointMagLinearMipPoint   /**< min=point; mag=linear; mip=point. */
 };
 
-}}
+}
 
 #endif

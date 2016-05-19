@@ -3,7 +3,7 @@
 
 #include <ciri/graphics/VertexDeclaration.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLVertexDeclaration : public VertexDeclaration {
 public:
@@ -11,6 +11,6 @@ public:
 	virtual ~GLVertexDeclaration();
 };
 
-}}
+}
 
 #endif

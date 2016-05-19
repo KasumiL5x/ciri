@@ -3,7 +3,7 @@
 
 #include <ciri/graphics/IDepthStencilState.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLDepthStencilState : public IDepthStencilState {
 public:
@@ -19,6 +19,6 @@ private:
 	DepthStencilDesc _desc;
 };
 
-}}
+}
 
 #endif

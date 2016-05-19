@@ -1,6 +1,6 @@
 #include <ciri/graphics/Plane.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 Plane::Plane( const cc::Vec4f& val )
 	: Plane(cc::Vec3f(val.x, val.y, val.z), val.w) {

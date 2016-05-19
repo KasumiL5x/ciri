@@ -11,7 +11,7 @@
 #include <ciri/graphics/BlendMode.hpp>
 #include <ciri/graphics/BlendFunction.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 static GLenum ciriToGlComparisonFunc( CompareFunction func ) {
 	switch( func ) {
@@ -310,6 +310,6 @@ static GLenum ciriToGlBlendFunction( BlendFunction func ) {
 	}
 }
 
-}}
+}
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "Camera.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class MayaCamera : public Camera {
 public:
@@ -40,6 +40,6 @@ private:
 	float _panSensitivity;
 };
 
-}}
+}
 
 #endif

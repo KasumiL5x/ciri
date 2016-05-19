@@ -2,8 +2,7 @@
 #include <ciri/graphics/win/gl/CiriToGl.hpp>
 #include <ciri/core/TGA.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 GLTexture2D::GLTexture2D( int flags )
 	: ITexture2D(flags), _flags(flags), _format(TextureFormat::RGBA32_UINT), _textureId(0), _internalFormat(0), _pixelFormat(0), _pixelType(0), _width(0), _height(0) {

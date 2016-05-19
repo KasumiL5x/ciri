@@ -9,7 +9,7 @@
 #include <ciri/graphics/IShader.hpp>
 #include <ciri/graphics/VertexDeclaration.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 class DXConstantBuffer;
@@ -20,9 +20,9 @@ public:
 	virtual ~DXShader();
 
 	virtual void addInputElement( const VertexElement& element ) override;
-	virtual core::ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps ) override;
-	virtual core::ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps ) override;
-	virtual core::ErrorCode addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags ) override;
+	virtual ErrorCode loadFromFile( const char* vs, const char* gs, const char* ps ) override;
+	virtual ErrorCode loadFromMemory( const char* vs, const char* gs, const char* ps ) override;
+	virtual ErrorCode addConstants( const std::shared_ptr<IConstantBuffer>& buffer, const char* name, int shaderTypeFlags ) override;
 	virtual void destroy() override;
 	virtual const std::vector<ShaderError>& getErrors() const override;
 	virtual bool isValid() const override;
@@ -37,7 +37,7 @@ public:
 	const std::vector<std::shared_ptr<DXConstantBuffer>>& getPixelConstants() const;
 
 private:
-	void addError( core::ErrorCode code, const std::string& msg );
+	void addError( ErrorCode code, const std::string& msg );
 	void clearErrors();
 
 private:
@@ -62,6 +62,6 @@ private:
 	std::vector<std::shared_ptr<DXConstantBuffer>> _pixelConstantBuffers;
 };
 
-}}
+}
 
 #endif

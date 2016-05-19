@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_PrimitiveTopology__
 #define __ciri_graphics_PrimitiveTopology__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* How vertex data is interpreted when drawing.
@@ -14,6 +14,6 @@ enum class PrimitiveTopology {
 	TriangleStrip /**< Draws connected triangles.  One triangle is defined for each vertex after the first two.  For odd <b>n</b>, vertices <b>n</b>, <b>n+1</b>, and <b>n+2</b> define triangle <b>n</b>.  For even <b>n</b>, vertices <b>n+1</b>, <b>n</b>, and <b>n+2</b> define triangle <b>n</b>.  <b>n-2</b> triangles are drawn. */
 };
 
-}}
+}
 
 #endif

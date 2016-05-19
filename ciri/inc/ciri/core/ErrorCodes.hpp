@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-namespace ciri { namespace core {
+namespace ciri {
 
 enum class ErrorCode : int {
 	CIRI_OK = 0,
@@ -49,6 +49,6 @@ static const char* getErrorString( const ErrorCode& code ) {
 	return errorStrings[code];
 }
 
-}}
+}
 
 #endif

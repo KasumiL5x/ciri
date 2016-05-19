@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/ITextureCube.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -14,7 +14,7 @@ public:
 	DXTextureCube( const std::shared_ptr<DXGraphicsDevice>& device );
 	virtual ~DXTextureCube();
 
-	virtual core::ErrorCode set( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
+	virtual ErrorCode set( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 	virtual void destroy() override;
 
 	ID3D11Texture2D* getTexture() const;
@@ -26,6 +26,6 @@ private:
 	ID3D11ShaderResourceView* _shaderResourceView;
 };
 
-}}
+}
 
 #endif

@@ -1,9 +1,6 @@
 #include "SpriteBatch.hpp"
 #include <cc/MatrixFunc.hpp>
 
-namespace core = ciri::core;
-namespace gfx = ciri::graphics;
-
 struct SpriteSortTexture {
 	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
 		return (lhs->texture == rhs->texture);
@@ -33,7 +30,7 @@ SpriteBatch::~SpriteBatch() {
 	}
 }
 
-bool SpriteBatch::create( const std::shared_ptr<gfx::IGraphicsDevice>& device ) {
+bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device ) {
 	// store gfx device
 	_device = device;
 
@@ -43,14 +40,14 @@ bool SpriteBatch::create( const std::shared_ptr<gfx::IGraphicsDevice>& device ) 
 
 	// load and configure shader and constants
 	_defaultShader = device->createShader();
-	_defaultShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Position, 0));
-	_defaultShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float2, gfx::VertexUsage::Texcoord, 0));
-	_defaultShader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float4, gfx::VertexUsage::Color, 0));
+	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
+	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	_defaultShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Color, 0));
 	const std::string shaderExt = device->getShaderExt();
 	const std::string vsFile = ("common/shaders/SpriteBatch_vs" + shaderExt);
 	//const std::string gsFile = ("common/shaders/SpriteBatch_gs" + shaderExt);
 	const std::string psFile = ("common/shaders/SpriteBatch_ps" + shaderExt);
-	if( core::failed(_defaultShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( ciri::failed(_defaultShader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to load SpriteBatch shader:\n");
 		for( auto err : _defaultShader->getErrors() ) {
 			printf("%s\n", err.msg.c_str());
@@ -58,11 +55,11 @@ bool SpriteBatch::create( const std::shared_ptr<gfx::IGraphicsDevice>& device ) 
 		return false;
 	}
 	_constantBuffer = device->createConstantBuffer();
-	if( core::failed(_constantBuffer->setData(sizeof(SpriteConstants), &_constants)) ) {
+	if( ciri::failed(_constantBuffer->setData(sizeof(SpriteConstants), &_constants)) ) {
 		printf("Failed to create SpriteBatch constants.\n");
 		return false;
 	}
-	if( core::failed(_defaultShader->addConstants(_constantBuffer, "SpriteConstants", gfx::ShaderStage::Vertex)) ) {
+	if( ciri::failed(_defaultShader->addConstants(_constantBuffer, "SpriteConstants", ciri::ShaderStage::Vertex)) ) {
 		printf("Failed to assign constants to SpriteBatch shader.\n");
 		return false;
 	}
@@ -70,7 +67,7 @@ bool SpriteBatch::create( const std::shared_ptr<gfx::IGraphicsDevice>& device ) 
 	return true;
 }
 
-bool SpriteBatch::begin( const std::shared_ptr<gfx::IBlendState>& blendState, const std::shared_ptr<gfx::ISamplerState>& samplerState, const std::shared_ptr<gfx::IDepthStencilState>& depthStencilState, const std::shared_ptr<gfx::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<gfx::IShader>& shader ) {
+bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<ciri::IShader>& shader ) {
 	// check for bad inputs (shader is optional and will be set to a default one if it is null, so don't check it)
 	if( nullptr == blendState || nullptr == samplerState || nullptr == depthStencilState || nullptr == rasterizerState ) {
 		return false;
@@ -98,7 +95,7 @@ bool SpriteBatch::begin( const std::shared_ptr<gfx::IBlendState>& blendState, co
 	return true;
 }
 
-void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth ) {
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec4f& dstRect, float rotation, const cc::Vec2f& origin, float depth ) {
 	if( nullptr == texture ) {
 		return;
 	}
@@ -112,7 +109,7 @@ void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const c
 	item->set(dstRect.x, dstRect.y, -newOrigin.x, -newOrigin.y, dstRect.z, dstRect.w, sinf(rotation), cosf(rotation), depth, cc::Vec4f(1.0f));
 }
 
-void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth ) {
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth ) {
 	if( nullptr == texture ) {
 		return;
 	}
@@ -126,7 +123,7 @@ void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const c
 	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, cc::Vec4f(1.0f));
 }
 
-void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth ) {
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, float scale, float depth ) {
 	if( nullptr == texture ) {
 		return;
 	}
@@ -140,7 +137,7 @@ void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const c
 	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, cc::Vec4f(1.0f));
 }
 
-void SpriteBatch::draw( const std::shared_ptr<gfx::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color ) {
+void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color ) {
 	if( nullptr == texture ) {
 		return;
 	}
@@ -212,7 +209,7 @@ bool SpriteBatch::end() {
 	// draw batched
 	int startIndex = 0;
 	int endIndex = 0;
-	std::shared_ptr<gfx::ITexture2D> boundTexture = nullptr;
+	std::shared_ptr<ciri::ITexture2D> boundTexture = nullptr;
 	for( int i = 0; i < batchCount; ++i ) {
 		std::shared_ptr<SpriteBatchItem> item = _batchItemList[i];
 		// if texture has changed...
@@ -244,8 +241,8 @@ bool SpriteBatch::end() {
 	_device->setBlendState(nullptr);
 	_device->setDepthStencilState(nullptr);
 	_device->setRasterizerState(nullptr);
-	_device->setSamplerState(0, nullptr, gfx::ShaderStage::Pixel);
-	_device->setTexture2D(0, nullptr, gfx::ShaderStage::Pixel);
+	_device->setSamplerState(0, nullptr, ciri::ShaderStage::Pixel);
+	_device->setTexture2D(0, nullptr, ciri::ShaderStage::Pixel);
 	_device->applyShader(nullptr);
 
 	return true;
@@ -267,18 +264,18 @@ bool SpriteBatch::configure() {
 	_device->setBlendState(_blendState);
 	_device->setDepthStencilState(_depthStencilState);
 	_device->setRasterizerState(_rasterizerState);
-	_device->setSamplerState(0, _samplerState, gfx::ShaderStage::Pixel);
+	_device->setSamplerState(0, _samplerState, ciri::ShaderStage::Pixel);
 
-	const gfx::Viewport& vp = _device->getViewport();
+	const ciri::Viewport& vp = _device->getViewport();
 
 	// update constant buffer
 	_constants.projection = cc::math::orthographic(0.0f, static_cast<float>(vp.width()), 0.0f, static_cast<float>(vp.height()), -1.0f, 1.0f);
-	if( core::failed(_constantBuffer->setData(sizeof(SpriteConstants), &_constants)) ) {
+	if( ciri::failed(_constantBuffer->setData(sizeof(SpriteConstants), &_constants)) ) {
 		return false;
 	}
 
 	// update vertex buffer
-	if( core::failed(_spritesBuffer->set(_vertexArray, sizeof(SpriteVertex), _vertexArraySize, true)) ) {
+	if( ciri::failed(_spritesBuffer->set(_vertexArray, sizeof(SpriteVertex), _vertexArraySize, true)) ) {
 		return false;
 	}
 
@@ -314,13 +311,13 @@ void SpriteBatch::ensureArrayCapacity( int size ) {
 	}
 }
 
-void SpriteBatch::flush( int start, int end, const std::shared_ptr<gfx::ITexture2D>& texture ) {
+void SpriteBatch::flush( int start, int end, const std::shared_ptr<ciri::ITexture2D>& texture ) {
 	if( start == end ) {
 		return;
 	}
 
-	_device->setTexture2D(0, texture, gfx::ShaderStage::Pixel);
+	_device->setTexture2D(0, texture, ciri::ShaderStage::Pixel);
 
 	const int count = end - start;
-	_device->drawArrays(gfx::PrimitiveTopology::TriangleList, count, start);
+	_device->drawArrays(ciri::PrimitiveTopology::TriangleList, count, start);
 }

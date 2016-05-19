@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/IConstantBuffer.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -14,7 +14,7 @@ public:
 	DXConstantBuffer( const std::shared_ptr<DXGraphicsDevice>& device );
 	virtual ~DXConstantBuffer();
 
-	virtual core::ErrorCode setData( int dataSize, void* data ) override;
+	virtual ErrorCode setData( int dataSize, void* data ) override;
 	virtual void destroy() override;
 
 	ID3D11Buffer* getBuffer() const;
@@ -28,6 +28,6 @@ private:
 	int _index;
 };
 
-}}
+}
 
 #endif

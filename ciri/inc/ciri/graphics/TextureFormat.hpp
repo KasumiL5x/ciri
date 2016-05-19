@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_TextureFormat__
 #define __ciri_graphics_TextureFormat__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 struct TextureFormat {
 	/**
@@ -47,6 +47,6 @@ struct TextureFormat {
 	}
 };
 
-}}
+}
 
 #endif

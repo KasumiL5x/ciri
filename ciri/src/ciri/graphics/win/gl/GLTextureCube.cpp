@@ -1,7 +1,6 @@
 #include <ciri/graphics/win/gl/GLTextureCube.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 GLTextureCube::GLTextureCube()
 	: ITextureCube(), _textureId(0) {

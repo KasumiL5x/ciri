@@ -10,7 +10,7 @@ struct SpriteBatchItem {
 	SpriteVertex topRight;
 	SpriteVertex bottomLeft;
 	SpriteVertex bottomRight;
-	std::shared_ptr<ciri::graphics::ITexture2D> texture;
+	std::shared_ptr<ciri::ITexture2D> texture;
 	float depth;
 
 	void set( float x, float y, float dx, float dy, float w, float h, float sinAngle, float cosAngle, float depth, const cc::Vec4f& color ) {

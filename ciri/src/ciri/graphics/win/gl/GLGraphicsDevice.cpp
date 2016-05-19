@@ -11,8 +11,7 @@
 #include <ciri/graphics/win/gl/CiriToGl.hpp>
 #include <ciri/graphics/ClearFlags.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 //static void setVSync(bool sync)
 //{	
@@ -1188,8 +1187,8 @@ void APIENTRY GLGraphicsDevice::debugContextAmdCb( GLuint id, GLenum category, G
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 //}
 
-namespace ciri { namespace graphics {
+namespace ciri {
 std::shared_ptr<IGraphicsDevice> createGraphicsDevice() {
 	return std::shared_ptr<IGraphicsDevice>(new GLGraphicsDevice());
 }
-}}
+}

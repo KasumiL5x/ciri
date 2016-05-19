@@ -1,7 +1,7 @@
 #include <ciri/graphics/MayaCamera.hpp>
 #include <cc/MatrixFunc.hpp>
 
-using namespace ciri::graphics;
+using namespace ciri;
 
 MayaCamera::MayaCamera()
 	: Camera(), _yaw(0.0f), _pitch(0.0f), _offset(50.0f), _minOffset(1.0f), _lerpStrength(0.5f), _rotateSensitivity(1.0f),

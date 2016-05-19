@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/ISamplerState.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -24,6 +24,6 @@ private:
 	ID3D11SamplerState* _samplerState;
 };
 
-}}
+}
 
 #endif

@@ -4,7 +4,7 @@
 #include "VertexFormat.hpp"
 #include "VertexUsage.hpp"
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class VertexElement {
 public:
@@ -48,6 +48,6 @@ private:
 	int _usageIndex;
 };
 
-}}
+}
 
 #endif

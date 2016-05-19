@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <ciri/graphics/IIndexBuffer.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class DXGraphicsDevice;
 
@@ -14,7 +14,7 @@ public:
 	DXIndexBuffer( const std::shared_ptr<DXGraphicsDevice>& device );
 	virtual ~DXIndexBuffer();
 
-	virtual core::ErrorCode set( int* indices, int indexCount, bool dynamic ) override;
+	virtual ErrorCode set( int* indices, int indexCount, bool dynamic ) override;
 	virtual void destroy() override;
 	virtual int getIndexCount() const override;
 
@@ -26,6 +26,6 @@ private:
 	int _indexCount;
 };
 
-}}
+}
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef __ciri_core_TGA__
 #define __ciri_core_TGA__
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class TGA {
 public:
@@ -96,6 +96,6 @@ private:
 	unsigned char* _pixels;
 };
 
-}}
+}
 
 #endif

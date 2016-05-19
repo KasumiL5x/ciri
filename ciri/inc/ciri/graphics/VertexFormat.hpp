@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_VertexFormat__
 #define __ciri_graphics_VertexFormat__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Defines the format of a VertexElement.
@@ -13,5 +13,5 @@ enum class VertexFormat {
 	Float4  /**< Four 32 bit floats. */
 };
 
-}}
+}
 #endif

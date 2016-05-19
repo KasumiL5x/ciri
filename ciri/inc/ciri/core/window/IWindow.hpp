@@ -3,7 +3,7 @@
 
 #include "WindowEvent.hpp"
 
-namespace ciri { namespace core {
+namespace ciri {
 
 class IWindow {
 public:
@@ -83,6 +83,6 @@ public:
 	virtual void setCursorVisible( bool visible )=0;
 };
 
-}}
+}
 
 #endif

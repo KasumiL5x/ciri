@@ -1,7 +1,7 @@
 #ifndef __ciri_graphics_BlendMode__
 #define __ciri_graphics_BlendMode__
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 /**
 	* Blending modes.
@@ -22,6 +22,6 @@ enum class BlendMode {
 	SourceAlphaSaturation    /**< Color is multiplied by max of alpha of source color or its inverse: {c, c, c, 1} where c=min(srcA, 1-srcA). */
 };
 
-}}
+}
 
 #endif

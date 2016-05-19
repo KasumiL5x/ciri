@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <ciri/graphics/ISamplerState.hpp>
 
-namespace ciri { namespace graphics {
+namespace ciri {
 
 class GLSamplerState : public ISamplerState {
 public:
@@ -20,6 +20,6 @@ private:
 	GLuint _samplerId;
 };
 
-}}
+}
 
 #endif

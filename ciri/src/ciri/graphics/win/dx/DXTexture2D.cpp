@@ -4,8 +4,7 @@
 #include <ciri/graphics/win/dx/msft/ScreenGrab.h>
 #include <ciri/core/StrUtil.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 DXTexture2D::DXTexture2D( int flags, const std::shared_ptr<DXGraphicsDevice>& device )
 	: ITexture2D(flags), _device(device), _flags(flags), _format(TextureFormat::RGBA32_UINT), _texture2D(nullptr), _shaderResourceView(nullptr), _width(0), _height(0) {

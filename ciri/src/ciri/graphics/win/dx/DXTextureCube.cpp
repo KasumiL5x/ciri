@@ -1,8 +1,7 @@
 #include <ciri/graphics/win/dx/DXTextureCube.hpp>
 #include <ciri/graphics/win/dx/DXGraphicsDevice.hpp>
 
-using namespace ciri::graphics;
-using namespace ciri::core;
+using namespace ciri;
 
 DXTextureCube::DXTextureCube( const std::shared_ptr<DXGraphicsDevice>& device )
 	: ITextureCube(), _device(device), _cubeTexture(nullptr), _shaderResourceView(nullptr) {

@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-namespace ciri { namespace core { namespace leb128 {
+namespace ciri { namespace leb128 {
 
 /**
 	* Decodes a signed integer encoded with LEB128-encoded from a stream.
@@ -42,6 +42,6 @@ namespace ciri { namespace core { namespace leb128 {
 		return result;
 	}
 
-}}}
+}}
 
 #endif
