@@ -72,28 +72,28 @@
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game-d</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
     <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
     <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game-d</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
     <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
     <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -44,14 +44,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>./bin/</OutDir>
     <IntDir>./tmp/$(Configuration)/</IntDir>
-    <IncludePath>../ciri/inc/;../ciri/thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../ciri/inc/;../ciri/thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
     <LibraryPath>../ciri/lib/;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>./bin/</OutDir>
     <IntDir>./tmp/$(Configuration)/</IntDir>
-    <IncludePath>../ciri/inc/;../ciri/thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../ciri/inc/;../ciri/thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
     <LibraryPath>../ciri/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

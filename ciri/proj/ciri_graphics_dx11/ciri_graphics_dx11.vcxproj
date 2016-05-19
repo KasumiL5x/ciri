@@ -45,13 +45,13 @@
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_graphics-d</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_graphics</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

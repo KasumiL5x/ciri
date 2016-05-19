@@ -42,14 +42,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_graphics-d</TargetName>
     <LibraryPath>../../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_graphics</TargetName>
