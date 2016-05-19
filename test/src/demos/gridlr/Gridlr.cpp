@@ -78,52 +78,103 @@ void Gridlr::onLoadContent() {
 
 	// DEBUG - load dummy red texture
 	const unsigned int RED_SIZE = 32;
-	std::array<unsigned char, RED_SIZE*RED_SIZE> RED_DATA = {};
+	std::array<float, RED_SIZE*RED_SIZE> RED_DATA = {};
 	for( int i = 0; i < RED_SIZE; ++i ) {
 		for( int j = 0; j < RED_SIZE; ++j ) {
-			RED_DATA[j * RED_SIZE + i] = cc::math::Random<float, int>::rangedReal(0, 255);
+			RED_DATA[j * RED_SIZE + i] = i % 2 == 0 ? 1.0f : 0.0f;
+			//RED_DATA[j * RED_SIZE + i] = cc::math::Random<float, int>::rangedReal(0, 255);
 		}
 	}
 	//RED_DATA.fill	(255);
-	_redTextureTest = graphicsDevice()->createTexture2D(RED_SIZE, RED_SIZE, ciri::TextureFormat::R32_UINT, 0, RED_DATA.data());
+	_redTextureTest = graphicsDevice()->createTexture2D(RED_SIZE, RED_SIZE, ciri::TextureFormat::R32_FLOAT, 0, RED_DATA.data());
 	_redSampler = graphicsDevice()->createSamplerState(ciri::SamplerDesc());
 	// DEBUG - load dummy red shader
 	_redShader = graphicsDevice()->createShader();
 	_redShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Position, 0));
-	const std::string RED_VS = "#version 440\n"
-														 "layout ( location = 0 ) in vec2 in_position;\n"
-														 "void main() {\n"
-														 "  gl_Position = vec4(in_position, 0.0, 1.0);\n"
-														 "}\n";
-	const std::string RED_GS = "#version 440\n"
-														 "layout(points) in;\n"
-														 "layout(triangle_strip) out;\n"
-														 "layout(max_vertices=4) out;\n"
-														 "out vec2 go_texcoord;\n"
-														 "void main() {\n"
-														 "  vec2 pos = gl_in[0].gl_Position.xy;\n"
-														 "  float size = 0.1;"
-														 "  gl_Position = vec4(pos - vec2(size, size), 0.0, 1.0);\n"
-														 "  go_texcoord = vec2(0.0, 0.0)\n;"
-														 "  EmitVertex();\n"
-														 "  gl_Position = vec4(pos + vec2(-size, size), 0.0, 1.0);\n"
-														 "  go_texcoord = vec2(0.0, 1.0)\n;"
-														 "  EmitVertex();\n"
-														 "  gl_Position = vec4(pos + vec2(size, -size), 0.0, 1.0);\n"
-														 "  go_texcoord = vec2(1.0, 0.0)\n;"
-														 "  EmitVertex();\n"
-														 "  gl_Position = vec4(pos + vec2(size, size), 0.0, 1.0f);\n"
-														 "  go_texcoord = vec2(1.0, 1.0)\n;"
-														 "  EmitVertex();\n"
-														 "  EndPrimitive();\n"
-														 "}\n";
-	const std::string RED_PS = "#version 440\n"
-														 "uniform sampler2D TheTexture;\n"
-														 "in vec2 go_texcoord;\n"
-														 "out vec4 out_color;\n"
-														 "void main() {\n"
-														 "  out_color = vec4(texture(TheTexture, go_texcoord).r, 0.0, 0.0, 1.0);\n"
-														 "}\n";
+	std::string RED_VS;
+	std::string RED_GS;
+	std::string RED_PS;
+	if( graphicsDevice()->getApiType() == ciri::GraphicsApiType::DirectX11 ) {
+	RED_VS = "struct VertexOut {\n"
+					 "	float2 pos : POSITION;\n"
+					 "};\n"
+					 "VertexOut main( float2 in_position : POSITION ) {\n"
+					 "	VertexOut OUT;\n"
+					 "	OUT.pos = in_position;\n"
+					 "	return OUT;\n"
+					 "}\n";
+	RED_GS = "struct VertexOut {\n"
+					 "	float2 pos : POSITION;\n"
+					 "};\n"
+					 "struct GeoOut {\n"
+					 "	float4 hpos : SV_POSITION;\n"
+					 "	float2 tex : TEXCOORD;\n"
+					 "};\n"
+					 "[maxvertexcount(4)]\n"
+					 "void main( point VertexOut gin[1], inout TriangleStream<GeoOut> gout ) {\n"
+					 "	GeoOut output;\n"
+					 "	float2 pos = gin[0].pos;\n"
+					 "	float size = 0.1;\n"
+					 "	output.hpos = float4(pos - float2(size, size), 0.0, 1.0);\n"
+					 "	output.tex = float2(0.0, 0.0);\n"
+					 "	gout.Append(output);\n"
+					 "	output.hpos = float4(pos + float2(-size, size), 0.0, 1.0);\n"
+					 "	output.tex = float2(0.0, 1.0);\n"
+					 "	gout.Append(output);\n"
+					 "	output.hpos = float4(pos + float2(size, -size), 0.0, 1.0);\n"
+					 "	output.tex = float2(1.0, 0.0);\n"
+					 "	gout.Append(output);\n"
+					 "	output.hpos = float4(pos + float2(size, size), 0.0, 1.0);\n"
+					 "	output.tex = float2(1.0, 1.0);\n"
+					 "	gout.Append(output);\n"
+					 "	gout.RestartStrip();\n"
+					 "}\n";
+	RED_PS = "Texture2D<float> TheTexture : register(t0);\n"
+					 "SamplerState TheSampler : register(s0);\n"
+					 "struct GeoOut {\n"
+					 "	float4 hpos : SV_POSITION;\n"
+					 "	float2 tex : TEXCOORD;\n"
+					 "};\n"
+					 "float4 main( GeoOut input ) : SV_TARGET {\n"
+					 "  return float4(TheTexture.Sample(TheSampler, input.tex).r, 0.0, 0.0, 1.0);\n"
+					 "  //return float4(TheTexture.Sample(TheSampler, input.tex).r, 0.0, 0.0, 1.0);\n"
+					 "}\n";
+	} else {
+	RED_VS = "#version 440\n"
+					 "layout ( location = 0 ) in vec2 in_position;\n"
+					 "void main() {\n"
+					 "  gl_Position = vec4(in_position, 0.0, 1.0);\n"
+					 "}\n";
+	RED_GS = "#version 440\n"
+					 "layout(points) in;\n"
+					 "layout(triangle_strip) out;\n"
+					 "layout(max_vertices=4) out;\n"
+					 "out vec2 go_texcoord;\n"
+					 "void main() {\n"
+					 "  vec2 pos = gl_in[0].gl_Position.xy;\n"
+					 "  float size = 0.1;"
+					 "  gl_Position = vec4(pos - vec2(size, size), 0.0, 1.0);\n"
+					 "  go_texcoord = vec2(0.0, 0.0)\n;"
+					 "  EmitVertex();\n"
+					 "  gl_Position = vec4(pos + vec2(-size, size), 0.0, 1.0);\n"
+					 "  go_texcoord = vec2(0.0, 1.0)\n;"
+					 "  EmitVertex();\n"
+					 "  gl_Position = vec4(pos + vec2(size, -size), 0.0, 1.0);\n"
+					 "  go_texcoord = vec2(1.0, 0.0)\n;"
+					 "  EmitVertex();\n"
+					 "  gl_Position = vec4(pos + vec2(size, size), 0.0, 1.0f);\n"
+					 "  go_texcoord = vec2(1.0, 1.0)\n;"
+					 "  EmitVertex();\n"
+					 "  EndPrimitive();\n"
+					 "}\n";
+	RED_PS = "#version 440\n"
+					 "uniform sampler2D TheTexture;\n"
+					 "in vec2 go_texcoord;\n"
+					 "out vec4 out_color;\n"
+					 "void main() {\n"
+					 "  out_color = vec4(texture(TheTexture, go_texcoord).r, 0.0, 0.0, 1.0);\n"
+					 "}\n";
+	}
 	if( ciri::failed(_redShader->loadFromMemory(RED_VS.c_str(), RED_GS.c_str(), RED_PS.c_str())) ) {
 		printf("Failed to load RED shader!\n");
 		for( auto err : _redShader->getErrors() ) {

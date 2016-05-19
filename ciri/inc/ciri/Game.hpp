@@ -5,5 +5,7 @@
 #include <ciri/game/SpriteBatch.hpp>
 #include <ciri/game/SpriteBatchItem.hpp>
 #include <ciri/game/SpriteVertex.hpp>
+#include <ciri/game/ISpriteFont.hpp>
+#include <ciri/game/SpriteFontGlyph.hpp>
 
 #endif

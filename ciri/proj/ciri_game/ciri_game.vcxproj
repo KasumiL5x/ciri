@@ -155,12 +155,16 @@
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\Game.hpp" />
     <ClInclude Include="..\..\inc\ciri\game\App.hpp" />
+    <ClInclude Include="..\..\inc\ciri\game\FreeTypeSpriteFont.hpp" />
+    <ClInclude Include="..\..\inc\ciri\game\ISpriteFont.hpp" />
     <ClInclude Include="..\..\inc\ciri\game\SpriteBatch.hpp" />
     <ClInclude Include="..\..\inc\ciri\game\SpriteBatchItem.hpp" />
+    <ClInclude Include="..\..\inc\ciri\game\SpriteFontGlyph.hpp" />
     <ClInclude Include="..\..\inc\ciri\game\SpriteVertex.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\game\App.cpp" />
+    <ClCompile Include="..\..\src\ciri\game\FreeTypeSpriteFont.cpp" />
     <ClCompile Include="..\..\src\ciri\game\SpriteBatch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
