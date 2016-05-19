@@ -1,7 +1,7 @@
 #ifndef __clippingdemo__
 #define __clippingdemo__
 
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include <ciri/graphics/MayaCamera.hpp>
 #include "../../common/AxisGrid.hpp"
 #include "../../common/AxisWidget.hpp"
@@ -10,7 +10,7 @@
 #include "ClipPlane.hpp"
 #include "../../common/GeometricPlane.hpp"
 
-class ClippingDemo : public Game {
+class ClippingDemo : public ciri::App {
 public:
 	ClippingDemo();
 	virtual ~ClippingDemo();

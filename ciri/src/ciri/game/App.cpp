@@ -1,14 +1,16 @@
-#include "Game.hpp"
+#include <ciri/game/App.hpp>
 
-Game::Game()
+using namespace ciri;
+
+App::App()
 	: _isRunning(false), _isInitialized(false), _shouldGtfo(false), _window(nullptr), _input(nullptr),
 		_graphicsDevice(nullptr), _gameTimer(nullptr) {
 }
 
-Game::~Game() {
+App::~App() {
 }
 
-bool Game::run() {
+bool App::run() {
 	// cannot run two times
 	if( _isRunning ) {
 		printf("ciri error: Failed to run because already running.\n");
@@ -100,13 +102,13 @@ bool Game::run() {
 	return true;
 }
 
-void Game::onInitialize() {
+void App::onInitialize() {
 }
 
-void Game::onLoadContent() {
+void App::onLoadContent() {
 }
 
-void Game::onEvent( const ciri::WindowEvent& evt ) {
+void App::onEvent( const ciri::WindowEvent& evt ) {
 	// window closed event check
 	if( ciri::WindowEvent::Closed == evt.type ) {
 		gtfo();
@@ -114,34 +116,34 @@ void Game::onEvent( const ciri::WindowEvent& evt ) {
 	}
 }
 
-void Game::onUpdate( const double deltaTime, const double elapsedTime ) {
+void App::onUpdate( const double deltaTime, const double elapsedTime ) {
 }
 
-void Game::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
+void App::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
 }
 
-void Game::onDraw() {
+void App::onDraw() {
 }
 
-void Game::onUnloadContent() {
+void App::onUnloadContent() {
 }
 
-void Game::gtfo() {
+void App::gtfo() {
 	_shouldGtfo = true;
 }
 
-std::shared_ptr<ciri::IWindow> Game::window() const {
+std::shared_ptr<ciri::IWindow> App::window() const {
 	return _window;
 }
 
-std::shared_ptr<ciri::IInput> Game::input() const {
+std::shared_ptr<ciri::IInput> App::input() const {
 	return _input;
 }
 
-std::shared_ptr<ciri::IGraphicsDevice> Game::graphicsDevice() const {
+std::shared_ptr<ciri::IGraphicsDevice> App::graphicsDevice() const {
 	return _graphicsDevice;
 }
 
-std::shared_ptr<ciri::ITimer> Game::gameTimer() const {
+std::shared_ptr<ciri::ITimer> App::gameTimer() const {
 	return _gameTimer;
 }

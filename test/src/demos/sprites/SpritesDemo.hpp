@@ -3,7 +3,7 @@
 
 #include <array>
 #include <memory>
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include "../../common/SpriteBatch.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
@@ -13,7 +13,7 @@
 
 #include "BMGrid.hpp"
 
-class SpritesDemo : public Game {
+class SpritesDemo : public ciri::App {
 public:
 	SpritesDemo();
 	virtual ~SpritesDemo();

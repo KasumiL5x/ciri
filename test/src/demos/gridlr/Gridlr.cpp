@@ -20,7 +20,7 @@
 //
 
 Gridlr::Gridlr()
-	: Game(), _grid(nullptr), _blendState(nullptr), _samplerState(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr), _cellTexture(nullptr),
+	: App(), _grid(nullptr), _blendState(nullptr), _samplerState(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr), _cellTexture(nullptr),
 		_isDragging(false) {
 	_config.width = 1280;
 	_config.height = 720;
@@ -31,7 +31,7 @@ Gridlr::~Gridlr() {
 }
 
 void Gridlr::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	// cell off grid to start
 	_lastMouseCell.x = -1;
@@ -64,7 +64,7 @@ void Gridlr::onInitialize() {
 }
 
 void Gridlr::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	// load grid texture
 	ciri::PNG cellPng;
@@ -143,11 +143,11 @@ void Gridlr::onLoadContent() {
 }
 
 void Gridlr::onEvent(const ciri::WindowEvent& evt) {
-	Game::onEvent(evt);
+	App::onEvent(evt);
 }
 
 void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
 	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
@@ -200,11 +200,11 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 }
 
 void Gridlr::onFixedUpdate(const double deltaTime, const double elapsedTime) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 }
 
 void Gridlr::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	const auto device = graphicsDevice();
 
@@ -259,7 +259,7 @@ void Gridlr::onDraw() {
 }
 
 void Gridlr::onUnloadContent() {
-	Game::onUnloadContent();
+	App::onUnloadContent();
 
 	// clean spritebatch
 	_spriteBatch.clean();

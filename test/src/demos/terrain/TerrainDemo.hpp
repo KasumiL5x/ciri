@@ -1,14 +1,14 @@
 #ifndef __reflections_demo__
 #define __reflections_demo__
 
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include <ciri/graphics/FPSCamera.hpp>
 #include "../../common/AxisWidget.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"
 #include "../../common/HeightmapTerrain.hpp"
 
-class TerrainDemo : public Game {
+class TerrainDemo : public ciri::App {
 private:
 	_declspec(align(16))
 	struct WaterConstants {

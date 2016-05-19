@@ -2,7 +2,7 @@
 #define __dynamicvertexbufferdemo__
 
 #include <string>
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include <ciri/graphics/MayaCamera.hpp>
 #include "../../common/AxisGrid.hpp"
 #include "../../common/AxisWidget.hpp"
@@ -10,7 +10,7 @@
 #include "../../common/ShaderPresets.hpp"
 #include "OpenCloth.hpp"
 
-class DynamicVertexBufferDemo : public Game {
+class DynamicVertexBufferDemo : public ciri::App {
 private:
 	struct FlagVertex {
 		cc::Vec3f position;

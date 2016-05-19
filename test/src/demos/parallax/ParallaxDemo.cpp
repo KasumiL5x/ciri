@@ -2,7 +2,7 @@
 #include "../../common/ModelGen.hpp"
 
 ParallaxDemo::ParallaxDemo()
-	: Game(), _depthStencilState(nullptr), _rasterizerState(nullptr), _model(nullptr), _parallaxShader(nullptr),
+	: App(), _depthStencilState(nullptr), _rasterizerState(nullptr), _model(nullptr), _parallaxShader(nullptr),
 		_parallaxVertexConstantBuffer(nullptr), _parallaxTexture(nullptr), _parallaxSampler(nullptr) {
 	_config.width = 1280;
 	_config.height = 720;
@@ -21,7 +21,7 @@ void ParallaxDemo::operator delete( void* p ) {
 }
 
 void ParallaxDemo::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
@@ -40,7 +40,7 @@ void ParallaxDemo::onInitialize() {
 }
 
 void ParallaxDemo::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	// create depth stencil state
 	ciri::DepthStencilDesc depthDesc;
@@ -104,7 +104,7 @@ void ParallaxDemo::onLoadContent() {
 }
 
 void ParallaxDemo::onEvent( const ciri::WindowEvent& evt ) {
-	Game::onEvent(evt);
+	App::onEvent(evt);
 
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
@@ -117,7 +117,7 @@ void ParallaxDemo::onEvent( const ciri::WindowEvent& evt ) {
 }
 
 void ParallaxDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
 	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
@@ -167,14 +167,14 @@ void ParallaxDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 }
 
 void ParallaxDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 
 	// update camera
 	_camera.update(static_cast<float>(deltaTime));
 }
 
 void ParallaxDemo::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
@@ -245,7 +245,7 @@ void ParallaxDemo::onDraw() {
 }
 
 void ParallaxDemo::onUnloadContent() {
-	Game::onUnloadContent();
+	App::onUnloadContent();
 
 	// clean model
 	if( _model != nullptr ) {

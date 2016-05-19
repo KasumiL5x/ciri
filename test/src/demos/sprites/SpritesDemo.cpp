@@ -7,7 +7,7 @@
 #include <cc/Random.hpp>
 
 SpritesDemo::SpritesDemo()
-	: Game() {
+	: App() {
 	_config.width = 1280;
 	_config.height = 720;
 	_config.title = "ciri : Sprites Demo";
@@ -25,7 +25,7 @@ void SpritesDemo::operator delete( void* p ) {
 }
 
 void SpritesDemo::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	srand(static_cast<unsigned int>(time(0)));
 	rand();
@@ -64,7 +64,7 @@ void SpritesDemo::onInitialize() {
 }
 
 void SpritesDemo::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	// load and set player texture
 	ciri::PNG playerPng;
@@ -110,6 +110,8 @@ void SpritesDemo::onLoadContent() {
 }
 
 void SpritesDemo::onEvent( const ciri::WindowEvent& evt ) {
+	App::onEvent(evt);
+
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
 			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
@@ -121,7 +123,7 @@ void SpritesDemo::onEvent( const ciri::WindowEvent& evt ) {
 }
 
 void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	if( !window()->hasFocus() ) {
 		return;
@@ -230,7 +232,7 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 }
 
 void SpritesDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 
 	_player->update(_playerMovement);
 
@@ -263,7 +265,7 @@ void SpritesDemo::onFixedUpdate( const double deltaTime, const double elapsedTim
 }
 
 void SpritesDemo::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	const std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 	const ciri::Viewport& vp = device->getViewport();
@@ -309,7 +311,7 @@ void SpritesDemo::onDraw() {
 }
 
 void SpritesDemo::onUnloadContent() {
-	Game::onUnloadContent();
+	App::onUnloadContent();
 
 	_spritebatch.clean();
 	if( _grid != nullptr ) {

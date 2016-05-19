@@ -9,7 +9,7 @@
 #include <cc/MatrixFunc.hpp>
 
 TerrainDemo::TerrainDemo()
-	: Game(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
+	: App(), _depthStencilState(nullptr), _rasterizerState(nullptr), _waterPlane(nullptr), _waterShader(nullptr), _waterConstantsBuffer(nullptr),
 		_alphaBlendState(nullptr), WATER_HEIGHT(10.0f), _waterReflectionTarget(nullptr), _cubemap(nullptr), _skyboxShader(nullptr), _skyboxConstantsBuffer(nullptr), _skyboxSampler(nullptr), _elapsedTime(0.0f) {
 	_config.width = 1280;
 	_config.height = 720;
@@ -20,7 +20,7 @@ TerrainDemo::~TerrainDemo() {
 }
 
 void TerrainDemo::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	// print info
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
@@ -36,7 +36,7 @@ void TerrainDemo::onInitialize() {
 }
 
 void TerrainDemo::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	//// create depth stencil state
 	ciri::DepthStencilDesc depthDesc;
@@ -181,7 +181,7 @@ void TerrainDemo::onLoadContent() {
 }
 
 void TerrainDemo::onEvent( const ciri::WindowEvent& evt ) {
-	Game::onEvent(evt);
+	App::onEvent(evt);
 
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
@@ -192,7 +192,7 @@ void TerrainDemo::onEvent( const ciri::WindowEvent& evt ) {
 }
 
 void TerrainDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	_elapsedTime = static_cast<float>(elapsedTime);
 
@@ -272,11 +272,11 @@ void TerrainDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 }
 
 void TerrainDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 }
 
 void TerrainDemo::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
@@ -400,7 +400,7 @@ void TerrainDemo::onDraw() {
 }
 
 void TerrainDemo::onUnloadContent() {
-	Game::onUnloadContent();
+	App::onUnloadContent();
 
 	_terrain.clean();
 

@@ -3,7 +3,7 @@
 #include <cc/MatrixFunc.hpp>
 
 DynamicVertexBufferDemo::DynamicVertexBufferDemo()
-	: Game(), _depthStencilState(nullptr), _rasterizerState(nullptr),
+	: App(), _depthStencilState(nullptr), _rasterizerState(nullptr),
 		_clothRunning(true) {
 	_config.width = 1280;
 	_config.height = 720;
@@ -22,7 +22,7 @@ void DynamicVertexBufferDemo::operator delete( void* p ) {
 }
 
 void DynamicVertexBufferDemo::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
@@ -41,7 +41,7 @@ void DynamicVertexBufferDemo::onInitialize() {
 }
 
 void DynamicVertexBufferDemo::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
@@ -89,7 +89,7 @@ void DynamicVertexBufferDemo::onLoadContent() {
 }
 
 void DynamicVertexBufferDemo::onEvent( const ciri::WindowEvent& evt ) {
-	Game::onEvent(evt);
+	App::onEvent(evt);
 
 	switch( evt.type) {
 		case ciri::WindowEvent::Resized: {
@@ -102,7 +102,7 @@ void DynamicVertexBufferDemo::onEvent( const ciri::WindowEvent& evt ) {
 }
 
 void DynamicVertexBufferDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
 	if( input()->isKeyDown(ciri::Key::Escape) ) {
@@ -151,7 +151,7 @@ void DynamicVertexBufferDemo::onUpdate( const double deltaTime, const double ela
 }
 
 void DynamicVertexBufferDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 
 	_camera.update(static_cast<float>(deltaTime));
 
@@ -162,7 +162,7 @@ void DynamicVertexBufferDemo::onFixedUpdate( const double deltaTime, const doubl
 }
 
 void DynamicVertexBufferDemo::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
@@ -232,7 +232,7 @@ void DynamicVertexBufferDemo::onDraw() {
 }
 
 void DynamicVertexBufferDemo::onUnloadContent() {
-	Game::onUnloadContent();
+	App::onUnloadContent();
 
 	_axis.clean();
 	_cloth.clean();

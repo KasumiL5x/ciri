@@ -83,9 +83,6 @@
     <ClCompile Include="src\common\ScreenSystem\ScreenManager.cpp">
       <Filter>common\ScreenSystem</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\Game.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="src\demos\clipping\ClipPlane.cpp">
       <Filter>demos\clipping</Filter>
     </ClCompile>
@@ -251,9 +248,6 @@
     </ClInclude>
     <ClInclude Include="src\common\ScreenSystem\ScreenState.hpp">
       <Filter>common\ScreenSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\Game.hpp">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\clipping\ClipPlane.hpp">
       <Filter>demos\clipping</Filter>

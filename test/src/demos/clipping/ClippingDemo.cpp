@@ -5,7 +5,7 @@
 #include "../../common/KScene.hpp"
 
 ClippingDemo::ClippingDemo()
-	: Game(), _model(nullptr) {
+	: App(), _model(nullptr) {
 	_config.width = 1280;
 	_config.height = 720;
 	_config.title = "ciri : Clipping Demo";
@@ -23,7 +23,7 @@ void ClippingDemo::operator delete( void* p ) {
 }
 
 void ClippingDemo::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
@@ -42,7 +42,7 @@ void ClippingDemo::onInitialize() {
 }
 
 void ClippingDemo::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	// create grid
 	if( !_grid.create(graphicsDevice()) ) {
@@ -136,7 +136,7 @@ void ClippingDemo::onLoadContent() {
 }
 
 void ClippingDemo::onEvent( const ciri::WindowEvent& evt ) {
-	Game::onEvent(evt);
+	App::onEvent(evt);
 
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
@@ -149,7 +149,7 @@ void ClippingDemo::onEvent( const ciri::WindowEvent& evt ) {
 }
 
 void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
 	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
@@ -230,14 +230,14 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 }
 
 void ClippingDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 
 	// update camera
 	_camera.update((float)deltaTime);
 }
 
 void ClippingDemo::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 

@@ -1,7 +1,7 @@
 #ifndef __refractdemo__
 #define __refractdemo__
 
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include <ciri/graphics/MayaCamera.hpp>
 #include "../../common/AxisGrid.hpp"
 #include "../../common/AxisWidget.hpp"
@@ -21,7 +21,7 @@ struct SkyboxConstants {
 	cc::Mat4f proj;
 };
 
-class RefractDemo : public Game {
+class RefractDemo : public ciri::App {
 public:
 	RefractDemo();
 	virtual ~RefractDemo();

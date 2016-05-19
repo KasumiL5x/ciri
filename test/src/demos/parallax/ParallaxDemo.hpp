@@ -5,7 +5,7 @@
 // http://www.gamedev.net/page/resources/_/technical/graphics-programming-and-theory/a-closer-look-at-parallax-occlusion-mapping-r3262
 // http://sunandblackcat.com/tipFullView.php?topicid=28
 
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include <ciri/graphics/MayaCamera.hpp>
 #include "../../common/AxisGrid.hpp"
 #include "../../common/AxisWidget.hpp"
@@ -18,7 +18,7 @@ struct ParallaxVertexConstants {
 	cc::Vec3f campos;
 };
 
-class ParallaxDemo : public Game {
+class ParallaxDemo : public ciri::App {
 public:
 	ParallaxDemo();
 	virtual ~ParallaxDemo();

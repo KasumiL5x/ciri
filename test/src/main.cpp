@@ -10,7 +10,7 @@
 #include "demos/parallax/ParallaxDemo.hpp"
 //#include "demos/deferred/DeferredDemo.hpp"
 #include "demos\gridlr\Gridlr.hpp"
-#include "common/Game.hpp"
+#include <ciri/Game.hpp>
 
 enum class Demo {
 	Dynvb,
@@ -23,30 +23,30 @@ enum class Demo {
 	Gridlr
 };
 
-std::unique_ptr<Game> createGame( Demo type ) {
+std::unique_ptr<ciri::App> createGame( Demo type ) {
 	switch( type ) {
 		case Demo::Dynvb: {
-			return std::unique_ptr<Game>(new DynamicVertexBufferDemo());
+			return std::unique_ptr<ciri::App>(new DynamicVertexBufferDemo());
 		}
 
 		case Demo::Terrain:{ 
-			return std::unique_ptr<Game>(new TerrainDemo());
+			return std::unique_ptr<ciri::App>(new TerrainDemo());
 		}
 
 		case Demo::Sprites: {
-			return std::unique_ptr<Game>(new SpritesDemo());
+			return std::unique_ptr<ciri::App>(new SpritesDemo());
 		}
 
 		case Demo::Refract: {
-			return std::unique_ptr<Game>(new RefractDemo());
+			return std::unique_ptr<ciri::App>(new RefractDemo());
 		}
 												
 		case Demo::Clipping: {
-			return std::unique_ptr<Game>(new ClippingDemo());
+			return std::unique_ptr<ciri::App>(new ClippingDemo());
 		}
 
 		case Demo::Parallax: {
-			return std::unique_ptr<Game>(new ParallaxDemo());
+			return std::unique_ptr<ciri::App>(new ParallaxDemo());
 		}
 
 		//case Demo::Deferred: {
@@ -54,7 +54,7 @@ std::unique_ptr<Game> createGame( Demo type ) {
 		//}
 
 		case Demo::Gridlr: {
-			return std::unique_ptr<Game>(new Gridlr());
+			return std::unique_ptr<ciri::App>(new Gridlr());
 		}
 
 		default: {
@@ -73,7 +73,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<Game> game = createGame(Demo::Sprites);
+	std::unique_ptr<ciri::App> game = createGame(Demo::Sprites);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}

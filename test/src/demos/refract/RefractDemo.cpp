@@ -1,7 +1,7 @@
 #include "RefractDemo.hpp"
 
 RefractDemo::RefractDemo()
-	: Game(), _model(nullptr) {
+	: App(), _model(nullptr) {
 	_config.width = 1280;
 	_config.height = 720;
 	_config.title = "ciri : Refraction Demo";
@@ -19,7 +19,7 @@ void RefractDemo::operator delete( void* p ) {
 }
 
 void RefractDemo::onInitialize() {
-	Game::onInitialize();
+	App::onInitialize();
 
 	// print driver information
 	printf("Device: %s\n", graphicsDevice()->getGpuName());
@@ -38,7 +38,7 @@ void RefractDemo::onInitialize() {
 }
 
 void RefractDemo::onLoadContent() {
-	Game::onLoadContent();
+	App::onLoadContent();
 
 	// create grid
 	if( !_grid.create(graphicsDevice()) ) {
@@ -189,7 +189,7 @@ void RefractDemo::onLoadContent() {
 }
 
 void RefractDemo::onEvent( const ciri::WindowEvent& evt ) {
-	Game::onEvent(evt);
+	App::onEvent(evt);
 
 	switch( evt.type ) {
 		case ciri::WindowEvent::Resized: {
@@ -202,7 +202,7 @@ void RefractDemo::onEvent( const ciri::WindowEvent& evt ) {
 }
 
 void RefractDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onUpdate(deltaTime, elapsedTime);
+	App::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
 	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
@@ -252,7 +252,7 @@ void RefractDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 }
 
 void RefractDemo::onFixedUpdate( const double deltaTime, const double elapsedTime ) {
-	Game::onFixedUpdate(deltaTime, elapsedTime);
+	App::onFixedUpdate(deltaTime, elapsedTime);
 
 	//_model->getXform().setOrientation(_model->getXform().getOrientation() * cc::Quatf::createFromEulerAngles(0.1f, 0.25f, 0.0f));
 
@@ -261,7 +261,7 @@ void RefractDemo::onFixedUpdate( const double deltaTime, const double elapsedTim
 }
 
 void RefractDemo::onDraw() {
-	Game::onDraw();
+	App::onDraw();
 
 	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
 
@@ -339,7 +339,7 @@ void RefractDemo::onDraw() {
 }
 
 void RefractDemo::onUnloadContent() {
-	Game::onUnloadContent();
+	App::onUnloadContent();
 
 	if( _skyboxModel != nullptr ) {
 		delete _skyboxModel;

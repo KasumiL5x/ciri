@@ -2,11 +2,11 @@
 #define __gridlr__
 
 #include <memory>
-#include "../../common/Game.hpp"
+#include <ciri/Game.hpp>
 #include "../../common/SpriteBatch.hpp"
 #include "BlockGrid.hpp"
 
-class Gridlr : public Game {
+class Gridlr : public ciri::App {
 public:
 	Gridlr();
 	virtual ~Gridlr();

@@ -1,26 +1,28 @@
-#ifndef __game__
-#define __game__
+#ifndef __ciri_game_App__
+#define __ciri_game_App__
 
 #include <memory>
 #include <string>
 #include <ciri/Core.hpp>
 #include <ciri/Graphics.hpp>
 
-struct GameConfig {
+namespace ciri {
+
+struct AppConfig {
 	std::string title;
 	int width;
 	int height;
-	GameConfig() {
+	AppConfig() {
 		title = "ciri";
 		width = 1280;
 		height = 720;
 	}
 };
 
-class Game {
+class App {
 public:
-	Game();
-	virtual ~Game();
+	App();
+	virtual ~App();
 
 public:
 	bool run();
@@ -42,7 +44,7 @@ protected:
 	std::shared_ptr<ciri::ITimer> gameTimer() const;
 
 protected:
-	GameConfig _config;
+	AppConfig _config;
 
 private:
 	bool _isRunning;
@@ -54,4 +56,6 @@ private:
 	std::shared_ptr<ciri::ITimer> _gameTimer;
 };
 
-#endif /* __ciri_game_game__ */
+}
+
+#endif
