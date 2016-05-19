@@ -6,6 +6,9 @@
 #include "MathHelper.hpp"
 #include <cc/Random.hpp>
 
+namespace core = ciri::core;
+namespace gfx = ciri::graphics;
+
 SpritesDemo::SpritesDemo()
 	: Game() {
 	_config.width = 1280;
@@ -45,12 +48,12 @@ void SpritesDemo::onInitialize() {
 
 	// create states
 	_blendState = graphicsDevice()->getDefaultBlendAlpha();
-	_samplerState = graphicsDevice()->createSamplerState(ciri::SamplerDesc());
+	_samplerState = graphicsDevice()->createSamplerState(gfx::SamplerDesc());
 	_depthStencilState = graphicsDevice()->getDefaultDepthStencilNone();
 	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise();
 
 	// configure grid
-	const ciri::Viewport& vp = graphicsDevice()->getViewport();
+	const gfx::Viewport& vp = graphicsDevice()->getViewport();
 	_grid = new BMGrid(16, 16, vp.width(), vp.height(), graphicsDevice());
 	_grid->resetAll();
 
@@ -67,16 +70,16 @@ void SpritesDemo::onLoadContent() {
 	Game::onLoadContent();
 
 	// load and set player texture
-	ciri::PNG playerPng;
+	core::PNG playerPng;
 	if( playerPng.loadFromFile("sprites/textures/Player.png", true) && playerPng.hasAlpha() ) {
-		_playerTexture = graphicsDevice()->createTexture2D(playerPng.getWidth(), playerPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, playerPng.getPixels());
+		_playerTexture = graphicsDevice()->createTexture2D(playerPng.getWidth(), playerPng.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, playerPng.getPixels());
 	}
 	_player->setTexture(_playerTexture);
 
 	// load bullet texture
-	ciri::PNG bulletPng;
+	core::PNG bulletPng;
 	if( bulletPng.loadFromFile("sprites/textures/Bullet.png", true) && bulletPng.hasAlpha() ) {
-		_bulletTexture = graphicsDevice()->createTexture2D(bulletPng.getWidth(), bulletPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, bulletPng.getPixels());
+		_bulletTexture = graphicsDevice()->createTexture2D(bulletPng.getWidth(), bulletPng.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, bulletPng.getPixels());
 	}
 	// assign bullet textures
 	for( auto& bullet : _bullets ) {
@@ -84,9 +87,9 @@ void SpritesDemo::onLoadContent() {
 	}
 
 	// load enemy textures
-	ciri::PNG seekPng;
+	core::PNG seekPng;
 	if( seekPng.loadFromFile("sprites/textures/Seeker.png", true) && seekPng.hasAlpha() ) {
-		_enemySeekerTexture = graphicsDevice()->createTexture2D(seekPng.getWidth(), seekPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, seekPng.getPixels());
+		_enemySeekerTexture = graphicsDevice()->createTexture2D(seekPng.getWidth(), seekPng.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, seekPng.getPixels());
 	}
 
 	// load some enemies
@@ -95,24 +98,24 @@ void SpritesDemo::onLoadContent() {
 	//}
 
 	// custom cursor texture
-	ciri::PNG cursorPng;
+	core::PNG cursorPng;
 	if( cursorPng.loadFromFile("sprites/textures/Pointer.png", true) && cursorPng.hasAlpha() ) {
-		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, cursorPng.getPixels());
+		_cursorTexture = graphicsDevice()->createTexture2D(cursorPng.getWidth(), cursorPng.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, cursorPng.getPixels());
 		_cursorOrigin = cc::Vec2f(0.0f, static_cast<float>(_cursorTexture->getHeight()));
 	}
 
 	// load test particle system
-	ciri::PNG glowPng;
+	core::PNG glowPng;
 	if( glowPng.loadFromFile("sprites/textures/dot.png", true) && glowPng.hasAlpha() ) {
-		_testPsysTexture = graphicsDevice()->createTexture2D(glowPng.getWidth(), glowPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, glowPng.getPixels());
+		_testPsysTexture = graphicsDevice()->createTexture2D(glowPng.getWidth(), glowPng.getHeight(), gfx::TextureFormat::RGBA32_UINT, 0, glowPng.getPixels());
 		_psys.setTexture(_testPsysTexture);
 	}
 }
 
-void SpritesDemo::onEvent( const ciri::WindowEvent& evt ) {
+void SpritesDemo::onEvent( const core::WindowEvent& evt ) {
 	switch( evt.type) {
-		case ciri::WindowEvent::Resized: {
-			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
+		case core::WindowEvent::Resized: {
+			if( graphicsDevice()->resize() != core::ErrorCode::CIRI_OK ) {
 				printf("Failed to resize default render targets.\n");
 			}
 			break;
@@ -131,7 +134,7 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	_enemySpawnTimer -= static_cast<float>(deltaTime);
 
 	// check for close w/ escape
-	if( input()->isKeyDown(ciri::Key::Escape) ) {
+	if( input()->isKeyDown(core::Key::Escape) ) {
 		this->gtfo();
 		return;
 	}
@@ -154,16 +157,16 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 
 	// update player movement
 	_playerMovement = cc::Vec2f::zero();
-	if( input()->isKeyDown(ciri::Key::A) ) {
+	if( input()->isKeyDown(core::Key::A) ) {
 		_playerMovement.x -= 1.0f;
 	}
-	if( input()->isKeyDown(ciri::Key::D) ) {
+	if( input()->isKeyDown(core::Key::D) ) {
 		_playerMovement.x += 1.0f;
 	}
-	if( input()->isKeyDown(ciri::Key::W) ) {
+	if( input()->isKeyDown(core::Key::W) ) {
 		_playerMovement.y += 1.0f;
 	}
-	if( input()->isKeyDown(ciri::Key::S) ) {
+	if( input()->isKeyDown(core::Key::S) ) {
 		_playerMovement.y -= 1.0f;
 	}
 	if( _playerMovement.sqrMagnitude() > 1.0f ) {
@@ -187,7 +190,7 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	_fireTimer += static_cast<float>(deltaTime);
 
 	// firing
-	if( (false||input()->isMouseButtonDown(ciri::MouseButton::Left)) && (_fireTimer > FIRE_DELAY) ) {
+	if( (false||input()->isMouseButtonDown(core::MouseButton::Left)) && (_fireTimer > FIRE_DELAY) ) {
 		_fireTimer = 0.0f;
 
 		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
@@ -234,7 +237,7 @@ void SpritesDemo::onFixedUpdate( const double deltaTime, const double elapsedTim
 
 	_player->update(_playerMovement);
 
-	const ciri::Viewport& vp = graphicsDevice()->getViewport();
+	const gfx::Viewport& vp = graphicsDevice()->getViewport();
 	const cc::Vec4f bounds(static_cast<float>(vp.x()), static_cast<float>(vp.y()), static_cast<float>(vp.width()), static_cast<float>(vp.height()));
 	for( auto& curr : _bullets ) {
 		if( !curr.isAlive() ) {
@@ -265,11 +268,11 @@ void SpritesDemo::onFixedUpdate( const double deltaTime, const double elapsedTim
 void SpritesDemo::onDraw() {
 	Game::onDraw();
 
-	const std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
-	const ciri::Viewport& vp = device->getViewport();
+	const std::shared_ptr<gfx::IGraphicsDevice> device = graphicsDevice();
+	const gfx::Viewport& vp = device->getViewport();
 
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
+	device->clear(gfx::ClearFlags::Color | gfx::ClearFlags::Depth);
 
 	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
 

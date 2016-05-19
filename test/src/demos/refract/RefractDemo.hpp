@@ -1,10 +1,10 @@
 #ifndef __refractdemo__
 #define __refractdemo__
 
-#include "../../framework/Game.hpp"
-#include <ciri/gfx/MayaCamera.hpp>
-#include "../../common/Grid.hpp"
-#include "../../common/Axis.hpp"
+#include "../../common/Game.hpp"
+#include <ciri/graphics/MayaCamera.hpp>
+#include "../../common/AxisGrid.hpp"
+#include "../../common/AxisWidget.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ModelGen.hpp"
 
@@ -31,7 +31,7 @@ public:
 protected:
 	virtual void onInitialize();
 	virtual void onLoadContent();
-	virtual void onEvent( const ciri::WindowEvent& evt );
+	virtual void onEvent( const ciri::core::WindowEvent& evt );
 	virtual void onUpdate( const double deltaTime, const double elapsedTime );
 	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime );
 	virtual void onDraw();
@@ -43,31 +43,31 @@ private:
 	void drawSkybox( const cc::Mat4f& view, const cc::Mat4f& proj );
 
 private:
-	ciri::MayaCamera _camera;
-	Grid _grid;
-	Axis _axis;
-	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
-	std::shared_ptr<ciri::IShader> _refractShader;
-	std::shared_ptr<ciri::IConstantBuffer> _refractVertexConstantBuffer;
+	ciri::graphics::MayaCamera _camera;
+	AxisGrid _grid;
+	AxisWidget _axis;
+	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::graphics::IShader> _refractShader;
+	std::shared_ptr<ciri::graphics::IConstantBuffer> _refractVertexConstantBuffer;
 	RefractVertexConstants _refractVertexConstants;
 	Model* _model;
 	//
-	std::shared_ptr<ciri::ITextureCube> _cubemap;
-	std::shared_ptr<ciri::ISamplerState> _cubemapSampler;
-	std::shared_ptr<ciri::ITexture3D> _texture3D;
-	std::shared_ptr<ciri::ITexture2D> _diffuseMap;
-	std::shared_ptr<ciri::ITexture2D> _bumpMap;
+	std::shared_ptr<ciri::graphics::ITextureCube> _cubemap;
+	std::shared_ptr<ciri::graphics::ISamplerState> _cubemapSampler;
+	std::shared_ptr<ciri::graphics::ITexture3D> _texture3D;
+	std::shared_ptr<ciri::graphics::ITexture2D> _diffuseMap;
+	std::shared_ptr<ciri::graphics::ITexture2D> _bumpMap;
 	//
-	std::shared_ptr<ciri::IBlendState> _alphaBlendState;
-	std::shared_ptr<ciri::IBlendState> _defaultBlendState;
+	std::shared_ptr<ciri::graphics::IBlendState> _alphaBlendState;
+	std::shared_ptr<ciri::graphics::IBlendState> _defaultBlendState;
 	//
 	Model* _skyboxModel;
-	std::shared_ptr<ciri::IShader> _skyboxShader;
-	std::shared_ptr<ciri::IConstantBuffer> _skyboxConstantBuffer;
+	std::shared_ptr<ciri::graphics::IShader> _skyboxShader;
+	std::shared_ptr<ciri::graphics::IConstantBuffer> _skyboxConstantBuffer;
 	SkyboxConstants _skyboxConstants;
-	std::shared_ptr<ciri::ISamplerState> _skyboxSampler;
-	std::shared_ptr<ciri::IDepthStencilState> _skyboxDepthState;
+	std::shared_ptr<ciri::graphics::ISamplerState> _skyboxSampler;
+	std::shared_ptr<ciri::graphics::IDepthStencilState> _skyboxDepthState;
 };
 
 #endif /* __refractdemo__ */

@@ -1,5 +1,7 @@
 #include "Entity.hpp"
 
+namespace gfx = ciri::graphics;
+
 Entity::Entity()
 	: _position(), _velocity(), _orientation(0.0f), _texture(nullptr), _origin(), _color(1.0f), _isAlive(false), _collisionRadius(20.0f) {
 }
@@ -23,7 +25,7 @@ const bool& Entity::isAlive() const {
 	return _isAlive;
 }
 
-std::shared_ptr<ciri::ITexture2D> Entity::getTexture() const {
+std::shared_ptr<gfx::ITexture2D> Entity::getTexture() const {
 	return _texture;
 }
 
@@ -55,7 +57,7 @@ void Entity::setIsAlive( const bool alive ) {
 	_isAlive = alive;
 }
 
-void Entity::setTexture( const std::shared_ptr<ciri::ITexture2D>& texture ) {
+void Entity::setTexture( const std::shared_ptr<gfx::ITexture2D>& texture ) {
 	if( nullptr == texture ) {
 		return;
 	}

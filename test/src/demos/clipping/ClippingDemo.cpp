@@ -4,6 +4,9 @@
 #include "ClipMesh.hpp"
 #include "../../common/KScene.hpp"
 
+namespace gfx = ciri::graphics;
+namespace core = ciri::core;
+
 ClippingDemo::ClippingDemo()
 	: Game(), _model(nullptr) {
 	_config.width = 1280;
@@ -55,16 +58,16 @@ void ClippingDemo::onLoadContent() {
 	}
 
 	// create depth stencil state
-	ciri::DepthStencilDesc depthDesc;
+	gfx::DepthStencilDesc depthDesc;
 	_depthStencilState = graphicsDevice()->createDepthStencilState(depthDesc);
 	if( nullptr == _depthStencilState ) {
 		printf("Failed to create depth stencil state.\n");
 	}
 
 	// create rasterizer state
-	ciri::RasterizerDesc rasterDesc;
-	rasterDesc.cullMode = ciri::CullMode::None;
-	rasterDesc.fillMode = ciri::FillMode::Wireframe;
+	gfx::RasterizerDesc rasterDesc;
+	rasterDesc.cullMode = gfx::CullMode::None;
+	rasterDesc.fillMode = gfx::FillMode::Wireframe;
 	_rasterizerState = graphicsDevice()->createRasterizerState(rasterDesc);
 	if( nullptr == _rasterizerState ) {
 		printf("Failed to create rasterizer state.\n");
@@ -135,12 +138,12 @@ void ClippingDemo::onLoadContent() {
 	cutMesh();
 }
 
-void ClippingDemo::onEvent( const ciri::WindowEvent& evt ) {
+void ClippingDemo::onEvent( const core::WindowEvent& evt ) {
 	Game::onEvent(evt);
 
 	switch( evt.type ) {
-		case ciri::WindowEvent::Resized: {
-			if( graphicsDevice()->resize() != ciri::ErrorCode::CIRI_OK ) {
+		case core::WindowEvent::Resized: {
+			if( graphicsDevice()->resize() != core::ErrorCode::CIRI_OK ) {
 				printf("Failed to resize backbuffer.\n");
 			}
 			break;
@@ -152,13 +155,13 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	Game::onUpdate(deltaTime, elapsedTime);
 
 	// check for close w/ escape
-	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::Escape) ) {
+	if( window()->hasFocus() && input()->isKeyDown(core::Key::Escape) ) {
 		gtfo();
 		return;
 	}
 
 	// debug print camera information
-	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F9) && input()->wasKeyUp(ciri::Key::F9) ) {
+	if( window()->hasFocus() && input()->isKeyDown(core::Key::F9) && input()->wasKeyUp(core::Key::F9) ) {
 		const cc::Vec3f& pos = _camera.getPosition();
 		const float yaw = _camera.getYaw();
 		const float pitch = _camera.getPitch();
@@ -168,29 +171,29 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 	}
 
 	// print obj data
-	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::F5) && input()->wasKeyUp(ciri::Key::F5) ) {
+	if( window()->hasFocus() && input()->isKeyDown(core::Key::F5) && input()->wasKeyUp(core::Key::F5) ) {
 		printf("Outputting OBJ model: %s\n", _clippedModel.exportToObj("clipped.obj") ? "success" : "failed");
 		printf("Outputting OBJ model: %s\n", _model->exportToObj("source.obj") ? "success" : "failed");
 	}
 
 	// camera movement
-	if( window()->hasFocus() && input()->isKeyDown(ciri::Key::LAlt) ) {
+	if( window()->hasFocus() && input()->isKeyDown(core::Key::LAlt) ) {
 		// rotation
-		if( input()->isMouseButtonDown(ciri::MouseButton::Left) ) {
+		if( input()->isMouseButtonDown(core::MouseButton::Left) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
 			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			_camera.rotateYaw(-dx);
 			_camera.rotatePitch(-dy);
 		}
 		// dolly
-		if( input()->isMouseButtonDown(ciri::MouseButton::Right) ) {
+		if( input()->isMouseButtonDown(core::MouseButton::Right) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
 			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			const float val = (fabsf(dx) > fabsf(dy)) ? dx : dy;
 			_camera.dolly(val);
 		}
 		// pan
-		if( input()->isMouseButtonDown(ciri::MouseButton::Middle) ) {
+		if( input()->isMouseButtonDown(core::MouseButton::Middle) ) {
 			const float dx = (float)input()->mouseX() - (float)input()->lastMouseX();
 			const float dy = (float)input()->mouseY() - (float)input()->lastMouseY();
 			_camera.pan(dx, -dy);
@@ -199,26 +202,26 @@ void ClippingDemo::onUpdate( const double deltaTime, const double elapsedTime ) 
 
 	// move geometric plane
 	cc::Vec3f movement;
-	if( input()->isKeyDown(ciri::Key::I) ) {
+	if( input()->isKeyDown(core::Key::I) ) {
 		movement.y += 1.0f * static_cast<float>(deltaTime);
 	}
-	if( input()->isKeyDown(ciri::Key::K) ) {
+	if( input()->isKeyDown(core::Key::K) ) {
 		movement.y -= 1.0f * static_cast<float>(deltaTime);
 	}
-	if( input()->isKeyDown(ciri::Key::J) ) {
+	if( input()->isKeyDown(core::Key::J) ) {
 		movement.x -= 1.0f * static_cast<float>(deltaTime);
 	}
-	if( input()->isKeyDown(ciri::Key::L) ) {
+	if( input()->isKeyDown(core::Key::L) ) {
 		movement.x += 1.0f * static_cast<float>(deltaTime);
 	}
 	_geometricPlane.getXform().setPosition(_geometricPlane.getXform().getPosition() + movement);
 
 	// rotate geometric plane
 	cc::Quatf rotation;
-	if( input()->isKeyDown(ciri::Key::U) ) {
+	if( input()->isKeyDown(core::Key::U) ) {
 		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, 45.0f * static_cast<float>(deltaTime));
 	}
-	if( input()->isKeyDown(ciri::Key::O) ) {
+	if( input()->isKeyDown(core::Key::O) ) {
 		rotation = rotation * cc::Quatf::createFromEulerAngles(0.0f, 0.0f, -45.0f * static_cast<float>(deltaTime));
 	}
 	_geometricPlane.getXform().setOrientation(_geometricPlane.getXform().getOrientation() * rotation);
@@ -239,14 +242,14 @@ void ClippingDemo::onFixedUpdate( const double deltaTime, const double elapsedTi
 void ClippingDemo::onDraw() {
 	Game::onDraw();
 
-	std::shared_ptr<ciri::IGraphicsDevice> device = graphicsDevice();
+	std::shared_ptr<gfx::IGraphicsDevice> device = graphicsDevice();
 
 	// camera's viewproj
 	const cc::Mat4f cameraViewProj = _camera.getProj() * _camera.getView();
 
 	// clear backbuffer
 	device->setClearColor(0.15f, 0.16f, 0.13f, 1.0f);
-	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
+	device->clear(gfx::ClearFlags::Color | gfx::ClearFlags::Depth);
 
 	// set default states
 	device->setDepthStencilState(_depthStencilState);
@@ -259,7 +262,7 @@ void ClippingDemo::onDraw() {
 		if( _grid.updateConstants(gridXform) ) {
 			device->applyShader(_grid.getShader());
 			device->setVertexBuffer(_grid.getVertexBuffer());
-			device->drawArrays(ciri::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
+			device->drawArrays(gfx::PrimitiveTopology::LineList, _grid.getVertexBuffer()->getVertexCount(), 0);
 		}
 	}
 
@@ -283,7 +286,7 @@ void ClippingDemo::onDraw() {
 		if( _simpleShader.updateConstants() ) {
 			device->setVertexBuffer(_geometricPlane.getVertexBuffer());
 			device->setIndexBuffer(_geometricPlane.getIndexBuffer());
-			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _geometricPlane.getIndexBuffer()->getIndexCount());
+			device->drawIndexed(gfx::PrimitiveTopology::TriangleList, _geometricPlane.getIndexBuffer()->getIndexCount());
 		}
 	}
 	//
@@ -296,7 +299,7 @@ void ClippingDemo::onDraw() {
 		if( _simpleShader.updateConstants() ) {
 			device->setVertexBuffer(_geometricPlane2.getVertexBuffer());
 			device->setIndexBuffer(_geometricPlane2.getIndexBuffer());
-			device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _geometricPlane2.getIndexBuffer()->getIndexCount());
+			device->drawIndexed(gfx::PrimitiveTopology::TriangleList, _geometricPlane2.getIndexBuffer()->getIndexCount());
 		}
 	}
 
@@ -312,9 +315,9 @@ void ClippingDemo::onDraw() {
 			device->setVertexBuffer(_model->getVertexBuffer());
 			if( _model->getIndexBuffer() != nullptr ) {
 				device->setIndexBuffer(_model->getIndexBuffer());
-				device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _model->getIndexBuffer()->getIndexCount());
+				device->drawIndexed(gfx::PrimitiveTopology::TriangleList, _model->getIndexBuffer()->getIndexCount());
 			} else {
-				device->drawArrays(ciri::PrimitiveTopology::TriangleList, _model->getVertexBuffer()->getVertexCount(), 0);
+				device->drawArrays(gfx::PrimitiveTopology::TriangleList, _model->getVertexBuffer()->getVertexCount(), 0);
 			}
 		}
 	}
@@ -330,9 +333,9 @@ void ClippingDemo::onDraw() {
 			device->setVertexBuffer(_clippedModel.getVertexBuffer());
 			if( _clippedModel.getIndexBuffer() != nullptr ) {
 				device->setIndexBuffer(_clippedModel.getIndexBuffer());
-				device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _clippedModel.getIndexBuffer()->getIndexCount());
+				device->drawIndexed(gfx::PrimitiveTopology::TriangleList, _clippedModel.getIndexBuffer()->getIndexCount());
 			} else {
-				device->drawArrays(ciri::PrimitiveTopology::TriangleList, _clippedModel.getVertexBuffer()->getVertexCount(), 0);
+				device->drawArrays(gfx::PrimitiveTopology::TriangleList, _clippedModel.getVertexBuffer()->getVertexCount(), 0);
 			}
 		}
 	}
@@ -364,8 +367,8 @@ void ClippingDemo::cutMesh() {
 
 	// perform the clip
 	// test: can i clip with multiple planes? yes! yes i can! :D
-	cm.clip(Plane(-_geometricPlane2.getNormal(), _geometricPlane2.getConstant()));
-	const ClipMesh::Result result = cm.clip(Plane(_geometricPlane.getNormal(), _geometricPlane.getConstant()));
+	cm.clip(ClipPlane(-_geometricPlane2.getNormal(), _geometricPlane2.getConstant()));
+	const ClipMesh::Result result = cm.clip(ClipPlane(_geometricPlane.getNormal(), _geometricPlane.getConstant()));
 	if( ClipMesh::Result::Dissected == result ) {
 		printf("Dissected\n");
 	}

@@ -1,6 +1,8 @@
 #include "BMGrid.hpp"
 #include <cmath>
 
+namespace gfx = ciri::graphics;
+
 template<typename T> int sign( T val ) {
 	return (T(0) < val) - (val < T(0)); 
 }
@@ -57,7 +59,7 @@ void GridPoint::disrupt( float xx, float yy ) {
 	}
 }
 
-BMGrid::BMGrid( const int gridWidth, const int gridHeight, const int playfieldWidth, const int playfieldHeight, const std::shared_ptr<ciri::IGraphicsDevice>& device ) {
+BMGrid::BMGrid( const int gridWidth, const int gridHeight, const int playfieldWidth, const int playfieldHeight, const std::shared_ptr<gfx::IGraphicsDevice>& device ) {
 	_playfieldWidth = playfieldWidth;
 	_playfieldHeight = playfieldHeight;
 	_gridWidth = gridWidth;
@@ -68,7 +70,7 @@ BMGrid::BMGrid( const int gridWidth, const int gridHeight, const int playfieldWi
 	_grid = new GridPoint[_numPointsW * _numPointsH];
 
 	unsigned char whitePixel[] = {255, 255, 255, 255};
-	_pixel = device->createTexture2D(1, 1, ciri::TextureFormat::RGBA32_UINT, 0, whitePixel);
+	_pixel = device->createTexture2D(1, 1, gfx::TextureFormat::RGBA32_UINT, 0, whitePixel);
 }
 
 BMGrid::~BMGrid() {

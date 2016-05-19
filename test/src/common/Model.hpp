@@ -2,7 +2,7 @@
 #define __test_model__
 
 #include <vector>
-#include <ciri/gfx/IGraphicsDevice.hpp>
+#include <ciri/Graphics.hpp>
 #include "Vertex.hpp"
 #include "Transform.hpp"
 
@@ -34,16 +34,16 @@ public:
 	bool addFromObj( const char* file, bool outputErrors=false );
 	bool computeNormals();
 	bool computeTangents();
-	bool build( std::shared_ptr<ciri::IGraphicsDevice> device );
+	bool build( std::shared_ptr<ciri::graphics::IGraphicsDevice> device );
 	bool updateBuffers( bool vertex, bool index );
 
 	bool flipNormals( bool shouldUpdateBuffers );
 
-	const std::shared_ptr<ciri::IVertexBuffer>& getVertexBuffer() const;
-	const std::shared_ptr<ciri::IIndexBuffer>& getIndexBuffer() const;
+	const std::shared_ptr<ciri::graphics::IVertexBuffer>& getVertexBuffer() const;
+	const std::shared_ptr<ciri::graphics::IIndexBuffer>& getIndexBuffer() const;
 	Transform& getXform();
-	const std::shared_ptr<ciri::IShader>& getShader() const;
-	void setShader( const std::shared_ptr<ciri::IShader>& val );
+	const std::shared_ptr<ciri::graphics::IShader>& getShader() const;
+	void setShader( const std::shared_ptr<ciri::graphics::IShader>& val );
 	void setDynamicity( bool vertex, bool index ); // only call before build
 
 	bool isValid() const;
@@ -62,10 +62,10 @@ public:
 private:
 	std::vector<Vertex> _vertices;
 	std::vector<int> _indices;
-	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
-	std::shared_ptr<ciri::IIndexBuffer> _indexBuffer;
+	std::shared_ptr<ciri::graphics::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::graphics::IIndexBuffer> _indexBuffer;
 	Transform _xform;
-	std::shared_ptr<ciri::IShader> _shader;
+	std::shared_ptr<ciri::graphics::IShader> _shader;
 	bool _dynamicVertex;
 	bool _dynamicIndex;
 	

@@ -1,56 +1,56 @@
-#ifndef __ciri_core_itimer__
-#define __ciri_core_itimer__
+#ifndef __ciri_core_ITimer__
+#define __ciri_core_ITimer__
 
-#include <memory>
+namespace ciri { namespace core {
 
-namespace ciri {
-	class ITimer {
-	public:
-		ITimer() {
-		}
+class ITimer {
+public:
+	ITimer() {
+	}
 
-		virtual ~ITimer() {
-		}
+	virtual ~ITimer() {
+	}
 
 		
-		/**
-		 * Starts the timer.
-		 */
-		virtual void start()=0;
+	/**
+		* Starts the timer.
+		*/
+	virtual void start()=0;
 
-		/**
-		 * Pauses the timer.
-		 */
-		virtual void pause()=0;
+	/**
+		* Pauses the timer.
+		*/
+	virtual void pause()=0;
 
-		/**
-		 * Stops the timer.
-		 */
-		virtual void stop()=0;
+	/**
+		* Stops the timer.
+		*/
+	virtual void stop()=0;
 
-		/**
-		 * Restarts the timer.
-		 */
-		virtual void restart()=0;
+	/**
+		* Restarts the timer.
+		*/
+	virtual void restart()=0;
 
-		/**
-		 * Gets the elapsed time since start in microseconds.
-		 * @return Time elapsed in microseconds.
-		 */
-		virtual double getElapsedMicrosecs()=0;
+	/**
+		* Gets the elapsed time since start in microseconds.
+		* @return Time elapsed in microseconds.
+		*/
+	virtual double getElapsedMicrosecs()=0;
 
-		/**
-		 * Gets the elapsed time since start in milliseconds.
-		 * @return Time elapsed in milliseconds.
-		 */
-		virtual double getElapsedMillisecs()=0;
+	/**
+		* Gets the elapsed time since start in milliseconds.
+		* @return Time elapsed in milliseconds.
+		*/
+	virtual double getElapsedMillisecs()=0;
 
-		/**
-		 * Gets the elapsed time since start in seconds.
-		 * @return Time elapsed in seconds.
-		 */
-		virtual double getElapsedSecs()=0;
-	};
-} // ciri
+	/**
+		* Gets the elapsed time since start in seconds.
+		* @return Time elapsed in seconds.
+		*/
+	virtual double getElapsedSecs()=0;
+};
 
-#endif /* __ciri_core_itimer__ */
+}}
+
+#endif

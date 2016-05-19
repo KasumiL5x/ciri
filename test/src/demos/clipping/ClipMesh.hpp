@@ -16,7 +16,7 @@
 #include <set>
 #include <cc/Vec3.hpp>
 #include "../../common/Model.hpp"
-#include "Plane.hpp"
+#include "ClipPlane.hpp"
 
 class ClipMesh {
 public:
@@ -95,7 +95,7 @@ public:
 	 * @param clipPlane Plane to clip the mesh with.
 	 * @returns Result indicating clipping status.
 	 */
-	Result clip( const Plane& clipPlane );
+	Result clip( const ClipPlane& clipPlane );
 
 	/**
 	 * Converts the clipped mesh back to a regular Model.
@@ -116,7 +116,7 @@ private:
 	 * @param clippingPlane Plane to compare the vertices to.
 	 * @returns Result indicating clipping status.
 	 */
-	Result processVertices( const Plane& clippingPlane );
+	Result processVertices( const ClipPlane& clippingPlane );
 	
 	/**
 	 * Modifies and splits edges based on their vertices' signed distances.
@@ -128,7 +128,7 @@ private:
 	 * Fixes the faces with new edges and caps the newly created hole generated from the cutting process.
 	 * @param clippingPlane Plane used to give the filled hole a normal.
 	 */
-	void processFaces( const Plane& clippingPlane );
+	void processFaces( const ClipPlane& clippingPlane );
 	
 	/**
 	 * Detects an open polyline's start and end points from a face.

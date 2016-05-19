@@ -63,7 +63,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ciri-core-d.lib;ciri-wnd-d.lib;ciri-input-d.lib;ciri-gfx-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ciri_core-d.lib;ciri_graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,22 +78,24 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ciri-core.lib;ciri-wnd.lib;ciri-input.lib;ciri-gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ciri_core.lib;ciri_graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\common\Axis.cpp" />
+    <ClCompile Include="src\common\AxisGrid.cpp" />
+    <ClCompile Include="src\common\AxisWidget.cpp" />
+    <ClCompile Include="src\common\Game.cpp" />
     <ClCompile Include="src\common\GeometricPlane.cpp" />
-    <ClCompile Include="src\common\Grid.cpp" />
     <ClCompile Include="src\common\HeightmapTerrain.cpp" />
     <ClCompile Include="src\common\KScene.cpp" />
     <ClCompile Include="src\common\Model.cpp" />
+    <ClCompile Include="src\common\ScreenSystem\ScreenManager.cpp" />
     <ClCompile Include="src\common\ShaderPresets.cpp" />
     <ClCompile Include="src\common\SpriteBatch.cpp" />
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\clipping\ClippingDemo.cpp" />
     <ClCompile Include="src\demos\clipping\ClipMesh.cpp" />
-    <ClCompile Include="src\demos\clipping\Plane.cpp" />
+    <ClCompile Include="src\demos\clipping\ClipPlane.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="src\demos\gridlr\BlockChain.cpp" />
@@ -111,18 +113,21 @@
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp" />
     <ClCompile Include="src\demos\sprites\TestParticleSystem.cpp" />
     <ClCompile Include="src\demos\terrain\TerrainDemo.cpp" />
-    <ClCompile Include="src\framework\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\common\Axis.hpp" />
+    <ClInclude Include="src\common\AxisGrid.hpp" />
+    <ClInclude Include="src\common\AxisWidget.hpp" />
+    <ClInclude Include="src\common\Game.hpp" />
     <ClInclude Include="src\common\GeometricPlane.hpp" />
-    <ClInclude Include="src\common\Grid.hpp" />
     <ClInclude Include="src\common\HeightmapTerrain.hpp" />
     <ClInclude Include="src\common\KScene.hpp" />
     <ClInclude Include="src\common\Leb128.hpp" />
     <ClInclude Include="src\common\Model.hpp" />
     <ClInclude Include="src\common\ModelGen.hpp" />
+    <ClInclude Include="src\common\ScreenSystem\Screen.hpp" />
+    <ClInclude Include="src\common\ScreenSystem\ScreenManager.hpp" />
+    <ClInclude Include="src\common\ScreenSystem\ScreenState.hpp" />
     <ClInclude Include="src\common\ShaderPresets.hpp" />
     <ClInclude Include="src\common\SpriteBatch.hpp" />
     <ClInclude Include="src\common\SpriteBatchItem.hpp" />
@@ -131,7 +136,7 @@
     <ClInclude Include="src\common\Vertex.hpp" />
     <ClInclude Include="src\demos\clipping\ClippingDemo.hpp" />
     <ClInclude Include="src\demos\clipping\ClipMesh.hpp" />
-    <ClInclude Include="src\demos\clipping\Plane.hpp" />
+    <ClInclude Include="src\demos\clipping\ClipPlane.hpp" />
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\gridlr\Block.hpp" />
@@ -154,7 +159,6 @@
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp" />
     <ClInclude Include="src\demos\sprites\TestParticleSystem.hpp" />
     <ClInclude Include="src\demos\terrain\TerrainDemo.hpp" />
-    <ClInclude Include="src\framework\Game.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

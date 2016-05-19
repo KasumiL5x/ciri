@@ -2,12 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\common\Axis.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\Grid.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="src\common\HeightmapTerrain.cpp">
       <Filter>common</Filter>
     </ClCompile>
@@ -56,9 +50,6 @@
     <ClCompile Include="src\demos\sprites\BMGrid.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\framework\Game.cpp">
-      <Filter>framework</Filter>
-    </ClCompile>
     <ClCompile Include="src\demos\refract\RefractDemo.cpp">
       <Filter>demos\refract</Filter>
     </ClCompile>
@@ -74,9 +65,6 @@
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp">
       <Filter>demos\parallax</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\clipping\Plane.cpp">
-      <Filter>demos\clipping</Filter>
-    </ClCompile>
     <ClCompile Include="src\common\KScene.cpp">
       <Filter>common</Filter>
     </ClCompile>
@@ -91,6 +79,21 @@
     </ClCompile>
     <ClCompile Include="src\demos\gridlr\BlockGrid.cpp">
       <Filter>demos\gridlr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\ScreenSystem\ScreenManager.cpp">
+      <Filter>common\ScreenSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Game.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\clipping\ClipPlane.cpp">
+      <Filter>demos\clipping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\AxisGrid.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\AxisWidget.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,9 +118,6 @@
     <Filter Include="demos\deferred">
       <UniqueIdentifier>{9af89ecd-c1b6-4a06-9dc0-4bf36dee413b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="framework">
-      <UniqueIdentifier>{55e961ed-0bef-4f64-acf7-d333255a2984}</UniqueIdentifier>
-    </Filter>
     <Filter Include="demos\refract">
       <UniqueIdentifier>{2de98518-acd6-4f7c-ac5f-57dd3d102d97}</UniqueIdentifier>
     </Filter>
@@ -130,14 +130,11 @@
     <Filter Include="demos\gridlr">
       <UniqueIdentifier>{5b1a7620-a180-4501-92ca-c77b5920bfd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\ScreenSystem">
+      <UniqueIdentifier>{2e8a2560-3445-4bcc-88c8-042a288956db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\common\Axis.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\Grid.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="src\common\HeightmapTerrain.hpp">
       <Filter>common</Filter>
     </ClInclude>
@@ -198,16 +195,10 @@
     <ClInclude Include="src\demos\sprites\BMGrid.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\framework\Game.hpp">
-      <Filter>framework</Filter>
-    </ClInclude>
     <ClInclude Include="src\demos\refract\RefractDemo.hpp">
       <Filter>demos\refract</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\clipping\ClippingDemo.hpp">
-      <Filter>demos\clipping</Filter>
-    </ClInclude>
-    <ClInclude Include="src\demos\clipping\Plane.hpp">
       <Filter>demos\clipping</Filter>
     </ClInclude>
     <ClInclude Include="src\common\GeometricPlane.hpp">
@@ -251,6 +242,27 @@
     </ClInclude>
     <ClInclude Include="src\demos\gridlr\BlockType.hpp">
       <Filter>demos\gridlr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\ScreenSystem\Screen.hpp">
+      <Filter>common\ScreenSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\ScreenSystem\ScreenManager.hpp">
+      <Filter>common\ScreenSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\ScreenSystem\ScreenState.hpp">
+      <Filter>common\ScreenSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Game.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\clipping\ClipPlane.hpp">
+      <Filter>demos\clipping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\AxisGrid.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\AxisWidget.hpp">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

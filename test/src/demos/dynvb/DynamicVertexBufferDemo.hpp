@@ -2,10 +2,10 @@
 #define __dynamicvertexbufferdemo__
 
 #include <string>
-#include "../../framework/Game.hpp"
-#include <ciri/gfx/MayaCamera.hpp>
-#include "../../common/Grid.hpp"
-#include "../../common/Axis.hpp"
+#include "../../common/Game.hpp"
+#include <ciri/graphics/MayaCamera.hpp>
+#include "../../common/AxisGrid.hpp"
+#include "../../common/AxisWidget.hpp"
 #include "../../common/Model.hpp"
 #include "../../common/ShaderPresets.hpp"
 #include "OpenCloth.hpp"
@@ -24,20 +24,20 @@ public:
 
 	virtual void onInitialize() override;
 	virtual void onLoadContent() override;
-	virtual void onEvent( const ciri::WindowEvent& evt ) override;
+	virtual void onEvent( const ciri::core::WindowEvent& evt ) override;
 	virtual void onUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onDraw() override;
 	virtual void onUnloadContent() override;
 
 private:
-	ciri::MayaCamera _camera;
+	ciri::graphics::MayaCamera _camera;
 	//
-	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
 	//
-	Grid _grid;
-	Axis _axis;
+	AxisGrid _grid;
+	AxisWidget _axis;
 	//
 	SimpleShader _simpleShader;
 	Model _flagpole;

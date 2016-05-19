@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{77f2e265-b99f-449a-8e77-9bd932e2b4cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{507464ea-bb0c-4553-b503-20d086c3250f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core">
+      <UniqueIdentifier>{fb8c7572-05df-4391-a7b9-2ac86c318a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{a1c132e8-15ea-468e-bf8e-d0aa064e6217}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core\win">
+      <UniqueIdentifier>{4613f610-e07b-4f89-b656-19dc87a4cda0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core\win">
+      <UniqueIdentifier>{708d24b1-3493-4404-adb1-d6e270fbe1f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core\window">
+      <UniqueIdentifier>{3f1e94d9-b57a-4761-be46-df0fcba53efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core\window\win">
+      <UniqueIdentifier>{03573c17-fc04-47c3-96d7-75363747e57f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core\window">
+      <UniqueIdentifier>{4fe21032-c340-44c9-bd1a-b2a9e470f55e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core\window\win">
+      <UniqueIdentifier>{2bcf01a7-0432-4d37-8216-72db14bae36b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core\input">
+      <UniqueIdentifier>{d27c32d8-4ccd-4611-a8c5-062a3d685ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\core\input\win">
+      <UniqueIdentifier>{2f2ab755-0687-4094-b9e8-39a8c463e8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core\input">
+      <UniqueIdentifier>{c82ee80f-f7ad-4134-a471-0e68dd8fe339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core\input\win">
+      <UniqueIdentifier>{a794af45-7b21-4943-b46c-e7851e0cb214}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\ciri\core\File.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\Log.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\TGA.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\PNG.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\ErrorCodes.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\StrUtil.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\Leb128.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\ITimer.hpp">
+      <Filter>inc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\win\Timer.hpp">
+      <Filter>inc\core\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\window\IWindow.hpp">
+      <Filter>inc\core\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\window\WindowEvent.hpp">
+      <Filter>inc\core\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\window\win\Window.hpp">
+      <Filter>inc\core\window\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\input\IInput.hpp">
+      <Filter>inc\core\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\input\Keyboard.hpp">
+      <Filter>inc\core\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\input\Mouse.hpp">
+      <Filter>inc\core\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\core\input\win\Input.hpp">
+      <Filter>inc\core\input\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\Core.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ciri\core\File.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\TGA.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\PNG.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\win\Timer.cpp">
+      <Filter>src\core\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\Log.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\window\win\Window.cpp">
+      <Filter>src\core\window\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\core\input\win\Input.cpp">
+      <Filter>src\core\input\win</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

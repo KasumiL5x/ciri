@@ -1,5 +1,8 @@
 #include "HeightmapTerrain.hpp"
 
+namespace core = ciri::core;
+namespace gfx = ciri::graphics;
+
 HeightmapTerrain::HeightmapTerrain()
 	: _generated(false), _heightData(nullptr), _vertices(nullptr), _indices(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr),
 		_shader(nullptr), _perFrameConstantBuffer(nullptr), _sampler(nullptr) {
@@ -9,7 +12,7 @@ HeightmapTerrain::HeightmapTerrain()
 HeightmapTerrain::~HeightmapTerrain() {
 }
 
-bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<ciri::IGraphicsDevice> device ) {
+bool HeightmapTerrain::generate( const core::TGA& heightmap, std::shared_ptr<gfx::IGraphicsDevice> device ) {
 	if( _generated ) {
 		return false;
 	}
@@ -29,7 +32,7 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<cir
 	float minHeight = std::numeric_limits<float>::max();
 	float maxHeight = std::numeric_limits<float>::min();
 	// create height data array
-	const int BPP = (ciri::TGA::RGB == heightmap.getFormat()) ? 3 : 4;
+	const int BPP = (core::TGA::RGB == heightmap.getFormat()) ? 3 : 4;
 	_heightData = new float[width * height];
 	for( int x = 0; x < width; ++x ) {
 		for( int y = 0; y < height; ++y ) {
@@ -160,14 +163,14 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<cir
 
 	// create the shader
 	_shader = device->createShader();
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Texcoord, 1)); // wrong ?
-	const std::string vsStr = (ciri::GraphicsApiType::OpenGL==device->getApiType()) ? getVertexShaderGl() : getVertexShaderDx();
-	const std::string psStr = (ciri::GraphicsApiType::OpenGL==device->getApiType()) ? getPixelShaderGl() : getPixelShaderDx();
-	if( ciri::failed(_shader->loadFromMemory(vsStr.c_str(), nullptr, psStr.c_str())) ) {
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Position, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Normal, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float4, gfx::VertexUsage::Tangent, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float2, gfx::VertexUsage::Texcoord, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float4, gfx::VertexUsage::Texcoord, 1)); // wrong ?
+	const std::string vsStr = (gfx::GraphicsApiType::OpenGL==device->getApiType()) ? getVertexShaderGl() : getVertexShaderDx();
+	const std::string psStr = (gfx::GraphicsApiType::OpenGL==device->getApiType()) ? getPixelShaderGl() : getPixelShaderDx();
+	if( core::failed(_shader->loadFromMemory(vsStr.c_str(), nullptr, psStr.c_str())) ) {
 		for( auto err : _shader->getErrors() ) {
 			printf("%s\n", err.msg.c_str());
 		}
@@ -180,11 +183,11 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<cir
 	_perFrameConstantBuffer->setData(sizeof(PerFrameConstants), &_perFrameConstants);
 
 	// assign constant buffers to shader
-	_shader->addConstants(_perFrameConstantBuffer, "PerFrameConstants", ciri::ShaderStage::Vertex);
+	_shader->addConstants(_perFrameConstantBuffer, "PerFrameConstants", gfx::ShaderStage::Vertex);
 
 	// create the sampler
-	ciri::SamplerDesc samplerDesc;
-	samplerDesc.filter = ciri::SamplerFilter::Linear;
+	gfx::SamplerDesc samplerDesc;
+	samplerDesc.filter = gfx::SamplerFilter::Linear;
 	_sampler = device->createSamplerState(samplerDesc);
 
 	_generated = true;
@@ -192,7 +195,7 @@ bool HeightmapTerrain::generate( const ciri::TGA& heightmap, std::shared_ptr<cir
 	return true;
 }
 
-void HeightmapTerrain::setTextures( const std::shared_ptr<ciri::ITexture2D>& tex0, const std::shared_ptr<ciri::ITexture2D>& tex1, const std::shared_ptr<ciri::ITexture2D>& tex2, const std::shared_ptr<ciri::ITexture2D>& tex3 ) {
+void HeightmapTerrain::setTextures( const std::shared_ptr<gfx::ITexture2D>& tex0, const std::shared_ptr<gfx::ITexture2D>& tex1, const std::shared_ptr<gfx::ITexture2D>& tex2, const std::shared_ptr<gfx::ITexture2D>& tex3 ) {
 	_textures[0] = tex0;
 	_textures[1] = tex1;
 	_textures[2] = tex2;
@@ -204,11 +207,11 @@ void HeightmapTerrain::setClippingPlaneActive( bool active ) {
 }
 
 void HeightmapTerrain::setClippingPlaneParams( float height, const cc::Mat4f& viewProj, bool flip ) {
-	ciri::Plane plane = createClippingPlane(height, cc::Vec3f(0, -1, 0), viewProj, flip);
+	gfx::Plane plane = createClippingPlane(height, cc::Vec3f(0, -1, 0), viewProj, flip);
 	_perFrameConstants.clippingPlane = cc::Vec4f(plane.getNormal(), plane.getD());
 }
 
-void HeightmapTerrain::draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::IGraphicsDevice> device ) {
+void HeightmapTerrain::draw( const cc::Mat4f& viewProj, std::shared_ptr<gfx::IGraphicsDevice> device ) {
 	if( !_generated ) {
 		return;
 	}
@@ -237,16 +240,16 @@ void HeightmapTerrain::draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::IG
 	device->applyShader(_shader);
 
 	// apply samplers
-	device->setSamplerState(0, _sampler, ciri::ShaderStage::Pixel);
-	device->setSamplerState(1, _sampler, ciri::ShaderStage::Pixel);
-	device->setSamplerState(2, _sampler, ciri::ShaderStage::Pixel);
-	device->setSamplerState(3, _sampler, ciri::ShaderStage::Pixel);
+	device->setSamplerState(0, _sampler, gfx::ShaderStage::Pixel);
+	device->setSamplerState(1, _sampler, gfx::ShaderStage::Pixel);
+	device->setSamplerState(2, _sampler, gfx::ShaderStage::Pixel);
+	device->setSamplerState(3, _sampler, gfx::ShaderStage::Pixel);
 
 	// apply textures
-	device->setTexture2D(0, _textures[0], ciri::ShaderStage::Pixel);
-	device->setTexture2D(1, _textures[1], ciri::ShaderStage::Pixel);
-	device->setTexture2D(2, _textures[2], ciri::ShaderStage::Pixel);
-	device->setTexture2D(3, _textures[3], ciri::ShaderStage::Pixel);
+	device->setTexture2D(0, _textures[0], gfx::ShaderStage::Pixel);
+	device->setTexture2D(1, _textures[1], gfx::ShaderStage::Pixel);
+	device->setTexture2D(2, _textures[2], gfx::ShaderStage::Pixel);
+	device->setTexture2D(3, _textures[3], gfx::ShaderStage::Pixel);
 
 	// update constant buffers
 	updateConstants(cc::Mat4f(1.0f), viewProj);
@@ -254,7 +257,7 @@ void HeightmapTerrain::draw( const cc::Mat4f& viewProj, std::shared_ptr<ciri::IG
 	// set buffers and draw
 	device->setVertexBuffer(_vertexBuffer);
 	device->setIndexBuffer(_indexBuffer);
-	device->drawIndexed(ciri::PrimitiveTopology::TriangleList, _indexBuffer->getIndexCount());
+	device->drawIndexed(gfx::PrimitiveTopology::TriangleList, _indexBuffer->getIndexCount());
 }
 
 void HeightmapTerrain::clean() {
@@ -564,10 +567,10 @@ std::string HeightmapTerrain::getPixelShaderDx() const {
 		"}";
 }
 
-ciri::Plane HeightmapTerrain::createClippingPlane( float height, const cc::Vec3f& normal, const cc::Mat4f& viewProj, bool flip ) const {
+gfx::Plane HeightmapTerrain::createClippingPlane( float height, const cc::Vec3f& normal, const cc::Mat4f& viewProj, bool flip ) const {
 	cc::Vec4f coeffs = cc::Vec4f(normal, height) * (flip ? -1.0f : 1.0f);
 	cc::Mat4f myViewProj = viewProj;
 	myViewProj.invert();
 	coeffs = (coeffs * myViewProj);
-	return ciri::Plane(coeffs);
+	return gfx::Plane(coeffs);
 }

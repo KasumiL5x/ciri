@@ -26,9 +26,11 @@ bool BlockGrid::create( int width, int height ) {
 
 	// initialize grid
 	_blocks = new Block[width * height];
+	int counter = 0;
 	for( int y = 0; y < height; ++y ) {
 		for( int x = 0; x < width; ++x ) {
 			auto block = get(x, y);
+			block->setId(counter++);
 			block->setX(x);
 			block->setY(y);
 		}

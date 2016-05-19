@@ -1,10 +1,10 @@
 #include "Model.hpp"
-#include <ciri/gfx/IVertexBuffer.hpp>
-#include <ciri/gfx/IIndexBuffer.hpp>
-#include <ciri/gfx/ObjModel.hpp>
 #include <map>
 #include <cc/TriMath.hpp>
 #include <fstream>
+
+namespace core = ciri::core;
+namespace gfx = ciri::graphics;
 
 Model::Model()
 	: _vertexBuffer(nullptr), _indexBuffer(nullptr), _shader(nullptr), _dynamicVertex(false), _dynamicIndex(false) {
@@ -49,7 +49,7 @@ void Model::addIndex( int index ){
 }
 
 bool Model::addFromObj( const char* file, bool outputErrors ) {
-	ciri::ObjModel obj;
+	gfx::ObjModel obj;
 	if( !obj.parse(file) ) {
 		return false;
 	}
@@ -60,7 +60,7 @@ bool Model::addFromObj( const char* file, bool outputErrors ) {
 	const std::vector<cc::Vec3f>& positions = obj.getPositions();
 	const std::vector<cc::Vec3f>& normals = obj.getNormals();
 	const std::vector<cc::Vec2f>& texcoords = obj.getTexcoords();
-	const std::vector<ciri::ObjModel::ObjVertex>& objVertices = obj.getVertices();
+	const std::vector<gfx::ObjModel::ObjVertex>& objVertices = obj.getVertices();
 
 	//printf("pos: %d; nrm: %d; tex: %d; verts: %d\n", positions.size(), normals.size(), texcoords.size(), objVertices.size());
 
@@ -207,7 +207,7 @@ bool Model::computeTangents() {
 	return true;
 }
 
-bool Model::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
+bool Model::build( std::shared_ptr<gfx::IGraphicsDevice> device ) {
 	if( _vertexBuffer != nullptr ) {
 		return false;
 	}
@@ -217,7 +217,7 @@ bool Model::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 	}
 
 	_vertexBuffer = device->createVertexBuffer();
-	if( ciri::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), _dynamicVertex)) ) {
+	if( core::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), _dynamicVertex)) ) {
 		_vertexBuffer->destroy();
 		_vertexBuffer.reset();
 		_vertexBuffer = nullptr;
@@ -226,7 +226,7 @@ bool Model::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
 
 	if( _indices.size() > 0 ) {
 		_indexBuffer = device->createIndexBuffer();
-		if( ciri::failed(_indexBuffer->set(_indices.data(), _indices.size(), _dynamicIndex)) ) {
+		if( core::failed(_indexBuffer->set(_indices.data(), _indices.size(), _dynamicIndex)) ) {
 			_vertexBuffer->destroy();
 			_vertexBuffer.reset();
 			_vertexBuffer = nullptr;
@@ -252,7 +252,7 @@ bool Model::updateBuffers( bool vertex, bool index ) {
 		if( !_dynamicVertex ) {
 			success = false;
 		} else {
-			if( ciri::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), true)) ) {
+			if( core::failed(_vertexBuffer->set(_vertices.data(), sizeof(Vertex), _vertices.size(), true)) ) {
 				success = false;
 			}
 		}
@@ -263,7 +263,7 @@ bool Model::updateBuffers( bool vertex, bool index ) {
 		if( !_dynamicIndex ) {
 			success = false;
 		} else {
-			if( ciri::failed(_indexBuffer->set(_indices.data(), _indices.size(), true)) ) {
+			if( core::failed(_indexBuffer->set(_indices.data(), _indices.size(), true)) ) {
 				success = false;
 			}
 		}
@@ -289,11 +289,11 @@ bool Model::flipNormals( bool shouldUpdateBuffers ) {
 	return true;
 }
 
-const std::shared_ptr<ciri::IVertexBuffer>& Model::getVertexBuffer() const {
+const std::shared_ptr<gfx::IVertexBuffer>& Model::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-const std::shared_ptr<ciri::IIndexBuffer>& Model::getIndexBuffer() const {
+const std::shared_ptr<gfx::IIndexBuffer>& Model::getIndexBuffer() const {
 	return _indexBuffer;
 }
 
@@ -301,11 +301,11 @@ Transform& Model::getXform() {
 	return _xform;
 }
 
-const std::shared_ptr<ciri::IShader>& Model::getShader() const {
+const std::shared_ptr<gfx::IShader>& Model::getShader() const {
 	return _shader;
 }
 
-void Model::setShader( const std::shared_ptr<ciri::IShader>& val ) {
+void Model::setShader( const std::shared_ptr<gfx::IShader>& val ) {
 	_shader = val;
 }
 

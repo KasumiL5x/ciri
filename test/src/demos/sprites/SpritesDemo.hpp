@@ -3,7 +3,7 @@
 
 #include <array>
 #include <memory>
-#include "../../framework/Game.hpp"
+#include "../../common/Game.hpp"
 #include "../../common/SpriteBatch.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
@@ -22,7 +22,7 @@ public:
 
 	virtual void onInitialize() override;
 	virtual void onLoadContent() override;
-	virtual void onEvent( const ciri::WindowEvent& evt ) override;
+	virtual void onEvent( const ciri::core::WindowEvent& evt ) override;
 	virtual void onUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onFixedUpdate( const double deltaTime, const double elapsedTime ) override;
 	virtual void onDraw() override;
@@ -36,33 +36,33 @@ private:
 private:
 	SpriteBatch _spritebatch;
 
-	std::shared_ptr<ciri::IBlendState> _blendState;
-	std::shared_ptr<ciri::ISamplerState> _samplerState;
-	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
-	std::shared_ptr<ciri::IRasterizerState> _rasterizerState;
+	std::shared_ptr<ciri::graphics::IBlendState> _blendState;
+	std::shared_ptr<ciri::graphics::ISamplerState> _samplerState;
+	std::shared_ptr<ciri::graphics::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::graphics::IRasterizerState> _rasterizerState;
 
 	BMGrid* _grid;
 
-	std::shared_ptr<ciri::ITexture2D> _playerTexture;
+	std::shared_ptr<ciri::graphics::ITexture2D> _playerTexture;
 	std::shared_ptr<PlayerShip> _player;
 	cc::Vec2f _playerMovement;
 
-	std::shared_ptr<ciri::ITexture2D> _bulletTexture;
+	std::shared_ptr<ciri::graphics::ITexture2D> _bulletTexture;
 	std::array<Bullet, 100> _bullets;
 	float _fireTimer = {0.0f};
 	const float FIRE_DELAY = {0.1f};
 
-	std::shared_ptr<ciri::ITexture2D> _enemySeekerTexture;
+	std::shared_ptr<ciri::graphics::ITexture2D> _enemySeekerTexture;
 	std::array<Enemy, 10> _enemies;
 	float _enemySpawnDelay;
 	float _enemySpawnTimer;
 
-	std::shared_ptr<ciri::ITexture2D> _cursorTexture;
+	std::shared_ptr<ciri::graphics::ITexture2D> _cursorTexture;
 	cc::Vec2f _cursorPos;
 	cc::Vec2f _cursorOrigin;
 
 	TestParticleSystem _psys;
-	std::shared_ptr<ciri::ITexture2D> _testPsysTexture;
+	std::shared_ptr<ciri::graphics::ITexture2D> _testPsysTexture;
 };
 
 #endif /* __spritesdemo__ */

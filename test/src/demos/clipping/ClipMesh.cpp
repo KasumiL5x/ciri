@@ -68,7 +68,7 @@ ClipMesh::ClipMesh( Model& sourceModel ) {
 	}
 }
 
-ClipMesh::Result ClipMesh::clip( const Plane& clipPlane ) {
+ClipMesh::Result ClipMesh::clip( const ClipPlane& clipPlane ) {
 	const Result result = processVertices(clipPlane);
 
 	// no more processing required if the mesh isn't clipped
@@ -154,7 +154,7 @@ void ClipMesh::printDebug( bool verbose ) {
 	}
 }
 
-ClipMesh::Result ClipMesh::processVertices( const Plane& clippingPlane ) {
+ClipMesh::Result ClipMesh::processVertices( const ClipPlane& clippingPlane ) {
 	const float EPSILON = 0.0001f;
 	int numPositive = 0;
 	int numNegative = 0;
@@ -252,7 +252,7 @@ void ClipMesh::processEdges() {
 	}
 }
 
-void ClipMesh::processFaces( const Plane& clippingPlane ) {
+void ClipMesh::processFaces( const ClipPlane& clippingPlane ) {
 	// the mesh straddles the plane.  a new convex polygon face will be
 	// generated.  add it now and insert edges when they are visited.
 	const unsigned int fNew = static_cast<unsigned int>(_faces.size());

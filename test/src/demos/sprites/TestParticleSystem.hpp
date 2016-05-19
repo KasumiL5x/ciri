@@ -16,7 +16,7 @@ public:
 	virtual void draw( SpriteBatch& spritebatch ) override;
 
 	void setEmitterPosition( const cc::Vec2f& position );
-	void setTexture( const std::shared_ptr<ciri::ITexture2D>& texture );
+	void setTexture( const std::shared_ptr<ciri::graphics::ITexture2D>& texture );
 	void setEmitDirection( const cc::Vec2f& direction );
 
 private:
@@ -28,7 +28,7 @@ private:
 private:
 	std::vector<Particle> _particles;
 	cc::Vec2f _emitterPosition;
-	std::shared_ptr<ciri::ITexture2D> _texture;
+	std::shared_ptr<ciri::graphics::ITexture2D> _texture;
 	cc::Vec2f _emitDirection;
 };
 

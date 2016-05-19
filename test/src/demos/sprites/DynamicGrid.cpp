@@ -1,6 +1,8 @@
 #include "DynamicGrid.hpp"
 #include <vector>
 
+namespace gfx = ciri::graphics;
+
 PointMass::PointMass()
 	: position(0.0f), velocity(0.0f), inverseMass(0.0f), acceleration(0.0f), damping(0.98f) {
 }
@@ -70,7 +72,7 @@ DynamicGrid::DynamicGrid()
 	: _numColumns(0), _numRows(0), _pixel(nullptr) {
 }
 
-DynamicGrid::DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const std::shared_ptr<ciri::IGraphicsDevice>& device )
+DynamicGrid::DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const std::shared_ptr<gfx::IGraphicsDevice>& device )
 	: _numColumns(0), _numRows(0), _pixel(nullptr) {
 	_numColumns = static_cast<int>(size.z / spacing.x) + 1;
 	_numRows = static_cast<int>(size.w / spacing.y) + 1;
@@ -121,7 +123,7 @@ DynamicGrid::DynamicGrid( const cc::Vec4f& size, const cc::Vec2f& spacing, const
 	}
 
 	unsigned char whitePixel[] = {255, 255, 255, 255};
-	_pixel = device->createTexture2D(1, 1, ciri::TextureFormat::RGBA32_UINT, 0, whitePixel);
+	_pixel = device->createTexture2D(1, 1, gfx::TextureFormat::RGBA32_UINT, 0, whitePixel);
 }
 
 void DynamicGrid::applyDirectedForce( const cc::Vec2f& force, const cc::Vec2f& position, float radius ) {

@@ -1,5 +1,8 @@
 #include "OpenCloth.hpp"
 
+namespace gfx = ciri::graphics;
+namespace core = ciri::core;
+
 OpenCloth::OpenCloth()
 	: _built(false), _device(nullptr), _vertexBuffer(nullptr), _indexBuffer(nullptr), _vertices(nullptr), _indexCount(0), _indices(nullptr),
 		_positions(nullptr), _lastPositions(nullptr), _forces(nullptr), _springCount(0), _springs(nullptr), _shader(nullptr), _constantsBuffer(nullptr) {
@@ -71,7 +74,7 @@ void OpenCloth::setGravity( const cc::Vec3f& gravity ) {
 	_gravity = gravity;
 }
 
-void OpenCloth::build( std::shared_ptr<ciri::IGraphicsDevice> device ) {
+void OpenCloth::build( std::shared_ptr<gfx::IGraphicsDevice> device ) {
 	if( _built ) {
 		return;
 	}
@@ -224,15 +227,15 @@ bool OpenCloth::isBuilt() const {
 	return _built;
 }
 
-const std::shared_ptr<ciri::IVertexBuffer>& OpenCloth::getVertexBuffer() const {
+const std::shared_ptr<gfx::IVertexBuffer>& OpenCloth::getVertexBuffer() const {
 	return _vertexBuffer;
 }
 
-const std::shared_ptr<ciri::IIndexBuffer>& OpenCloth::getIndexBuffer() const {
+const std::shared_ptr<gfx::IIndexBuffer>& OpenCloth::getIndexBuffer() const {
 	return _indexBuffer;
 }
 
-const std::shared_ptr<ciri::IShader>& OpenCloth::getShader() const {
+const std::shared_ptr<gfx::IShader>& OpenCloth::getShader() const {
 	return _shader;
 }
 
@@ -246,7 +249,7 @@ bool OpenCloth::updateConstants() {
 	}
 
 	bool success = true;
-	if( ciri::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
+	if( core::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
 		success = false;
 	}
 	return success;
@@ -255,14 +258,14 @@ bool OpenCloth::updateConstants() {
 bool OpenCloth::createGpuResources() {
 	// create the shader
 	_shader = _device->createShader();
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Position, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float3, ciri::VertexUsage::Normal, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float4, ciri::VertexUsage::Tangent, 0));
-	_shader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Texcoord, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Position, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float3, gfx::VertexUsage::Normal, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float4, gfx::VertexUsage::Tangent, 0));
+	_shader->addInputElement(gfx::VertexElement(gfx::VertexFormat::Float2, gfx::VertexUsage::Texcoord, 0));
 	const std::string shaderExt = _device->getShaderExt();
 	const std::string vsFile = ("dynvb/fabric_plaid_vs" + shaderExt);
 	const std::string psFile = ("dynvb/fabric_plaid_ps" + shaderExt);
-	if( ciri::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
+	if( core::failed(_shader->loadFromFile(vsFile.c_str(), nullptr, psFile.c_str())) ) {
 		printf("Failed to build fabric shader:\n");
 		for( unsigned int i = 0; i < _shader->getErrors().size(); ++i ) {
 			printf("%s\n", _shader->getErrors()[i].msg.c_str());
@@ -272,12 +275,12 @@ bool OpenCloth::createGpuResources() {
 
 	// create constant buffers
 	_constantsBuffer = _device->createConstantBuffer();
-	if( ciri::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
+	if( core::failed(_constantsBuffer->setData(sizeof(Constants), &_constants)) ) {
 		return false;
 	}
 
 	// assign constant buffers to shader
-	if( ciri::failed(_shader->addConstants(_constantsBuffer, "Constants", ciri::ShaderStage::Vertex)) ) {
+	if( core::failed(_shader->addConstants(_constantsBuffer, "Constants", gfx::ShaderStage::Vertex)) ) {
 		return false;
 	}
 

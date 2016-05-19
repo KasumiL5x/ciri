@@ -2,12 +2,12 @@
 #define __test_modelgen__
 
 #include <vector>
-#include <ciri/gfx/IGraphicsDevice.hpp>
+#include <ciri/Graphics.hpp>
 #include "Model.hpp"
 
 namespace modelgen {
 	// http://stackoverflow.com/questions/4405787/generating-vertices-for-a-sphere
-	static Model* createSphere( std::shared_ptr<ciri::IGraphicsDevice> device, int resolution, float scale ) {
+	static Model* createSphere( std::shared_ptr<ciri::graphics::IGraphicsDevice> device, int resolution, float scale ) {
 		// todo: generate icosphere w/ uv coordinates: http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
 
 		Model* model = new Model();
@@ -182,7 +182,7 @@ namespace modelgen {
 	}
 
 	// width; height; depth; u-scale; v-scale
-	static Model* createCube( std::shared_ptr<ciri::IGraphicsDevice> device, float w, float h, float d, float us, float vs, bool ccw=true ) {
+	static Model* createCube( std::shared_ptr<ciri::graphics::IGraphicsDevice> device, float w, float h, float d, float us, float vs, bool ccw=true ) {
 		Model* model = new Model();
 
 		model->addVertex(Vertex(cc::Vec3f(-0.5f*w, -0.5f*h,  0.5f*d), cc::Vec3f( 1.0f,  0.0f,  0.0f), cc::Vec2f(0.0f * us,  0.0f * vs)));
@@ -235,7 +235,7 @@ namespace modelgen {
 		return model;
 	}
 	
-	static Model* createFullscreenQuad( std::shared_ptr<ciri::IGraphicsDevice> device ) {
+	static Model* createFullscreenQuad( std::shared_ptr<ciri::graphics::IGraphicsDevice> device ) {
 		Model* model = new Model();
 		//model->addVertex(Vertex(cc::Vec3f(-1.0f, -1.0f, 0.0f), cc::Vec3f(), cc::Vec2f()));
 		//model->addVertex(Vertex(cc::Vec3f( 1.0f, -1.0f, 0.0f), cc::Vec3f(), cc::Vec2f()));
@@ -259,7 +259,7 @@ namespace modelgen {
 		return model;
 	}
 
-	static Model* createPlane( std::shared_ptr<ciri::IGraphicsDevice> device, float width, float height, int divsX=0, int divsY=0, float uScale=1.0f, float vScale=1.0f, bool dynamicVertex=false, bool dynamicIndex=false ) {
+	static Model* createPlane( std::shared_ptr<ciri::graphics::IGraphicsDevice> device, float width, float height, int divsX=0, int divsY=0, float uScale=1.0f, float vScale=1.0f, bool dynamicVertex=false, bool dynamicIndex=false ) {
 		// add 1 such that asking for 1 division will add a split in the middle; asking for 0 returns just a quad
 		divsX += 1;
 		divsY += 1;

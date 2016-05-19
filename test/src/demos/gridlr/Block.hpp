@@ -8,11 +8,15 @@ namespace gridlr {
 	class Block {
 	public:
 		Block()
-			: _x(-1), _y(-1), _state(BlockState::Empty), _type(BlockType::Normal) {
+			: _id(-1), _x(-1), _y(-1), _state(BlockState::Empty), _type(BlockType::Normal) {
 		}
 
 		bool operator==( const Block& rhs ) const {
 			return (_x==rhs._x) && (_y==rhs._y) && (_state==rhs._state) && (_type==rhs._type);
+		}
+
+		int id() const {
+			return _id;
 		}
 
 		int x() const {
@@ -29,6 +33,10 @@ namespace gridlr {
 
 		BlockType type() const {
 			return _type;
+		}
+
+		void setId( int val ) {
+			_id = val;
 		}
 
 		void setX( int val ) {
@@ -48,6 +56,7 @@ namespace gridlr {
 		}
 
 	private:
+		int _id;
 		int _x;
 		int _y;
 		BlockState _state;

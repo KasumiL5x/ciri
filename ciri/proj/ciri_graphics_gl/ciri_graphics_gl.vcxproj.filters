@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{60c3dff5-74c8-4b05-b297-673fdf82cbc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\graphics">
+      <UniqueIdentifier>{da721949-4353-43ff-8bfa-af09111c315a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{e8b441e5-4dd4-4d85-a1c4-ad3218c354f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics">
+      <UniqueIdentifier>{f45e9b17-099c-4d02-b703-cf5d07100463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\graphics\win">
+      <UniqueIdentifier>{03d7a4d3-308f-4672-aa51-83f6d6453b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\graphics\win\gl">
+      <UniqueIdentifier>{fa4d0f7e-3880-4373-9ac1-156b574e76a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics\win">
+      <UniqueIdentifier>{fdc80a46-6ad1-4321-ba6a-4747b99f1339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics\win\gl">
+      <UniqueIdentifier>{c17b97a9-ed88-4563-a858-ab3768d09a97}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\ciri\graphics\BlendColorMask.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\BlendFunction.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\BlendMode.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\Camera.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ClearFlags.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\CompareFunction.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\CullMode.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\FillMode.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\FPSCamera.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\GraphicsApiType.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IBlendState.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IConstantBuffer.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IDepthStencilState.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IIndexBuffer.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IRasterizerState.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IRenderTarget2D.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ISamplerState.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IShader.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ITexture2D.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ITexture3D.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ITextureCube.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IVertexBuffer.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\MayaCamera.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ObjModel.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\Plane.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\PrimitiveTopology.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\SamplerFilter.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\SamplerWrap.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\ShaderStage.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\StencilOperation.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\TextureFlags.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\TextureFormat.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexDeclaration.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexElement.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexFormat.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexUsage.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\Viewport.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\IGraphicsDevice.hpp">
+      <Filter>inc\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\CheckGLError.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\CiriToGl.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLBlendState.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLConstantBuffer.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLDepthStencilState.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLIndexBuffer.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLRasterizerState.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLRenderTarget2D.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLSamplerState.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLShader.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLTexture2D.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLTexture3D.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLTextureCube.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLVertexBuffer.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLVertexDeclaration.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLGraphicsDevice.hpp">
+      <Filter>inc\graphics\win\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\Graphics.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ciri\graphics\Camera.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\FPSCamera.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\MayaCamera.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\ObjModel.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\Plane.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\VertexDeclaration.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\VertexElement.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\Viewport.cpp">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLBlendState.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLConstantBuffer.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLDepthStencilState.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLIndexBuffer.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLRasterizerState.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLRenderTarget2D.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLSamplerState.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLShader.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLTexture2D.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLTexture3D.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLTextureCube.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLVertexBuffer.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLVertexDeclaration.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLGraphicsDevice.cpp">
+      <Filter>src\graphics\win\gl</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

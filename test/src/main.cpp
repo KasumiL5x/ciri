@@ -1,9 +1,7 @@
 #include <crtdbg.h>
 #include <memory>
-#include <ciri/Window.hpp>
-#include <ciri/Graphics.hpp>
-#include <ciri/Input.hpp>
 #include <ciri/Core.hpp>
+#include <ciri/Graphics.hpp>
 #include "demos/dynvb/DynamicVertexBufferDemo.hpp"
 #include "demos/terrain/TerrainDemo.hpp"
 #include "demos/sprites/SpritesDemo.hpp"
@@ -12,6 +10,7 @@
 #include "demos/parallax/ParallaxDemo.hpp"
 //#include "demos/deferred/DeferredDemo.hpp"
 #include "demos\gridlr\Gridlr.hpp"
+#include "common/Game.hpp"
 
 enum class Demo {
 	Dynvb,
@@ -74,7 +73,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<Game> game = createGame(Demo::Gridlr);
+	std::unique_ptr<Game> game = createGame(Demo::Clipping);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}

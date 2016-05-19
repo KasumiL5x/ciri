@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DD675209-E6DA-4CEB-8CE6-47F2BF3208A9}</ProjectGuid>
+    <RootNamespace>ciri_graphics_gl</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>ciri_graphics-d</TargetName>
+    <LibraryPath>../../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>../../inc/;../../thirdparty/ccmath/;../../thirdparty/glew-1.11.0/inc/;$(IncludePath)</IncludePath>
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>ciri_graphics</TargetName>
+    <LibraryPath>../../thirdparty/glew-1.11.0/lib/;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>OpenGL32.lib;glu32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>OpenGL32.lib;glu32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\ciri\Graphics.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\BlendColorMask.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\BlendFunction.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\BlendMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\Camera.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ClearFlags.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\CompareFunction.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\CullMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\FillMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\FPSCamera.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\GraphicsApiType.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IBlendState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IConstantBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IDepthStencilState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IGraphicsDevice.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IIndexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IRasterizerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IRenderTarget2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ISamplerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IShader.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ITexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ITexture3D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ITextureCube.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\IVertexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\MayaCamera.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ObjModel.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\Plane.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\PrimitiveTopology.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\SamplerFilter.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\SamplerWrap.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\ShaderStage.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\StencilOperation.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\TextureFlags.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\TextureFormat.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexDeclaration.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexElement.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexFormat.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\VertexUsage.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\Viewport.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\CheckGLError.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\CiriToGl.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLBlendState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLConstantBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLDepthStencilState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLGraphicsDevice.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLIndexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLRasterizerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLRenderTarget2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLSamplerState.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLShader.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLTexture2D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLTexture3D.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLTextureCube.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLVertexBuffer.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\win\gl\GLVertexDeclaration.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ciri\graphics\Camera.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\FPSCamera.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\MayaCamera.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\ObjModel.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\Plane.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\VertexDeclaration.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\VertexElement.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\Viewport.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLBlendState.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLConstantBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLDepthStencilState.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLGraphicsDevice.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLIndexBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLRasterizerState.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLRenderTarget2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLSamplerState.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLShader.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLTexture2D.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLTexture3D.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLTextureCube.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLVertexBuffer.cpp" />
+    <ClCompile Include="..\..\src\ciri\graphics\win\gl\GLVertexDeclaration.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

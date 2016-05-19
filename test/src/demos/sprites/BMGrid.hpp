@@ -18,7 +18,7 @@ struct GridPoint {
 };
 class BMGrid {
 public:
-	BMGrid( const int gridWidth, const int gridHeight, const int playfieldWidth, const int playfieldHeight, const std::shared_ptr<ciri::IGraphicsDevice>& device );
+	BMGrid( const int gridWidth, const int gridHeight, const int playfieldWidth, const int playfieldHeight, const std::shared_ptr<ciri::graphics::IGraphicsDevice>& device );
 	~BMGrid();
 
 	void resetAll();
@@ -41,7 +41,7 @@ private:
 	int _gridHeight;
 	int _numPointsW;
 	int _numPointsH;
-	std::shared_ptr<ciri::ITexture2D> _pixel;
+	std::shared_ptr<ciri::graphics::ITexture2D> _pixel;
 };
 
 #endif /* __grid__ */

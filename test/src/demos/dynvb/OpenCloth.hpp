@@ -4,7 +4,7 @@
 #include <vector>
 #include <cc/Vec3.hpp>
 #include <cc/Mat4.hpp>
-#include <ciri/gfx/IGraphicsDevice.hpp>
+#include <ciri/Graphics.hpp>
 #include "../../common/Vertex.hpp"
 
 class OpenCloth {
@@ -35,15 +35,15 @@ public:
 	void setDamping( float damping );
 	void setSpringParams( float structKs, float structKd, float shearKs, float shearKd, float bendKs, float bendKd );
 	void setGravity( const cc::Vec3f& gravity );
-	void build( std::shared_ptr<ciri::IGraphicsDevice> device );
+	void build( std::shared_ptr<ciri::graphics::IGraphicsDevice> device );
 	void update( float deltaTime );
 	void clean();
 
 	bool isBuilt() const;
 
-	const std::shared_ptr<ciri::IVertexBuffer>& getVertexBuffer() const;
-	const std::shared_ptr<ciri::IIndexBuffer>& getIndexBuffer() const;
-	const std::shared_ptr<ciri::IShader>& getShader() const;
+	const std::shared_ptr<ciri::graphics::IVertexBuffer>& getVertexBuffer() const;
+	const std::shared_ptr<ciri::graphics::IIndexBuffer>& getIndexBuffer() const;
+	const std::shared_ptr<ciri::graphics::IShader>& getShader() const;
 	Constants& getConstants();
 	bool updateConstants();
 
@@ -63,9 +63,9 @@ private:
 private:
 	bool _built;
 	//
-	std::shared_ptr<ciri::IGraphicsDevice> _device;
-	std::shared_ptr<ciri::IVertexBuffer> _vertexBuffer;
-	std::shared_ptr<ciri::IIndexBuffer> _indexBuffer;
+	std::shared_ptr<ciri::graphics::IGraphicsDevice> _device;
+	std::shared_ptr<ciri::graphics::IVertexBuffer> _vertexBuffer;
+	std::shared_ptr<ciri::graphics::IIndexBuffer> _indexBuffer;
 	Vertex* _vertices;
 	int _indexCount;
 	int* _indices;
@@ -93,9 +93,9 @@ private:
 	float _ksBend; // ks term for bend springs
 	float _kdBend; // kd term for bend springs
 	//
-	std::shared_ptr<ciri::IShader> _shader;
+	std::shared_ptr<ciri::graphics::IShader> _shader;
 	Constants _constants;
-	std::shared_ptr<ciri::IConstantBuffer> _constantsBuffer;
+	std::shared_ptr<ciri::graphics::IConstantBuffer> _constantsBuffer;
 };
 
 #endif /* __opencloth__ */
