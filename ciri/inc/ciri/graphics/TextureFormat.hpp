@@ -10,7 +10,8 @@ struct TextureFormat {
 	enum Format {
 		RGBA32_UINT=0, /**< RGBA; 8-bit unsigned integer per channel; 32 bits total. */
 		RGBA32_Float,  /**< RGBA; 32-bit float per channel; 128 bits total. */
-		R32_UINT       /**< R; 32-bit unsigned integer; 32 bits total. */
+		R32_UINT,      /**< R; 32-bit unsigned integer; 32 bits total. */
+		R32_FLOAT      /**< R; 32-bit float; 32 bits total. */
 	};
 
 	/**
@@ -26,7 +27,8 @@ struct TextureFormat {
 				return 4;
 			}
 
-			case R32_UINT: {
+			case R32_UINT:
+			case R32_FLOAT: {
 				return 1;
 			}
 

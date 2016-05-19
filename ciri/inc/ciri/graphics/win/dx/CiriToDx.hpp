@@ -178,6 +178,10 @@ static DXGI_FORMAT ciriToDxTextureFormat( TextureFormat::Format format ) {
 			return DXGI_FORMAT_R32_UINT;
 		}
 
+		case TextureFormat::R32_FLOAT: {
+			return DXGI_FORMAT_R32_FLOAT;
+		}
+
 		default: {
 			throw; //return DXGI_FORMAT_UNKNOWN;
 		}

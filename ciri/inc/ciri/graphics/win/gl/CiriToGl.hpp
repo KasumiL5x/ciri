@@ -189,6 +189,13 @@ static void ciriToGlTextureFormat( TextureFormat::Format ciriFormat, GLint* inte
 			break;
 		}
 
+		case TextureFormat::R32_FLOAT: {
+			*internalFormat = GL_R32F;
+			*pixelFormat = GL_RED;
+			*pixelType = GL_FLOAT;
+			break;
+		}
+
 		default: {
 			throw; // oh nooooooooooooooo! that's jeffry's dog!
 		}
