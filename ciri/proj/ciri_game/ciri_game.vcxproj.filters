@@ -21,9 +21,21 @@
     <ClInclude Include="..\..\inc\ciri\game\App.hpp">
       <Filter>inc\game</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\game\SpriteVertex.hpp">
+      <Filter>inc\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\game\SpriteBatchItem.hpp">
+      <Filter>inc\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\game\SpriteBatch.hpp">
+      <Filter>inc\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\game\App.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\game\SpriteBatch.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
   </ItemGroup>

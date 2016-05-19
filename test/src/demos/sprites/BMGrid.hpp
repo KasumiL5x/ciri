@@ -2,7 +2,7 @@
 #define __grid__
 
 #include <cc/Vec2.hpp>
-#include "../../common/SpriteBatch.hpp"
+#include <ciri/game/SpriteBatch.hpp>
 #include <ciri/Graphics.hpp>
 
 struct GridPoint {
@@ -23,14 +23,14 @@ public:
 
 	void resetAll();
 	void updateGrid();
-	void draw( SpriteBatch& spritebatch );
+	void draw( ciri::SpriteBatch& spritebatch );
 
 	void pull( const int x1, const int y1, const int size=4, const int amount=4 );
 	void push( const int x1, const int y1, const int size=4, const int amount=4 );
 	void shockwave( const int x1, const int y1 );
 
 private:
-	void drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness=2.0f );
+	void drawLine( ciri::SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness=2.0f );
 	__forceinline int getIndex( const int x, const int y ) const;
 
 private:

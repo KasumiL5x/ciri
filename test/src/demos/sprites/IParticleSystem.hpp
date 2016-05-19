@@ -2,7 +2,7 @@
 #define __particle_system__
 
 #include "Particle.hpp"
-#include "../../common/SpriteBatch.hpp"
+#include <ciri/game/SpriteBatch.hpp>
 #include <cc/Vec2.hpp>
 
 class IParticleSystem {
@@ -12,7 +12,7 @@ public:
 
 	virtual void emitParticles( unsigned int count )=0;
 	virtual void update( float deltaTime )=0;
-	virtual void draw( SpriteBatch& spritebatch )=0;
+	virtual void draw( ciri::SpriteBatch& spritebatch )=0;
 };
 
 #endif /* __particle_system__ */

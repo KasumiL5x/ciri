@@ -4,7 +4,6 @@
 #include <array>
 #include <memory>
 #include <ciri/Game.hpp>
-#include "../../common/SpriteBatch.hpp"
 #include "PlayerShip.hpp"
 #include "Bullet.hpp"
 #include <cc/Quaternion.hpp>
@@ -34,7 +33,7 @@ private:
 	bool spawnEnemy();
 
 private:
-	SpriteBatch _spritebatch;
+	ciri::SpriteBatch _spritebatch;
 
 	std::shared_ptr<ciri::IBlendState> _blendState;
 	std::shared_ptr<ciri::ISamplerState> _samplerState;

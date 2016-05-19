@@ -1,9 +1,11 @@
-#ifndef __spritevertex__
-#define __spritevertex__
+#ifndef __ciri_game_SpriteVertex__
+#define __ciri_game_SpriteVertex__
 
 #include <cc/Vec2.hpp>
 #include <cc/Vec3.hpp>
 #include <cc/Vec4.hpp>
+
+namespace ciri {
 
 struct SpriteVertex {
 	cc::Vec3f position;
@@ -23,4 +25,6 @@ struct SpriteVertex {
 	}
 };
 
-#endif /* __spritevertex__ */
+}
+
+#endif

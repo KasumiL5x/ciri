@@ -114,7 +114,7 @@ void BMGrid::updateGrid() {
 	}
 }
 
-void BMGrid::draw( SpriteBatch& spritebatch ) {
+void BMGrid::draw( ciri::SpriteBatch& spritebatch ) {
 	const int GRID_HILITE = 4;
 
 	const int gw_low = 0;
@@ -240,7 +240,7 @@ void BMGrid::shockwave( const int x1, const int y1 ) {
 	}
 }
 
-void BMGrid::drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness ) {
+void BMGrid::drawLine( ciri::SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness ) {
 	const cc::Vec2f delta = end - start;
 	const float angle = atan2f(delta.y, delta.x);
 	const cc::Vec2f scale = cc::Vec2f(delta.magnitude(), thickness);

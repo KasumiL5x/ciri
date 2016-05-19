@@ -71,9 +71,6 @@
     <ClCompile Include="src\demos\gridlr\Gridlr.cpp">
       <Filter>demos\gridlr</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\SpriteBatch.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="src\demos\gridlr\BlockChain.cpp">
       <Filter>demos\gridlr</Filter>
     </ClCompile>
@@ -215,15 +212,6 @@
     </ClInclude>
     <ClInclude Include="src\demos\gridlr\Gridlr.hpp">
       <Filter>demos\gridlr</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\SpriteBatch.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\SpriteBatchItem.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\SpriteVertex.hpp">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\gridlr\Block.hpp">
       <Filter>demos\gridlr</Filter>

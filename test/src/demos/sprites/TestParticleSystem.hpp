@@ -13,7 +13,7 @@ public:
 
 	virtual void emitParticles( unsigned int count ) override;
 	virtual void update( float deltaTime ) override;
-	virtual void draw( SpriteBatch& spritebatch ) override;
+	virtual void draw( ciri::SpriteBatch& spritebatch ) override;
 
 	void setEmitterPosition( const cc::Vec2f& position );
 	void setTexture( const std::shared_ptr<ciri::ITexture2D>& texture );

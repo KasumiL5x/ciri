@@ -90,7 +90,6 @@
     <ClCompile Include="src\common\Model.cpp" />
     <ClCompile Include="src\common\ScreenSystem\ScreenManager.cpp" />
     <ClCompile Include="src\common\ShaderPresets.cpp" />
-    <ClCompile Include="src\common\SpriteBatch.cpp" />
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\clipping\ClippingDemo.cpp" />
     <ClCompile Include="src\demos\clipping\ClipMesh.cpp" />
@@ -127,9 +126,6 @@
     <ClInclude Include="src\common\ScreenSystem\ScreenManager.hpp" />
     <ClInclude Include="src\common\ScreenSystem\ScreenState.hpp" />
     <ClInclude Include="src\common\ShaderPresets.hpp" />
-    <ClInclude Include="src\common\SpriteBatch.hpp" />
-    <ClInclude Include="src\common\SpriteBatchItem.hpp" />
-    <ClInclude Include="src\common\SpriteVertex.hpp" />
     <ClInclude Include="src\common\Transform.hpp" />
     <ClInclude Include="src\common\Vertex.hpp" />
     <ClInclude Include="src\demos\clipping\ClippingDemo.hpp" />

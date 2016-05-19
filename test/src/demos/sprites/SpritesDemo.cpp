@@ -273,7 +273,7 @@ void SpritesDemo::onDraw() {
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
-	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
+	_spritebatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, ciri::SpriteSortMode::Deferred, nullptr);
 
 	// grid
 	_grid->draw(_spritebatch);

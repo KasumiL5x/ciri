@@ -46,7 +46,7 @@ void TestParticleSystem::update( float deltaTime ) {
 	}
 }
 
-void TestParticleSystem::draw( SpriteBatch& spritebatch ) {
+void TestParticleSystem::draw( ciri::SpriteBatch& spritebatch ) {
 	if( nullptr == _texture ) {
 		return;
 	}

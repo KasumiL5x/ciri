@@ -72,29 +72,29 @@
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game-d</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;../../thirdparty/freetype-2.3.5-1/inc/;../../thirdparty/freetype-2.3.5-1/inc/freetype2/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../lib/;../../thirdparty/freetype-2.3.5-1/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;../../thirdparty/freetype-2.3.5-1/inc/;../../thirdparty/freetype-2.3.5-1/inc/freetype2/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../lib/;../../thirdparty/freetype-2.3.5-1/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game-d</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;../../thirdparty/freetype-2.3.5-1/inc/;../../thirdparty/freetype-2.3.5-1/inc/freetype2/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../lib/;../../thirdparty/freetype-2.3.5-1/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>../../lib/</OutDir>
     <IntDir>../../tmp/$(ProjectName)/$(Configuration)/</IntDir>
     <TargetName>ciri_game</TargetName>
-    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../inc/;../../thirdparty/ccmath/src/;../../thirdparty/freetype-2.3.5-1/inc/;../../thirdparty/freetype-2.3.5-1/inc/freetype2/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../lib/;../../thirdparty/freetype-2.3.5-1/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -103,6 +103,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>freetype.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -111,6 +114,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>freetype.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,6 +131,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>freetype.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -139,13 +148,20 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>freetype.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\Game.hpp" />
     <ClInclude Include="..\..\inc\ciri\game\App.hpp" />
+    <ClInclude Include="..\..\inc\ciri\game\SpriteBatch.hpp" />
+    <ClInclude Include="..\..\inc\ciri\game\SpriteBatchItem.hpp" />
+    <ClInclude Include="..\..\inc\ciri\game\SpriteVertex.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\game\App.cpp" />
+    <ClCompile Include="..\..\src\ciri\game\SpriteBatch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

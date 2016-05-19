@@ -1,9 +1,11 @@
-#ifndef __spritebatchitem__
-#define __spritebatchitem__
+#ifndef __ciri_game_SpriteBatchItem__
+#define __ciri_game_SpriteBatchItem__
 
 #include <memory>
 #include <ciri/Graphics.hpp>
 #include "SpriteVertex.hpp"
+
+namespace ciri {
 
 struct SpriteBatchItem {
 	SpriteVertex topLeft;
@@ -31,4 +33,6 @@ struct SpriteBatchItem {
 	}
 };
 
-#endif /* __spritebatchitem__ */
+}
+
+#endif

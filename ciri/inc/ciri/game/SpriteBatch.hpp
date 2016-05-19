@@ -1,5 +1,5 @@
-#ifndef __spritebatch__
-#define __spritebatch__
+#ifndef __ciri_game_SpriteBatch__
+#define __ciri_game_SpriteBatch__
 
 #include <memory>
 #include <vector>
@@ -10,6 +10,8 @@
 #include <ciri/Graphics.hpp>
 #include "SpriteVertex.hpp"
 #include "SpriteBatchItem.hpp"
+
+namespace ciri {
 
 _declspec(align(16))
 struct SpriteConstants {
@@ -111,4 +113,6 @@ private:
 	SpriteSortMode _sortMode;
 };
 
-#endif /* __spritebatch__ */
+}
+
+#endif

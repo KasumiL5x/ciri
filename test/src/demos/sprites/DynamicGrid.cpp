@@ -177,7 +177,7 @@ void DynamicGrid::update() {
 	}
 }
 
-void DynamicGrid::draw( SpriteBatch& spriteBatch, float scrw, float scrh ) {
+void DynamicGrid::draw( ciri::SpriteBatch& spriteBatch, float scrw, float scrh ) {
 	const int width = _numColumns;
 	const int height = _numRows;
 	const cc::Vec4f color = cc::Vec4f(0.12f, 0.12f, 0.55f, 0.33f); // dark blue
@@ -239,7 +239,7 @@ void DynamicGrid::draw( SpriteBatch& spriteBatch, float scrw, float scrh ) {
 	}
 }
 
-void DynamicGrid::drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness ) {
+void DynamicGrid::drawLine( ciri::SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness ) {
 	const cc::Vec2f delta = end - start;
 	const float angle = atan2f(delta.y, delta.x);
 	const cc::Vec2f scale = cc::Vec2f(delta.magnitude(), thickness);

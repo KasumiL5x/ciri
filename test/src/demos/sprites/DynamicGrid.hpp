@@ -8,7 +8,7 @@
 #include <cc/Vec3.hpp>
 #include <cc/Vec4.hpp>
 #include <ciri/Graphics.hpp>
-#include "../../common/SpriteBatch.hpp"
+#include <ciri/game/SpriteBatch.hpp>
 
 struct PointMass {
 	cc::Vec3f position;
@@ -48,10 +48,10 @@ public:
 	void applyExplosiveForce( float force, const cc::Vec2f& position, float radius );
 	void applyExplosiveForce( float force, const cc::Vec3f& position, float radius );
 	void update();
-	void draw( SpriteBatch& spriteBatch, float scrw, float scrh );
+	void draw( ciri::SpriteBatch& spriteBatch, float scrw, float scrh );
 
 private:
-	void drawLine( SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness=2.0f );
+	void drawLine( ciri::SpriteBatch& spriteBatch, const cc::Vec2f& start, const cc::Vec2f& end, const cc::Vec4f& color, float thickness=2.0f );
 	cc::Vec2f toVec2( const cc::Vec3f& vec, const cc::Vec2f& screenSize );
 	__forceinline	int getPixelCoord( int x, int y ) const;
 

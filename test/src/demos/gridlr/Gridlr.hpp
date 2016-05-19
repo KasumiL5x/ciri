@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <ciri/Game.hpp>
-#include "../../common/SpriteBatch.hpp"
 #include "BlockGrid.hpp"
 
 class Gridlr : public ciri::App {
@@ -22,7 +21,7 @@ protected:
 
 private:
 	std::unique_ptr<gridlr::BlockGrid> _grid;
-	SpriteBatch _spriteBatch;
+	ciri::SpriteBatch _spriteBatch;
 	std::shared_ptr<ciri::IBlendState> _blendState;
 	std::shared_ptr<ciri::ISamplerState> _samplerState;
 	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
