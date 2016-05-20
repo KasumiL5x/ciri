@@ -105,7 +105,7 @@ bool FreeTypeSpriteFont::loadGlyph( char character ) {
 	for( int y = 0; y < height; ++y ) {
 		for( int x = 0; x < width; ++x ) {
 			const int glyphPixel = (height-1-y) * width + x;
-			const float val = static_cast<float>(_ftFace->glyph->bitmap.buffer[glyphPixel]);
+			const float val = static_cast<float>(_ftFace->glyph->bitmap.buffer[glyphPixel]) / 255.0f;
 
 			const int floatPixel = (y * width * 4) + x * 4;
 			floatBuffer[floatPixel+0] = val;

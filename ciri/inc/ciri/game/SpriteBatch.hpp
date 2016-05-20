@@ -80,7 +80,7 @@ public:
 	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color );
 
 
-	void drawString( const std::string& text, const std::shared_ptr<ISpriteFont>& font, const cc::Vec2f& position, const cc::Vec4f& color );
+	void drawString( const std::shared_ptr<ISpriteFont>& font, const std::string& text, const cc::Vec2f& position, const cc::Vec4f& color, float scale, float rotation, float depth );
 	
 	bool end();
 	void clean();

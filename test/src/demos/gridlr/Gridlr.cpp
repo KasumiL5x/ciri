@@ -42,7 +42,10 @@ void Gridlr::onInitialize() {
 
 	// create states
 	_blendState = graphicsDevice()->getDefaultBlendAlpha();
-	_samplerState = graphicsDevice()->createSamplerState(ciri::SamplerDesc());
+	ciri::SamplerDesc samplerDesc;
+	samplerDesc.filter = ciri::SamplerFilter::Point;
+	samplerDesc.wrapU=samplerDesc.wrapV=samplerDesc.wrapW = ciri::SamplerWrap::Clamp;
+	_samplerState = graphicsDevice()->createSamplerState(samplerDesc);
 	_depthStencilState = graphicsDevice()->getDefaultDepthStencilNone();
 	_rasterizerState = graphicsDevice()->getDefaultRasterCounterClockwise();
 }
@@ -64,8 +67,8 @@ void Gridlr::onLoadContent() {
 	if( ciri::failed(_font->loadFromFile("data/fonts/Gravity-Bold.ttf")) ) {
 		printf("Failed to load font.\n");
 	}
-	_font->setSize(42);
-	_font->setLineSpacing(42);
+	_font->setSize(72);
+	_font->setLineSpacing(72);
 }
 
 void Gridlr::onEvent(const ciri::WindowEvent& evt) {
@@ -170,7 +173,9 @@ void Gridlr::onDraw() {
 		}
 	}
 
-	_spriteBatch.drawString("Hello.  This is on the same line.\nSay what?", _font, cc::Vec2f(100.0f, 300.0f), cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f));
+	const float scale = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().height(), input()->mouseY()) * 10.f;
+	const float rotation = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().width(), input()->mouseX()) * 10.f;
+	_spriteBatch.drawString(_font, "Hello.  This is on the same line.\nSay what?", cc::Vec2f(100.0f, 300.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), scale, rotation, 1.0f);
 
 	_spriteBatch.end();
 

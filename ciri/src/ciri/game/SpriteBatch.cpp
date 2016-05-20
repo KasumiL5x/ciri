@@ -153,12 +153,13 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, color);
 }
 
-void SpriteBatch::drawString( const std::string& text, const std::shared_ptr<ISpriteFont>& font, const cc::Vec2f& position, const cc::Vec4f& color ) {
+//void SpriteBatch::drawString( const std::string& text, const std::shared_ptr<ISpriteFont>& font, const cc::Vec2f& position, const cc::Vec4f& color ) {
+void SpriteBatch::drawString( const std::shared_ptr<ISpriteFont>& font, const std::string& text, const cc::Vec2f& position, const cc::Vec4f& color, float scale, float rotation, float depth ) {
 	if( nullptr == font || text.empty() ) {
 		return;
 	}
 
-	const float SCALE = 1.0f;
+	const cc::Vec2f SCALE(scale, scale);
 
 	cc::Vec2i offset(0, 0);
 
@@ -181,19 +182,22 @@ void SpriteBatch::drawString( const std::string& text, const std::shared_ptr<ISp
 			continue;
 		}
 
-		const float xPos = offset.x + position.x + glyph.bearingLeft() * SCALE;
-		const float yPos = offset.y + position.y - (glyph.height() - glyph.bearingTop()) * SCALE;
+		// if no texture, just advance (could be a space, for instance)
+		if( nullptr == glyph.texture() ) {
+			offset.x += (glyph.advance() >> 6) * scale;
+			continue;
+		}
 
-		const float width = glyph.width() * SCALE;
-		const float height = glyph.height() * SCALE;
+		const float xPos = offset.x + position.x + glyph.bearingLeft() * scale;
+		const float yPos = offset.y + position.y - (glyph.height() - glyph.bearingTop()) * scale;
 
-		draw(glyph.texture(), cc::Vec2f(xPos, yPos), 0.0f, cc::Vec2f(0,0), 1.0, 1.0f);
+		const float width = glyph.width() * scale;
+		const float height = glyph.height() * scale;
 
-		std::shared_ptr<SpriteBatchItem> item = createBatchItem();
-		item->texture = glyph.texture();
-		item->set(xPos, yPos, 0.0f, 0.0f, width, height, 0.0f, 0.0f, 1.0f, color);
+		const cc::Vec2f origin(0.0f, 0.0f);
+		draw(glyph.texture(), cc::Vec2f(xPos, yPos), rotation, origin, SCALE, depth, color);
 
-		offset.x += (glyph.advance() >> 6) * SCALE;
+		offset.x += (glyph.advance() >> 6) * scale;
 	}
 }
 
