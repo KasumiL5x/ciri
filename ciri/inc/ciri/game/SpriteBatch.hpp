@@ -4,12 +4,14 @@
 #include <memory>
 #include <vector>
 #include <queue>
+#include <string>
 #include <cc/Mat4.hpp>
 #include <cc/Vec2.hpp>
 #include <cc/Vec4.hpp>
 #include <ciri/Graphics.hpp>
 #include "SpriteVertex.hpp"
 #include "SpriteBatchItem.hpp"
+#include "ISpriteFont.hpp"
 
 namespace ciri {
 
@@ -76,6 +78,9 @@ public:
 	 * @param color     Color (including alpha) to multiply the texture by.
 	 */
 	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color );
+
+
+	void drawString( const std::string& text, const std::shared_ptr<ISpriteFont>& font, const cc::Vec2f& position, const cc::Vec4f& color );
 	
 	bool end();
 	void clean();

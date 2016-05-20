@@ -8,8 +8,10 @@ FreeTypeSpriteFont::FreeTypeSpriteFont( const std::shared_ptr<IGraphicsDevice>& 
 }
 
 FreeTypeSpriteFont::~FreeTypeSpriteFont() {
-	FT_Done_Face(_ftFace);
-	FT_Done_FreeType(_ftLibrary);
+	if( _fontLoaded ) {
+		FT_Done_Face(_ftFace);
+		FT_Done_FreeType(_ftLibrary);
+	}
 }
 
 ErrorCode FreeTypeSpriteFont::loadFromFile( const char* file ) {
@@ -99,7 +101,27 @@ bool FreeTypeSpriteFont::loadGlyph( char character ) {
 	const int bearingL = _ftFace->glyph->bitmap_left;
 	const int bearingT = _ftFace->glyph->bitmap_top;
 	const int advance = _ftFace->glyph->advance.x;
-	const auto texture = _device->createTexture2D(width, height, ciri::TextureFormat::R32_UINT, 0, _ftFace->glyph->bitmap.buffer);
+	float* floatBuffer = new float[width*height*4];
+	for( int y = 0; y < height; ++y ) {
+		for( int x = 0; x < width; ++x ) {
+			const int glyphPixel = (height-1-y) * width + x;
+			const float val = static_cast<float>(_ftFace->glyph->bitmap.buffer[glyphPixel]);
+
+			const int floatPixel = (y * width * 4) + x * 4;
+			floatBuffer[floatPixel+0] = val;
+			floatBuffer[floatPixel+1] = val;
+			floatBuffer[floatPixel+2] = val;
+			floatBuffer[floatPixel+3] = val;
+		}
+	}
+	//for( int i = 0; i < width*height; ++i ) {
+	//	floatBuffer[i*4+0] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
+	//	floatBuffer[i*4+1] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
+	//	floatBuffer[i*4+2] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
+	//	floatBuffer[i*4+3] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
+	//}
+	const auto texture = _device->createTexture2D(width, height, ciri::TextureFormat::RGBA32_Float, 0, floatBuffer);//_ftFace->glyph->bitmap.buffer);
+	delete[] floatBuffer;
 	SpriteFontGlyph glyph(width, height, bearingL, bearingT, advance, texture);
 	_glyphs.insert(std::make_pair(character, glyph));
 	return true;

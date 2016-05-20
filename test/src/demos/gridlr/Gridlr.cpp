@@ -75,7 +75,14 @@ void Gridlr::onLoadContent() {
 		_gridOffset.y = static_cast<float>((vp.height() / 2) - (_cellTexture->getHeight() * _grid->height() / 2));
 	}
 
+	// load sprite font
+	_font = std::make_shared<ciri::FreeTypeSpriteFont>(graphicsDevice());
+	if( ciri::failed(_font->loadFromFile("data/fonts/Gravity-Bold.ttf")) ) {
+		printf("Failed to load font.\n");
+	}
+	_font->setSize(42);
 
+	/*
 	// DEBUG - load dummy red texture
 	const unsigned int RED_SIZE = 32;
 	std::array<float, RED_SIZE*RED_SIZE> RED_DATA = {};
@@ -191,6 +198,7 @@ void Gridlr::onLoadContent() {
 		RED_VERTS[i].y = cc::math::Random<float, int>::rangedReal(0.0f, 1.0f);
 	}
 	_redVb->set(RED_VERTS.data(), sizeof(cc::Vec2f), RED_VERTS_COUNT, false);
+	*/
 }
 
 void Gridlr::onEvent(const ciri::WindowEvent& evt) {
@@ -264,14 +272,13 @@ void Gridlr::onDraw() {
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
 
 	// DEBUG - draw red things
-	graphicsDevice()->applyShader(_redShader);
-	graphicsDevice()->setVertexBuffer(_redVb);
-	graphicsDevice()->setTexture2D(0, _redTextureTest, ciri::ShaderStage::Pixel);
-	graphicsDevice()->setSamplerState(0, _redSampler, ciri::ShaderStage::Pixel);
-	graphicsDevice()->drawArrays(ciri::PrimitiveTopology::PointList, 4, 0);
+	//graphicsDevice()->applyShader(_redShader);
+	//graphicsDevice()->setVertexBuffer(_redVb);
+	//graphicsDevice()->setTexture2D(0, _redTextureTest, ciri::ShaderStage::Pixel);
+	//graphicsDevice()->setSamplerState(0, _redSampler, ciri::ShaderStage::Pixel);
+	//graphicsDevice()->drawArrays(ciri::PrimitiveTopology::PointList, 4, 0);
 
-	/*
-	_spriteBatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, SpriteSortMode::Deferred, nullptr);
+	_spriteBatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, ciri::SpriteSortMode::Deferred, nullptr);
 	// draw grid
 	for( int y = 0; y < _grid->height(); ++y ) {
 		for( int x = 0; x < _grid->width(); ++x ) {
@@ -299,11 +306,13 @@ void Gridlr::onDraw() {
 			// draw
 			const cc::Vec2f origin(0.0f, 0.0f);
 			const cc::Vec2f scale(1.0f, 1.0f);
-			_spriteBatch.draw(_cellTexture, position, 0.0f, origin, scale, 0.0f, color);
+			//_spriteBatch.draw(_cellTexture, position, 0.0f, origin, scale, 0.0f, color);
 		}
 	}
+
+	_spriteBatch.drawString("Hello.  This is on the same line.\nSay what?", _font, cc::Vec2f(100.0f, 300.0f), cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f));
+
 	_spriteBatch.end();
-	*/
 
 	// present to screen
 	device->present();

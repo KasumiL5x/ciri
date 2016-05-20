@@ -31,10 +31,12 @@ private:
 	bool _isDragging;
 	cc::Vec2i _lastMouseCell;
 	//
-	std::shared_ptr<ciri::ITexture2D> _redTextureTest;
-	std::shared_ptr<ciri::IShader> _redShader;
-	std::shared_ptr<ciri::IVertexBuffer> _redVb;
-	std::shared_ptr<ciri::ISamplerState> _redSampler;
+	std::shared_ptr<ciri::ISpriteFont> _font;
+	//
+	//std::shared_ptr<ciri::ITexture2D> _redTextureTest;
+	//std::shared_ptr<ciri::IShader> _redShader;
+	//std::shared_ptr<ciri::IVertexBuffer> _redVb;
+	//std::shared_ptr<ciri::ISamplerState> _redSampler;
 };
 
 #endif /* __gridlr__ */

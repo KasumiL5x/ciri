@@ -7,5 +7,6 @@
 #include <ciri/game/SpriteVertex.hpp>
 #include <ciri/game/ISpriteFont.hpp>
 #include <ciri/game/SpriteFontGlyph.hpp>
+#include <ciri/game/FreeTypeSpriteFont.hpp>
 
 #endif
