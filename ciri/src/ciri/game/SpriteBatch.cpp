@@ -159,28 +159,41 @@ void SpriteBatch::drawString( const std::string& text, const std::shared_ptr<ISp
 	}
 
 	const float SCALE = 1.0f;
-	float xOffset = 0.0f;
+
+	cc::Vec2i offset(0, 0);
 
 	for( const auto& c : text ) {
-		const auto& character = font->getGlyph(c);
+		// ignore carriage return
+		if( '\r' == c ) {
+			continue;
+		}
 
-		const float xPos = xOffset + position.x + character.bearingLeft() * SCALE;
-		const float yPos = position.y - (character.height() - character.bearingTop()) * SCALE;
+		// handle newline
+		if( '\n' == c ) {
+			offset.x = 0;
+			offset.y -= font->getLineSpacing();
+			continue;
+		}
 
-		const float width = character.width() * SCALE;
-		const float height = character.height() * SCALE;
+		SpriteFontGlyph glyph;
+		if( !font->getGlyph(c, glyph) ) {
+			printf("SpriteBatch::drawString Failed to get glyph.\n");
+			continue;
+		}
 
-		draw(character.texture(), cc::Vec2f(xPos, yPos), 0.0f, cc::Vec2f(0,0), 1.0, 1.0f);
+		const float xPos = offset.x + position.x + glyph.bearingLeft() * SCALE;
+		const float yPos = offset.y + position.y - (glyph.height() - glyph.bearingTop()) * SCALE;
+
+		const float width = glyph.width() * SCALE;
+		const float height = glyph.height() * SCALE;
+
+		draw(glyph.texture(), cc::Vec2f(xPos, yPos), 0.0f, cc::Vec2f(0,0), 1.0, 1.0f);
 
 		std::shared_ptr<SpriteBatchItem> item = createBatchItem();
-		item->texture = character.texture();
+		item->texture = glyph.texture();
 		item->set(xPos, yPos, 0.0f, 0.0f, width, height, 0.0f, 0.0f, 1.0f, color);
 
-		xOffset += (character.advance() >> 6) * SCALE;
-
-		//std::shared_ptr<SpriteBatchItem> item = createBatchItem();
-		//item->texture = character.texture();
-		//item->set(xPos, yPos, 0.0f, 0.0f, width, height,0.0f, 0.0f, 0.0f, color);
+		offset.x += (glyph.advance() >> 6) * SCALE;
 	}
 }
 

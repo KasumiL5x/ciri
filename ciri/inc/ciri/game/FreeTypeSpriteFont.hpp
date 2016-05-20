@@ -22,7 +22,7 @@ namespace ciri {
 		virtual int getLineSpacing() const override;
 		virtual void measureString( const std::string& str, int* outWidth, int* outHeight ) const override;
 		virtual const std::unordered_map<char, SpriteFontGlyph> getLoadedCharacters() const override;
-		virtual const SpriteFontGlyph& getGlyph( char character ) override;
+		virtual bool getGlyph( char character, SpriteFontGlyph& outGlyph ) override;
 
 	private:
 		bool loadGlyph( char character );

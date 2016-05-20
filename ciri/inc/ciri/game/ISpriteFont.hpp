@@ -77,9 +77,10 @@ public:
 	/**
 		* Gets a specific character's glyph.  If not loaded, should load the glyph and return its result.
 		* @param character Character to retrieve the glyph of.
-		* @returns SpriteFontGlyph of the given character.
+		* @param outGlyph  Output SpriteFontGlyph.
+		* @returns False if the requested glyph could not be retrieved.
 		*/
-	virtual const SpriteFontGlyph& getGlyph( char character )=0;
+	virtual bool getGlyph( char character, SpriteFontGlyph& outGlyph )=0;
 
 	// change style
 	// get texture of character

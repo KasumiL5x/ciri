@@ -1,23 +1,7 @@
-#include "Gridlr.hpp"
+﻿#include "Gridlr.hpp"
 #include <cctype>
 #include <array>
 #include <cc/Random.hpp>
-
-//
-// random note about spritefonts!  the idea is something like the following:
-//
-// creation:
-//	std::shared_ptr<ciri::ISpriteFont> spriteFont = device->createSpriteFont("Helvetica.ttf", any, other, default, params);
-//	(or spriteFont->loadFromFile("..."); spriteFont->setSize(...); and so on).
-// 
-// drawing:
-//	device->drawString(spriteFont, "The String To Draw", color, position, rotation, pivot, states, custom shader, whatever...);
-//
-// can measure strings in pixels like this:
-//	string score = "Player Score:";
-//	vec2 size = spriteFont.measureString(score);
-//	device->drawString(spriteFont, player_score_str, score_pos + vec2(size.x + spacing, 0), ...);
-//
 
 Gridlr::Gridlr()
 	: App(), _grid(nullptr), _blendState(nullptr), _samplerState(nullptr), _depthStencilState(nullptr), _rasterizerState(nullptr), _cellTexture(nullptr),
@@ -81,124 +65,7 @@ void Gridlr::onLoadContent() {
 		printf("Failed to load font.\n");
 	}
 	_font->setSize(42);
-
-	/*
-	// DEBUG - load dummy red texture
-	const unsigned int RED_SIZE = 32;
-	std::array<float, RED_SIZE*RED_SIZE> RED_DATA = {};
-	for( int i = 0; i < RED_SIZE; ++i ) {
-		for( int j = 0; j < RED_SIZE; ++j ) {
-			RED_DATA[j * RED_SIZE + i] = i % 2 == 0 ? 1.0f : 0.0f;
-			//RED_DATA[j * RED_SIZE + i] = cc::math::Random<float, int>::rangedReal(0, 255);
-		}
-	}
-	//RED_DATA.fill	(255);
-	_redTextureTest = graphicsDevice()->createTexture2D(RED_SIZE, RED_SIZE, ciri::TextureFormat::R32_FLOAT, 0, RED_DATA.data());
-	_redSampler = graphicsDevice()->createSamplerState(ciri::SamplerDesc());
-	// DEBUG - load dummy red shader
-	_redShader = graphicsDevice()->createShader();
-	_redShader->addInputElement(ciri::VertexElement(ciri::VertexFormat::Float2, ciri::VertexUsage::Position, 0));
-	std::string RED_VS;
-	std::string RED_GS;
-	std::string RED_PS;
-	if( graphicsDevice()->getApiType() == ciri::GraphicsApiType::DirectX11 ) {
-	RED_VS = "struct VertexOut {\n"
-					 "	float2 pos : POSITION;\n"
-					 "};\n"
-					 "VertexOut main( float2 in_position : POSITION ) {\n"
-					 "	VertexOut OUT;\n"
-					 "	OUT.pos = in_position;\n"
-					 "	return OUT;\n"
-					 "}\n";
-	RED_GS = "struct VertexOut {\n"
-					 "	float2 pos : POSITION;\n"
-					 "};\n"
-					 "struct GeoOut {\n"
-					 "	float4 hpos : SV_POSITION;\n"
-					 "	float2 tex : TEXCOORD;\n"
-					 "};\n"
-					 "[maxvertexcount(4)]\n"
-					 "void main( point VertexOut gin[1], inout TriangleStream<GeoOut> gout ) {\n"
-					 "	GeoOut output;\n"
-					 "	float2 pos = gin[0].pos;\n"
-					 "	float size = 0.1;\n"
-					 "	output.hpos = float4(pos - float2(size, size), 0.0, 1.0);\n"
-					 "	output.tex = float2(0.0, 0.0);\n"
-					 "	gout.Append(output);\n"
-					 "	output.hpos = float4(pos + float2(-size, size), 0.0, 1.0);\n"
-					 "	output.tex = float2(0.0, 1.0);\n"
-					 "	gout.Append(output);\n"
-					 "	output.hpos = float4(pos + float2(size, -size), 0.0, 1.0);\n"
-					 "	output.tex = float2(1.0, 0.0);\n"
-					 "	gout.Append(output);\n"
-					 "	output.hpos = float4(pos + float2(size, size), 0.0, 1.0);\n"
-					 "	output.tex = float2(1.0, 1.0);\n"
-					 "	gout.Append(output);\n"
-					 "	gout.RestartStrip();\n"
-					 "}\n";
-	RED_PS = "Texture2D<float> TheTexture : register(t0);\n"
-					 "SamplerState TheSampler : register(s0);\n"
-					 "struct GeoOut {\n"
-					 "	float4 hpos : SV_POSITION;\n"
-					 "	float2 tex : TEXCOORD;\n"
-					 "};\n"
-					 "float4 main( GeoOut input ) : SV_TARGET {\n"
-					 "  return float4(TheTexture.Sample(TheSampler, input.tex).r, 0.0, 0.0, 1.0);\n"
-					 "  //return float4(TheTexture.Sample(TheSampler, input.tex).r, 0.0, 0.0, 1.0);\n"
-					 "}\n";
-	} else {
-	RED_VS = "#version 440\n"
-					 "layout ( location = 0 ) in vec2 in_position;\n"
-					 "void main() {\n"
-					 "  gl_Position = vec4(in_position, 0.0, 1.0);\n"
-					 "}\n";
-	RED_GS = "#version 440\n"
-					 "layout(points) in;\n"
-					 "layout(triangle_strip) out;\n"
-					 "layout(max_vertices=4) out;\n"
-					 "out vec2 go_texcoord;\n"
-					 "void main() {\n"
-					 "  vec2 pos = gl_in[0].gl_Position.xy;\n"
-					 "  float size = 0.1;"
-					 "  gl_Position = vec4(pos - vec2(size, size), 0.0, 1.0);\n"
-					 "  go_texcoord = vec2(0.0, 0.0)\n;"
-					 "  EmitVertex();\n"
-					 "  gl_Position = vec4(pos + vec2(-size, size), 0.0, 1.0);\n"
-					 "  go_texcoord = vec2(0.0, 1.0)\n;"
-					 "  EmitVertex();\n"
-					 "  gl_Position = vec4(pos + vec2(size, -size), 0.0, 1.0);\n"
-					 "  go_texcoord = vec2(1.0, 0.0)\n;"
-					 "  EmitVertex();\n"
-					 "  gl_Position = vec4(pos + vec2(size, size), 0.0, 1.0f);\n"
-					 "  go_texcoord = vec2(1.0, 1.0)\n;"
-					 "  EmitVertex();\n"
-					 "  EndPrimitive();\n"
-					 "}\n";
-	RED_PS = "#version 440\n"
-					 "uniform sampler2D TheTexture;\n"
-					 "in vec2 go_texcoord;\n"
-					 "out vec4 out_color;\n"
-					 "void main() {\n"
-					 "  out_color = vec4(texture(TheTexture, go_texcoord).r, 0.0, 0.0, 1.0);\n"
-					 "}\n";
-	}
-	if( ciri::failed(_redShader->loadFromMemory(RED_VS.c_str(), RED_GS.c_str(), RED_PS.c_str())) ) {
-		printf("Failed to load RED shader!\n");
-		for( auto err : _redShader->getErrors() ) {
-			printf("Error: %s\n", err.msg.c_str());
-		}
-	}
-	// DEBUG - load dummy vb
-	_redVb = graphicsDevice()->createVertexBuffer();
-	const unsigned int RED_VERTS_COUNT = 4;
-	std::array<cc::Vec2f, RED_VERTS_COUNT> RED_VERTS;
-	const auto& vp = graphicsDevice()->getViewport();
-	for( unsigned int i = 0; i < RED_VERTS_COUNT; ++i ) {
-		RED_VERTS[i].x = cc::math::Random<float, int>::rangedReal(0.0f, 1.0f);
-		RED_VERTS[i].y = cc::math::Random<float, int>::rangedReal(0.0f, 1.0f);
-	}
-	_redVb->set(RED_VERTS.data(), sizeof(cc::Vec2f), RED_VERTS_COUNT, false);
-	*/
+	_font->setLineSpacing(42);
 }
 
 void Gridlr::onEvent(const ciri::WindowEvent& evt) {
@@ -270,13 +137,6 @@ void Gridlr::onDraw() {
 	// clear screen
 	device->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	device->clear(ciri::ClearFlags::Color | ciri::ClearFlags::Depth);
-
-	// DEBUG - draw red things
-	//graphicsDevice()->applyShader(_redShader);
-	//graphicsDevice()->setVertexBuffer(_redVb);
-	//graphicsDevice()->setTexture2D(0, _redTextureTest, ciri::ShaderStage::Pixel);
-	//graphicsDevice()->setSamplerState(0, _redSampler, ciri::ShaderStage::Pixel);
-	//graphicsDevice()->drawArrays(ciri::PrimitiveTopology::PointList, 4, 0);
 
 	_spriteBatch.begin(_blendState, _samplerState, _depthStencilState, _rasterizerState, ciri::SpriteSortMode::Deferred, nullptr);
 	// draw grid

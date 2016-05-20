@@ -4,7 +4,7 @@
 using namespace ciri;
 
 FreeTypeSpriteFont::FreeTypeSpriteFont( const std::shared_ptr<IGraphicsDevice>& device )
-	: ISpriteFont(), _device(device), _fontLoaded(false), _size(14) {
+	: ISpriteFont(), _device(device), _fontLoaded(false), _size(14), _lineSpacing(14) {
 }
 
 FreeTypeSpriteFont::~FreeTypeSpriteFont() {
@@ -66,7 +66,6 @@ int FreeTypeSpriteFont::getSize() const {
 
 void FreeTypeSpriteFont::setLineSpacing( int spacing ) {
 	_lineSpacing = spacing;
-	throw;
 }
 
 int FreeTypeSpriteFont::getLineSpacing() const {
@@ -81,14 +80,15 @@ const std::unordered_map<char, SpriteFontGlyph> FreeTypeSpriteFont::getLoadedCha
 	return _glyphs;
 }
 
-const SpriteFontGlyph& FreeTypeSpriteFont::getGlyph( char character ) {
+bool FreeTypeSpriteFont::getGlyph( char character, SpriteFontGlyph& outGlyph ) {
 	const auto existing = _glyphs.find(character);
 	if( _glyphs.end() == existing ) {
 		if( !loadGlyph(character) ) {
-			throw; // todo: don't do it this way
+			return false;
 		}
 	}
-	return _glyphs[character];
+	outGlyph = _glyphs[character];
+	return true;
 }
 
 bool FreeTypeSpriteFont::loadGlyph( char character ) {
@@ -114,12 +114,6 @@ bool FreeTypeSpriteFont::loadGlyph( char character ) {
 			floatBuffer[floatPixel+3] = val;
 		}
 	}
-	//for( int i = 0; i < width*height; ++i ) {
-	//	floatBuffer[i*4+0] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
-	//	floatBuffer[i*4+1] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
-	//	floatBuffer[i*4+2] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
-	//	floatBuffer[i*4+3] = static_cast<float>(_ftFace->glyph->bitmap.buffer[i]);
-	//}
 	const auto texture = _device->createTexture2D(width, height, ciri::TextureFormat::RGBA32_Float, 0, floatBuffer);//_ftFace->glyph->bitmap.buffer);
 	delete[] floatBuffer;
 	SpriteFontGlyph glyph(width, height, bearingL, bearingT, advance, texture);
