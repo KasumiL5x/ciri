@@ -147,7 +147,7 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 
 	// move custom cursor
 	if( _cursorTexture != nullptr ) {
-		_cursorPos = cc::Vec2f(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
+		_cursorPos = cc::Vec2f(static_cast<float>(input()->mouseX()), static_cast<float>(input()->mouseY()));
 		_cursorPos.x = (_cursorPos.x < 0.0f) ? 0.0f : _cursorPos.x;
 		_cursorPos.y = (_cursorPos.y < _cursorTexture->getHeight()) ? _cursorTexture->getHeight() : _cursorPos.y;
 		_cursorPos.x = (_cursorPos.x > window()->getWidth() - _cursorTexture->getWidth()) ? window()->getWidth() - _cursorTexture->getWidth() : _cursorPos.x;
@@ -192,7 +192,7 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 	if( (false||input()->isMouseButtonDown(ciri::MouseButton::Left)) && (_fireTimer > FIRE_DELAY) ) {
 		_fireTimer = 0.0f;
 
-		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(window()->getHeight() - input()->mouseY()));
+		const cc::Vec2f mousePos(static_cast<float>(input()->mouseX()), static_cast<float>(input()->mouseY()));
 		const cc::Vec2f diff = (mousePos - _player->getPosition()).normalized();
 
 		const float aimAngle = atan2f(diff.y, diff.x);

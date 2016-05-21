@@ -159,7 +159,7 @@ void Gridlr::onDraw() {
 			// offset and inverted positions
 			cc::Vec2f position = {
 				_gridOffset.x + static_cast<float>(_cellTexture->getWidth() * x),
-				(vp.height() - _gridOffset.y - _cellTexture->getHeight()) - (_cellTexture->getHeight() * y) // subtract from top of screen to invert the grid so it displays right; sub cell tex height is b/c of the pivot being at the top left (need to fix this)
+				_gridOffset.y + static_cast<float>(_cellTexture->getHeight() * y)
 			};
 
 			// pick color based on state
@@ -175,22 +175,18 @@ void Gridlr::onDraw() {
 			// draw
 			const cc::Vec2f origin(0.0f, 0.0f);
 			const cc::Vec2f scale(1.0f, 1.0f);
-			//_spriteBatch.draw(_cellTexture, position, 0.0f, origin, scale, 0.0f, color);
+			_spriteBatch.draw(_cellTexture, position, 0.0f, origin, scale, 0.0f, color);
 		}
 	}
 
-	//const float scale = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().height(), input()->mouseY()) * 10.f;
-	//const float rotation = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().width(), input()->mouseX()) * 10.f;
-	//_spriteBatch.drawString(_font, "Hello.  This is on the same line.\nSay what?", cc::Vec2f(100.0f, 300.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), scale, rotation, 1.0f);
-
-	const std::string str1 = "Hello, ";
-	const cc::Vec2f str1pos(input()->mouseX(), input()->mouseY());
-	_spriteBatch.drawString(_font, str1, str1pos, cc::Vec4f(1.0f), 1.0f, 0.0f, 1.0f);
-	const std::string str2 = "World!";
-	const cc::Vec2f str2pos = str1pos + cc::Vec2f(_font->measureString(str1).x, 0.0f);
-	_spriteBatch.drawString(_font, str2, str2pos, cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
-	_spriteBatch.drawString(_font, "Hello, World!", str1pos + cc::Vec2f(0.0f, 100.0f), cc::Vec4f(1.0f), 1.0f, 0.0f, 1.0f);
-	printf("x: %d; y: %d\n", input()->mouseX(), input()->mouseY());
+	//const std::string str1 = "Hello, ";
+	//const cc::Vec2f str1pos(input()->mouseX(), input()->mouseY());
+	//_spriteBatch.drawString(_font, str1, str1pos, cc::Vec4f(0.0f, 1.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	//const std::string str2 = "World!";
+	//const cc::Vec2f str2pos = str1pos + cc::Vec2f(_font->measureString(str1).x, 0.0f);
+	//_spriteBatch.drawString(_font, str2, str2pos, cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	//_spriteBatch.drawString(_font, "Hello, World!", str1pos + cc::Vec2f(0.0f, 100.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	//printf("x: %d; y: %d\n", input()->mouseX(), input()->mouseY());
 
 	_spriteBatch.end();
 
