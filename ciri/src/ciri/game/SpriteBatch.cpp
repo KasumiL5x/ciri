@@ -160,7 +160,7 @@ void SpriteBatch::drawString( const std::shared_ptr<ISpriteFont>& font, const st
 	}
 
 	const cc::Vec2f SCALE(scale, scale);
-	cc::Vec2i offset(0, 0);
+	cc::Vec2f offset(0.0f, 0.0f);
 
 	for( const auto& c : text ) {
 		// ignore carriage return
@@ -170,8 +170,8 @@ void SpriteBatch::drawString( const std::shared_ptr<ISpriteFont>& font, const st
 
 		// handle newline
 		if( '\n' == c ) {
-			offset.x = 0;
-			offset.y -= font->getLineSpacing();
+			offset.x = 0.0f;
+			offset.y -= static_cast<float>(font->getLineSpacing());
 			continue;
 		}
 
@@ -187,8 +187,8 @@ void SpriteBatch::drawString( const std::shared_ptr<ISpriteFont>& font, const st
 			continue;
 		}
 
-		const float xPos = offset.x + position.x + glyph.bearingLeft() * scale;
-		const float yPos = offset.y + position.y - (glyph.height() - glyph.bearingTop()) * scale;
+		const float xPos = static_cast<float>(offset.x) + position.x + glyph.bearingLeft() * scale;
+		const float yPos = static_cast<float>(offset.y) + position.y - (glyph.height() - glyph.bearingTop()) * scale;
 
 		const float width = glyph.width() * scale;
 		const float height = glyph.height() * scale;

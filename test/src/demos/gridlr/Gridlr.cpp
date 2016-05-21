@@ -179,13 +179,13 @@ void Gridlr::onDraw() {
 		}
 	}
 
-	//const std::string str1 = "Hello, ";
-	//const cc::Vec2f str1pos(input()->mouseX(), input()->mouseY());
-	//_spriteBatch.drawString(_font, str1, str1pos, cc::Vec4f(0.0f, 1.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
-	//const std::string str2 = "World!";
-	//const cc::Vec2f str2pos = str1pos + cc::Vec2f(_font->measureString(str1).x, 0.0f);
-	//_spriteBatch.drawString(_font, str2, str2pos, cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
-	//_spriteBatch.drawString(_font, "Hello, World!", str1pos + cc::Vec2f(0.0f, 100.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	const std::string str1 = "Hello, ";
+	const cc::Vec2f str1pos(input()->mouseX(), input()->mouseY());
+	_spriteBatch.drawString(_font, str1, str1pos, cc::Vec4f(0.0f, 1.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	const std::string str2 = "World!";
+	const cc::Vec2f str2pos = str1pos + cc::Vec2f(_font->measureString(str1).x, 0.0f);
+	_spriteBatch.drawString(_font, str2, str2pos, cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	_spriteBatch.drawString(_font, "Hello, World!", str1pos + cc::Vec2f(0.0f, 100.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0.0f, 1.0f);
 	//printf("x: %d; y: %d\n", input()->mouseX(), input()->mouseY());
 
 	_spriteBatch.end();
