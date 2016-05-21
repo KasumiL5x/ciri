@@ -72,8 +72,60 @@ int FreeTypeSpriteFont::getLineSpacing() const {
 	return _lineSpacing;
 }
 
-void FreeTypeSpriteFont::measureString( const std::string& str, int* outWidth, int* outHeight ) const {
-	throw;
+cc::Vec2i FreeTypeSpriteFont::measureString( const std::string& str ) const {
+	if( str.empty() ) {
+		return cc::Vec2i::zero();
+	}
+
+	cc::Vec2i size;
+
+	int thisLineHeight = getLineSpacing();
+	for( const auto& c : str ) {
+		if( '\r' == c ) {
+			continue;
+		}
+
+		if( '\n' == c ) {
+			size.y += thisLineHeight; // add previous line height
+			thisLineHeight = getLineSpacing(); // reset line height
+			continue;
+		}
+
+		const auto glyph = _glyphs.find(c);
+		if( _glyphs.end() == glyph ) {
+			continue;
+		}
+
+		size.x += (glyph->second.advance() >> 6);
+		thisLineHeight = (glyph->second.height() > thisLineHeight) ? glyph->second.height() : thisLineHeight;
+	}
+	size.y += thisLineHeight; // append remaining line height
+
+	//bool lineFinished = false;
+	//int lineSpacing = getLineSpacing();
+	//for( const auto& c : str ) {
+	//	// ignore carriage return
+	//	if( '\r' == c ) {
+	//		continue;
+	//	}
+
+	//	// handle newline
+	//	if( '\n' == c ) {
+	//		size.y += getLineSpacing();
+	//	}
+
+	//	// find glyph; ignore non-existent ones (not loading them, hence not using getGlyph)
+	//	const auto existing = _glyphs.find(c);
+	//	if( _glyphs.end() == existing ) {
+	//		continue;
+	//	}
+
+	//	// append line's height based on glyph
+	//	lineSpacing = existing->second.height() > lineSpacing ? existing->second.height() : lineSpacing;
+
+	//	size.x += (existing->second.advance() >> 6);
+	//}
+	return size;
 }
 
 const std::unordered_map<char, SpriteFontGlyph> FreeTypeSpriteFont::getLoadedCharacters() const {

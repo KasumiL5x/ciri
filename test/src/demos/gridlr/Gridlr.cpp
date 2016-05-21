@@ -126,6 +126,12 @@ void Gridlr::onUpdate(const double deltaTime, const double elapsedTime) {
 	if( _grid->isComplete() ) {
 		printf("Complete!\n");
 	}
+
+
+
+
+	//const auto size = _font->measureString("hello");
+	//printf("Size: %dpx x %dpx\n", size.x, size.y);
 }
 
 void Gridlr::onFixedUpdate(const double deltaTime, const double elapsedTime) {
@@ -173,9 +179,18 @@ void Gridlr::onDraw() {
 		}
 	}
 
-	const float scale = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().height(), input()->mouseY()) * 10.f;
-	const float rotation = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().width(), input()->mouseX()) * 10.f;
-	_spriteBatch.drawString(_font, "Hello.  This is on the same line.\nSay what?", cc::Vec2f(100.0f, 300.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), scale, rotation, 1.0f);
+	//const float scale = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().height(), input()->mouseY()) * 10.f;
+	//const float rotation = cc::math::percent<float>(0.0f, graphicsDevice()->getViewport().width(), input()->mouseX()) * 10.f;
+	//_spriteBatch.drawString(_font, "Hello.  This is on the same line.\nSay what?", cc::Vec2f(100.0f, 300.0f), cc::Vec4f(1.0f, 0.0f, 0.0f, 1.0f), scale, rotation, 1.0f);
+
+	const std::string str1 = "Hello, ";
+	const cc::Vec2f str1pos(input()->mouseX(), device->getViewport().height()-input()->mouseY());
+	_spriteBatch.drawString(_font, str1, str1pos, cc::Vec4f(1.0f), 1.0f, 0.0f, 1.0f);
+	const std::string str2 = "World!";
+	const cc::Vec2f str2pos = str1pos + cc::Vec2f(_font->measureString(str1).x, 0.0f);
+	_spriteBatch.drawString(_font, str2, str2pos, cc::Vec4f(1.0f, 0.0f, 1.0f, 1.0f), 1.0f, 0.0f, 1.0f);
+	_spriteBatch.drawString(_font, "Hello, World!", str1pos + cc::Vec2f(0.0f, 100.0f), cc::Vec4f(1.0f), 1.0f, 0.0f, 1.0f);
+	printf("x: %d; y: %d\n", input()->mouseX(), device->getViewport().height()-input()->mouseY());
 
 	_spriteBatch.end();
 

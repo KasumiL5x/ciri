@@ -160,7 +160,6 @@ void SpriteBatch::drawString( const std::shared_ptr<ISpriteFont>& font, const st
 	}
 
 	const cc::Vec2f SCALE(scale, scale);
-
 	cc::Vec2i offset(0, 0);
 
 	for( const auto& c : text ) {

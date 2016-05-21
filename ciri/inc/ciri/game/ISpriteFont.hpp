@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <ciri/core/ErrorCodes.hpp>
+#include <cc/Vec2.hpp>
 #include "SpriteFontGlyph.hpp"
 
 namespace ciri {
@@ -63,10 +64,9 @@ public:
 		* Measures a given string's width and height in pixels.
 		* 
 		* @param str String to measure.
-		* @param outWidth Width of string in pixels.
-		* @param outHeight Height of string in pixels.
+		* @returns Size in pixels.
 		*/
-	virtual void measureString( const std::string& str, int* outWidth, int* outHeight ) const=0;
+	virtual cc::Vec2i measureString( const std::string& str ) const=0;
 
 	/**
 		* Gets a map of loaded characters and their associated SpriteFontGlyph information.
@@ -75,7 +75,7 @@ public:
 	virtual const std::unordered_map<char, SpriteFontGlyph> getLoadedCharacters() const=0;
 
 	/**
-		* Gets a specific character's glyph.  If not loaded, should load the glyph and return its result.
+		* Gets a specific character's glyph.  If not loaded, will attempt to load the glyph.
 		* @param character Character to retrieve the glyph of.
 		* @param outGlyph  Output SpriteFontGlyph.
 		* @returns False if the requested glyph could not be retrieved.

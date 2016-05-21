@@ -20,7 +20,7 @@ namespace ciri {
 		virtual int getSize() const override;
 		virtual void setLineSpacing( int spacing ) override;
 		virtual int getLineSpacing() const override;
-		virtual void measureString( const std::string& str, int* outWidth, int* outHeight ) const override;
+		virtual cc::Vec2i measureString( const std::string& str ) const override;
 		virtual const std::unordered_map<char, SpriteFontGlyph> getLoadedCharacters() const override;
 		virtual bool getGlyph( char character, SpriteFontGlyph& outGlyph ) override;
 
