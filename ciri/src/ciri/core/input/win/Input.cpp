@@ -155,17 +155,22 @@ bool Input::poll() {
 		_currKeyState.states[i] = (KeyboardState::_keyBuffer[i] & 0x80) ? true : false;
 	}
 
-	// get current mouse state
+	// get current mouse buttons' state
 	_currMouseState.states[(int)MouseButton::Left] = (GetKeyState(VK_LBUTTON) & 0x80) ? true : false;
 	_currMouseState.states[(int)MouseButton::Middle] = (GetKeyState(VK_MBUTTON) & 0x80) ? true : false;
 	_currMouseState.states[(int)MouseButton::Right] = (GetKeyState(VK_RBUTTON) & 0x80) ? true : false;
 	_currMouseState.states[(int)MouseButton::X1] = (GetKeyState(VK_XBUTTON1) & 0x80) ? true : false;
 	_currMouseState.states[(int)MouseButton::X2] = (GetKeyState(VK_XBUTTON2) & 0x80) ? true : false;
+
+	// get mouse position and invert coordinates
+	RECT crect;
+	GetClientRect(static_cast<HWND>(_window->getNativeHandle()), &crect);
+	const int clientHeight = crect.bottom - crect.top;
 	POINT pos;
 	GetCursorPos(&pos);
 	ScreenToClient(static_cast<HWND>(_window->getNativeHandle()), &pos);
 	_currMouseState.x = static_cast<int>(pos.x);
-	_currMouseState.y = static_cast<int>(pos.y);
+	_currMouseState.y = clientHeight - static_cast<int>(pos.y);
 
 	return true;
 }
