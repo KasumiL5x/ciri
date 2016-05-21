@@ -11,7 +11,7 @@ static __forceinline bool checkGlError() {
 	const GLenum err = glGetError();
 	if( GL_NO_ERROR != err ) {
 		const char* errStr = reinterpret_cast<const char*>(glewGetErrorString(err));
-		core::Logs::get(core::Logs::Debug).printError(std::string(errStr));
+		ciri::Logs::get(ciri::Logs::Debug).printError(std::string(errStr));
 		return false;
 	}
 	return true;

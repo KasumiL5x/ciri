@@ -69,7 +69,7 @@ ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height,
 	glGenTextures(1, &_textureId);
 	glBindTexture(GL_TEXTURE_2D, _textureId);
 	// change the pixel store to match that of the format's bytes per pixel
-	glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
+	glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::getAlignment(format));
 	// set the texture data
 	glTexImage2D(GL_TEXTURE_2D, level, _internalFormat, width, height, 0, _pixelFormat, _pixelType, data);
 	// reset pixel store back to default

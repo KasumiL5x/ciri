@@ -40,7 +40,7 @@ ErrorCode GLTexture3D::setData( int width, int height, int depth, void* data, Te
 	glGenTextures(1, &_textureId);
 	glBindTexture(GL_TEXTURE_3D, _textureId);
 	// change the pixel store to match the format's bytes per pixel
-	glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
+	glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::getAlignment(format));
 	// set the texture data
 	glTexImage3D(GL_TEXTURE_3D, 0, _internalFormat, width, height, depth, 0, _pixelFormat, _pixelType, data);
 	// resetr pixel store back to default

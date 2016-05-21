@@ -168,6 +168,7 @@ bool FreeTypeSpriteFont::loadGlyph( char character ) {
 	}
 	const auto texture = _device->createTexture2D(width, height, ciri::TextureFormat::RGBA32_Float, 0, floatBuffer);//_ftFace->glyph->bitmap.buffer);
 	delete[] floatBuffer;
+	floatBuffer = nullptr;
 	SpriteFontGlyph glyph(width, height, bearingL, bearingT, advance, texture);
 	_glyphs.insert(std::make_pair(character, glyph));
 	return true;
