@@ -14,9 +14,6 @@ in vec3 vo_tangentLightPos;
 in vec3 vo_tangentCamPos;
 in vec3 vo_tangentFragPos;
 
-// in vec3 vo_tangent;
-// in vec3 vo_bitangent;
-
 out vec4 out_color;
 
 vec3 LightPosition = vec3(0.0, 15.0, 0.0);
@@ -28,38 +25,6 @@ float LightPower = 32.0;
 float ParallaxHeight = 0.04;
 float MinLayers = 15.0;
 float MaxLayers = 30.0;
-
-float attenuate( vec3 p, vec3 l, float range )
-{
-	float dist = length(p - l);
-	return smoothstep(range, 0.0f, dist);
-}
-
-vec3 lambert( vec3 L, vec3 N, vec3 lightColor, float lightIntensity )
-{
-	float diffuseLight = max(dot(L, N), 0.0f);
-	return (diffuseLight * lightColor) * lightIntensity;
-}
-
-vec3 phong( vec3 L, vec3 N, vec3 V, vec3 lightColor, float lightIntensity, float specularPower )
-{
-	float nDotL = max(dot(N, L), 0.0f);
-	vec3 RL = reflect(-L, N);
-	float rDotV = max(dot(RL, V), 0.0f);
-	vec3 specular = vec3(0.0f);
-	if( specularPower > 0.0f )
-	{
-		specular = (lightColor * pow(rDotV, specularPower));
-	}
-	vec3 diffuse = (lightColor * nDotL);
-	return (diffuse + specular) * lightIntensity;
-}
-
-vec2 ParallaxMapping( vec2 texcoords, vec3 viewdir ) {
-	// standard parallax
-	float height = texture(ParallaxTexture, texcoords).r;
-	return texcoords - (viewdir.xy / viewdir.z * (height * ParallaxHeight));
-}
 
 vec2 SteepParallaxMapping( in vec2 texcoords, in vec3 viewdir, out float parallaxHeight ) {
 	// number of depth layers
@@ -148,9 +113,6 @@ float ParallaxShadow( vec3 L, vec2 texcoords, float initialHeight ) {
 }
 
 void main() {
-	// out_color = texture(DiffuseTexture, vo_texcoord);
-	// return;
-
 	vec3 ViewDir = normalize(vo_tangentCamPos - vo_tangentFragPos);
 	vec2 TexCoords = vo_texcoord;
 	float selfShadowModifier = 1.0;

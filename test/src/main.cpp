@@ -73,7 +73,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<ciri::App> game = createGame(Demo::Gridlr);
+	std::unique_ptr<ciri::App> game = createGame(Demo::Parallax);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}
