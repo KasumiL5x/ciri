@@ -62,6 +62,9 @@ private:
 
 	TestParticleSystem _psys;
 	std::shared_ptr<ciri::ITexture2D> _testPsysTexture;
+
+	std::shared_ptr<ciri::ISpriteFont> _font;
+	int _enemiesKilled;
 };
 
 #endif /* __spritesdemo__ */

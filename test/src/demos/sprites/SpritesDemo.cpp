@@ -7,7 +7,7 @@
 #include <cc/Random.hpp>
 
 SpritesDemo::SpritesDemo()
-	: App() {
+	: App(), _enemiesKilled(0) {
 	_config.width = 1280;
 	_config.height = 720;
 	_config.title = "ciri : Sprites Demo";
@@ -107,6 +107,14 @@ void SpritesDemo::onLoadContent() {
 		_testPsysTexture = graphicsDevice()->createTexture2D(glowPng.getWidth(), glowPng.getHeight(), ciri::TextureFormat::RGBA32_UINT, 0, glowPng.getPixels());
 		_psys.setTexture(_testPsysTexture);
 	}
+
+	// load sprite font
+	_font = std::make_shared<ciri::FreeTypeSpriteFont>(graphicsDevice());
+	if( ciri::failed(_font->loadFromFile("data/fonts/Gravity-Bold.ttf")) ) {
+		printf("Failed to load font.\n");
+	}
+	_font->setSize(30);
+	_font->setLineSpacing(30);
 }
 
 void SpritesDemo::onEvent( const ciri::WindowEvent& evt ) {
@@ -225,6 +233,9 @@ void SpritesDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 			if( isColliding(_bullets[i], _enemies[j]) ) {
 				_bullets[i].setIsAlive(false);
 				_enemies[j].setIsAlive(false);
+
+				_enemiesKilled += 1;
+
 				break;
 			}
 		}
@@ -304,6 +315,11 @@ void SpritesDemo::onDraw() {
 	if( _cursorTexture != nullptr ) {
 		_spritebatch.draw(_cursorTexture, _cursorPos, 0.0f, _cursorOrigin, 1.0f, 1.0f);
 	}
+
+	// player score
+	const cc::Vec2f scorePosition = cc::Vec2f(20.0f, device->getViewport().height() - 50.0f);
+	const cc::Vec4f scoreColor = cc::Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+	_spritebatch.drawString(_font, "Score: " + std::to_string(_enemiesKilled), scorePosition, scoreColor, 1.0f, 0.0f, 1.0f);
 
 	_spritebatch.end();
 
