@@ -32,7 +32,23 @@ public:
 	SpriteBatch();
 	~SpriteBatch();
 
+	/**
+	 * Create and initialize the SpriteBatch.
+	 * @param device IGraphicsDevice for initialization of GPU resources.
+	 * @returns True if created; false otherwise.
+	 */
 	bool create( const std::shared_ptr<ciri::IGraphicsDevice>& device );
+
+	/**
+	 * Prepare the SpriteBatch for drawing.  This must be called every frame before drawing anything, and must be accompanied by an end() call.
+	 * @param blendState        State to blend sprites together.
+	 * @param samplerState      State for how to sample the sprite textures.
+	 * @param depthStencilState State for depth buffering sprites.
+	 * @param rasterizerState   State for rasterizer settings.
+	 * @param sortMode          How to sort the sprites before drawing.
+	 * @param shader            Custom sprite shader (see default shader for implementation details).
+	 * @returns True if started; false otherwise.
+	 */
 	bool begin( const std::shared_ptr<ciri::IBlendState>& blendState, const std::shared_ptr<ciri::ISamplerState>& samplerState, const std::shared_ptr<ciri::IDepthStencilState>& depthStencilState, const std::shared_ptr<ciri::IRasterizerState>& rasterizerState, SpriteSortMode sortMode, const std::shared_ptr<ciri::IShader>& shader );
 
 	/**
@@ -79,10 +95,27 @@ public:
 	 */
 	void draw( const std::shared_ptr<ciri::ITexture2D>& texture, const cc::Vec2f& position, float rotation, const cc::Vec2f& origin, const cc::Vec2f& scale, float depth, const cc::Vec4f& color );
 
-
+	/**
+	 * Draws a string of text.
+	 * @param font     ISpriteFont to draw with.
+	 * @param text     Text string to draw.
+	 * @param position Position of text.
+	 * @param color    Color overlay of text.
+	 * @param scale    Uniform scale of text.
+	 * @param rotation Rotation of text (todo: change to text element rather than per-character).
+	 * @param depth    Depth for sorting.
+	 */
 	void drawString( const std::shared_ptr<ISpriteFont>& font, const std::string& text, const cc::Vec2f& position, const cc::Vec4f& color, float scale, float rotation, float depth );
 	
+	/**
+	 * End the SpriteBatch.  This draws everything.  This must be accompanied by a preceding begin() call.
+	 * @returns True if ended; false otherwise.
+	 */
 	bool end();
+
+	/**
+	 * Clean allocated resources.
+	 */
 	void clean();
 
 private:

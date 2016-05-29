@@ -3,24 +3,6 @@
 
 using namespace ciri;
 
-struct SpriteSortTexture {
-	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
-		return (lhs->texture == rhs->texture);
-	}
-};
-
-struct SpriteSortFrontToBack {
-	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
-		return (lhs->depth < rhs->depth);
-	}
-};
-
-struct SpriteSortBackToFront {
-	inline bool operator()( const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs ) {
-		return (rhs->depth < lhs->depth);
-	}
-};
-
 SpriteBatch::SpriteBatch()
 	: _beginCalled(false), _sortMode(SpriteSortMode::Deferred), _vertexArray(nullptr), _vertexArraySize(0) {
 }
@@ -37,8 +19,6 @@ bool SpriteBatch::create( const std::shared_ptr<ciri::IGraphicsDevice>& device )
 	_device = device;
 
 	_spritesBuffer = device->createVertexBuffer();
-
-	//ensureArrayCapacity(10);
 
 	// load and configure shader and constants
 	_defaultShader = device->createShader();
@@ -77,9 +57,6 @@ bool SpriteBatch::begin( const std::shared_ptr<ciri::IBlendState>& blendState, c
 
 	// save custom shader if provided
 	_shader = (shader != nullptr) ? shader : _defaultShader;
-	if( shader != nullptr ) {
-	} else {
-	}
 
 	// must have a valid shader set
 	if( !_shader->isValid() ) {
@@ -102,7 +79,7 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 		return;
 	}
 
-	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	const auto item = createBatchItem();
 	item->texture = texture;
 
 	const float textureWidth = static_cast<float>(texture->getWidth());
@@ -116,7 +93,7 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 		return;
 	}
 
-	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	const auto item = createBatchItem();
 	item->texture = texture;
 
 	const float textureWidth = static_cast<float>(texture->getWidth()) * scale.x;
@@ -130,7 +107,7 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 		return;
 	}
 
-	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	const auto item = createBatchItem();
 	item->texture = texture;
 
 	const float textureWidth = static_cast<float>(texture->getWidth()) * scale;
@@ -144,7 +121,7 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 		return;
 	}
 
-	std::shared_ptr<SpriteBatchItem> item = createBatchItem();
+	const auto item = createBatchItem();
 	item->texture = texture;
 
 	const float textureWidth = static_cast<float>(texture->getWidth()) * scale.x;
@@ -153,7 +130,6 @@ void SpriteBatch::draw( const std::shared_ptr<ciri::ITexture2D>& texture, const 
 	item->set(position.x, position.y, -newOrigin.x, -newOrigin.y, textureWidth, textureHeight, sinf(rotation), cosf(rotation), depth, color);
 }
 
-//void SpriteBatch::drawString( const std::string& text, const std::shared_ptr<ISpriteFont>& font, const cc::Vec2f& position, const cc::Vec4f& color ) {
 void SpriteBatch::drawString( const std::shared_ptr<ISpriteFont>& font, const std::string& text, const cc::Vec2f& position, const cc::Vec4f& color, float scale, float rotation, float depth ) {
 	if( nullptr == font || text.empty() ) {
 		return;
@@ -210,28 +186,34 @@ bool SpriteBatch::end() {
 	_beginCalled = false;
 
 	// check for no items
-	if( 0 == _batchItemList.size() ) {
+	if( _batchItemList.empty() ) {
 		return true; // not an error to have no batches
 	}
 
-	const int batchCount = _batchItemList.size();
+	const int batchCount = static_cast<int>(_batchItemList.size());
 
 	ensureArrayCapacity(batchCount);
 
 	// sort array
 	switch( _sortMode ) {
 		case SpriteSortMode::Texture: {
-			std::sort(_batchItemList.begin(), _batchItemList.end(), SpriteSortTexture());
+			std::sort(_batchItemList.begin(), _batchItemList.end(), [](const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs){
+				return (lhs->texture == rhs->texture);
+			});
 			break;
 		}
 
 		case SpriteSortMode::FrontToBack: {
-			std::sort(_batchItemList.begin(), _batchItemList.end(), SpriteSortFrontToBack());
+			std::sort(_batchItemList.begin(), _batchItemList.end(), [](const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs){
+				return (lhs->depth < rhs->depth);
+			});
 			break;
 		}
 
 		case SpriteSortMode::BackToFront: {
-			std::sort(_batchItemList.begin(), _batchItemList.end(), SpriteSortBackToFront());
+			std::sort(_batchItemList.begin(), _batchItemList.end(), [](const std::shared_ptr<SpriteBatchItem>& lhs, const std::shared_ptr<SpriteBatchItem>& rhs){
+				return (rhs->depth < lhs->depth);
+			});
 			break;
 		}
 
@@ -243,7 +225,7 @@ bool SpriteBatch::end() {
 	// update vertex array
 	int batchIndex = 0;
 	for( int i = 0; i < batchCount; ++i ) {
-		std::shared_ptr<SpriteBatchItem> item = _batchItemList[i];
+		const auto& item = _batchItemList[i];
 		_vertexArray[batchIndex++] = item->topLeft;     // t0
 		_vertexArray[batchIndex++] = item->bottomRight; // t0
 		_vertexArray[batchIndex++] = item->bottomLeft;  // t0
@@ -260,7 +242,7 @@ bool SpriteBatch::end() {
 	int endIndex = 0;
 	std::shared_ptr<ciri::ITexture2D> boundTexture = nullptr;
 	for( int i = 0; i < batchCount; ++i ) {
-		std::shared_ptr<SpriteBatchItem> item = _batchItemList[i];
+		const auto& item = _batchItemList[i];
 		// if texture has changed...
 		if( item->texture != boundTexture ) {
 			// draw what is already backlogged
@@ -299,13 +281,9 @@ bool SpriteBatch::end() {
 
 void SpriteBatch::clean() {
 	_beginCalled = false;
-
 	_spritesBuffer = nullptr;
-
 	_constantBuffer = nullptr;
-
 	_defaultShader = nullptr;
-
 	_shader = nullptr;
 }
 
@@ -315,7 +293,7 @@ bool SpriteBatch::configure() {
 	_device->setRasterizerState(_rasterizerState);
 	_device->setSamplerState(0, _samplerState, ciri::ShaderStage::Pixel);
 
-	const ciri::Viewport& vp = _device->getViewport();
+	const auto& vp = _device->getViewport();
 
 	// update constant buffer
 	_constants.projection = cc::math::orthographic(0.0f, static_cast<float>(vp.width()), 0.0f, static_cast<float>(vp.height()), -1.0f, 1.0f);
