@@ -93,6 +93,7 @@ void BMGrid::resetAll() {
 }
 
 void BMGrid::updateGrid() {
+	const float divisor = 1.f / 4.0f;
 	for( int a = 1; a < (_numPointsW-1); ++a ) {
 		for( int b = 1; b < (_numPointsH-1); ++b ) {
 			float xx = 0.0f;
@@ -100,14 +101,14 @@ void BMGrid::updateGrid() {
 			xx += _grid[getIndex(a, b-1)].x;
 			xx += _grid[getIndex(a, b+1)].x;
 			xx += _grid[getIndex(a+1, b)].x;
-			xx /= 4.0f;
+			xx *= divisor;
 
 			float yy = 0.0f;
 			yy += _grid[getIndex(a-1, b)].y;
 			yy += _grid[getIndex(a, b-1)].y;
 			yy += _grid[getIndex(a, b+1)].y;
 			yy += _grid[getIndex(a+1, b)].y;
-			yy /= 4.0f;
+			yy *= divisor;
 
 			_grid[getIndex(a, b)].update(xx, yy);
 		}

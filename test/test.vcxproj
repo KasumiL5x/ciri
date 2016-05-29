@@ -101,7 +101,6 @@
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp" />
     <ClCompile Include="src\demos\refract\RefractDemo.cpp" />
     <ClCompile Include="src\demos\sprites\Bullet.cpp" />
-    <ClCompile Include="src\demos\sprites\DynamicGrid.cpp" />
     <ClCompile Include="src\demos\sprites\Enemy.cpp" />
     <ClCompile Include="src\demos\sprites\Entity.cpp" />
     <ClCompile Include="src\demos\sprites\IParticleSystem.cpp" />
@@ -138,7 +137,6 @@
     <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp" />
     <ClInclude Include="src\demos\refract\RefractDemo.hpp" />
     <ClInclude Include="src\demos\sprites\Bullet.hpp" />
-    <ClInclude Include="src\demos\sprites\DynamicGrid.hpp" />
     <ClInclude Include="src\demos\sprites\Enemy.hpp" />
     <ClInclude Include="src\demos\sprites\Entity.hpp" />
     <ClInclude Include="src\demos\sprites\MathHelper.hpp" />

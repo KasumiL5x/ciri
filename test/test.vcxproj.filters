@@ -26,9 +26,6 @@
     <ClCompile Include="src\demos\sprites\SpritesDemo.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\sprites\DynamicGrid.cpp">
-      <Filter>demos\sprites</Filter>
-    </ClCompile>
     <ClCompile Include="src\demos\sprites\PlayerShip.cpp">
       <Filter>demos\sprites</Filter>
     </ClCompile>
@@ -151,9 +148,6 @@
       <Filter>demos\terrain</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\sprites\SpritesDemo.hpp">
-      <Filter>demos\sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="src\demos\sprites\DynamicGrid.hpp">
       <Filter>demos\sprites</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\sprites\PlayerShip.hpp">
