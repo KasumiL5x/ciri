@@ -8,5 +8,8 @@
 #include <ciri/game/ISpriteFont.hpp>
 #include <ciri/game/SpriteFontGlyph.hpp>
 #include <ciri/game/FreeTypeSpriteFont.hpp>
+#include <ciri/game/screens/Screen.hpp>
+#include <ciri/game/screens/ScreenState.hpp>
+#include <ciri/game/screens/ScreenManager.hpp>
 
 #endif
