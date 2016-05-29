@@ -93,12 +93,11 @@ cc::Vec2f TestParticleSystem::generateSpawnPosition() const {
 	return _emitterPosition;
 }
 
-float TestParticleSystem::generateLifetime() const {
-	//return cc::math::randRange<float>(5.0f, 5.0f);
-	return cc::math::Random<float, int>::rangedReal(0.25f, 1.0f);
+float TestParticleSystem::generateLifetime() {
+	return random_.nextReal(0.25f, 1.0f);
 }
 
-cc::Vec2f TestParticleSystem::generateVelocity() const {
+cc::Vec2f TestParticleSystem::generateVelocity() {
 	// http://www.playchilla.com/random-direction-in-2d
 	cc::Vec2f direction = _emitDirection;
 	const bool EMIT_DIRECTION_FLUX = true;
@@ -106,7 +105,7 @@ cc::Vec2f TestParticleSystem::generateVelocity() const {
 	if( EMIT_DIRECTION_FLUX ) {
 		const float MIN_ANGLE = static_cast<float>(-cc::math::PI);
 		const float MAX_ANGLE = static_cast<float>(cc::math::PI);
-		const float angle = cc::math::Random<float, int>::rangedReal(MIN_ANGLE, MAX_ANGLE);
+		const float angle = random_.nextReal(MIN_ANGLE, MAX_ANGLE);
 		direction.x += cosf(angle);
 		direction.y += sinf(angle);
 	}
@@ -127,6 +126,6 @@ cc::Vec2f TestParticleSystem::generateVelocity() const {
 	//}
 	direction.normalize();
 
-	const float magnitude = cc::math::Random<float, int>::rangedReal(0.75f, 2.0f);
+	const float magnitude = random_.nextReal(0.75f, 2.0f);
 	return direction * magnitude;
 }

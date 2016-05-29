@@ -5,6 +5,7 @@
 #include <cc/Vec2.hpp>
 #include "IParticleSystem.hpp"
 #include <ciri/Graphics.hpp>
+#include <cc/Random.hpp>
 
 class TestParticleSystem : public IParticleSystem {
 public:
@@ -22,14 +23,15 @@ public:
 private:
 	Particle& createParticle();
 	cc::Vec2f generateSpawnPosition() const;
-	float generateLifetime() const;
-	cc::Vec2f generateVelocity() const;
+	float generateLifetime();
+	cc::Vec2f generateVelocity();
 
 private:
 	std::vector<Particle> _particles;
 	cc::Vec2f _emitterPosition;
 	std::shared_ptr<ciri::ITexture2D> _texture;
 	cc::Vec2f _emitDirection;
+	cc::math::Random<float, int> random_;
 };
 
 #endif /* __test_particle_system__ */
