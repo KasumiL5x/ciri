@@ -77,9 +77,6 @@
     <ClCompile Include="src\demos\gridlr\BlockGrid.cpp">
       <Filter>demos\gridlr</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\ScreenSystem\ScreenManager.cpp">
-      <Filter>common\ScreenSystem</Filter>
-    </ClCompile>
     <ClCompile Include="src\demos\clipping\ClipPlane.cpp">
       <Filter>demos\clipping</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
     </Filter>
     <Filter Include="demos\gridlr">
       <UniqueIdentifier>{5b1a7620-a180-4501-92ca-c77b5920bfd5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="common\ScreenSystem">
-      <UniqueIdentifier>{2e8a2560-3445-4bcc-88c8-042a288956db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -227,15 +221,6 @@
     </ClInclude>
     <ClInclude Include="src\demos\gridlr\BlockType.hpp">
       <Filter>demos\gridlr</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\ScreenSystem\Screen.hpp">
-      <Filter>common\ScreenSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\ScreenSystem\ScreenManager.hpp">
-      <Filter>common\ScreenSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\ScreenSystem\ScreenState.hpp">
-      <Filter>common\ScreenSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\clipping\ClipPlane.hpp">
       <Filter>demos\clipping</Filter>

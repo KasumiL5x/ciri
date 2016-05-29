@@ -88,7 +88,6 @@
     <ClCompile Include="src\common\HeightmapTerrain.cpp" />
     <ClCompile Include="src\common\KScene.cpp" />
     <ClCompile Include="src\common\Model.cpp" />
-    <ClCompile Include="src\common\ScreenSystem\ScreenManager.cpp" />
     <ClCompile Include="src\common\ShaderPresets.cpp" />
     <ClCompile Include="src\common\Transform.cpp" />
     <ClCompile Include="src\demos\clipping\ClippingDemo.cpp" />
@@ -122,9 +121,6 @@
     <ClInclude Include="src\common\Leb128.hpp" />
     <ClInclude Include="src\common\Model.hpp" />
     <ClInclude Include="src\common\ModelGen.hpp" />
-    <ClInclude Include="src\common\ScreenSystem\Screen.hpp" />
-    <ClInclude Include="src\common\ScreenSystem\ScreenManager.hpp" />
-    <ClInclude Include="src\common\ScreenSystem\ScreenState.hpp" />
     <ClInclude Include="src\common\ShaderPresets.hpp" />
     <ClInclude Include="src\common\Transform.hpp" />
     <ClInclude Include="src\common\Vertex.hpp" />

@@ -13,6 +13,12 @@
     <Filter Include="src\game">
       <UniqueIdentifier>{11fb1a7a-2bf5-45c0-a334-7b0c126ef2c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="inc\game\screens">
+      <UniqueIdentifier>{cf77ca1e-cc53-4c44-8200-78492d7b6d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\game\screens">
+      <UniqueIdentifier>{d74989ee-d24d-4190-8646-0468dc47f6d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\ciri\Game.hpp">
@@ -39,6 +45,15 @@
     <ClInclude Include="..\..\inc\ciri\game\FreeTypeSpriteFont.hpp">
       <Filter>inc\game</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\game\screens\Screen.hpp">
+      <Filter>inc\game\screens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\game\screens\ScreenState.hpp">
+      <Filter>inc\game\screens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ciri\game\screens\ScreenManager.hpp">
+      <Filter>inc\game\screens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ciri\game\App.cpp">
@@ -49,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ciri\game\FreeTypeSpriteFont.cpp">
       <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ciri\game\screens\ScreenManager.cpp">
+      <Filter>src\game\screens</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

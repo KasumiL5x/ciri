@@ -1,5 +1,5 @@
-#include "ScreenManager.hpp"
-#include "Screen.hpp"
+#include <ciri/game/screens/ScreenManager.hpp>
+#include <ciri/game/screens/Screen.hpp>
 #include <algorithm>
 
 using namespace ciri;
