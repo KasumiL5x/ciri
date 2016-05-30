@@ -318,6 +318,8 @@ void DXGraphicsDevice::applyShader( const std::shared_ptr<IShader>& shader ) {
 			const int index = geometryConstants[i]->getIndex();
 			_context->GSSetConstantBuffers(index, 1, &buffer);
 		}
+	} else {
+		_context->GSSetShader(nullptr, nullptr, 0); // disable non-existent gs in case previous shader had it applied
 	}
 
 	ID3D11PixelShader* ps = dxShader->getPixelShader();
