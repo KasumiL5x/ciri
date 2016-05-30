@@ -86,6 +86,12 @@
     <ClCompile Include="src\demos\playground\playground.cpp">
       <Filter>demos\playground</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\playground\Plane.cpp">
+      <Filter>demos\playground</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\playground\PlayerPlaneController.cpp">
+      <Filter>demos\playground</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -232,6 +238,15 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="src\demos\playground\playground.hpp">
+      <Filter>demos\playground</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\playground\Plane.hpp">
+      <Filter>demos\playground</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\playground\PlaneController.hpp">
+      <Filter>demos\playground</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\playground\PlayerPlaneController.hpp">
       <Filter>demos\playground</Filter>
     </ClInclude>
   </ItemGroup>

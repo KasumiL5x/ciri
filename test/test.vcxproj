@@ -99,6 +99,8 @@
     <ClCompile Include="src\demos\gridlr\BlockGrid.cpp" />
     <ClCompile Include="src\demos\gridlr\Gridlr.cpp" />
     <ClCompile Include="src\demos\parallax\ParallaxDemo.cpp" />
+    <ClCompile Include="src\demos\playground\Plane.cpp" />
+    <ClCompile Include="src\demos\playground\PlayerPlaneController.cpp" />
     <ClCompile Include="src\demos\playground\playground.cpp" />
     <ClCompile Include="src\demos\refract\RefractDemo.cpp" />
     <ClCompile Include="src\demos\sprites\Bullet.cpp" />
@@ -136,6 +138,9 @@
     <ClInclude Include="src\demos\gridlr\BlockType.hpp" />
     <ClInclude Include="src\demos\gridlr\Gridlr.hpp" />
     <ClInclude Include="src\demos\parallax\ParallaxDemo.hpp" />
+    <ClInclude Include="src\demos\playground\Plane.hpp" />
+    <ClInclude Include="src\demos\playground\PlaneController.hpp" />
+    <ClInclude Include="src\demos\playground\PlayerPlaneController.hpp" />
     <ClInclude Include="src\demos\playground\playground.hpp" />
     <ClInclude Include="src\demos\refract\RefractDemo.hpp" />
     <ClInclude Include="src\demos\sprites\Bullet.hpp" />
