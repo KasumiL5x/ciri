@@ -8,8 +8,8 @@
 #include "demos/refract/RefractDemo.hpp"
 #include "demos/clipping/ClippingDemo.hpp"
 #include "demos/parallax/ParallaxDemo.hpp"
-//#include "demos/deferred/DeferredDemo.hpp"
 #include "demos\gridlr\Gridlr.hpp"
+#include "demos/playground/playground.hpp"
 #include <ciri/Game.hpp>
 
 enum class Demo {
@@ -19,8 +19,8 @@ enum class Demo {
 	Refract,
 	Clipping,
 	Parallax,
-	//Deferred
-	Gridlr
+	Gridlr,
+	Playground
 };
 
 std::unique_ptr<ciri::App> createGame( Demo type ) {
@@ -49,12 +49,12 @@ std::unique_ptr<ciri::App> createGame( Demo type ) {
 			return std::unique_ptr<ciri::App>(new ParallaxDemo());
 		}
 
-		//case Demo::Deferred: {
-		//	return std::unique_ptr<IDemo>(new DeferredDemo());
-		//}
-
 		case Demo::Gridlr: {
 			return std::unique_ptr<ciri::App>(new Gridlr());
+		}
+
+		case Demo::Playground: {
+			return std::unique_ptr<ciri::App>(new Playground());
 		}
 
 		default: {
@@ -73,7 +73,7 @@ int main() {
 #endif
 
 	// create the game
-	std::unique_ptr<ciri::App> game = createGame(Demo::Sprites);
+	std::unique_ptr<ciri::App> game = createGame(Demo::Playground);
 	if( !game->run() ) {
 		printf("ciri error: Game failed to run!\n");
 	}

@@ -83,6 +83,9 @@
     <ClCompile Include="src\common\AxisWidget.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\playground\playground.cpp">
+      <Filter>demos\playground</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -117,6 +120,9 @@
     </Filter>
     <Filter Include="demos\gridlr">
       <UniqueIdentifier>{5b1a7620-a180-4501-92ca-c77b5920bfd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\playground">
+      <UniqueIdentifier>{b32d95c6-c4b8-4c0b-a9a0-994a395b95c8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="src\common\AxisWidget.hpp">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\playground\playground.hpp">
+      <Filter>demos\playground</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
