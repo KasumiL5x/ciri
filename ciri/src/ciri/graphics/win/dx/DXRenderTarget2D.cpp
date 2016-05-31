@@ -47,8 +47,12 @@ void DXRenderTarget2D::destroy() {
 	}
 }
 
-std::shared_ptr<ITexture2D> DXRenderTarget2D::getTexture2D() const {
+std::shared_ptr<ITexture2D> DXRenderTarget2D::getTexture() const {
 	return _texture;
+}
+
+std::shared_ptr<ITexture2D> DXRenderTarget2D::getDepth() const {
+	throw;
 }
 
 ID3D11RenderTargetView* DXRenderTarget2D::getRenderTargetView() const {

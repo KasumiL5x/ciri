@@ -17,7 +17,8 @@ public:
 
 	virtual void destroy() override;
 
-	virtual std::shared_ptr<ITexture2D> getTexture2D() const override;
+	virtual std::shared_ptr<ITexture2D> getTexture() const override;
+	virtual std::shared_ptr<ITexture2D> getDepth() const override;
 
 private:
 	std::shared_ptr<GLTexture2D> _texture;

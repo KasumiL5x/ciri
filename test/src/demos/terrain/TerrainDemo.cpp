@@ -255,8 +255,8 @@ void TerrainDemo::onUpdate( const double deltaTime, const double elapsedTime ) {
 		// debug key
 		if( input()->isKeyDown(ciri::Key::F11) && input()->wasKeyUp(ciri::Key::F11) ) {
 			printf("debug...");
-			_waterReflectionTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/refl.dds");
-			_waterRefractionTarget->getTexture2D()->writeToDDS("C:/Users/kasum/Desktop/refr.dds");
+			_waterReflectionTarget->getTexture()->writeToDDS("C:/Users/kasum/Desktop/refl.dds");
+			_waterRefractionTarget->getTexture()->writeToDDS("C:/Users/kasum/Desktop/refr.dds");
 			printf("done\n");
 		}
 	}
@@ -367,11 +367,11 @@ void TerrainDemo::onDraw() {
 
 		// set reflection texture and sampler
 		device->setSamplerState(1, _waterReflectionSampler, ciri::ShaderStage::Pixel);
-		device->setTexture2D(1, _waterReflectionTarget->getTexture2D(), ciri::ShaderStage::Pixel);
+		device->setTexture2D(1, _waterReflectionTarget->getTexture(), ciri::ShaderStage::Pixel);
 
 		// set refraction texture and sampler
 		device->setSamplerState(2, _waterReflectionSampler, ciri::ShaderStage::Pixel);
-		device->setTexture2D(2, _waterRefractionTarget->getTexture2D(), ciri::ShaderStage::Pixel);
+		device->setTexture2D(2, _waterRefractionTarget->getTexture(), ciri::ShaderStage::Pixel);
 
 		// enable alpha blending
 		device->setBlendState(_alphaBlendState);

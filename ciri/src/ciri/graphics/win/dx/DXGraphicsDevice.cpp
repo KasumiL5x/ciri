@@ -569,7 +569,7 @@ void DXGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int nu
 	//       as by convention, they should all have the same format depth target
 	_context->OMSetRenderTargets(numRenderTargets, _activeRenderTargets, nullptr);
 
-	setViewport(Viewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight()));
+	setViewport(Viewport(0, 0, renderTargets[0]->getTexture()->getWidth(), renderTargets[0]->getTexture()->getHeight()));
 }
 
 void DXGraphicsDevice::restoreDefaultRenderTargets() {
@@ -666,12 +666,12 @@ ErrorCode DXGraphicsDevice::resizeRenderTarget2D( const std::shared_ptr<IRenderT
 	const std::shared_ptr<DXRenderTarget2D> dxTarget = std::static_pointer_cast<DXRenderTarget2D>(target);
 
 	// check for texure that isn't created
-	if( nullptr == dxTarget->getTexture2D() ) {
+	if( nullptr == dxTarget->getTexture() ) {
 		return ErrorCode::CIRI_UNKNOWN_ERROR;
 	}
 
 	// store texture's format for re-creation
-	const TextureFormat::Format textureFormat = dxTarget->getTexture2D()->getFormat();
+	const TextureFormat::Format textureFormat = dxTarget->getTexture()->getFormat();
 
 	dxTarget->destroy();
 	const std::shared_ptr<DXTexture2D> dxTexture = std::static_pointer_cast<DXTexture2D>(createTexture2D(width, height, textureFormat, TextureFlags::RenderTarget, nullptr));

@@ -19,6 +19,10 @@ bool GLRenderTarget2D::create( const std::shared_ptr<GLTexture2D>& texture ) {
 void GLRenderTarget2D::destroy() {
 }
 
-std::shared_ptr<ITexture2D> GLRenderTarget2D::getTexture2D() const {
+std::shared_ptr<ITexture2D> GLRenderTarget2D::getTexture() const {
 	return _texture;
+}
+
+std::shared_ptr<ITexture2D> GLRenderTarget2D::getDepth() const {
+	throw;
 }

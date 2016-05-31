@@ -551,7 +551,7 @@ void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int nu
 
 	// attach all render target textures
 	for( int i = 0; i < numRenderTargets; ++i ) {
-		const std::shared_ptr<GLTexture2D>& texture = std::static_pointer_cast<GLTexture2D>(renderTargets[i]->getTexture2D());
+		const std::shared_ptr<GLTexture2D>& texture = std::static_pointer_cast<GLTexture2D>(renderTargets[i]->getTexture());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->getTextureId(), 0);
 	}
 
@@ -559,7 +559,7 @@ void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int nu
 	glDrawBuffers(numRenderTargets, _drawBuffers);
 
 	// set viewport (use 0's size)
-	setViewport(Viewport(0, 0, renderTargets[0]->getTexture2D()->getWidth(), renderTargets[0]->getTexture2D()->getHeight()));
+	setViewport(Viewport(0, 0, renderTargets[0]->getTexture()->getWidth(), renderTargets[0]->getTexture()->getHeight()));
 }
 
 void GLGraphicsDevice::restoreDefaultRenderTargets() {
@@ -630,12 +630,12 @@ ErrorCode GLGraphicsDevice::resizeRenderTarget2D( const std::shared_ptr<IRenderT
 	const std::shared_ptr<GLRenderTarget2D> glTarget = std::static_pointer_cast<GLRenderTarget2D>(target);
 
 	// check for texture that isn't created
-	if( nullptr == glTarget->getTexture2D() ) {
+	if( nullptr == glTarget->getTexture() ) {
 		return ErrorCode::CIRI_UNKNOWN_ERROR;
 	}
 
 	// store texture's format for re-creation
-	const TextureFormat::Format textureFormat = glTarget->getTexture2D()->getFormat();
+	const TextureFormat::Format textureFormat = glTarget->getTexture()->getFormat();
 
 	glTarget->destroy();
 	const std::shared_ptr<GLTexture2D> glTexture = std::static_pointer_cast<GLTexture2D>(createTexture2D(width, height, textureFormat, TextureFlags::RenderTarget, nullptr));

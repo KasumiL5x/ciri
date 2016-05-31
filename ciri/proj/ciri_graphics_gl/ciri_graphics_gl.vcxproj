@@ -92,6 +92,7 @@
     <ClInclude Include="..\..\inc\ciri\graphics\ClearFlags.hpp" />
     <ClInclude Include="..\..\inc\ciri\graphics\CompareFunction.hpp" />
     <ClInclude Include="..\..\inc\ciri\graphics\CullMode.hpp" />
+    <ClInclude Include="..\..\inc\ciri\graphics\DepthFormat.hpp" />
     <ClInclude Include="..\..\inc\ciri\graphics\FillMode.hpp" />
     <ClInclude Include="..\..\inc\ciri\graphics\FPSCamera.hpp" />
     <ClInclude Include="..\..\inc\ciri\graphics\GraphicsApiType.hpp" />

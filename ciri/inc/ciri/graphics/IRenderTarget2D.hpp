@@ -17,15 +17,21 @@ public:
 	}
 
 	/**
-		* Uninitializes the render target 2d.
+		* Uninitializes the render target 2D.
 		*/
 	virtual void destroy()=0;
 
 	/**
-		* Gets the associated underlying 2d texture of the render target.
+		* Gets the associated underlying 2D texture of the render target.
 		* @return Pointer to the actual ITexture2D that the render target is representing.
 		*/
-	virtual std::shared_ptr<ITexture2D> getTexture2D() const=0;
+	virtual std::shared_ptr<ITexture2D> getTexture() const=0;
+
+	/**
+	 * Gets the depth texture of the render target.  This can be null.
+	 * @return Pointer to the depth ITexture2D, if it exists.
+	 */
+	virtual std::shared_ptr<ITexture2D> getDepth() const=0;
 };
 
 }
