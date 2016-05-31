@@ -218,7 +218,7 @@ std::shared_ptr<ISamplerState> DXGraphicsDevice::createSamplerState( const Sampl
 	return dxSampler;
 }
 
-std::shared_ptr<IRenderTarget2D> DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
+std::shared_ptr<IRenderTarget2D> DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat ) {
 	if( !_isValid ) {
 		return nullptr;
 	}

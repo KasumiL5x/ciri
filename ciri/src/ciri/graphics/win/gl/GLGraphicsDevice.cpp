@@ -253,7 +253,7 @@ std::shared_ptr<ISamplerState> GLGraphicsDevice::createSamplerState( const Sampl
 	return glSampler;
 }
 
-std::shared_ptr<IRenderTarget2D> GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format ) {
+std::shared_ptr<IRenderTarget2D> GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat ) {
 	if( !_isValid ) {
 		return nullptr;
 	}

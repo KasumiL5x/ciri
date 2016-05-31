@@ -19,6 +19,7 @@
 #include "ShaderStage.hpp"
 #include "PrimitiveTopology.hpp"
 #include "GraphicsApiType.hpp"
+#include "DepthFormat.hpp"
 
 namespace ciri {
 
@@ -133,12 +134,13 @@ public:
 
 	/**
 		* Creates a new 2d render target.
-		* @param width  Width of the render target in pixels.
-		* @param height Height of the render target in pixels.
-		* @param format Format of the render target.
+		* @param width       Width of the render target in pixels.
+		* @param height      Height of the render target in pixels.
+		* @param format      Format of the render target.
+		* @param depthFormat Format of the optional depth-stencil buffer.
 		* @returns A pointer to a new IRenderTarget2D, or nullptr upon error.
 		*/
-	virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format )=0;
+	virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat )=0;
 
 	/**
 		* Creates a new rasterizer state.
