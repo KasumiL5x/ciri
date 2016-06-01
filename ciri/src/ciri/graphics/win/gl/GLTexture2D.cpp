@@ -38,7 +38,7 @@ ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height,
 
 		const int level = 0; // todo
 		glBindTexture(GL_TEXTURE_2D, _textureId);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::bytesPerPixel(format));
+		glPixelStorei(GL_UNPACK_ALIGNMENT, TextureFormat::getAlignment(format));
 		glTexSubImage2D(GL_TEXTURE_2D, level, xOffset, yOffset, width, height, _pixelFormat, _pixelType, data);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 		glBindTexture(GL_TEXTURE_2D, 0);
