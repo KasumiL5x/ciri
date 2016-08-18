@@ -20,7 +20,13 @@ __declspec(align(16))
 struct BasicConstants {
 	cc::Mat4f world;
 	cc::Mat4f xform;
-	cc::Vec3f campos;
+	cc::Mat4f lightViewProj;
+	cc::Vec3f campos; // this fucker caused alignment issues.
+};
+
+__declspec(align(16))
+struct PGDepthConstants {
+	cc::Mat4f xform;
 };
 
 class Playground : public ciri::App {
@@ -49,11 +55,22 @@ private:
 	std::shared_ptr<ciri::IBlendState> _blendState;
 	std::shared_ptr<Plane> _plane;
 	std::shared_ptr<PlayerPlaneController> _playerPlaneController;
-	Model _planeModel;
+	Model* _planeModel;
 	std::shared_ptr<ciri::IShader> _basicShader;
 	std::shared_ptr<ciri::IConstantBuffer> _basicConstantBuffer;
 	BasicConstants _basicConstants;
 	cc::Quatf _cameraOrientation;
+
+	std::shared_ptr<ciri::IRenderTarget2D> _renderTarget;
+	std::shared_ptr<ciri::IDepthStencilState> _depthStencilState;
+	std::shared_ptr<ciri::SpriteBatch> _spriteBatch;
+	std::shared_ptr<ciri::ISamplerState> _samplerState;
+	std::shared_ptr<ciri::IShader> _depthShader;
+	std::shared_ptr<ciri::IConstantBuffer> _depthConstantBuffer;
+	PGDepthConstants _depthConstants;
+	std::shared_ptr<ciri::ISamplerState> _shadowSampler;
+	Model* _groundModel;
+	std::shared_ptr<ciri::IRasterizerState> _spriteRaster;
 };
 
 #endif

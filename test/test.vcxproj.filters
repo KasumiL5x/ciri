@@ -92,6 +92,18 @@
     <ClCompile Include="src\demos\playground\PlayerPlaneController.cpp">
       <Filter>demos\playground</Filter>
     </ClCompile>
+    <ClCompile Include="src\demos\deferred\DeferredDemo.cpp">
+      <Filter>demos\deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\deferred\LppRenderer.cpp">
+      <Filter>demos\deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\shadows\ShadowsDemo.cpp">
+      <Filter>demos\shadows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\shadows\Light.cpp">
+      <Filter>demos\shadows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -129,6 +141,9 @@
     </Filter>
     <Filter Include="demos\playground">
       <UniqueIdentifier>{b32d95c6-c4b8-4c0b-a9a0-994a395b95c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demos\shadows">
+      <UniqueIdentifier>{0dad9722-6344-43ef-90e5-e0d99598e912}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -248,6 +263,24 @@
     </ClInclude>
     <ClInclude Include="src\demos\playground\PlayerPlaneController.hpp">
       <Filter>demos\playground</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\deferred\DeferredDemo.hpp">
+      <Filter>demos\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\deferred\LppRenderer.hpp">
+      <Filter>demos\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\shadows\ShadowsDemo.hpp">
+      <Filter>demos\shadows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\shadows\Light.hpp">
+      <Filter>demos\shadows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\shadows\BoundingFrustum.hpp">
+      <Filter>demos\shadows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demos\shadows\BoundingBox.hpp">
+      <Filter>demos\shadows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

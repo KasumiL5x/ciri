@@ -93,6 +93,8 @@
     <ClCompile Include="src\demos\clipping\ClippingDemo.cpp" />
     <ClCompile Include="src\demos\clipping\ClipMesh.cpp" />
     <ClCompile Include="src\demos\clipping\ClipPlane.cpp" />
+    <ClCompile Include="src\demos\deferred\DeferredDemo.cpp" />
+    <ClCompile Include="src\demos\deferred\LppRenderer.cpp" />
     <ClCompile Include="src\demos\dynvb\DynamicVertexBufferDemo.cpp" />
     <ClCompile Include="src\demos\dynvb\OpenCloth.cpp" />
     <ClCompile Include="src\demos\gridlr\BlockChain.cpp" />
@@ -103,6 +105,8 @@
     <ClCompile Include="src\demos\playground\PlayerPlaneController.cpp" />
     <ClCompile Include="src\demos\playground\playground.cpp" />
     <ClCompile Include="src\demos\refract\RefractDemo.cpp" />
+    <ClCompile Include="src\demos\shadows\Light.cpp" />
+    <ClCompile Include="src\demos\shadows\ShadowsDemo.cpp" />
     <ClCompile Include="src\demos\sprites\Bullet.cpp" />
     <ClCompile Include="src\demos\sprites\Enemy.cpp" />
     <ClCompile Include="src\demos\sprites\Entity.cpp" />
@@ -129,6 +133,8 @@
     <ClInclude Include="src\demos\clipping\ClippingDemo.hpp" />
     <ClInclude Include="src\demos\clipping\ClipMesh.hpp" />
     <ClInclude Include="src\demos\clipping\ClipPlane.hpp" />
+    <ClInclude Include="src\demos\deferred\DeferredDemo.hpp" />
+    <ClInclude Include="src\demos\deferred\LppRenderer.hpp" />
     <ClInclude Include="src\demos\dynvb\DynamicVertexBufferDemo.hpp" />
     <ClInclude Include="src\demos\dynvb\OpenCloth.hpp" />
     <ClInclude Include="src\demos\gridlr\Block.hpp" />
@@ -143,6 +149,10 @@
     <ClInclude Include="src\demos\playground\PlayerPlaneController.hpp" />
     <ClInclude Include="src\demos\playground\playground.hpp" />
     <ClInclude Include="src\demos\refract\RefractDemo.hpp" />
+    <ClInclude Include="src\demos\shadows\BoundingBox.hpp" />
+    <ClInclude Include="src\demos\shadows\BoundingFrustum.hpp" />
+    <ClInclude Include="src\demos\shadows\Light.hpp" />
+    <ClInclude Include="src\demos\shadows\ShadowsDemo.hpp" />
     <ClInclude Include="src\demos\sprites\Bullet.hpp" />
     <ClInclude Include="src\demos\sprites\Enemy.hpp" />
     <ClInclude Include="src\demos\sprites\Entity.hpp" />

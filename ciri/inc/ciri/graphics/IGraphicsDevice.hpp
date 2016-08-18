@@ -19,7 +19,7 @@
 #include "ShaderStage.hpp"
 #include "PrimitiveTopology.hpp"
 #include "GraphicsApiType.hpp"
-#include "DepthFormat.hpp"
+#include "DepthStencilFormat.hpp"
 
 namespace ciri {
 
@@ -140,7 +140,7 @@ public:
 		* @param depthFormat Format of the optional depth-stencil buffer.
 		* @returns A pointer to a new IRenderTarget2D, or nullptr upon error.
 		*/
-	virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat )=0;
+	virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthStencilFormat depthFormat )=0;
 
 	/**
 		* Creates a new rasterizer state.
@@ -279,6 +279,16 @@ public:
 		* @param a Alpha.
 		*/
 	virtual void setClearColor( float r, float g, float b, float a )=0;
+
+	/** 
+	 * Sets the value that depth targets will be cleared to.
+	 */
+	virtual void setClearDepth( float depth )=0;
+
+	/**
+	 * Sets the value that stencil targets will be cleared to.
+	 */
+	virtual void setClearStencil( int stencil )=0;
 
 	/**
 		* Clears the currently bound render targets.

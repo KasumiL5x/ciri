@@ -196,6 +196,43 @@ static void ciriToGlTextureFormat( TextureFormat::Format ciriFormat, GLint* inte
 			break;
 		}
 
+		case TextureFormat::Depth16: {
+			*internalFormat = GL_DEPTH_COMPONENT16;
+			*pixelFormat = GL_DEPTH_COMPONENT;
+			*pixelType = GL_UNSIGNED_BYTE;
+			break;
+		}
+		case TextureFormat::Depth24: {
+			*internalFormat = GL_DEPTH_COMPONENT24;
+			*pixelFormat = GL_DEPTH_COMPONENT;
+			*pixelType = GL_UNSIGNED_BYTE;
+			break;
+		}
+		case TextureFormat::Depth32: {
+			*internalFormat = GL_DEPTH_COMPONENT32;
+			*pixelFormat = GL_DEPTH_COMPONENT;
+			*pixelType = GL_UNSIGNED_BYTE;
+			break;
+		}
+		case TextureFormat::Depth32F: {
+			*internalFormat = GL_DEPTH_COMPONENT32F;
+			*pixelFormat = GL_DEPTH_COMPONENT;
+			*pixelType = GL_FLOAT;
+			break;
+		}
+		case TextureFormat::Depth24Stencil8: {
+			*internalFormat = GL_DEPTH24_STENCIL8;
+			*pixelFormat = GL_DEPTH_STENCIL;
+			*pixelType = GL_UNSIGNED_INT_24_8;
+			break;
+		}
+		case TextureFormat::Depth32FStencil8: {
+			*internalFormat = GL_DEPTH32F_STENCIL8;
+			*pixelFormat = GL_DEPTH_STENCIL;
+			*pixelType = GL_FLOAT;
+			break;
+		}
+
 		default: {
 			throw; // oh nooooooooooooooo! that's jeffry's dog!
 		}

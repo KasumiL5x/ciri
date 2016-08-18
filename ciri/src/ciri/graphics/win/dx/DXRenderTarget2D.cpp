@@ -12,7 +12,7 @@ DXRenderTarget2D::~DXRenderTarget2D() {
 	destroy();
 }
 
-bool DXRenderTarget2D::create( const std::shared_ptr<DXTexture2D>& texture ) {
+bool DXRenderTarget2D::create( const std::shared_ptr<DXTexture2D>& texture, const std::shared_ptr<DXTexture2D>& depthTexture ) {
 	if( _renderTargetView != nullptr ) {
 		return false;
 	}
@@ -22,6 +22,7 @@ bool DXRenderTarget2D::create( const std::shared_ptr<DXTexture2D>& texture ) {
 	}
 
 	_texture = texture;
+	_depthTexture = depthTexture;
 		
 	// get the texture's description
 	D3D11_TEXTURE2D_DESC textureDesc;

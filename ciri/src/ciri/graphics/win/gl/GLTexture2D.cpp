@@ -1,6 +1,7 @@
 #include <ciri/graphics/win/gl/GLTexture2D.hpp>
 #include <ciri/graphics/win/gl/CiriToGl.hpp>
 #include <ciri/core/TGA.hpp>
+#include <ciri/graphics/win/gl/CheckGLError.hpp>
 
 using namespace ciri;
 
@@ -27,7 +28,7 @@ ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height,
 			return ErrorCode::CIRI_INVALID_ARGUMENT;
 		}
 
-		// for now, the enture texture must be updated, and it must therefore be of the same size
+		// for now, the entire texture must be updated, and it must therefore be of the same size
 		if( width != _width || height != _height || xOffset != 0 || yOffset != 0 ) {
 			return ErrorCode::CIRI_NOT_IMPLEMENTED;
 		}
@@ -75,6 +76,9 @@ ErrorCode GLTexture2D::setData( int xOffset, int yOffset, int width, int height,
 	// reset pixel store back to default
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
+	checkGlError();
+	
+
 	// generate mipmaps
 	if( _flags & TextureFlags::Mipmaps ) {
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -107,21 +111,58 @@ ErrorCode GLTexture2D::writeToTGA( const char* file ) {
 	GLuint tmpFbo;
 	glGenFramebuffers(1, &tmpFbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, tmpFbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _textureId, 0);
 
-	// todo: what if i want to support other formats in the future like floating point textures? another function probably!
-	unsigned char* pixels = new unsigned char[_width * _height * TextureFormat::bytesPerPixel(_format)];
-	glReadPixels(0, 0, _width, _height, _pixelFormat, GL_UNSIGNED_BYTE, pixels); // _pixelType
-	glDeleteFramebuffers(1, &tmpFbo);
+	std::vector<unsigned char> pixels;
 
-	if( !TGA::writeToFile(file, _width, _height, pixels, TextureFormat::hasAlpha(_format) ? TGA::RGBA : TGA::RGB, true) ) {
-		delete[] pixels;
-		pixels = nullptr;
-		return ErrorCode::CIRI_UNKNOWN_ERROR; // todo
+	if( TextureFormat::isDepth(_format) ) {
+		if( TextureFormat::hasStencil(_format) ) {
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, _textureId, 0);
+			std::vector<GLuint> rawPixels(_width * _height);
+			glReadPixels(0, 0, _width, _height, _pixelFormat, _pixelType, rawPixels.data());
+			for( int i = 0; i < _width*_height; ++i ) {
+				const GLuint rawVal = rawPixels[i];
+				const unsigned char newVal = (rawVal >> 8) & 0xFF;
+				pixels.push_back(newVal);//r
+				pixels.push_back(newVal);//g
+				pixels.push_back(newVal);//b
+			}
+			// todo: modify this function to write depth and stencil rather than just depth
+		} else {
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _textureId, 0);
+			std::vector<GLuint> rawPixels(_width * _height);
+			// note: using GL_UNSIGNED_INT as GL_DEPTH_COMPONENT24 converts to int anyway.
+			glReadPixels(0, 0, _width, _height, _pixelFormat, GL_UNSIGNED_INT, rawPixels.data());
+			for( int i = 0; i < _width * _height; ++i ) {
+				const GLuint rawVal = rawPixels[i];
+				const unsigned char newVal = (rawVal >> 8) & 0xFF;
+				pixels.push_back(newVal);
+				pixels.push_back(newVal);
+				pixels.push_back(newVal);
+			}
+		}
+	} else {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _textureId, 0);
+
+		if( TextureFormat::isFloat(_format) ) {
+			// note: this is separated b/c floating point texture formats will be added at some point.
+			std::vector<float> rawPixels(_width * _height * TextureFormat::bytesPerPixel(_format));
+			glReadPixels(0, 0, _width, _height, _pixelFormat, _pixelType, rawPixels.data());
+			for( int i = 0; i < _width * _height * TextureFormat::bytesPerPixel(_format); i += TextureFormat::bytesPerPixel(_format) ) {
+				for( int j = 0; j < TextureFormat::bytesPerPixel(_format); ++j ) {
+					pixels.push_back(rawPixels[i+j] * 255.0);
+				}
+			}
+		} else {
+			pixels.resize(_width * _height * TextureFormat::bytesPerPixel(_format));
+			glReadPixels(0, 0, _width, _height, _pixelFormat, _pixelType, pixels.data());
+		}
 	}
 
-	delete[] pixels;
-	pixels = nullptr;
+	glDeleteFramebuffers(1, &tmpFbo);
+
+	if( !TGA::writeToFile(file, _width, _height, pixels.data(), TextureFormat::hasAlpha(_format)?TGA::RGBA:TGA::RGB, true) ) {
+		return ErrorCode::CIRI_UNKNOWN_ERROR;
+	}
 
 	return ErrorCode::CIRI_OK;
 }

@@ -30,6 +30,10 @@ void Plane::pitch( float amount ) {
 	_worldDirty = true;
 }
 
+void Plane::setPosition( const cc::Vec3f& val ) {
+	_position = val;
+}
+
 const cc::Mat4f& Plane::world() {
 	if( _worldDirty ) {
 		const cc::Mat4f translation = cc::math::translate<float>(_position);

@@ -253,7 +253,7 @@ std::shared_ptr<ISamplerState> GLGraphicsDevice::createSamplerState( const Sampl
 	return glSampler;
 }
 
-std::shared_ptr<IRenderTarget2D> GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat ) {
+std::shared_ptr<IRenderTarget2D> GLGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthStencilFormat depthFormat ) {
 	if( !_isValid ) {
 		return nullptr;
 	}
@@ -262,8 +262,12 @@ std::shared_ptr<IRenderTarget2D> GLGraphicsDevice::createRenderTarget2D( int wid
 	if( nullptr == texture ) {
 		return nullptr;
 	}
+	std::shared_ptr<GLTexture2D> depthTexture = (DepthStencilFormat::None==depthFormat) ? nullptr : std::static_pointer_cast<GLTexture2D>(this->createTexture2D(width, height, TextureFormat::fromDepthStencilFormat(depthFormat), TextureFlags::RenderTarget, nullptr));
+	//if( nullptr == depthTexture ) { // todo: only run this check if trying to make the texture
+		//return nullptr;
+	//}
 	std::shared_ptr<GLRenderTarget2D> glTarget = std::make_shared<GLRenderTarget2D>();
-	if( !glTarget->create(texture) ) {
+	if( !glTarget->create(texture, depthTexture) ) {
 		texture.reset();
 		return nullptr;
 	}
@@ -549,10 +553,18 @@ void GLGraphicsDevice::setRenderTargets( IRenderTarget2D** renderTargets, int nu
 	if( 0 == _currentFbo ) { glGenFramebuffers(1, &_currentFbo); }
 	glBindFramebuffer(GL_FRAMEBUFFER, _currentFbo);
 
-	// attach all render target textures
+	// attach all render target textures incl. first occurrence of a depth stencil
+	bool isDepthStencilBound = false;
 	for( int i = 0; i < numRenderTargets; ++i ) {
 		const std::shared_ptr<GLTexture2D>& texture = std::static_pointer_cast<GLTexture2D>(renderTargets[i]->getTexture());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->getTextureId(), 0);
+
+		if( !isDepthStencilBound && renderTargets[i]->getDepth() != nullptr ) {
+			isDepthStencilBound = true;
+			const auto glDepth = std::static_pointer_cast<GLTexture2D>(renderTargets[i]->getDepth());
+			const GLenum DepthAttachmentType = TextureFormat::hasStencil(glDepth->getFormat()) ? GL_DEPTH_STENCIL_ATTACHMENT : GL_DEPTH_ATTACHMENT;
+			glFramebufferTexture2D(GL_FRAMEBUFFER, DepthAttachmentType , GL_TEXTURE_2D, glDepth->getTextureId(), 0);
+		}
 	}
 
 	// configure draw buffers
@@ -642,7 +654,8 @@ ErrorCode GLGraphicsDevice::resizeRenderTarget2D( const std::shared_ptr<IRenderT
 	if( nullptr == glTexture ) {
 		return ErrorCode::CIRI_UNKNOWN_ERROR;
 	}
-	return glTarget->create(glTexture) ? ErrorCode::CIRI_OK : ErrorCode::CIRI_UNKNOWN_ERROR;
+	const std::shared_ptr<GLTexture2D> glDepth = nullptr; // todo
+	return glTarget->create(glTexture, glDepth) ? ErrorCode::CIRI_OK : ErrorCode::CIRI_UNKNOWN_ERROR;
 }
 
 void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
@@ -651,6 +664,20 @@ void GLGraphicsDevice::setClearColor( float r, float g, float b, float a ) {
 	}
 
 	glClearColor(r, g, b, a);
+}
+
+void GLGraphicsDevice::setClearDepth( float depth ) {
+	if( !_isValid ) {
+		return;
+	}
+	glClearDepth(depth);
+}
+
+void GLGraphicsDevice::setClearStencil( int stencil ) {
+	if( !_isValid ) {
+		return;
+	}
+	glClearStencil(stencil);
 }
 
 void GLGraphicsDevice::clear( int flags ) {
@@ -1020,6 +1047,9 @@ bool GLGraphicsDevice::configureGl( HWND hwnd ) {
 
 	// default clear color
 	glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+	// default clear values
+	glClearDepth(1.0f);
+	glClearStencil(0);
 
 	// *cough*
 	// gimmie dat dank core profile (temp hack, unless it works)

@@ -120,9 +120,9 @@ void TerrainDemo::onLoadContent() {
 	// create render target for water reflections
 	const unsigned int RTT_WIDTH = 640;
 	const unsigned int RTT_HEIGHT = 360;
-	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(RTT_WIDTH, RTT_HEIGHT, ciri::TextureFormat::RGBA32_Float, ciri::DepthFormat::None);
+	_waterReflectionTarget = graphicsDevice()->createRenderTarget2D(RTT_WIDTH, RTT_HEIGHT, ciri::TextureFormat::RGBA32_Float, ciri::DepthStencilFormat::None);
 // and for refractions
-	_waterRefractionTarget = graphicsDevice()->createRenderTarget2D(RTT_WIDTH, RTT_HEIGHT, ciri::TextureFormat::RGBA32_Float, ciri::DepthFormat::None);
+	_waterRefractionTarget = graphicsDevice()->createRenderTarget2D(RTT_WIDTH, RTT_HEIGHT, ciri::TextureFormat::RGBA32_Float, ciri::DepthStencilFormat::None);
 	// and the sampler
 	ciri::SamplerDesc reflSamplerDesc;
 	reflSamplerDesc.filter = ciri::SamplerFilter::Linear;

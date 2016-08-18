@@ -192,7 +192,7 @@
     <ClInclude Include="..\..\inc\ciri\Graphics.hpp">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\ciri\graphics\DepthFormat.hpp">
+    <ClInclude Include="..\..\inc\ciri\graphics\DepthStencilFormat.hpp">
       <Filter>inc\graphics</Filter>
     </ClInclude>
   </ItemGroup>

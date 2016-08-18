@@ -23,6 +23,8 @@ public:
 	void roll( float amount );
 	void pitch( float amount );
 
+	void setPosition( const cc::Vec3f& val );
+
 private:
 	cc::Vec3f _position;
 	cc::Quatf _orientation;

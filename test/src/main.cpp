@@ -10,6 +10,7 @@
 #include "demos/parallax/ParallaxDemo.hpp"
 #include "demos\gridlr\Gridlr.hpp"
 #include "demos/playground/playground.hpp"
+#include "demos/shadows/ShadowsDemo.hpp"
 #include <ciri/Game.hpp>
 
 enum class Demo {
@@ -20,7 +21,8 @@ enum class Demo {
 	Clipping,
 	Parallax,
 	Gridlr,
-	Playground
+	Playground,
+	Shadows
 };
 
 std::unique_ptr<ciri::App> createGame( Demo type ) {
@@ -55,6 +57,10 @@ std::unique_ptr<ciri::App> createGame( Demo type ) {
 
 		case Demo::Playground: {
 			return std::unique_ptr<ciri::App>(new Playground());
+		}
+
+		case Demo::Shadows: {
+			return std::unique_ptr<ciri::App>(new ShadowsDemo());
 		}
 
 		default: {

@@ -46,6 +46,8 @@ bool DXGraphicsDevice::create( const std::shared_ptr<IWindow>& window ) {
 	_clearColor[1] = 0.58f;
 	_clearColor[2] = 0.93f;
 	_clearColor[3] = 1.0f;
+	_clearDepth = 1.0f;
+	_clearStencil = 0;
 
 	_isValid = true;
 
@@ -218,7 +220,7 @@ std::shared_ptr<ISamplerState> DXGraphicsDevice::createSamplerState( const Sampl
 	return dxSampler;
 }
 
-std::shared_ptr<IRenderTarget2D> DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat ) {
+std::shared_ptr<IRenderTarget2D> DXGraphicsDevice::createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthStencilFormat depthFormat ) {
 	if( !_isValid ) {
 		return nullptr;
 	}
@@ -703,11 +705,11 @@ void DXGraphicsDevice::clear( int flags ) {
 			_context->ClearRenderTargetView(_backbuffer, _clearColor);
 		}
 		if( (flags & ClearFlags::Depth) && (flags & ClearFlags::Stencil) ) {
-			_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+			_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, _clearDepth, _clearStencil);
 		} else if( flags & ClearFlags::Depth ) {
-			_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+			_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, _clearDepth, _clearStencil);
 		} if( flags & ClearFlags::Stencil ) {
-			_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+			_context->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_STENCIL, _clearDepth, _clearStencil);
 		}
 		return;
 	}

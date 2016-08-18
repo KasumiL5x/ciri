@@ -13,7 +13,7 @@ public:
 	GLRenderTarget2D();
 	virtual ~GLRenderTarget2D();
 
-	bool create( const std::shared_ptr<GLTexture2D>& texture );
+	bool create( const std::shared_ptr<GLTexture2D>& texture, const std::shared_ptr<GLTexture2D>& depth );
 
 	virtual void destroy() override;
 
@@ -22,6 +22,7 @@ public:
 
 private:
 	std::shared_ptr<GLTexture2D> _texture;
+	std::shared_ptr<GLTexture2D> _depth;
 };
 
 }

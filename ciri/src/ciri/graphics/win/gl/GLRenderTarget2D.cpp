@@ -4,15 +4,16 @@
 using namespace ciri;
 
 GLRenderTarget2D::GLRenderTarget2D()
-	:IRenderTarget2D(), _texture(nullptr) {
+	:IRenderTarget2D(), _texture(nullptr), _depth(nullptr) {
 }
 
 GLRenderTarget2D::~GLRenderTarget2D() {
 	destroy();
 }
 
-bool GLRenderTarget2D::create( const std::shared_ptr<GLTexture2D>& texture ) {
+bool GLRenderTarget2D::create( const std::shared_ptr<GLTexture2D>& texture, const std::shared_ptr<GLTexture2D>& depth ) {
 	_texture = texture;
+	_depth = depth;
 	return true;
 }
 
@@ -24,5 +25,5 @@ std::shared_ptr<ITexture2D> GLRenderTarget2D::getTexture() const {
 }
 
 std::shared_ptr<ITexture2D> GLRenderTarget2D::getDepth() const {
-	throw;
+	return _depth;
 }

@@ -36,7 +36,7 @@ public:
 	virtual std::shared_ptr<ITexture3D> createTexture3D( int width, int height, int depth, TextureFormat::Format format, int flags, void* pixels=nullptr ) override;
 	virtual std::shared_ptr<ITextureCube> createTextureCube( int width, int height, void* posx, void* negx, void* posy, void* negy, void* posz, void* negz ) override;
 	virtual std::shared_ptr<ISamplerState> createSamplerState( const SamplerDesc& desc ) override;
-	virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthFormat depthFormat ) override;
+	virtual std::shared_ptr<IRenderTarget2D> createRenderTarget2D( int width, int height, TextureFormat::Format format, DepthStencilFormat depthFormat ) override;
 	virtual std::shared_ptr<IRasterizerState> createRasterizerState( const RasterizerDesc& desc ) override;
 	virtual std::shared_ptr<IDepthStencilState> createDepthStencilState( const DepthStencilDesc& desc ) override;
 	virtual std::shared_ptr<IBlendState> createBlendState( const BlendDesc& desc ) override;
@@ -56,6 +56,8 @@ public:
 	virtual ErrorCode resizeTexture2D( const std::shared_ptr<ITexture2D>& texture, int width, int height ) override;
 	virtual ErrorCode resizeRenderTarget2D( const std::shared_ptr<IRenderTarget2D>& target, int width, int height ) override;
 	virtual void setClearColor( float r, float g, float b, float a ) override;
+	virtual void setClearDepth( float depth ) override;
+	virtual void setClearStencil( int stencil ) override;
 	virtual void clear( int flags) override;
 	virtual void setRasterizerState( const std::shared_ptr<IRasterizerState>& state ) override;
 	virtual void setDepthStencilState( const std::shared_ptr<IDepthStencilState>& state ) override;
